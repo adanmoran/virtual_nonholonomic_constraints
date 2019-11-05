@@ -2,7 +2,234 @@
 
 %/========== Acrobot ==========/%
 \section{Energy Injection for the Acrobot}
+Suppose the acrobot is simple; 
+that is, assume that the acrobot's two links are of equal length \(l\)
+and of equal mass \(m\), with the mass concentrated at the tip of each rod.
 
+Let \(q = (q_u,q_a)\) where \(q_u\) is the shoulder angle and \(q_a\) is the hip angle.
+
+Then the acrobot has hamiltonian given by
+\[
+    \mathcal{H}(q,p) = \frac{1}{2} p^T M^{-1}(q) p + V(q)
+\]
+where
+\[
+    M^{-1}(q) = \frac{1}{m l^2 (2 - \cos^2(q_a))} 
+    \begin{bmatrix}
+        1              & -(1 + \cos(q_a)) \\
+        -(1 + \cos(q_a)) & (3 + 2\cos(q_a))
+    \end{bmatrix}
+\]
+and
+\[
+    V(q) = m g l (3 - 2 \cos(q_u) - \cos(q_u + q_a))
+\]
+
+Notice that the acrobot satisfies \(\partial M^{-1}(q)/ \partial q_u = 0\),
+which means it may be possible to enforce a regular solvable VNHC to inject energy
+into the acrobot.
+One such VNHC is
+\begin{align}\label{eqn:acrobot_vnhc}
+    \begin{split}
+    h(q,p) &= q_a - f(q_u,p_u) \\
+           &= q_a - \bar{q_a}\sin(\arctan(p_u,q_u)) \\
+           &= q_a - \frac{\bar{q_a}p_u}{\sqrt{q_u^2 + p_u^2}}
+    \end{split}
+\end{align}
+where \(\bar{q_a} \in ]0,\pi[\) is a parameter which dictates how much the 
+controlled link can swing back and forth.
+
+To compute the regularity and solvability conditions, first observe that since
+the acrobot has two coordinates and only \(p_a\) is actuatable, the control matrix
+\(B = [0, 1]^T\) is constant and full rank everywhere. This also implies that
+\(h\) is both regular and solvable if \(dh_q M^{-1}(q)B\) is full rank.
+
+Observe that
+\begin{align}
+    \begin{split}
+        dh_q M^{-1}(q)B &= \frac{1}{m l^2 (2 - \cos^2(q_a))}
+\left[ \frac{\bar{q_a}p_uq_u}{(q_u^2 + p_u^2)^{3/2}}, 1\right] 
+    \begin{bmatrix}
+        -(1 + \cos(q_a)) \\
+        (3 + 2\cos(q_a))
+    \end{bmatrix} \\
+                     &= \frac{ (3+2\cos(q_a))(q_u^2 + p_u^2)^{3/2} 
+                     - \bar{q_a}p_uq_u(1+cos(q_a))}
+                     {m l^2 (q_u^2+p_u^2)^{3/2} (2 - \cos^2(q_a))}
+    \end{split}
+\end{align}
+
+TODO: \textbf{Determine if this is full rank everywhere except at \((q_u,p_u) = (0,0)\)}
+
+Solving for \(p_a\) is straightforward. The computation is shown below.
+\begin{multline*}
+    p_a = \left(dh_q M^{-1}(q)B\right)^{-1}  \\
+        \left(\frac{m g l \bar{q_a}p_u q_u^2}{(q_u^2+p_u^2)^{3/2}} 
+            \left(2\sin(q_u) + sin(q_u + q_a) \right)
+        +
+            \frac{1}{m l^2 (2 - \cos^2(q_a))}
+            [ \frac{\bar{q_a}p_uq_u}{(q_u^2+p_u^2)^{3/2}}, 1] 
+            \begin{bmatrix}
+              1 \\
+              -(1 + \cos(q_a))
+          \end{bmatrix} \right)
+\end{multline*}
+\begin{align*}
+    &= -\frac
+    {
+        \frac{ m g l \bar{q_a}q_u^2(2\sin(q_u) + \sin(q_u+q_a))}{(q_u^2+p_u^2)^{3/2}}
+        + \frac{\bar{q_a} p_u^2 q_u}{m l^2 (q_u^2 + p_u^2)^{3/2} (2 -\cos^2(q_a))}
+        - \frac{(1+\cos(q_a)) p_u}{m l^2 (2 - \cos^2(q_a))}
+    }
+    {
+        \frac
+        {
+            (3 + 2\cos(q_a))(q_u^2+p_u^2)^{3/2} - \bar{q_a}(1 + \cos(q_a))q_up_u
+        }
+        {
+            m l^2 (q_u^2+p_u^2)^{3/2} (2 - \cos^2(q_a))
+        }
+    } \\
+    &= \frac
+    {
+        \frac
+        {
+            -m^2 g l^3 \bar{q_a}q_u^2(2\sin(q_u) + \sin(q_u+q_a))(2 - \cos^2(q_a))
+            - \bar{q_a}p_u^2 q_u 
+            + (1 + \cos(q_a))(q_u^2 + p_u^2)^{3/2} p_u
+        }
+        {
+            m l^2 (q_u^2+p_u^2)^{3/2} (2 - \cos^2(q_a))
+        }
+    }
+    {
+        \frac
+        {
+            (3 + 2\cos(q_a))(q_u^2+p_u^2)^{3/2} - \bar{q_a}(1 + \cos(q_a))q_up_u
+        }
+        {
+            m l^2 (q_u^2+p_u^2)^{3/2} (2 - \cos^2(q_a))
+        }
+    }
+\end{align*}
+
+\begin{equation*}
+    \Rightarrow p_a = \frac
+        {
+            (1 + \cos(q_a))(q_u^2 + p_u^2)^{3/2} p_u
+            -m^2 g l^3 \bar{q_a}q_u^2(2\sin(q_u) + \sin(q_u+q_a))(2 - \cos^2(q_a))
+            - \bar{q_a}q_up_u^2
+        }
+        {
+            (3 + 2\cos(q_a))(q_u^2+p_u^2)^{3/2} - \bar{q_a}(1 + \cos(q_a))q_up_u
+        }
+\end{equation*}
+
+With \(p_a\) in hand, it is now possible to solve for the zero dynamics under the constraint. To simplify the notation we define \(s_u := \sin(q_u)\),
+\(s_{ua} := \sin(q_u + q_a)\), 
+and \(c_a := \cos(q_a)\).
+\begin{align*}
+    \dot{q_u} &= \frac{1}{m l^2 (2 - c_a^2)} [ 1, -(1+c_a)]
+    \begin{bmatrix} p_u \\ p_a \end{bmatrix} \\
+    \dot{p_u} &= - m g l (2 s_u + s_{ua})
+\end{align*}
+Expanding out \(\dot{q_u}\) we get
+\begin{multline*}
+    \dot{q_u} = 
+    \frac{p_u}{m l^2 (2 - c_a^2)}\\
+    + \frac
+    {
+        m^2 g l^3 \bar{q_a}q_u^2(2s_u + s_{ua})(2 - c_a^2)(1 + c_a)
+        - (1+c_a)^2(q_u^2+p_u^2)^{3/2}p_u 
+        + \bar{q_a}(1+c_a)q_up_u^2
+    }
+    {
+        ml^2 (2-c_a^2) ((3 + 2c_a)(q_u^2+p_u^2)^{3/2} - \bar{q_a}(1 + c_a)q_up_u)
+    }
+\end{multline*}
+and, putting everything over one denominator,
+\begin{align*}
+    \dot{q_a} &= \frac
+    {
+        (3 + 2c_a)(q_u^2+p_u^2)^{3/2}p_u 
+        - (1+c_a)^2(q_u^2+p_u^2)^{3/2}p_u 
+        +m^2 g l^3 \bar{q_a}q_u^2(2s_u + s_{ua})(2 - c_a^2)(1 + c_a)
+    }
+    {
+        ml^2 (2-c_a^2) ((3 + 2c_a)(q_u^2+p_u^2)^{3/2} - \bar{q_a}(1 + c_a)q_up_u)
+    } \\
+    &= \frac
+    {
+        (2-c_a^2)\left((q_u^2+p_u^2)^{3/2}p_u 
+        +m^2 g l^3 \bar{q_a}q_u^2(2s_u + s_{ua})(1 + c_a)\right)
+    }
+    {
+        ml^2 (2-c_a^2) ((3 + 2c_a)(q_u^2+p_u^2)^{3/2} - \bar{q_a}(1 + c_a)q_up_u)
+    }
+\end{align*}
+Therefore, the zero-dynamics of the acrobot under the constraint 
+\(q_a = \sin(\arctan(p_u,q_u))\) are:
+\begin{align}\label{eqn:acrobot_eom_qp}
+\begin{split}
+    \dot{q_u} &= \frac
+    {
+        (q_u^2+p_u^2)^{3/2}p_u 
+        +m^2 g l^3 \bar{q_a}q_u^2(2s_u + s_{ua})(1 + c_a)
+    }
+    {
+        ml^2 \left((3 + 2c_a)(q_u^2+p_u^2)^{3/2} - \bar{q_a}(1 + c_a)q_up_u\right)
+    } \\
+    \dot{p_u} &= - m g l (2s_u + s_{ua})
+\end{split}
+\end{align}
+
+It may be convenient to represent these equations of motion  in polar coordinates.
+Letting \(r = \sqrt{q_u^2 + p_u^2}\) be the radius and 
+\(\theta = \arctan(p_u,q_u)\) be the angle in the \((q_u,p_u)\) plane and taking
+derivatives, it is easy to show that
+\begin{align}\label{eqn:dr_and_dt_general}
+\begin{split}
+    \dot{r} &= \sin(\theta)]
+    \begin{bmatrix} \dot{q_u}(r,\theta) \\ \dot{p_u}(r,\theta) \end{bmatrix} \\
+    \dot{\theta} &= \frac{1}{r}[-\sin(\theta), \cos(\theta)]
+    \begin{bmatrix} \dot{q_u}(r,\theta) \\ \dot{p_u}(r,\theta) \end{bmatrix}
+\end{split}
+\end{align}
+
+By expanding out (\ref{eqn:dr_and_dt_general}) then substituting \(q_u = r\cos(\theta)\)
+and \(p_u = r\sin(\theta)\)
+it is straightforward computation to find the equations of motion in cylindrical \((r,\theta)\)
+coordinates. To simplify the notation yet again, define
+\(s(g)_\theta := \sin(g(\theta))\) and \(c(g)_\theta := \cos(g(\theta))\) 
+for any function \(g: \mathbb{R} \rightarrow \mathbb{R}\). The final equations
+of motion in \((r,\theta)\) coordinates are
+\begin{align}\label{eqn:acrobot_eom_rt}
+\begin{split}
+    \dot{r} &= \frac
+    {
+        r^2 c_\theta s_\theta 
+        + m^2 g l^3 (2 s(rc)_\theta + s(rc + \bar{q_a}s)_\theta)
+        \left(
+            (1+c(\bar{q_a}s)_\theta)\bar{q_a}c_\theta 
+            - (3 + 2c(\bar{q_a}s)_\theta)s_\theta r
+        \right)
+    }
+    {
+        m l^2 \left((3+2c(\bar{q_a}s)_\theta)r 
+        - \bar{q_a}(1+ c(\bar{q_a}s)_\theta)c_\theta s_\theta\right)
+    }\\
+    \dot{\theta} &= -\frac
+    {
+        r s_\theta^2
+        + m^2 g l^3 (2 s(rc)_\theta + s(rc + \bar{q_a}s)_\theta)
+        (3 + 2c(\bar{q_a}s)_\theta)c_\theta
+    }
+    {
+        m l^2 \left((3+2c(\bar{q_a}s)_\theta)r 
+        - \bar{q_a}(1+ c(\bar{q_a}s)_\theta)c_\theta s_\theta\right)
+    }
+\end{split}
+\end{align}
 
 %/========== /Acrobot ==========/%
 % vim: set ts=4 sw=4 sts=0 et ffs=unix :
