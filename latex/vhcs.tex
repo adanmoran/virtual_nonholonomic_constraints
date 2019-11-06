@@ -1,0 +1,34 @@
+%! TEX root = main.tex
+
+%/========== Virtual Holonomic Constraints ==========/%
+\section{Virtual Holonomic Constraints}\label{sec:vhcs}
+
+\subsection{Lagrangian Framework Review}%
+\label{sub:lagrangian_vhcs}
+
+\begin{defn}\label{defn:vhc_order_k}
+   A \textbf{virtual holonomic constraint (VHC) of order k} is a smooth relation 
+   \( h : \mathcal{Q} \rightarrow \mathbb{R}^k\) where
+   \( \text{rank}(dh_q) = k \, \forall q \in h^{-1}(0)\) and where there exists
+   a smooth feedback controller \(\tau(q,\dot{q})\) such that the constraint
+   manifold
+   \[
+      \Gamma = \left\{ (q,\dot{q}) \in T_q\mathcal{Q} \vert h(q) = 0, \, 
+      dh_q \dot{q} = 0\right\}
+   \]
+   is positively invariant.
+\end{defn}
+
+\begin{defn}\label{defn:vhc_regular}
+   A VHC is \textbf{regular} if system \textbf{TODO:
+   reference to E-L mechanical system} with output \(e = h(q)\) has vector
+   relative degree \(\{2,2,\ldots,2\}\).
+   Equivalently, a VHC is regular if 
+   \[
+      dh_q D^{-1}(q)B(q)
+   \]
+   is nonsingular everywhere on \(\Gamma\).
+\end{defn}
+
+%/========== /Virtual Holonomic Constraints ==========/%
+% vim: set tw=80 ts=3 sw=3 sts=0 et ffs=unix :
