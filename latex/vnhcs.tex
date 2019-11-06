@@ -18,7 +18,12 @@ with Lagrangian
 \begin{equation}\label{eqn:lagrangian}
 \mathcal{L}(q,\dot{q}) = \frac{1}{2} \dot{q}^T M(q) \dot{q} - V(q)
 \end{equation}
-where \(q = (q_1,\ldots,q_n) \in \mathcal{Q}\) is the configuration vector, the inertia matrix \(M(q) = M^T(q)\) is positive definite for all \(q \in \mathcal{Q}\), \(V(q)\) is the potential of the system, \(B : \mathcal{Q} \rightarrow \mathbb{R}^{n \times m}\) is a \(C^1\) full rank control matrix, and \(\tau \in \mathbb{R}^{m}\) is the control input.
+where \(q = (q_1,\ldots,q_n) \in \mathcal{Q}\) is the configuration vector, 
+the inertia matrix \(M(q) = M^T(q)\) is positive definite for all 
+\(q \in \mathcal{Q}\), \(V(q)\) is the potential of the system, 
+\(B : \mathcal{Q} \rightarrow \mathbb{R}^{n \times m}\) is a 
+\(C^1\) full rank control matrix, and \(\tau \in \mathbb{R}^{m}\) is the control 
+input.
 
 One can compute the Hamiltonian of this system by performing a Legendre transform on the Lagrangian. Define the conjugate of momenta for \(q\) by 
 \[
@@ -28,7 +33,8 @@ Then, the Legendre transform is performed by taking
 \[
 \mathcal{H}(q,p) = p^T \dot{q} - \mathcal{L}(q,\dot{q})
 \]
-It is easy to verify that the Hamiltonian for system (\ref{eqn:lagrangian}) is given by the total mechanical energy (\ref{eqn:hamiltonian}).
+It is easy to verify that the Hamiltonian for system (\ref{eqn:lagrangian}) is 
+given by the total mechanical energy (\ref{eqn:hamiltonian}).
 \begin{equation}\label{eqn:hamiltonian}
 \mathcal{H}(q,p) = E(q,p) = \frac{1}{2} p^T M^{-1}(q) p + V(q)
 \end{equation}
@@ -140,7 +146,9 @@ A VNHC \(h(q,p)\) is \textbf{solvable} (NOTE: actionable? what's a good name?) i
 With this analysis and our new definition in hand, we can solve for the dynamics on the constraint manifold.
 
 \begin{thm}\label{thm:equation_for_pa}
-Suppose assumptions \ref{assm:vnhc_is_on_qu_pu} and \ref{assm:M_is_Mqa} hold. If a regular VNHC \(h(q,p) = q_a - f(q_u,p_u)\) is solvable, then the parameterization for \(p_a\) on the constraint manifold is given by
+Suppose assumptions \ref{assm:vnhc_is_on_qu_pu} and \ref{assm:M_is_Mqa} hold.
+If a regular VNHC \(h(q,p) = q_a - f(q_u,p_u)\) is solvable, then the
+parameterization for \(p_a\) on the constraint manifold is given by
 \begin{align*}
 p_a &= -\left(dh_q M^{-1}(q) \begin{bmatrix}
     0 & \cdots & 0 \\
@@ -158,6 +166,9 @@ and the constrained dynamics on \(\Gamma\) are given by
 \end{align*}
 \end{thm}
 
-Theorem \ref{thm:equation_for_pa} guarantees that, on \(\Gamma\), \(q_a\) is a parameterized completely by \((q_u,p_u)\). Hence, the zero-dynamics on \(\Gamma\) are always two-dimensional regardless of the original dimension \(n\).
-%/========== /Virtual Nonholonomic Constraints ==========/%
-% vim: set ts=4 sw=4 sts=0 et ffs=unix :
+Theorem \ref{thm:equation_for_pa} guarantees that, on \(\Gamma\), \(q_a\) is a
+parameterized completely by \((q_u,p_u)\). Hence, the zero-dynamics on
+\(\Gamma\) are always two-dimensional regardless of the original dimension
+\(n\).
+%/========== /Virtual Nonholonomic Constraints ==========/% vim: set ts=4 sw=4
+%sts=0 et ffs=unix :
