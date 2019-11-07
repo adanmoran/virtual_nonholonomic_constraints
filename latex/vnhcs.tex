@@ -9,23 +9,9 @@ TODO: Why do we bother with Hamiltonian? Why can't we do virtual nonholonomic co
 
 %/----- Lagrange vs Hamilton -----/%
 \subsection{A Hamiltonian Approach to Virtual Nonholonomic Constraints}
-Take an underactuated mechanical system 
-
-\begin{equation}\label{eqn:eom_lagrangian}
-M(q)\ddot{q} + C(q,\dot{q})\dot{q} + \nabla V(q) = B(q)\tau
-\end{equation}
-with Lagrangian
-\begin{equation}\label{eqn:lagrangian}
-\mathcal{L}(q,\dot{q}) = \frac{1}{2} \dot{q}^T M(q) \dot{q} - V(q)
-\end{equation}
-where \(q = (q_1,\ldots,q_n) \in \mathcal{Q}\) is the configuration vector, 
-the inertia matrix \(M(q) = M^T(q)\) is positive definite for all 
-\(q \in \mathcal{Q}\), \(V(q)\) is the potential of the system, 
-\(B : \mathcal{Q} \rightarrow \mathbb{R}^{n \times m}\) is a 
-\(C^1\) full rank control matrix, and \(\tau \in \mathbb{R}^{m}\) is the control 
-input.
-
-One can compute the Hamiltonian of this system by performing a Legendre transform on the Lagrangian. Define the conjugate of momenta for \(q\) by 
+One can compute the Hamiltonian of the Lagrangian (\ref{eqn:lagrangian}) by 
+performing a Legendre transform on the Lagrangian. 
+First, define the conjugate of momenta for \(q\) by 
 \[
 p = \frac{\partial \mathcal{L}}{\partial \dot{q}} \in \mathbb{R}^n
 \]

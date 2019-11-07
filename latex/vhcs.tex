@@ -3,8 +3,39 @@
 %/========== Virtual Holonomic Constraints ==========/%
 \section{Virtual Holonomic Constraints}\label{sec:vhcs}
 
-\subsection{Lagrangian Framework Review}%
-\label{sub:lagrangian_vhcs}
+Take an underactuated mechanical system with Lagrangian
+\begin{equation}\label{eqn:lagrangian}
+\mathcal{L}(q,\dot{q}) = \frac{1}{2} \dot{q}^T D(q) \dot{q} - P(q)
+\end{equation}
+where \(q = (q_1,\ldots,q_n) \in \mathcal{Q}\) is the configuration vector, 
+the inertia matrix \(D(q) = D^T(q)\) is positive definite for all 
+\(q \in \mathcal{Q}\), and \(P(q)\) is the potential of the system.
+
+
+The equations of motion for this system can be computed from 
+the Euler-Lagrange equations (\ref{eqn:el_eqns})
+\begin{equation}\label{eqn:el_eqns}
+   \frac{d}{dt} \left( \frac{\partial \mathcal{L}}{\partial \dot{q}}\right) -
+   \frac{\partial \mathcal{L}}{\partial q} = B(q)\tau
+\end{equation}
+which result in (\ref{eqn:eom_lagrangian}), where
+\(C : T\mathcal{Q} \rightarrow \mathbb{R}^{n \times n}\) represents the
+generalized coriolis and centrifugal forces,
+\(B : \mathcal{Q} \rightarrow \mathbb{R}^{n \times m}\) is a 
+\(C^1\) full rank control matrix, and \(\tau \in \mathbb{R}^{m}\) is the control 
+input. \textbf{TODO: citation for E-L equations}
+
+\begin{equation}\label{eqn:eom_lagrangian}
+D(q)\ddot{q} + C(q,\dot{q})\dot{q} + \nabla P(q) = B(q)\tau
+\end{equation}
+
+Suppose now that one wishes to enforce, through the control input \(\tau\), a
+constraint on the generalized coordinates which depends only on \(q\) and not on
+\(\dot{q}\). This type of constraint is called ``holonomic"; since the
+constraint is enforced by control (as opposed to being enforced by the mechanics
+of the system itself), we call the constraint ``virtual". This intuition leads
+to the following mathematical definition as originally observed in 
+\textbf{TODO: cite VHC definition paper}:
 
 \begin{defn}\label{defn:vhc_order_k}
    A \textbf{virtual holonomic constraint (VHC) of order k} is a smooth relation 
@@ -29,6 +60,7 @@
    \]
    is nonsingular everywhere on \(\Gamma\).
 \end{defn}
+\textbf{TODO: cite VHC papers}
 
 %/========== /Virtual Holonomic Constraints ==========/%
 % vim: set tw=80 ts=3 sw=3 sts=0 et ffs=unix :
