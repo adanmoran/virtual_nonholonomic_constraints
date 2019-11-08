@@ -171,5 +171,35 @@ function notation on \(B\),\(D\),\(C\), and \(P\) for simplicity), one gets
    + B^\perp \left[ C \sigma'(s)\dot{s} + \nabla P \right] = 0
 \end{align*}
 
+By how \(C(q,\dot{q})\) is defined, 
+one can collect the product \(B^\perp C \dot{q}\) in the following way.
+First, combine the Christoffel symbols  into a matrix
+\(Q_i : \mathcal{Q} \rightarrow \mathbb{R}^{n \times n}\)
+defined element-wise by
+\begin{equation*}
+   [Q_i]_{j,k}(q) = \frac{1}{2}\left(\partial_{q_k} [D]_{i,j}(q)
+      + \partial_{q_j} [D]_{i,k}(q) 
+      + \partial_{q_i} [D]_{k,j}(q)\right)
+\end{equation*}
+
+Then \(B^\perp C \dot{q}\) becomes
+\begin{equation*}
+   \sum \limits_{i=1}^n B_i^\perp \dot{q}^T Q_i
+\end{equation*}
+
+To simplify the notation, define 
+\begin{align*}
+   \Psi_1(s) &:= -\frac{B^\perp \nabla P}{B^\perp D \sigma'} \\
+   \Psi_2(s) &:= -\frac{B^\perp D \sigma" + \sum\limits_{i=1}^n B_i^\perp
+   {\sigma'}^T Q_i \sigma'}{B^\perp D \sigma'} 
+\end{align*}
+
+Hence, the constrained dynamics for any regular VHC of order \((n-1)\) are
+provided entirely by the single, second-order system 
+(\ref{eqn:lagrangian_constrained_dynamics}).
+\begin{equation}\label{eqn:lagrangian_constrained_dynamics}
+   \ddot{s} = \Psi_1(s) + \Psi_2(s)\dot{s}^2
+\end{equation}
+
 %/========== /Virtual Holonomic Constraints ==========/%
 % vim: set tw=80 ts=3 sw=3 sts=0 et ffs=unix :
