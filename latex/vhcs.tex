@@ -29,13 +29,13 @@ input. \textbf{TODO: citation for E-L equations}
 D(q)\ddot{q} + C(q,\dot{q})\dot{q} + \nabla P(q) = B(q)\tau
 \end{equation}
 
-Suppose now that one wishes to enforce, through the control input \(\tau\), a
+Suppose one were to use the control input \(\tau\) to enforce a
 constraint on the generalized coordinates which depends only on \(q\) and not on
-\(\dot{q}\). This type of constraint is called ``holonomic"; since the
-constraint is enforced by control (as opposed to being enforced by the mechanics
-of the system itself), we call the constraint ``virtual". This intuition leads
-to the following mathematical definition as originally observed in 
-\textbf{TODO: cite VHC definition paper}:
+\(\dot{q}\). This type of constraint is called ``holonomic"; since the 
+constraint is enforced by control as opposed to being a feature of the mechanics
+of the system, it is a called a ``virtual" constraint. 
+This intuition leads to the following mathematical development, described in 
+\cite{vhcs_for_el_systems}:
 
 \begin{defn}\label{defn:vhc_order_k}
    A \textbf{virtual holonomic constraint (VHC) of order k} is a smooth relation 
@@ -50,17 +50,126 @@ to the following mathematical definition as originally observed in
    is positively invariant.
 \end{defn}
 
+Typically in the theory of VHCS, one focuses mostly on VHCs of order \((n-1)\).
+This is because \(h^{-1}(0) = \{q \in \mathcal{Q} \vert h(q) = 0\}\) is a
+\((n-k)\)-dimensional submanifold of \(\mathcal{Q}\); if a VHC is of order
+\((n-1)\), then (by the preimage theorem) once the system is on \(\Gamma\), the
+set \(h^{-1}(0)\) is a 1-dimensional curve with no self-intersections which can
+be parameterized by a single configuration variable. In other words, VHCs of
+order \((n-1)\) reduce the dimension of the system to a 2-dimensional state,
+parameterized by some new virtual configuration and its velocity.  If \(k <
+(n-1)\), it becomes much more difficult to analyse the system under constraint
+since it gains more degrees of freedom. Therefore it is assumed for the rest of
+this section that any VHC is of order \((n-1)\).
+
 \begin{defn}\label{defn:vhc_regular}
-   A VHC is \textbf{regular} if system \textbf{TODO:
-   reference to E-L mechanical system} with output \(e = h(q)\) has vector
-   relative degree \(\{2,2,\ldots,2\}\).
+   A VHC of order \((n-1)\) is \textbf{regular} if 
+   system (\ref{eqn:eom_lagrangian}) with output \(e = h(q)\) has vector
+   relative degree \(\{2,2,\ldots,2\}\) on \(\Gamma\).
    Equivalently, a VHC is regular if 
    \[
       dh_q D^{-1}(q)B(q)
    \]
    is nonsingular everywhere on \(\Gamma\).
 \end{defn}
-\textbf{TODO: cite VHC papers}
+
+The definition of regularity comes from the following: 
+let \(h\) be a VHC and let \(e = h(q)\) be the
+output of (\ref{eqn:eom_lagrangian}). If \(h\) is regular, then
+it is possible to input-output
+linearize the system to get \(\ddot{e} = -k_p e - k_d \dot{e}\). This
+in turn means \(\Gamma\) becomes control-invariant and asymptotically
+stabilizable.
+
+To show this, we repeat the derivation of
+\textcite{vhcs_for_el_systems,lagrangian_structure_reduced_dynamics_vhcs} and take
+derivatives of \(e\).
+
+\begin{align*}
+   \dot{e} &= dh_q \dot{q} \\
+   \ddot{e} &= dh_q \ddot{q} + \frac{d}{dt}\left(dh_q\right)\dot{q}\\
+   \Rightarrow \ddot{e} &= 
+      -dh_qD^{-1}(q)\left[C(q,\dot{q})\dot{q} + \nabla P(q) \right] 
+      + \begin{bmatrix}
+         \dot{q}^T \nabla^2 h_1(q) \dot{q} \\
+         \vdots \\
+         \dot{q}^T \nabla^2 h_{n-1}(q) \dot{q}
+      \end{bmatrix}
+      + dh_q D^{-1}(q)B\tau \\
+\end{align*}
+
+Let \(\mu(q,\dot{q})\) be given by 
+\begin{equation*}
+   \mu(q,\dot{q}) := -dh_qD^{-1}(q)\left[C(q,\dot{q})\dot{q} + \nabla P(q) \right] 
+      + \begin{bmatrix}
+         \dot{q}^T \nabla^2 h_1(q) \dot{q} \\
+         \vdots \\
+         \dot{q}^T \nabla^2 h_{n-1}(q) \dot{q}
+      \end{bmatrix}
+\end{equation*}
+Then the resulting error dynamics are
+\begin{equation}\label{eqn:vhc_error_dynamics}
+   \ddot{e} = \mu(q,\dot{q}) + dh_q D^{-1}B(q) \tau
+\end{equation}
+
+Since \(h\) is a regular VHC, it is possible to solve for the control input. 
+The controller
+\begin{equation*}
+   \tau(q,\dot{q}) = \left(dh_q D^{-1}B(q)\right)^{-1}\left[-k_p e - k_d \dot{e} -
+   \mu(q,\dot{q})\right]
+\end{equation*}
+will generate the linear error dynamics \(\ddot{e} = -k_p e - k_d\dot{e}\) 
+which make \(\Gamma\) asymptotically stable.
+
+After constructing this controller, a natural question to ask is how system
+(\ref{eqn:eom_lagrangian}) behaves once it has stabilized on the constraint
+manifold \(\Gamma\). For this, one must make the following assumption.
+
+\begin{assm}\label{assm:B_perp_exists}
+   There exists \(B^\perp(q) \in \mathbb{R}^{(n-1) \times n}\) such that
+   \[
+      B^\perp(q) B(q) = 0 \in \mathbb{R}^{(n-1)\times(n-1)} \, \forall q \in
+   \mathcal{Q}
+   \]
+\end{assm}
+
+Given some \(B^\perp\), one can left-multiply the equations of motion to get
+\begin{equation}\label{eqn:eom_lagrangian_with_B_perp}
+   B^\perp(q)D(q)\ddot{q} + B^\perp(q)\left(C(q,\dot{q})\dot{q} \nabla
+   P(q)\right) = 0
+\end{equation}
+
+Recall that, since \(h\) is a regular VHC of order \((n-1)\), the dynamics under
+constraint can be parameterized by a single configuration variable.  If the
+dynamics on \(\Gamma\) are non-periodic, then the curve \(h^{-1}(0)\) is
+diffeomorphic to \(\mathbb{R}\). In this case, define \(\Theta := \mathbb{R}\).
+Otherwise, if the dynamics on \(\Gamma\) are periodic with some period \(T > 0\), 
+then the curve \(h^{-1}(0)\) is diffeomorphic to the circle
+\(\mathbb{S}^1\). In this case, let \(\Theta := [\mathbb{R}]_T\).
+
+As in \cite{lagrangian_structure_reduced_dynamics_vhcs}, 
+now \(s \in \Theta\) be the virtual configuration which parameterizes
+\(h^{-1}(0)\) through the diffeomorphism 
+\begin{align*}
+   \sigma : \Theta &\rightarrow h^{-1}(0) \\
+   s &\mapsto q
+\end{align*}
+Likewise, the tangent bundle \(T\Theta\) is diffeomorphic to \(Gamma\) 
+through the mapping
+\begin{align*}
+   d\sigma : T\Theta &\rightarrow \Gamma \\
+   (s,\dot{s}) &\mapsto (q,\dot{q})
+\end{align*}
+
+Using this new virtual configuration, the state of system
+(\ref{eqn:eom_lagrangian}) on the constraint manifold
+is parameterized by \(q = \sigma(s)\) and \(\dot{q} = \sigma'(s)\dot{s}\).
+Inserting these into (\ref{eqn:eom_lagrangian_with_B_perp}) (and dropping the
+function notation on \(B\),\(D\),\(C\), and \(P\) for simplicity), one gets
+\begin{align*}
+   B^\perp D\left(\sigma'(s)\ddot{s} + \sigma"(s)\dot{s}^2 \right)
+   + B^\perp \left[ C \sigma'(s)\dot{s} + \nabla P \right] = 0
+\end{align*}
 
 %/========== /Virtual Holonomic Constraints ==========/%
 % vim: set tw=80 ts=3 sw=3 sts=0 et ffs=unix :

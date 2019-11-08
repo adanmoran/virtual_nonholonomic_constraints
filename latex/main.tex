@@ -3,14 +3,14 @@
 \documentclass[12pt]{article}
 \usepackage[utf8]{inputenc}
 
-%----------- Choose Margins -----%
+%----------- Choose Margins ----------%
 \usepackage[margin=1in]{geometry}
 
 %---------- Bibliography Style ----------%
 \usepackage[style=ieee,backend=biber]{biblatex}
 \addbibresource{bib.bib}
 
-% ----- Math Packages -----%
+%----------- Math Packages -----------%
 \usepackage{amsfonts}
 \usepackage{mathtools}
 \usepackage{amsthm} % allow theorems and definitions as a block
@@ -31,19 +31,25 @@
 \theoremstyle{remark}
 \newtheorem*{remark}{Remark}
 
-%/----- Remove indenting from paragraphs -----/%
+%---------- Remove indenting from paragraphs ----------%
 % Also makes each new paragraph start with an vertical space.
 \usepackage[parfill]{parskip}
 
+%---------- Custom Commands ----------%
+\newcommand{\etal}{\textit{et al}. }
+\newcommand{\ie}{\textit{i}.\textit{e}., }
+\newcommand{\eg}{\textit{e}.\textit{g}. }
+
+%/========== Main Document ==========/%
 \begin{document}
 
-%/----- Title Page -----/%
+%---------- Title Page -----------%
 \include{title}
 
-%/----- Acknowledgements, TOC, Abstract, Intro -----/%
+%---------- Acknowledgements, TOC, Abstract, Intro -----------%
 % TODO: all of this section
 
-%/----- Main Content -----/%
+%---------- Main Content ----------%
 TEST CITATIONS:
 
 \cite{constrained_hamiltonian_systems}
@@ -77,8 +83,9 @@ TEST CITATIONS:
 % Give the Acrobot Model and Reduced Dynamics
 \include{acrobot}
 
-%/----- Bibliography -----/%
+%---------- Bibliography ----------%
 \newpage
 \printbibliography
 \end{document}
+%/========== /Main Document ==========/%
 % vim: set ts=4 sw=4 sts=0 et ffs=unix :
