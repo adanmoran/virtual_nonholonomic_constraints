@@ -3,6 +3,7 @@
 %/========== Virtual Holonomic Constraints ==========/%
 \section{Virtual Holonomic Constraints}\label{sec:vhcs}
 
+\subsection{Review: Lagrangian Virtual Holonomic Constraints}
 Take an underactuated mechanical system with Lagrangian
 \begin{equation}\label{eqn:lagrangian}
 \mathcal{L}(q,\dot{q}) = \frac{1}{2} \dot{q}^T D(q) \dot{q} - P(q)
@@ -200,6 +201,77 @@ provided entirely by the single, second-order system
 \begin{equation}\label{eqn:lagrangian_constrained_dynamics}
    \ddot{s} = \Psi_1(s) + \Psi_2(s)\dot{s}^2
 \end{equation}
+
+A natural question to ask is whether these constrained dynamics are also
+Lagrangian. In fact, for VHCs applied to mechanical systems, the dynamics are
+Euler-Lagrange. \cite{lagrangian_structure_reduced_dynamics_vhcs}
+
+To see this, suppose the constrained dynamics had Lagrangian given by
+\begin{equation*}
+   \mathcal{L}_{\Psi}(s,\dot{s}) = \frac{1}{2}
+   D_{\Psi}(s)\dot{s}^2 + V_{\Psi}(s)
+\end{equation*}
+where \(D_{\Psi} : \Theta \rightarrow \mathbb{R}_{>0}\) is the virtual mass
+and \(V_{\Psi} : \Theta \rightarrow \mathbb{R}\) is the virtual potential of the
+system. Then the equations of motion of this system are
+\begin{equation*}
+   D_{\Psi}'(s)\dot{s}^2 + D_{\Psi}(s)\ddot{s} - \frac{1}{2}D_{\Psi}'(s)\dot{s}
+   + V_{\Psi}'(s) = 0
+\end{equation*}
+\begin{equation}\label{eqn:lagrangian_constrained_dynamics_general}
+   \Rightarrow \ddot{s} = -\frac{V_{\Psi}'(s)}{D_{\Psi}(s)} -
+   \frac{D_{\Psi}'(s)}{2 D_{\Psi}(s)}
+\end{equation}
+
+Setting (\ref{eqn:lagrangian_constrained_dynamics}) and
+(\ref{eqn:lagrangian_constrained_dynamics_general}) equal to each other, one
+can compute the values of \(D_{\Psi}\) and \(V_{\Psi}\). First, one sees that
+\(V_{\Psi}(s)\) is defined by \(D_{\Psi}\) and \(\Psi_1\):
+\begin{align*}
+   \Psi_1(s) &= -\frac{V_{\Psi}'(s)}{D_{\Psi}(s)} \\
+   \Rightarrow V_{\Psi}'(s) &= -D_{\Psi}(s) \Psi_1(s) \\
+   \Rightarrow V_{\Psi}(s) &= - \int \limits_{0}^s
+   D_{\Psi}(\tau)\Psi_1(\tau)d\tau
+\end{align*}
+where \(D_{\Psi}\) is given by
+\begin{align*}
+   \Psi_2(s) &= -\frac{D_{\Psi}'(s)}{D_\Psi(s)} \\
+   \Rightarrow D_{\Psi}'(s) &= -D_{\Psi}(s) \Psi_2(s) \\
+   \Rightarrow D_{\Psi}(s) &= \exp\left[ 
+   -2\int \limits_{0}^s \Psi_2(\tau) d\tau \right]
+\end{align*}
+
+\subsection{Review: Hamiltonian Systems}
+\textbf{TODO: What is a Hamiltonian system and why does it matter?}
+
+One can compute the Hamiltonian of the Lagrangian (\ref{eqn:lagrangian}) by 
+performing a Legendre transform on the Lagrangian. 
+First, define the conjugate of momenta for \(q\) by 
+\begin{equation*}
+p = \frac{\partial \mathcal{L}}{\partial \dot{q}} \in \mathbb{R}^n
+\end{equation*}
+Then, the Legendre transform is performed by taking
+\begin{equation*}
+\mathcal{H}(q,p) = p^T \dot{q} - \mathcal{L}(q,\dot{q})
+\end{equation*}
+It is easy to verify that the Hamiltonian for system (\ref{eqn:lagrangian}) is 
+given by the total mechanical energy (\ref{eqn:hamiltonian}).
+\begin{equation}\label{eqn:hamiltonian}
+\mathcal{H}(q,p) = E(q,p) = \frac{1}{2} p^T M^{-1}(q) p + V(q)
+\end{equation}
+
+The equations of motion for the system in Hamiltonian coordinates is given by
+\begin{align}\label{eqn:hamiltionian_eom}
+\begin{split}
+\dot{q} &= \frac{\partial \mathcal{H}}{\partial p} = M^{-1}(q) p \\
+\dot{p} &= -\frac{\partial \mathcal{H}}{\partial q} + B \tau
+\end{split}
+\end{align}
+
+\textbf{Why bother looking at Hamiltonian systems? What is the intuition behind
+these equations of motion?}
+
+\subsection{Hamiltonian Virtual Nonholonomic Constraints}
 
 %/========== /Virtual Holonomic Constraints ==========/%
 % vim: set tw=80 ts=3 sw=3 sts=0 et ffs=unix :

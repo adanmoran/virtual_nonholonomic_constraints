@@ -7,32 +7,6 @@
 \subsection{Motivation}
 TODO: Why do we bother with Hamiltonian? Why can't we do virtual nonholonomic constraints in Lagrangian?
 
-%/----- Lagrange vs Hamilton -----/%
-\subsection{A Hamiltonian Approach to Virtual Nonholonomic Constraints}
-One can compute the Hamiltonian of the Lagrangian (\ref{eqn:lagrangian}) by 
-performing a Legendre transform on the Lagrangian. 
-First, define the conjugate of momenta for \(q\) by 
-\[
-p = \frac{\partial \mathcal{L}}{\partial \dot{q}} \in \mathbb{R}^n
-\]
-Then, the Legendre transform is performed by taking
-\[
-\mathcal{H}(q,p) = p^T \dot{q} - \mathcal{L}(q,\dot{q})
-\]
-It is easy to verify that the Hamiltonian for system (\ref{eqn:lagrangian}) is 
-given by the total mechanical energy (\ref{eqn:hamiltonian}).
-\begin{equation}\label{eqn:hamiltonian}
-\mathcal{H}(q,p) = E(q,p) = \frac{1}{2} p^T M^{-1}(q) p + V(q)
-\end{equation}
-
-The equations of motion for the system in Hamiltonian coordinates is given by
-\begin{align}\label{eqn:hamiltionian_eom}
-\begin{split}
-\dot{q} &= \frac{\partial \mathcal{H}}{\partial p} = M^{-1}(q) p \\
-\dot{p} &= -\frac{\partial \mathcal{H}}{\partial q} + B \tau
-\end{split}
-\end{align}
-
 Suppose the mechanical system has degree of underactuation one, so that coordinates of the system can be split into an unactuated component \(q_u \in [\mathbb{R}]_T, \, T \in \mathbb{R}_{>0}\) which is not influence by control, along with an actuated component \(q_a\); that is, suppose \(B\) is of the form \(B(q) = [0_m, B_1^T(q), \ldots, B_n^T(q)]^T, \, B_i^T(q) \in \mathbb{R}^{n-1}\) and \(\tau \in \mathbb{R}^{n-1}\). In this case, \(q = (q_u, q_a)^T\) and the equations of motion become
 \begin{align}\label{eqn:unactuated_actuated_eom}
 \begin{split}
