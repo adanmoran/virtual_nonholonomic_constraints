@@ -3,6 +3,8 @@
 \documentclass[12pt]{article}
 \usepackage[utf8]{inputenc}
 
+%/========== Preamble ==========/%
+
 %----------- Choose Margins ----------%
 \usepackage[margin=1in]{geometry}
 
@@ -21,15 +23,17 @@
 \newtheorem{lemma}[thm]{Lemma}
 \newtheorem{prop}[thm]{Proposition}
 \newtheorem*{cor}{Corollary}
-%% Prepare Definition and Example Styles %%
+%% Define Definition Styles %%
 \theoremstyle{definition}
-\newtheorem{defn}[thm]{Definition} % definition numbers are dependent on theorem numbers
+\newtheorem{defn}[thm]{Definition} % def'n number depends on section number
 \newtheorem{exmp}[thm]{Example} % same for example numbers
-% Define an assumption, which is numbered
-\newtheorem{assm}[thm]{Assumption}
-%% Define Remark with no number %%
+\newtheorem{assm}[thm]{Assumption} % and for assumption numbers
+%% Define Remark Styles %%
 \theoremstyle{remark}
 \newtheorem*{remark}{Remark}
+
+%---------- Layout packages ----------%
+\usepackage{minipage-marginpar}
 
 %---------- Remove indenting from paragraphs ----------%
 % Also makes each new paragraph start with an vertical space.
@@ -39,6 +43,8 @@
 \newcommand{\etal}{\textit{et al}. }
 \newcommand{\ie}{\textit{i}.\textit{e}., }
 \newcommand{\eg}{\textit{e}.\textit{g}. }
+
+%/========== /Preamble ==========/%
 
 %/========== Main Document ==========/%
 \begin{document}
@@ -88,4 +94,5 @@ TEST CITATIONS:
 \printbibliography
 \end{document}
 %/========== /Main Document ==========/%
+
 % vim: set ts=4 sw=4 sts=0 et ffs=unix :
