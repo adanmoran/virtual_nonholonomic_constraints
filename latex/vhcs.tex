@@ -3,7 +3,11 @@
 %/========== Virtual Holonomic Constraints ==========/%
 \section{Virtual Holonomic Constraints}\label{sec:vhcs}
 
-\subsection{Review: Lagrangian Virtual Holonomic Constraints}
+\subsection{Motivation}
+\textbf{TODO: why use holonomic constraints? 
+How are they better than regular control?}
+
+\subsection{Lagrangian Virtual Holonomic Constraints}
 Take an underactuated mechanical system with Lagrangian
 \begin{equation}\label{eqn:lagrangian}
 \mathcal{L}(q,\dot{q}) = \frac{1}{2} \dot{q}^T D(q) \dot{q} - P(q)
@@ -11,7 +15,6 @@ Take an underactuated mechanical system with Lagrangian
 where \(q = (q_1,\ldots,q_n) \in \mathcal{Q}\) is the configuration vector, 
 the inertia matrix \(D(q) = D^T(q)\) is positive definite for all 
 \(q \in \mathcal{Q}\), and \(P(q)\) is the potential of the system.
-
 
 The equations of motion for this system can be computed from 
 the Euler-Lagrange equations (\ref{eqn:el_eqns})
@@ -248,6 +251,9 @@ can compute the values of \(D_{\Psi}\) and \(V_{\Psi}\):
 
 Thus, the constrained dynamics for mechanical systems are Euler-Lagrange with
 Lagrangian (\ref{eqn:vhcs_constrained_lagrangian}).
+
+\subsection{Benefits and Drawbacks of VHCs}
+\textbf{TODO: why are VHCs good? Who has used them? What is their downside?}
 
 %/========== /Virtual Holonomic Constraints ==========/%
 % vim: set tw=80 ts=3 sw=3 sts=0 et ffs=unix :
