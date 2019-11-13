@@ -207,10 +207,10 @@ Lagrangian. In fact, for VHCs applied to mechanical systems, the dynamics are
 Euler-Lagrange. \cite{lagrangian_structure_reduced_dynamics_vhcs}
 
 To see this, suppose the constrained dynamics had Lagrangian given by
-\begin{equation*}
+\begin{equation}\label{eqn:vhcs_constrained_lagrangian}
    \mathcal{L}_{\Psi}(s,\dot{s}) = \frac{1}{2}
    D_{\Psi}(s)\dot{s}^2 + V_{\Psi}(s)
-\end{equation*}
+\end{equation}
 where \(D_{\Psi} : \Theta \rightarrow \mathbb{R}_{>0}\) is the virtual mass
 and \(V_{\Psi} : \Theta \rightarrow \mathbb{R}\) is the virtual potential of the
 system. Then the equations of motion of this system are
@@ -225,21 +225,30 @@ system. Then the equations of motion of this system are
 
 Setting (\ref{eqn:lagrangian_constrained_dynamics}) and
 (\ref{eqn:lagrangian_constrained_dynamics_general}) equal to each other, one
-can compute the values of \(D_{\Psi}\) and \(V_{\Psi}\). First, one sees that
-\(V_{\Psi}(s)\) is defined by \(D_{\Psi}\) and \(\Psi_1\):
-\begin{align*}
-   \Psi_1(s) &= -\frac{V_{\Psi}'(s)}{D_{\Psi}(s)} \\
-   \Rightarrow V_{\Psi}'(s) &= -D_{\Psi}(s) \Psi_1(s) \\
-   \Rightarrow V_{\Psi}(s) &= - \int \limits_{0}^s
-   D_{\Psi}(\tau)\Psi_1(\tau)d\tau
-\end{align*}
-where \(D_{\Psi}\) is given by
+can compute the values of \(D_{\Psi}\) and \(V_{\Psi}\): 
+% Empty line here required for spacing
+
+\begin{minipage}{0.48\textwidth}
 \begin{align*}
    \Psi_2(s) &= -\frac{D_{\Psi}'(s)}{D_\Psi(s)} \\
    \Rightarrow D_{\Psi}'(s) &= -D_{\Psi}(s) \Psi_2(s) \\
    \Rightarrow D_{\Psi}(s) &= \exp\left[ 
    -2\int \limits_{0}^s \Psi_2(\tau) d\tau \right]
 \end{align*}
+\end{minipage}
+% No empty lines between these
+\begin{minipage}{0.48\textwidth}
+\begin{align*}
+   \Psi_1(s) &= -\frac{V_{\Psi}'(s)}{D_{\Psi}(s)} \\
+   \Rightarrow V_{\Psi}'(s) &= -D_{\Psi}(s) \Psi_1(s) \\
+   \Rightarrow V_{\Psi}(s) &= - \int \limits_{0}^s
+   D_{\Psi}(\tau)\Psi_1(\tau)d\tau
+\end{align*}
+\end{minipage}
+
+Thus, the constrained dynamics for mechanical systems are Euler-Lagrange with
+Lagrangian (\ref{eqn:vhcs_constrained_lagrangian}).
+
 
 \subsection{Review: Hamiltonian Systems}
 \textbf{TODO: What is a Hamiltonian system and why does it matter?}
@@ -272,6 +281,10 @@ The equations of motion for the system in Hamiltonian coordinates is given by
 these equations of motion?}
 
 \subsection{Hamiltonian Virtual Nonholonomic Constraints}
+While VHCs are still possible in the Hamiltonian framework, the assumptions
+required to make this work are slightly different. To see this, let us look back
+to the derivation which led to the error dynamics (\ref{eqn:vhc_error_dynamics})
+and attempt to reconstruct this in Hamiltonian coordinates.
 
 %/========== /Virtual Holonomic Constraints ==========/%
 % vim: set tw=80 ts=3 sw=3 sts=0 et ffs=unix :
