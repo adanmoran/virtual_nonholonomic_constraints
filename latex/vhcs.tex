@@ -249,42 +249,5 @@ can compute the values of \(D_{\Psi}\) and \(V_{\Psi}\):
 Thus, the constrained dynamics for mechanical systems are Euler-Lagrange with
 Lagrangian (\ref{eqn:vhcs_constrained_lagrangian}).
 
-
-\subsection{Review: Hamiltonian Systems}
-\textbf{TODO: What is a Hamiltonian system and why does it matter?}
-
-One can compute the Hamiltonian of the Lagrangian (\ref{eqn:lagrangian}) by 
-performing a Legendre transform on the Lagrangian. 
-First, define the conjugate of momenta for \(q\) by 
-\begin{equation*}
-p = \frac{\partial \mathcal{L}}{\partial \dot{q}} \in \mathbb{R}^n
-\end{equation*}
-Then, the Legendre transform is performed by taking
-\begin{equation*}
-\mathcal{H}(q,p) = p^T \dot{q} - \mathcal{L}(q,\dot{q})
-\end{equation*}
-It is easy to verify that the Hamiltonian for system (\ref{eqn:lagrangian}) is 
-given by the total mechanical energy (\ref{eqn:hamiltonian}).
-\begin{equation}\label{eqn:hamiltonian}
-\mathcal{H}(q,p) = E(q,p) = \frac{1}{2} p^T M^{-1}(q) p + V(q)
-\end{equation}
-
-The equations of motion for the system in Hamiltonian coordinates is given by
-\begin{align}\label{eqn:hamiltionian_eom}
-\begin{split}
-\dot{q} &= \frac{\partial \mathcal{H}}{\partial p} = M^{-1}(q) p \\
-\dot{p} &= -\frac{\partial \mathcal{H}}{\partial q} + B \tau
-\end{split}
-\end{align}
-
-\textbf{Why bother looking at Hamiltonian systems? What is the intuition behind
-these equations of motion?}
-
-\subsection{Hamiltonian Virtual Nonholonomic Constraints}
-While VHCs are still possible in the Hamiltonian framework, the assumptions
-required to make this work are slightly different. To see this, let us look back
-to the derivation which led to the error dynamics (\ref{eqn:vhc_error_dynamics})
-and attempt to reconstruct this in Hamiltonian coordinates.
-
 %/========== /Virtual Holonomic Constraints ==========/%
 % vim: set tw=80 ts=3 sw=3 sts=0 et ffs=unix :
