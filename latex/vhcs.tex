@@ -3,26 +3,65 @@
 %/========== Virtual Holonomic Constraints ==========/%
 \section{Virtual Holonomic Constraints}\label{sec:vhcs}
 
+%---------- Motivation ----------%
 \subsection{Motivation}
-\textbf{TODO: why use holonomic constraints? 
-How are they better than regular control?}
+Most classic control architectures achieve one of two goals: equilibrium
+stabilization, or tracking of a signal over time (which is known as
+trajectory tracking). In fact, most trajectory-tracking controllers achieve
+their results by changing a system's coordinates so that the new system is at
+equilibrium if it is on the trajectory; so in fact, most control architectures
+in the past have focused on equilibrium stabilization. \textbf{TODO: citation to
+support this claim?}
 
+While this is a perfectly valid approach for many systems, it is not sufficient
+to provide robust, intricate motion on anything but the simplest of control
+systems \textbf{TODO: citation? Can I suppport this?}. Take the example of an
+autonomous vehicle driving on a road. If the desired path is a time trajectory 
+and the robot experiences a disturbance, it will need to ``catch up" to the
+trajectory it was following. This is a problem, because the vehicle will take
+shortcuts that may take it off its original trajectory, which can cause
+collisions with pedestrians, buildings, or simply cause the robot to speed down
+the road.
+
+\textbf{TODO figure with an example of this robot trajectory tracking issue}
+
+For this reason, mobile roboticists use \textbf{path tracking}:
+they define a constraint on the position of the vehicle, which does not depend on
+time. Rather than catching up to where the robot is ``supposed to be" in time, a
+path-tracking controller drives the robot to the nearest point on the path. This
+is a much more robust control architecture, as it forces the robot to stay
+within the confines of the path, so that it does not accidentally kill an
+unsuspecting pedestrian.
+
+\textbf{TODO: figure showing path tracking}
+
+Take now the example of a walking robot. If the legs are given a trajectory in
+time to follow, then the second the robot stumbles or slips it will try to
+``catch up" to the trajectory and the robot will fall over \textbf{TODO: cite
+grizzle. Does he make this argument too?}.  To fix this issue, one requires a
+path-tracking controller for general robotic systems. An engineer should be able
+to provide a constraint on the robot's configuration which does not depend on
+time, and the controller should keep the robot on that constraint. This is
+precisely what Virtual Holonomic Constraints attempt to accomplish.
+
+%---------- Define VHCs ----------%
 \subsection{Lagrangian Virtual Holonomic Constraints}
 Take an underactuated mechanical system with Lagrangian
 \begin{equation}\label{eqn:lagrangian}
 \mathcal{L}(q,\dot{q}) = \frac{1}{2} \dot{q}^T D(q) \dot{q} - P(q)
 \end{equation}
 where \(q = (q_1,\ldots,q_n) \in \mathcal{Q}\) is the configuration vector, 
-the inertia matrix \(D(q) = D^T(q)\) is positive definite for all 
-\(q \in \mathcal{Q}\), and \(P(q)\) is the potential of the system.
+the inertia matrix \(D(q) = D^T(q) \mathbb{R}^{n \times n}\) 
+is positive definite for all 
+\(q \in \mathcal{Q}\), and \(P(q) \in \mathbb{R}\) is the potential of the
+system.
 
-The equations of motion for this system can be computed from 
-the Euler-Lagrange equations (\ref{eqn:el_eqns})
+The Euler-Lagrange equations 
 \begin{equation}\label{eqn:el_eqns}
    \frac{d}{dt} \left( \frac{\partial \mathcal{L}}{\partial \dot{q}}\right) -
    \frac{\partial \mathcal{L}}{\partial q} = B(q)\tau
 \end{equation}
-which result in (\ref{eqn:eom_lagrangian}), where
+produce the equations of motion (\ref{eqn:eom_lagrangian}), where
 \(C : T\mathcal{Q} \rightarrow \mathbb{R}^{n \times n}\) represents the
 generalized coriolis and centrifugal forces,
 \(B : \mathcal{Q} \rightarrow \mathbb{R}^{n \times m}\) is a 
@@ -34,12 +73,11 @@ D(q)\ddot{q} + C(q,\dot{q})\dot{q} + \nabla P(q) = B(q)\tau
 \end{equation}
 
 Suppose one were to use the control input \(\tau\) to enforce a
-constraint on the generalized coordinates which depends only on \(q\) and not on
-\(\dot{q}\). This type of constraint is called ``holonomic"; since the 
-constraint is enforced by control as opposed to being a feature of the mechanics
-of the system, it is a called a ``virtual" constraint. 
-This intuition leads to the following mathematical development, described in 
-\cite{vhcs_for_el_systems}:
+constraint on \(q\), which does not depend on \(\dot{q}\). This type of
+constraint is called ``holonomic". Furthermore, since the constraint is enforced
+by control as opposed to being a feature of the mechanics of the system, it is a
+called a ``virtual" constraint.  This intuition leads to the following
+mathematical development, as was described in \cite{vhcs_for_el_systems}:
 
 \begin{defn}\label{defn:vhc_order_k}
    A \textbf{virtual holonomic constraint (VHC) of order k} is a smooth relation 
@@ -67,14 +105,14 @@ since it gains more degrees of freedom. Therefore it is assumed for the rest of
 this section that any VHC is of order \((n-1)\).
 
 \begin{defn}\label{defn:vhc_regular}
-   A VHC of order \((n-1)\) is \textbf{regular} if 
+   A VHC \(h(q)\) of order \((n-1)\) is \textbf{regular} if 
    system (\ref{eqn:eom_lagrangian}) with output \(e = h(q)\) has vector
    relative degree \(\{2,2,\ldots,2\}\) on \(\Gamma\).
-   Equivalently, a VHC is regular if 
+   Equivalently, a VHC is regular if and only if 
    \[
       dh_q D^{-1}(q)B(q)
    \]
-   is nonsingular everywhere on \(\Gamma\).
+   is full rank everywhere on \(\Gamma\).
 \end{defn}
 
 The definition of regularity comes from the following: 
@@ -85,7 +123,7 @@ linearize the system to get \(\ddot{e} = -k_p e - k_d \dot{e}\). This
 in turn means \(\Gamma\) becomes control-invariant and asymptotically
 stabilizable.
 
-To show this, we repeat the derivation of
+To show this, we repeat the analysis by
 \textcite{vhcs_for_el_systems,lagrangian_structure_reduced_dynamics_vhcs} and take
 derivatives of \(e\).
 
@@ -111,7 +149,7 @@ Let \(\mu(q,\dot{q})\) be given by
          \dot{q}^T \nabla^2 h_{n-1}(q) \dot{q}
       \end{bmatrix}
 \end{equation*}
-Then the resulting error dynamics are
+Then the resulting output dynamics are
 \begin{equation}\label{eqn:vhc_error_dynamics}
    \ddot{e} = \mu(q,\dot{q}) + dh_q D^{-1}B(q) \tau
 \end{equation}
@@ -122,9 +160,11 @@ The controller
    \tau(q,\dot{q}) = \left(dh_q D^{-1}B(q)\right)^{-1}\left[-k_p e - k_d \dot{e} -
    \mu(q,\dot{q})\right]
 \end{equation*}
-will generate the linear error dynamics \(\ddot{e} = -k_p e - k_d\dot{e}\) 
+will generate the linear output dynamics \(\ddot{e} = -k_p e - k_d\dot{e}\) 
 which make \(\Gamma\) asymptotically stable.
 
+%---------- Constrained Dynamics ----------%
+\subsection{Constrained Dynamics for Lagrangian VHCs}
 After constructing this controller, a natural question to ask is how system
 (\ref{eqn:eom_lagrangian}) behaves once it has stabilized on the constraint
 manifold \(\Gamma\). For this, one must make the following assumption.
@@ -152,13 +192,13 @@ then the curve \(h^{-1}(0)\) is diffeomorphic to the circle
 \(\mathbb{S}^1\). In this case, let \(\Theta := [\mathbb{R}]_T\).
 
 As in \cite{lagrangian_structure_reduced_dynamics_vhcs}, 
-now \(s \in \Theta\) be the virtual configuration which parameterizes
-\(h^{-1}(0)\) through the diffeomorphism 
+let \(s \in \Theta\) be the virtual configuration which parameterizes
+\(h^{-1}(0)\) through a diffeomorphism 
 \begin{align*}
    \sigma : \Theta &\rightarrow h^{-1}(0) \\
-   s &\mapsto q
+   s &\mapsto \sigma(s) = q
 \end{align*}
-Likewise, the tangent bundle \(T\Theta\) is diffeomorphic to \(Gamma\) 
+Likewise, the tangent bundle \(T\Theta\) is diffeomorphic to \(\Gamma\) 
 through the mapping
 \begin{align*}
    d\sigma : T\Theta &\rightarrow \Gamma \\
@@ -166,7 +206,7 @@ through the mapping
 \end{align*}
 
 Using this new virtual configuration, the state of system
-(\ref{eqn:eom_lagrangian}) on the constraint manifold
+(\ref{eqn:eom_lagrangian}) on \(\Gamma\) 
 is parameterized by \(q = \sigma(s)\) and \(\dot{q} = \sigma'(s)\dot{s}\).
 Inserting these into (\ref{eqn:eom_lagrangian_with_B_perp}) (and dropping the
 function notation on \(B\),\(D\),\(C\), and \(P\) for simplicity), one gets
@@ -175,9 +215,14 @@ function notation on \(B\),\(D\),\(C\), and \(P\) for simplicity), one gets
    + B^\perp \left[ C \sigma'(s)\dot{s} + \nabla P \right] = 0
 \end{align*}
 
-By how \(C(q,\dot{q})\) is defined, 
-one can collect the product \(B^\perp C \dot{q}\) in the following way.
-First, combine the Christoffel symbols  into a matrix
+The matrix \(C(q,\dot{q})\) is defined element-wise by 
+\begin{align*}
+   [C]_{j,k} &= \sum \limits_{i=1}^n c_{i,j,k}\dot{q}_i \\
+   c_{i,j,k} &= ???
+\end{align*}
+where \(c_{i,j,k}\) are the Christoffel symbols.
+As such, one can collect the product \(B^\perp C \dot{q}\) in the following way.
+First, combine the Christoffel symbols  into matrices
 \(Q_i : \mathcal{Q} \rightarrow \mathbb{R}^{n \times n}\)
 defined element-wise by
 \begin{equation*}
@@ -185,7 +230,6 @@ defined element-wise by
       + \partial_{q_j} [D]_{i,k}(q) 
       + \partial_{q_i} [D]_{k,j}(q)\right)
 \end{equation*}
-
 Then \(B^\perp C \dot{q}\) becomes
 \begin{equation*}
    \sum \limits_{i=1}^n B_i^\perp \dot{q}^T Q_i
@@ -252,6 +296,7 @@ can compute the values of \(D_{\Psi}\) and \(V_{\Psi}\):
 Thus, the constrained dynamics for mechanical systems are Euler-Lagrange with
 Lagrangian (\ref{eqn:vhcs_constrained_lagrangian}).
 
+%---------- Pros and Cons of VHCs ----------%
 \subsection{Benefits and Drawbacks of VHCs}
 \textbf{TODO: why are VHCs good? Who has used them? What is their downside?}
 
