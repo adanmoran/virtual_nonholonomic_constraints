@@ -7,6 +7,9 @@
  *
  * For use with the SUGAR system
  * Code for the acrobot arduino nano
+ *
+ * Last Modified: 12 January 2020
+ * Last Editor: Adan Moran-MacDonald
  */
 
 #include <Wire.h>
@@ -24,15 +27,19 @@ const double Ts_ms = 2;
 const double Ts_sec = Ts_ms / 1000.;
 
 // Robot parameters, in SI units
-double Mt = 0.2112;  // kg
-double Ml = 0.1979;  // kg
-double Jt = 0.00075; // kg*m^2
-double Jl = 0.00129; // kg*m^2
-double Rt = 0.148;   // m
-double Rl = 0.145;   // m
-double lt = 0.073;   // m
-double ll = 0.083;   // m
-double g = 9.8;      // m/s^2
+const double Mt = 0.2112;  // kg
+const double Ml = 0.1979;  // kg
+const double Jt = 0.00075; // kg*m^2
+const double Jl = 0.00129; // kg*m^2
+const double Rt = 0.148;   // m
+const double Rl = 0.145;   // m
+const double lt = 0.073;   // m
+const double ll = 0.083;   // m
+const double g = 9.8;      // m/s^2
+
+// Robot Inverse Inertia Matrix
+// TODO: This should take in the robot parameters
+const auto Minv = AcrobotInverseInertia();
 
 // Energy quantities
 const double E_still_exit = 0.15;
@@ -100,6 +107,11 @@ double energy_discrete = 0;
 double E0 = 0;
 double psi_last = 0;
 
+// Declare the initial VHC state for the automaton.
+// For some reason this is required for making the code compile.
+void vhc_still_state(Configuration, Compensator);
+
+// Assign the initial VHC state function to the automaton.
 VHCState state = vhc_still_state;
 unsigned int still_counter = 0;
 
@@ -145,41 +157,131 @@ WireData temp_data;
 
 // This function runs every Ts_ms milliseconds
 void rtloop() {
-
+  
   // Start by assuming the switch is off, query the switch box for actualy state
   main_switch_state = 0;
-
-  // Update the servo position and calculate velocity
-  servo_pos_rad = servoToRadians(RX24F.readPosition(SERVO_ID));
-
-  servo_vel_rad_s = 11.58 * (servo_pos_rad - servo_pos_rad_2)
-                    + 0.7799 * servo_vel_rad_s_1 - 0.1506 * servo_vel_rad_s_2;
-
-  encoder_vel_rad_s_lpf = 0.1367 * (encoder_vel_rad_s + encoder_vel_rad_s_1)
-                          + 0.7265 * encoder_vel_rad_s_lpf_1;
-
+  
+  // Get the servo and encoder velocities
+  update_velocities();
+  
+  // Update data as measured by the other arduino
+  get_wire_data();
+  
+  // Update the main switch state and configuration variables
+  update_configuration();
+  
+  // Rename the energy for ease-of-use in many places
+  energy = configuration.E;
+  // Filter the energy, as it changes very dramatically.
+  // TODO: What are the magic numbers in this filter? 
+  energy_filtered = 0.0378 * (energy + energy_1) + 0.9244 * energy_filtered_1;
+  
+  // Decide whether or not to update the discrete energy
+  // TODO: This may not be necessary, energy_discrete is not used anywhere
+  if(psi_last > (M_PI - 0.1) && configuration.psi < -(M_PI - 0.1)){
+    energy_discrete = energy_filtered;
+  }
+  
+  // Update the compensator
+  // TODO: This is not used by the VNHC
   double dpsi_filtered = encoder_vel_rad_s_lpf;
+  compensator.s = energy_filtered;
+  compensator.xi = toXi(configuration.psi, dpsi_filtered);
+  compensator.rho = toRho(configuration.psi, dpsi_filtered);
+  
+  // Check the state of the master switch
+  bool switch_on = (main_switch_state == 1);
+  RX24F.ledStatus(SERVO_ID, switch_on);
+  
+  if (switch_on) {
+    RX24F.torqueStatus(SERVO_ID, true);
+  
+    // This calls the current state's corresponding function to set servo_goal_rad
+    // and determine the next state, in Xingbo's VHC automaton
+    // state(configuration, compensator);
 
+    // TODO: Set the servo_goal_rad with the vnhc update function.
+  
+    // Send it off to the servo
+    int pos = radiansToServo(servo_goal_rad);
+    RX24F.move(1, pos);
+  
+  } else {
+    RX24F.torqueStatus(SERVO_ID, false);
+  }
+  
+  // Send data back to the other box
+  send_wire_data();
+  
+  // Update the variables keeping track of previous states
+  // Servo / Encoder data 
   servo_pos_rad_2 = servo_pos_rad_1;
   servo_pos_rad_1 = servo_pos_rad;
   servo_vel_rad_s_2 = servo_vel_rad_s_1;
   servo_vel_rad_s_1 = servo_vel_rad_s;
   encoder_vel_rad_s_1 = encoder_vel_rad_s;
   encoder_vel_rad_s_lpf_1 = encoder_vel_rad_s_lpf;
+  // Configuration data
+  psi_last = configuration.psi;
+  // Energy data
+  energy_1 = energy;
+  energy_filtered_1 = energy_filtered;
+}
 
-  // Request the following info from the box:
-  // main switch state
-  // encoder position in radians
-  // encoder velocity in radians/s
-  // potentiometer position, scaled appropriately
-  Wire.requestFrom(Box_I2C_address, 15);
+void loop() {
+  // Update the timer, do nothing else here
+  timer.update();
+}
+
+// Loop Functions ---------------------------------------------------------
+
+/**
+ * Use the previously stored servo data to update the current velocities
+ * of the servo and encoder measurements.
+ *
+ * Variables which are updated:
+ * - servo_pos_rad
+ * - servo_vel_rad_s
+ * - encoder_vel_rad_s_lpf
+ */
+void update_velocities()
+{
+  // Update the servo position and calculate velocity
+  servo_pos_rad = servoToRadians(RX24F.readPosition(SERVO_ID));
+
+  // TODO: What are these magic constants? Check the servo's datasheet
+  //       and replace them with constant variables
+  servo_vel_rad_s = 11.58 * (servo_pos_rad - servo_pos_rad_2)
+                    + 0.7799 * servo_vel_rad_s_1 - 0.1506 * servo_vel_rad_s_2;
+
+  encoder_vel_rad_s_lpf = 0.1367 * (encoder_vel_rad_s + encoder_vel_rad_s_1)
+                          + 0.7265 * encoder_vel_rad_s_lpf_1;
+}
+
+/**
+ * Request the following info from the other Arduino:
+ * - main switch state
+ * - encoder position in radians
+ * - encoder velocity in radians/s
+ * - potentiometer position, scaled appropriately
+ * 
+ * Variables which are updated:
+ * - main_switch_state
+ * - encoder_pos_rad
+ * - encoder_vel_rad_s
+ * - E0
+ */
+void get_wire_data()
+{
+	Wire.requestFrom(Box_I2C_address, 15);
 
   // Attempt to read the header of this data stream
   byte header_test[2];
   header_test[0] = Wire.read();
   header_test[1] = Wire.read();
 
-  bool header_found = header_test[0] == HEADER[0] && header_test[1] == HEADER[1];
+  bool header_found = ((header_test[0] == HEADER[0]) && 
+					   (header_test[1] == HEADER[1]));
 
   // Decode the data only when we recognize the header
   if (header_found) {
@@ -214,63 +316,20 @@ void rtloop() {
     // the wire library handles buffered data
     while (Wire.available()) {
       Wire.read();
-    }
-  }
+    } // endwhile
+  } // endif
+}
 
-  // Let's use the variable names we are familiar with
-  configuration.psi = atan2(sin(encoder_pos_rad), cos(encoder_pos_rad));
-  configuration.alpha = atan2(sin(servo_pos_rad), cos(servo_pos_rad));
-  configuration.dpsi = encoder_vel_rad_s;
-  configuration.dalpha = servo_vel_rad_s;
-
-  // Compute the energy
-  energy = (Jl * sq(configuration.dalpha)) / 2.0 + (Jl * sq(configuration.dpsi)) / 2.0 
-           + (Jt * sq(configuration.dpsi)) / 2.0 + (Ml * sq(Rt) * sq(configuration.dpsi)) / 2.0
-           + (Ml * sq(configuration.dalpha) * sq(ll)) / 2.0 + (Ml * sq(configuration.dpsi) * sq(ll)) / 2.0 
-           + (Mt * sq(configuration.dpsi) * sq(lt)) / 2.0 + Jl * configuration.dalpha * configuration.dpsi 
-           - Ml * g * ll * cos(configuration.alpha + configuration.psi) - Ml * Rt * g * cos(configuration.psi)
-           + Ml * configuration.dalpha * configuration.dpsi * sq(ll) - Mt * g * lt * cos(configuration.psi) 
-           + Ml * Rt * sq(configuration.dpsi) * ll * cos(configuration.alpha)
-           + Ml * Rt * configuration.dalpha * configuration.dpsi * ll * cos(configuration.alpha) 
-           + g * (Ml * (Rt + ll) + Mt * lt);
-
-  configuration.E = energy;
-
-  energy_filtered = 0.0378 * (energy + energy_1) + 0.9244 * energy_filtered_1;
-  energy_1 = energy;
-  energy_filtered_1 = energy_filtered;
-
-  // decide whether or not to update the discrete energy
-  if(psi_last > (M_PI - 0.1) && configuration.psi < -(M_PI - 0.1)){
-    energy_discrete = energy_filtered;
-  }
-
-  compensator.s = energy_filtered;
-  compensator.xi = toXi(configuration.psi, dpsi_filtered);
-  compensator.rho = toRho(configuration.psi, dpsi_filtered);
-
-  // Check the state of the master switch
-  bool switch_on = main_switch_state == 1;
-  RX24F.ledStatus(SERVO_ID, switch_on);
-
-  if (switch_on) {
-    RX24F.torqueStatus(SERVO_ID, true);
-
-    // This calls the current state's corresponding function to set servo_goal_rad
-    // and determine the next state
-    state(configuration, compensator);
-
-    // Send it off to the servo
-    int pos = radiansToServo(servo_goal_rad);
-    RX24F.move(1, pos);
-
-  } else {
-    RX24F.torqueStatus(SERVO_ID, false);
-  }
-
-  psi_last = configuration.psi;
-
-  // Send some data back to the switch box
+/**
+ * Send the following back to the other Arduino box:
+ * - main_switch_state
+ * - servo_pos_rad
+ * - servo_vel_rad_s
+ * - servo_goal_rad
+ * - energy
+ */
+void send_wire_data()
+{
   Wire.beginTransmission(Box_I2C_address);
 
   // Let us only call Wire.write once to reduce overhead
@@ -305,9 +364,38 @@ void rtloop() {
   Wire.endTransmission();
 }
 
-void loop() {
-  // Update the timer, do nothing else here
-  timer.update();
+/**
+ * Update the configurations
+ * This function updates the servo/encoder velocities, then downloads
+ * the required data from the wire before updating the configuration object.
+ */
+void update_configuration()
+{
+  // Update the configuration with the current state
+  configuration.psi = atan2(sin(encoder_pos_rad), cos(encoder_pos_rad));
+  configuration.alpha = atan2(sin(servo_pos_rad), cos(servo_pos_rad));
+  configuration.dpsi = encoder_vel_rad_s;
+  configuration.dalpha = servo_vel_rad_s;
+  configuration.E = compute_energy(configuration);
+}
+
+/**
+ * Compute the mechanical energy of the acrobot
+ * E(configuration) = qd' * M(q) * qd + V(q)
+ */
+double compute_energy(Configuration configuration)
+{
+  double E = (Jl * sq(configuration.dalpha)) / 2.0 + (Jl * sq(configuration.dpsi)) / 2.0 
+	   + (Jt * sq(configuration.dpsi)) / 2.0 + (Ml * sq(Rt) * sq(configuration.dpsi)) / 2.0
+	   + (Ml * sq(configuration.dalpha) * sq(ll)) / 2.0 + (Ml * sq(configuration.dpsi) * sq(ll)) / 2.0 
+	   + (Mt * sq(configuration.dpsi) * sq(lt)) / 2.0 + Jl * configuration.dalpha * configuration.dpsi 
+	   - Ml * g * ll * cos(configuration.alpha + configuration.psi) - Ml * Rt * g * cos(configuration.psi)
+	   + Ml * configuration.dalpha * configuration.dpsi * sq(ll) - Mt * g * lt * cos(configuration.psi) 
+	   + Ml * Rt * sq(configuration.dpsi) * ll * cos(configuration.alpha)
+	   + Ml * Rt * configuration.dalpha * configuration.dpsi * ll * cos(configuration.alpha) 
+	   + g * (Ml * (Rt + ll) + Mt * lt);
+	   
+  return E;
 }
 
 // VHC ----------------------------------------------------------------------
@@ -412,7 +500,6 @@ void vhc_giant_state(Configuration conf, Compensator comp) {
   }
 }
 
-
 // AUXILIARY STUFF ----------------------------------------------------------
 
 // Convert servo position reading to radians,
@@ -426,4 +513,3 @@ double servoToRadians(long x) {
 int radiansToServo(double rad) {
   return rad * (1024.) / (MAX_SERVO_ANGLE_RAD) + 512;
 }
-
