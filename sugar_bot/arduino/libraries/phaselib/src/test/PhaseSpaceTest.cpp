@@ -18,13 +18,18 @@
 
 using namespace SUGAR;
 
-class PhaseTest 
+class PhaseTest : public ::testing::Test
 {
-	// Testing a simple
+public:
+	PhaseTest()
+	{}
+
+protected:
+	void SetUp() override {}
+	void TearDown() override {}
 };
 
-
-TEST(PhaseTest, name)   //name of suite, name of test
+TEST_F(PhaseTest, name)   //name of suite, name of test
 {
 }
 
