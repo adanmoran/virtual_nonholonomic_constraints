@@ -18,23 +18,12 @@
 *******************************************************************************/
 
 #ifndef __PHASE_H__
+#define __PHASE_H__
 
-#include "StateSpace.h"
+#include "AcrobotDynamics.h"
 
-/**
- * class AcrobotInverseInertia
- *
- * @brief: Stores the inertia matrix for an acrobot in the most general form. It
- * is given the masses, lengths, etc. and provides functions to compute this
- * inertia matrix at a given configuration.
- */
-class AcrobotInverseInertia
+namespace SUGAR
 {
-public:
-
-private:
-
-};
 
 /**
  * @brief: Stores the Acrobot phase for the Hamiltonian framework. 
@@ -65,9 +54,10 @@ public:
 
 private:
     const AcrobotInverseInertia& Minv_; // The inverse inertia matrix of the acrobot
-};
+}; // class Phase
 
 
+}; // namespace SUGAR
 #endif
 
 /* vim: set tw=80 ts=4 sw=4 sts=0 et ffs=unix : */

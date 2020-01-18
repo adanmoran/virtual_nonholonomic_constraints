@@ -16,6 +16,8 @@
 #include "Phase.h"
 #include "gtest/gtest.h"
 
+using namespace SUGAR;
+
 class PhaseTest 
 {
 	// Testing a simple

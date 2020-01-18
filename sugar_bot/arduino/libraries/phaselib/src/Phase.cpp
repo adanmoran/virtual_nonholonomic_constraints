@@ -15,6 +15,9 @@
 
 #include "Phase.h"
 
+namespace SUGAR
+{
+
 //////////////////
 // Constructors //
 //////////////////
@@ -48,4 +51,5 @@ auto Phase::updateFromConfiguration(const Configuration& configuration) -> bool
     return true;
 }
 
+}; // namespace SUGAR
 /* vim: set tw=80 ts=4 sw=4 sts=0 et ffs=unix : */

@@ -24,15 +24,20 @@ typedef struct Configurations { double psi, alpha, dpsi, dalpha, E; }
 Configuration; 
 
 // Global configuration object
-Configuration configuration = (Configuration){ 
-    .psi = 0, .alpha = 0, .dpsi = 0, .dalpha = 0, .E = 0 
-};
+// NOTE: This cannot be in the library or it causes linking issues, put it in
+// the Arduino code itself
+
+//Configuration configuration = (Configuration){ 
+//    .psi = 0, .alpha = 0, .dpsi = 0, .dalpha = 0, .E = 0 
+//};
 
 // Structure for the compensator
 typedef struct Compensators { double s, xi, rho; } Compensator; 
 
 // Global compensator object
-Compensator compensator = (Compensator){ .s = 0, .xi = 0, .rho = 0 };
+// NOTE: This cannot be in the library or it causes linking issues, put it in
+// the Arduino code itself
+// Compensator compensator = (Compensator){ .s = 0, .xi = 0, .rho = 0 };
 
 // Automaton function: VHCState is a function pointer to a function of
 // Configuration and Compensator
