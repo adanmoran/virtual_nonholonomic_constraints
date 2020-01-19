@@ -18,6 +18,7 @@
 #define __ACROBOTDYNAMICS_H__
 
 #include "StateSpace.h"
+#include <math.h> // this is allowed in Arduino for NAN
 
 namespace SUGAR
 {
@@ -43,9 +44,19 @@ public:
      */
     Matrix2(double a11, double a12, double a21, double a22);
 
+    /**
+    * @brief: Get the element at row i, column j for {i,j} in {1,2}.
+    *
+    * @param: uint8_t i the row of the element, in {1,2}
+    *       : uint8_t j the coumn of the element, in {1,2}
+    *
+    * @return: double The element value at (i,j). Returns NAN if (i,j) out of
+    * range.
+    */
+    auto at(unsigned int i, unsigned int j) -> double;
 
 private:
-    double matrix_[2][2];
+    double matrix_[2][2] = {{0,0},{0,0}};
 }; // class Matrix
 
 /**

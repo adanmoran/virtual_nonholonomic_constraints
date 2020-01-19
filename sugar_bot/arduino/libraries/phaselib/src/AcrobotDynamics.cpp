@@ -23,7 +23,20 @@ namespace SUGAR
 ///////////////////
 Matrix2::Matrix2(double a11, double a12, double a21, double a22)
 {
-    matrix_[0][1] = a11;
+    matrix_[0][0] = a11;
+    matrix_[0][1] = a12;
+    matrix_[1][0] = a21;
+    matrix_[1][1] = a22;
+}
+
+auto Matrix2::at(unsigned int i, unsigned int j) -> double
+{
+    if(i <= 0 || i > 2 || j <= 0 || j > 2)
+    {
+        return NAN;
+    }
+    // Arrays are 0-based, while our row/col is 1-based
+    return matrix_[i-1][j-1];
 }
 
 ///////////////////////////
