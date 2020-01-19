@@ -17,6 +17,6 @@ else
 fi
 
 # Run CMake to configure the project
-cmake -DCMAKE_CXX_COMPILER=$COMPILER -G$GENERATOR $SRC
+cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=1 -DCMAKE_CXX_COMPILER=$COMPILER -G$GENERATOR $SRC
 
 # vim: set ts=4 sw=4 et :
