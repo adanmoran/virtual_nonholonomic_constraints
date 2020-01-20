@@ -168,6 +168,19 @@ private:
     // Moments of inertia in kg*m^2
     double Jt_;
     double Jl_;
+
+    // Constants for the computation of the inverse inertia matrix
+    double JlJt_; // Jl * Jt
+    double Jlmldt2_; // Jl * ml * dt^2
+    double Jtmlll2_; // Jt * ml * ll^2
+    double Jlmtlt2_; // Jl * mt * lt^2
+    double ll2lt2mlmt_; // (ll*lt)^2 * ml * mt
+    double mlll2_; // ml * ll^2
+    double mldt2_; // ml * dt^2
+    double mtlt2_; // mt * lt^2
+    double mldtll_; // ml * dt * ll
+    double ml2dt2ll2_; // (mldtll_)^2
+    
 }; // class AcrobotInverseInertia
 
 }; // namespace SUGAR

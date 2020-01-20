@@ -28,6 +28,24 @@
 
 using namespace SUGAR;
 
+///////////////////////
+// Custom Predicates //
+///////////////////////
+
+/**
+* @brief: Predicate to decide if a and b are within tolerance of each other
+*
+* @param: double a
+*       : double b
+*       : double tolerance
+*
+* @return: bool
+*/
+bool Within(double a, double b, double tolerance)
+{
+    return abs(a-b) <= tolerance;
+}
+
 ///////////////////
 // Matrix2 Tests //
 ///////////////////
@@ -127,7 +145,8 @@ class AcrobotDynamicsTest : public ::testing::Test
 {
 public:
     AcrobotDynamicsTest()
-    :   simple1_(1,1),
+    :   eps_(10e-16),
+        simple1_(1,1),
         simple2_(30,1),
         simple3_(0.2,0.4),
         simple4_(0.2,0.2),
@@ -147,6 +166,9 @@ protected:
 
     void TearDown() override
     {}
+
+    // Allowable error for tests to compare doubles
+    double eps_;
 
     // Define simple acrobots
     AcrobotInverseInertia simple1_;
@@ -205,8 +227,7 @@ TEST_F(AcrobotDynamicsTest, SIMPLE_MASSES_AND_LENGTHS_MATCH)
 TEST_F(AcrobotDynamicsTest, SIMPLE_MINV_IS_CORRECT)
 {
     // Loop through and test the simple acrobot dynamics at each qa
-    auto qa = qaVec_[9];
-//    for(auto&& qa : qaVec_)
+    for(auto&& qa : qaVec_)
     {
 
         auto MinvVec = simpleMassesAtQa(qa);
@@ -215,7 +236,7 @@ TEST_F(AcrobotDynamicsTest, SIMPLE_MINV_IS_CORRECT)
         // approximately the ones we expect. We will need acrobot information,
         // so recall that the masses and acrobots line up in the vector
         // locations.
-        for(int i = 0; i < 1;++i)//simpleAcrobots_.size(); ++i)
+        for(int i = 0; i < simpleAcrobots_.size(); ++i)
         {
             // Validate the simple elements:
             // multiply all by 1/(ml^2(2-cos(qa)^2))
@@ -234,14 +255,14 @@ TEST_F(AcrobotDynamicsTest, SIMPLE_MINV_IS_CORRECT)
 
             // Now get the elements
             auto a11 = 1.0/den;
-            EXPECT_DOUBLE_EQ(MinvVec[i].at(1,1), a11);
+            EXPECT_PRED3(Within, MinvVec[i].at(1,1), a11, eps_);
 
             auto a12 = -(1 + cqa)/den;
-            EXPECT_DOUBLE_EQ(MinvVec[i].at(1,2), a12);
-            EXPECT_DOUBLE_EQ(MinvVec[i].at(2,1), a12);
+            EXPECT_PRED3(Within, MinvVec[i].at(1,2), a12, eps_);
+            EXPECT_PRED3(Within, MinvVec[i].at(2,1), a12, eps_);
 
             auto a22 = (3 + (2*cqa))/den;
-            EXPECT_DOUBLE_EQ(MinvVec[i].at(2,2), a22);
+            EXPECT_PRED3(Within, MinvVec[i].at(2,2), a22, eps_);
         }
         
     }
