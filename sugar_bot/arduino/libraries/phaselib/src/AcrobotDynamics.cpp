@@ -69,8 +69,23 @@ double Jt, double Jl
 
 auto AcrobotInverseInertia::at(const Configuration& configuration) -> Matrix2
 {
-    Matrix2 matrix(0,0,0,0);
-    return matrix;
+    // Get the configuration value for qa, which is all we need
+    double qa = configuration.alpha;
+    // Now compute cos(qa) to avoid doing it multiple times
+    double cqa = cos(qa);
+
+    // Next, compute the elements of the matrix at this qa.
+    //
+    // den = Jl*Jt + (dt*ml*ll)^2 + Jl*ml*dt^2 + Jt*ml*ll^2 + Jl*mt*lt^2 + (ll*lt)^2*ml*mt - (dt*ml*ll*cos(qa))^2
+    //
+    // Next, multiply the following by 1/den:
+    // (1,1) = ml*ll^2 + Jl 
+    // (1,2) = (2,1) = -(ml*ll^2) - (dt*ml*ll*cos(qa)) - Jl
+    // (2,2) = ml*dt^2 + 2*dt*ml*ll*cos(qa) + ml*ll^2 + mt*lt^2 + Jl + Jt
+    // TODO: store the constants (e.g. ml*ll^2, etc) upon construction to avoid
+    // recomputing them at runtime.
+
+    return Matrix2(0,0,0,0);
 }
 
 }; // namespace SUGAR

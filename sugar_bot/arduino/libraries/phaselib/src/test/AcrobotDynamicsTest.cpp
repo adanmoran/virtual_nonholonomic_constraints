@@ -156,20 +156,18 @@ protected:
     // Define complex acrobots
     AcrobotInverseInertia complex1_;
 
+    std::vector<AcrobotInverseInertia> simpleAcrobots_ = 
+    { simple1_, simple2_, simple3_, simple4_};
+
     // Define a list of values of qa for which we'll test the matrices generated
     // by the AcrobotInverseInertia
     std::vector<double> qaVec_;
-};
 
-// Test to make sure that the outputs of simple acrobots match what MATLAB gives
-// us for the value of Minv at each qa
-TEST_F(AcrobotDynamicsTest, SIMPLE_MINV_IS_CORRECT)
-{
-    Configuration config_at_qa;
-    // Loop through and test the simple acrobot dynamics at each qa
-    for(auto&& qa : qaVec_)
+    // Get the mass matrices of all the simple inverse inertia objects, in
+    // order, at the given qa, with the rest of the configuration set to 0.
+    auto simpleMassesAtQa(double qa) -> std::vector<Matrix2>
     {
-        // Update the qa value.
+        Configuration config_at_qa;
         config_at_qa.alpha = qa;
 
         // Get the 2x2 inverse inertia at each qa
@@ -183,15 +181,67 @@ TEST_F(AcrobotDynamicsTest, SIMPLE_MINV_IS_CORRECT)
             Ms1, Ms2, Ms3, Ms4
         };
 
+        return MinvVec;
+    }
+};
+
+// Test to make sure that, for simple acrobots, we have
+// mt = ml, dt = dl = lt = ll, and Jt = Jl = 0
+TEST_F(AcrobotDynamicsTest, SIMPLE_MASSES_AND_LENGTHS_MATCH)
+{
+    for(auto&& simple : simpleAcrobots_)
+    {
+        EXPECT_DOUBLE_EQ(simple.mt(), simple.ml());
+        EXPECT_DOUBLE_EQ(simple.dt(), simple.dl());
+        EXPECT_DOUBLE_EQ(simple.lt(), simple.ll());
+        EXPECT_DOUBLE_EQ(simple.dt(), simple.lt());
+        EXPECT_DOUBLE_EQ(simple.Jt(), 0);
+        EXPECT_DOUBLE_EQ(simple.Jl(), 0);
+    }
+}
+
+// Test to make sure that the outputs of simple acrobots match what MATLAB gives
+// us for the value of Minv at each qa
+TEST_F(AcrobotDynamicsTest, SIMPLE_MINV_IS_CORRECT)
+{
+    // Loop through and test the simple acrobot dynamics at each qa
+    auto qa = qaVec_[9];
+//    for(auto&& qa : qaVec_)
+    {
+
+        auto MinvVec = simpleMassesAtQa(qa);
+
         // Now check that the simple configurations at each element are
-        // approximately the ones we expect
-        for(auto&& Minv : MinvVec)
+        // approximately the ones we expect. We will need acrobot information,
+        // so recall that the masses and acrobots line up in the vector
+        // locations.
+        for(int i = 0; i < 1;++i)//simpleAcrobots_.size(); ++i)
         {
-            // TODO: validate the simple elements:
+            // Validate the simple elements:
             // multiply all by 1/(ml^2(2-cos(qa)^2))
             // (1,1) = 1 
             // (1,2) = (2,1) = -(1+cos(qa))
             // (2,2) = 3 + 2*cos(qa)
+
+            // Get the mass and length. Since these are simple acrobots, use mt and lt.
+            auto m = simpleAcrobots_[i].mt();
+            auto l = simpleAcrobots_[i].lt();
+
+            // compute cos(qa) as we use it in multiple places
+            auto cqa = cos(qa);
+            // Compute the denominator of the inverse inertia matrix
+            auto den = m*l*l*(2 - (cqa*cqa));
+
+            // Now get the elements
+            auto a11 = 1.0/den;
+            EXPECT_DOUBLE_EQ(MinvVec[i].at(1,1), a11);
+
+            auto a12 = -(1 + cqa)/den;
+            EXPECT_DOUBLE_EQ(MinvVec[i].at(1,2), a12);
+            EXPECT_DOUBLE_EQ(MinvVec[i].at(2,1), a12);
+
+            auto a22 = (3 + (2*cqa))/den;
+            EXPECT_DOUBLE_EQ(MinvVec[i].at(2,2), a22);
         }
         
     }

@@ -105,6 +105,56 @@ public:
      * that configuration.
      */
     auto at(const Configuration& configuration) -> Matrix2;
+
+    /**
+     * @brief: Get the torso mass in kg
+     *
+     * @return: double
+     */
+    inline auto mt() -> double { return mt_; }
+    /**
+     * @brief: Get the leg mass in kg
+     *
+     * @return: double
+     */
+    inline auto ml() -> double { return ml_; }
+    /**
+     * @brief: Get the torso length in m
+     *
+     * @return: double
+     */
+    inline auto dt() -> double { return dt_; }
+    /**
+     * @brief: Get the leg length in m
+     *
+     * @return: double
+     */
+    inline auto dl() -> double { return dl_; }
+    /**
+     * @brief: Get the distance from hands to torso COM in m
+     *
+     * @return: double
+     */
+    inline auto lt() -> double { return lt_; }
+    /**
+     * @brief: Get the distance from hips to leg COM in m
+     *
+     * @return: double
+     */
+    inline auto ll() -> double { return ll_; }
+     /**
+     * @brief: Get the absolute moment of inertia of the torso in kg*m^2
+     *
+     * @return: double
+     */
+    inline auto Jt() -> double { return Jt_; }
+     /**
+     * @brief: Get the absolute moment of inertia of the legs in kg*m^2
+     *
+     * @return: double
+     */
+    inline auto Jl() -> double { return Jl_; }
+          
 private:
     // Masses in kg
     double mt_;
