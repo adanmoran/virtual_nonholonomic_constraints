@@ -59,6 +59,8 @@ private:
     double matrix_[2][2] = {{0,0},{0,0}};
 }; // class Matrix
 
+// TODO: Create an Acrobot Inertia matrix class for computing phase
+
 /**
  * class AcrobotInverseInertia
  *

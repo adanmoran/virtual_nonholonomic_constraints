@@ -150,7 +150,13 @@ public:
         simple2_(30,1),
         simple3_(0.2,0.4),
         simple4_(0.2,0.2),
-        complex1_(1,1,1,1,1,1,0,0)
+        complex1_(1,1,1,1,1,1,0,0),
+        xingboBot_(
+            0.2112, 0.1979,   // m
+            0.148, 0.145,     // d
+            0.073, 0.083,     // l
+            0.00075, 0.00129) // J
+
     {
         // Compute the step size for qa
         const int N = 9;
@@ -175,8 +181,9 @@ protected:
     AcrobotInverseInertia simple2_;
     AcrobotInverseInertia simple3_;
     AcrobotInverseInertia simple4_;
-    // Define complex acrobots
+    // Define complex acrobots based on ones we can compute
     AcrobotInverseInertia complex1_;
+    AcrobotInverseInertia xingboBot_;
 
     std::vector<AcrobotInverseInertia> simpleAcrobots_ = 
     { simple1_, simple2_, simple3_, simple4_};
@@ -271,20 +278,95 @@ TEST_F(AcrobotDynamicsTest, SIMPLE_MINV_IS_CORRECT)
 // Test to make sure that changing qu does not affect the value of the inverse
 // inertia matrix (i.e. Minv(q) = Minv(qa)) for simple acrobots.
 TEST_F(AcrobotDynamicsTest, SIMPLE_IS_MINV_QA)
-{}
+{
+    // For each qa, we want Minv(q) to be a function of only qa
+    // We use pi/3 since it's a strange number and cannot be faked easily
+    double qa = 7*M_PI/9;
 
-// Test to make sure that the outputs of complex acrobots matches what the
-// equatiosn should be
+    Configuration q;
+    q.alpha = qa;
+    // Iterate through the qu values to make sure this is only a function of qa
+    for(auto && qu : qaVec_)
+    {
+        q.psi = qu;
+        // Test just one to make sure
+        auto mat = simple3_.at(q);
+
+         // Get the mass and length. Since these are simple acrobots, use mt and lt.
+        auto m = simple3_.mt();
+        auto l = simple3_.lt();
+
+        // compute cos(qa) as we use it in multiple places
+        auto cqa = cos(qa);
+        // Compute the denominator of the inverse inertia matrix
+        auto den = m*l*l*(2 - (cqa*cqa));
+
+        // Now get the elements
+        auto a11 = 1.0/den;
+        EXPECT_PRED3(Within, mat.at(1,1), a11, eps_);
+
+        auto a12 = -(1 + cqa)/den;
+        EXPECT_PRED3(Within, mat.at(1,2), a12, eps_);
+        EXPECT_PRED3(Within, mat.at(2,1), a12, eps_);
+
+        auto a22 = (3 + (2*cqa))/den;
+        EXPECT_PRED3(Within, mat.at(2,2), a22, eps_);
+    }
+}
+
+// Test to make sure that the outputs of complex acrobots matches what we expect
+// them to be for certain acrobots
 TEST_F(AcrobotDynamicsTest, COMPLEX_MINV_IS_CORRECT)
-{}
+{
+    // Test Xingbo's acrobot, which has non-zero Jl and Jt
+    for(auto&& qa : qaVec_)
+    {
+        Configuration q;
+        q.alpha = qa;
+        auto Minv = xingboBot_.at(q);
 
-// Test to make sure that the outputs of complex acrobots do not depend on qu
-TEST_F(AcrobotDynamicsTest, COMPLEX_IS_MINV_QA)
-{}
+        // Get the ACTUAL contents of the Xingbo matrix
+        auto cqa = cos(qa);
+        auto cqa2 = cqa*cqa;
+        double det = (102987240409999.0/(6.25*10e18))
+                     - (36936115645081.0/(6.25*10e18))*cqa2;
+
+        double a11 = 26533331.0/(10e10);
+        double a12 = -6077509.0*cqa/(2.5*10e9) - a11;
+        double a22 = 6077509.0*cqa/(1.25*10e9) + 17727239.0/(2.0*10e9);
+        a11 = a11/det;
+        a12 = a12/det;
+        a22 = a22/det;
+
+        // Now make sure they match
+        ASSERT_PRED3(Within, Minv.at(1,1),a11,eps_);
+        ASSERT_PRED3(Within, Minv.at(1,2),a12,eps_);
+        ASSERT_PRED3(Within, Minv.at(2,1),a12,eps_);
+        ASSERT_PRED3(Within, Minv.at(2,2),a22,eps_);
+    }
+}
 
 // Test to make sure every matrix is positive definite at each q, and symmetric
 TEST_F(AcrobotDynamicsTest, MINV_IS_SYMMETRIC_PD)
-{}
+{
+    // Make sure that each matrix has positive (1,1) element, positive
+    // determinant, and that (1,2) = (2,1)
+    for(auto&& qa : qaVec_)
+    {
+        auto MinvVec = simpleMassesAtQa(qa);
+
+        for(auto&& Minv : MinvVec)
+        {
+            // Check symmetry
+            ASSERT_DOUBLE_EQ(Minv.at(1,2), Minv.at(2,1));
+
+            // Check PD
+            auto determinant = Minv.at(1,1)*Minv.at(2,2) - Minv.at(1,2)*Minv.at(2,1);
+            EXPECT_GT(Minv.at(1,1), 0);
+            EXPECT_GT(determinant,0);
+        }
+    }
+}
 
 int main(int argc, char** argv)
 {
