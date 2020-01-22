@@ -74,12 +74,25 @@ double Jt, double Jl
     mldt2_(ml*dt*dt),
     mtlt2_(mt*lt*lt),
     mldtll_(ml*dt*ll),
-    ml2dt2ll2_(mldtll_*mldtll_)
+    ml2dt2ll2_(mldtll_*mldtll_),
+    mlll2pJl_(mlll2_ + Jl_)
 {}
 
 auto AcrobotInertia::at(const Configuration& configuration) -> Matrix2
 {
-    return Matrix2(0,0,0,0);
+    double cqa = cos(configuration.alpha);
+
+    // Compute the elements of the matrix at this qa
+    // (1,1) = ml*dt^2 + 2*ml*dt*ll*cos(qa) + ml*ll^2 + mt*lt^2 + Jl + Jt
+    // (1,2) = (2,1) = ml*ll^2 + ml*dt*ll*cos(qa) + Jl
+    // (2,2) = ml*ll^2 + Jl
+    double mldtllcqa = mldtll_*cqa;
+    
+    double a11 = mldt2_ + 2*mldtllcqa + mtlt2_ + mlll2pJl_ + Jt_;
+    double a12 = mldtllcqa + mlll2pJl_;
+    double a22 = mlll2pJl_;
+
+    return Matrix2(a11,a12,a12,a22);
 }
 
 auto AcrobotInertia::inverseAt(const Configuration& configuration) -> Matrix2

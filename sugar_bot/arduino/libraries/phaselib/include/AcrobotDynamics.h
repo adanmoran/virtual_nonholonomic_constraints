@@ -191,6 +191,7 @@ private:
     double mtlt2_; // mt * lt^2
     double mldtll_; // ml * dt * ll
     double ml2dt2ll2_; // (mldtll_)^2
+    double mlll2pJl_; // ml*ll^2 + Jl
     
 }; // class AcrobotInertia
 
