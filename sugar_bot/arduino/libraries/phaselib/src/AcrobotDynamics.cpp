@@ -40,18 +40,18 @@ auto Matrix2::at(unsigned int i, unsigned int j) -> double
 }
 
 ///////////////////////////
-// AcrobotInverseInertia //
+// AcrobotInertia //
 ///////////////////////////
 
-AcrobotInverseInertia::AcrobotInverseInertia(double m, double l)
-: AcrobotInverseInertia(
+AcrobotInertia::AcrobotInertia(double m, double l)
+: AcrobotInertia(
     m, m,
     l, l,
     l, l,
     0, 0)
 {}
 
-AcrobotInverseInertia::AcrobotInverseInertia(
+AcrobotInertia::AcrobotInertia(
 double mt, double ml,
 double dt, double dl,
 double lt, double ll,
@@ -77,7 +77,12 @@ double Jt, double Jl
     ml2dt2ll2_(mldtll_*mldtll_)
 {}
 
-auto AcrobotInverseInertia::at(const Configuration& configuration) -> Matrix2
+auto AcrobotInertia::at(const Configuration& configuration) -> Matrix2
+{
+    return Matrix2(0,0,0,0);
+}
+
+auto AcrobotInertia::inverseAt(const Configuration& configuration) -> Matrix2
 {
     // Get the configuration value for qa, which is all we need
     double qa = configuration.alpha;

@@ -33,11 +33,11 @@ namespace SUGAR
 class Phase
 {
 public:
-    Phase (const AcrobotInverseInertia& Minv);
-    Phase (const AcrobotInverseInertia& Minv, const Configuration& configuration);
+    Phase (const AcrobotInertia& M);
+    Phase (const AcrobotInertia& M, const Configuration& configuration);
 
     /**
-    * @brief: Updates the phase by computing p = Minv(q) q_dot at the given
+    * @brief: Updates the phase by computing p = M(q) q_dot at the given
     * configuration.
     *
     * @param: Configuration configuration
@@ -48,12 +48,12 @@ public:
 
     double qu; // Configuration unactuated variable = psi
     double qa; // Configuration actuated variable   = alpha
-    double pu; // Phase unactuated momentum         = e1' * Minv(q) * p
-    double pa; // Phase actuated momentum           = e2' * Minv(q) * p
+    double pu; // Phase unactuated momentum         = e1' * M(q) * p
+    double pa; // Phase actuated momentum           = e2' * M(q) * p
     double E;  // Configuration energy as given by configuration
 
 private:
-    const AcrobotInverseInertia& Minv_; // The inverse inertia matrix of the acrobot
+    const AcrobotInertia& M_; // The inverse inertia matrix of the acrobot
 }; // class Phase
 
 

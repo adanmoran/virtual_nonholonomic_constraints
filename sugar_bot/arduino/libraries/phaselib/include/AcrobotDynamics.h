@@ -59,16 +59,16 @@ private:
     double matrix_[2][2] = {{0,0},{0,0}};
 }; // class Matrix
 
-// TODO: Create an Acrobot Inertia matrix class for computing phase
+
+// TODO: Rework this into AcrobotInertia, and set .at() and .inverseAt() as
+// functions (rather than having a full object for the inverse matrix)
 
 /**
- * class AcrobotInverseInertia
+ * class AcrobotInertia
  *
- * @brief: Stores the inertia matrix for an acrobot in the most general form. It
- * is given the masses, lengths, etc. and provides functions to compute this
- * inertia matrix at a given configuration.
+ * @brief: Stores the inverse inertia matrix for an acrobot.
  */
-class AcrobotInverseInertia
+class AcrobotInertia
 {
 public:
     /**
@@ -78,7 +78,7 @@ public:
      * @param: double m = mass of each link, kg
      * @param: double l = length of each link, m
      */
-    AcrobotInverseInertia(double m, double l);
+    AcrobotInertia(double m, double l);
 
     /**
      * @brief: Constructor for a general acrobot
@@ -92,7 +92,7 @@ public:
      * @param: double Jt = absolute moment of inertia of torso link, kg*m^2
      * @param: double Jl = absolute moment of inertia of leg link, kg*m^2
      */
-    AcrobotInverseInertia(
+    AcrobotInertia(
             double mt, double ml,
             double dt, double dl,
             double lt, double ll,
@@ -107,6 +107,15 @@ public:
      * that configuration.
      */
     auto at(const Configuration& configuration) -> Matrix2;
+
+    /**
+    * @brief: Compute the inverse inertia matrix at a given configruation
+    *
+    * @param: const Configuration& configuration
+    *
+    * @return: auto
+    */
+    auto inverseAt(const Configuration& configuration) -> Matrix2;
 
     /**
      * @brief: Get the torso mass in kg
@@ -183,7 +192,7 @@ private:
     double mldtll_; // ml * dt * ll
     double ml2dt2ll2_; // (mldtll_)^2
     
-}; // class AcrobotInverseInertia
+}; // class AcrobotInertia
 
 }; // namespace SUGAR
 

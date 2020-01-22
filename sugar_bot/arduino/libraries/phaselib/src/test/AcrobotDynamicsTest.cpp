@@ -43,7 +43,7 @@ using namespace SUGAR;
 */
 bool Within(double a, double b, double tolerance)
 {
-    return abs(a-b) <= tolerance;
+    return std::abs(a-b) <= tolerance;
 }
 
 ///////////////////
@@ -145,7 +145,7 @@ class AcrobotDynamicsTest : public ::testing::Test
 {
 public:
     AcrobotDynamicsTest()
-    :   eps_(10e-16),
+    :   eps_(10e-13),
         simple1_(1,1),
         simple2_(30,1),
         simple3_(0.2,0.4),
@@ -177,24 +177,24 @@ protected:
     double eps_;
 
     // Define simple acrobots
-    AcrobotInverseInertia simple1_;
-    AcrobotInverseInertia simple2_;
-    AcrobotInverseInertia simple3_;
-    AcrobotInverseInertia simple4_;
+    AcrobotInertia simple1_;
+    AcrobotInertia simple2_;
+    AcrobotInertia simple3_;
+    AcrobotInertia simple4_;
     // Define complex acrobots based on ones we can compute
-    AcrobotInverseInertia complex1_;
-    AcrobotInverseInertia xingboBot_;
+    AcrobotInertia complex1_;
+    AcrobotInertia xingboBot_;
 
-    std::vector<AcrobotInverseInertia> simpleAcrobots_ = 
+    std::vector<AcrobotInertia> simpleAcrobots_ = 
     { simple1_, simple2_, simple3_, simple4_};
 
     // Define a list of values of qa for which we'll test the matrices generated
-    // by the AcrobotInverseInertia
+    // by the AcrobotInertia
     std::vector<double> qaVec_;
 
-    // Get the mass matrices of all the simple inverse inertia objects, in
-    // order, at the given qa, with the rest of the configuration set to 0.
-    auto simpleMassesAtQa(double qa) -> std::vector<Matrix2>
+    // Get the mass matrices of all the simple inertia objects, in order, at the
+    // given qa, with the rest of the config set to 0
+    auto simpleMAtQa(double qa) -> std::vector<Matrix2>
     {
         Configuration config_at_qa;
         config_at_qa.alpha = qa;
@@ -204,6 +204,28 @@ protected:
         auto Ms2 = simple2_.at(config_at_qa);
         auto Ms3 = simple3_.at(config_at_qa);
         auto Ms4 = simple4_.at(config_at_qa);
+
+        // Now collect these into a vector
+        std::vector<decltype(Ms1)> MVec = {
+            Ms1, Ms2, Ms3, Ms4
+        };
+
+        return MVec;
+    }
+
+
+    // Get the mass matrices of all the simple inverse inertia objects, in
+    // order, at the given qa, with the rest of the configuration set to 0.
+    auto simpleMinvAtQa(double qa) -> std::vector<Matrix2>
+    {
+        Configuration config_at_qa;
+        config_at_qa.alpha = qa;
+
+        // Get the 2x2 inverse inertia at each qa
+        auto Ms1 = simple1_.inverseAt(config_at_qa);
+        auto Ms2 = simple2_.inverseAt(config_at_qa);
+        auto Ms3 = simple3_.inverseAt(config_at_qa);
+        auto Ms4 = simple4_.inverseAt(config_at_qa);
 
         // Now collect these into a vector
         std::vector<decltype(Ms1)> MinvVec = {
@@ -229,6 +251,46 @@ TEST_F(AcrobotDynamicsTest, SIMPLE_MASSES_AND_LENGTHS_MATCH)
     }
 }
 
+TEST_F(AcrobotDynamicsTest, SIMPLE_M_IS_CORRECT)
+{
+    // Loop through and test the simple acrobot dynamics at each qa
+    for(auto&& qa : qaVec_)
+    {
+
+        auto MVec = simpleMAtQa(qa);
+
+        // Now check that the simple configurations at each element are
+        // approximately the ones we expect. We will need acrobot information,
+        // so recall that the masses and acrobots line up in the vector
+        // locations.
+        for(int i = 0; i < simpleAcrobots_.size(); ++i)
+        {
+            // Validate the simple elements:
+            // (1,1) = 3ml^2 + 2ml^2cos(qa)
+            // (1,2) = (2,1) = ml^2 + ml^2cos(qa)
+            // (2,2) = ml^2
+
+            // Get the mass and length. Since these are simple acrobots, use mt and lt.
+            auto m = simpleAcrobots_[i].mt();
+            auto l = simpleAcrobots_[i].lt();
+
+            // compute cos(qa) as we use it in multiple places
+            auto cqa = cos(qa);
+            auto ml2 = m*l*l;
+
+            // Compute the elements and assert that the element MVec[i]
+            // aligns with the computed elements within tolerance
+            auto a11 = ml2*(3 + 2*cqa);
+            auto a12 = ml2*(1+cqa);
+            auto a22 = ml2;
+            EXPECT_PRED3(Within, MVec[i].at(1,1), a11, eps_);
+            EXPECT_PRED3(Within, MVec[i].at(1,2), a12, eps_);
+            EXPECT_PRED3(Within, MVec[i].at(2,1), a12, eps_);
+            ASSERT_PRED3(Within, MVec[i].at(2,2), a22, eps_);
+        }
+    }
+}
+
 // Test to make sure that the outputs of simple acrobots match what MATLAB gives
 // us for the value of Minv at each qa
 TEST_F(AcrobotDynamicsTest, SIMPLE_MINV_IS_CORRECT)
@@ -237,7 +299,7 @@ TEST_F(AcrobotDynamicsTest, SIMPLE_MINV_IS_CORRECT)
     for(auto&& qa : qaVec_)
     {
 
-        auto MinvVec = simpleMassesAtQa(qa);
+        auto MinvVec = simpleMinvAtQa(qa);
 
         // Now check that the simple configurations at each element are
         // approximately the ones we expect. We will need acrobot information,
@@ -269,15 +331,54 @@ TEST_F(AcrobotDynamicsTest, SIMPLE_MINV_IS_CORRECT)
             EXPECT_PRED3(Within, MinvVec[i].at(2,1), a12, eps_);
 
             auto a22 = (3 + (2*cqa))/den;
-            EXPECT_PRED3(Within, MinvVec[i].at(2,2), a22, eps_);
+            ASSERT_PRED3(Within, MinvVec[i].at(2,2), a22, eps_);
         }
         
     }
 }
 
+// Test to make sure changing qa does not affect the inertia matrix
+TEST_F(AcrobotDynamicsTest, SIMPLE_M_IS_FUNC_OF_QA)
+{
+    // For each qa, we want M(q) to be a function of only qa
+    // We use pi/3 since it's a strange number and cannot be faked easily
+    double qa = 7*M_PI/9;
+
+    Configuration q;
+    q.alpha = qa;
+
+    //compute the actual components of M(qa) as before 
+    auto cqa = cos(qa);
+    auto m = simple3_.mt();
+    auto l = simple3_.lt();
+    auto ml2 = m*l*l;
+    auto a11 = ml2*(3 + 2*cqa);
+    auto a12 = ml2*(1+cqa);
+    auto a22 = ml2;
+
+    // Iterate through the qu values to make sure this is only a function of qa
+    for(auto && qu : qaVec_)
+    {
+        q.psi = qu;
+        // Test just one to make sure
+        auto mat = simple3_.at(q);
+
+         // Get the mass and length. Since these are simple acrobots, use mt and lt.
+        auto m = simple3_.mt();
+        auto l = simple3_.lt();
+
+        // Expect that the mass matrix at this config is within tolerance
+        // of the constant mass matrix elements above
+        EXPECT_PRED3(Within, mat.at(1,1), a11, eps_);
+        EXPECT_PRED3(Within, mat.at(1,2), a12, eps_);
+        EXPECT_PRED3(Within, mat.at(2,1), a12, eps_);
+        ASSERT_PRED3(Within, mat.at(2,2), a22, eps_);
+    }
+}
+
 // Test to make sure that changing qu does not affect the value of the inverse
 // inertia matrix (i.e. Minv(q) = Minv(qa)) for simple acrobots.
-TEST_F(AcrobotDynamicsTest, SIMPLE_IS_MINV_QA)
+TEST_F(AcrobotDynamicsTest, SIMPLE_MINV__IS_FUNC_OF_QA)
 {
     // For each qa, we want Minv(q) to be a function of only qa
     // We use pi/3 since it's a strange number and cannot be faked easily
@@ -290,7 +391,7 @@ TEST_F(AcrobotDynamicsTest, SIMPLE_IS_MINV_QA)
     {
         q.psi = qu;
         // Test just one to make sure
-        auto mat = simple3_.at(q);
+        auto mat = simple3_.inverseAt(q);
 
          // Get the mass and length. Since these are simple acrobots, use mt and lt.
         auto m = simple3_.mt();
@@ -310,20 +411,39 @@ TEST_F(AcrobotDynamicsTest, SIMPLE_IS_MINV_QA)
         EXPECT_PRED3(Within, mat.at(2,1), a12, eps_);
 
         auto a22 = (3 + (2*cqa))/den;
-        EXPECT_PRED3(Within, mat.at(2,2), a22, eps_);
+        ASSERT_PRED3(Within, mat.at(2,2), a22, eps_);
+    }
+}
+
+// Test to make sure Xingbo's acrobot's inertia matrix matches the one MATLAB
+// returns to us
+TEST_F(AcrobotDynamicsTest, XINGBO_M_CORRECT)
+{
+    for(auto&& qa : qaVec_)
+    {
+        Configuration q;
+        q.alpha = qa;
+        auto M = xingboBot_.at(q);
+
+        // Get the actual content of the Xingbo mass matrix
+        double cqa = cos(qa);
+        
+        double a11 = (6077509.0*cqa)/(1.25*10e9) + 17727239.0/(2.0*10e9);
+        double a22 = 26533331.0/(1.0*10e10);
+        double a12 = (6077509.0*cqa)/(2.5*10e9) + a22;
     }
 }
 
 // Test to make sure that the outputs of complex acrobots matches what we expect
 // them to be for certain acrobots
-TEST_F(AcrobotDynamicsTest, COMPLEX_MINV_IS_CORRECT)
+TEST_F(AcrobotDynamicsTest, XINGBO_MINV_IS_CORRECT)
 {
     // Test Xingbo's acrobot, which has non-zero Jl and Jt
     for(auto&& qa : qaVec_)
     {
         Configuration q;
         q.alpha = qa;
-        auto Minv = xingboBot_.at(q);
+        auto Minv = xingboBot_.inverseAt(q);
 
         // Get the ACTUAL contents of the Xingbo matrix
         auto cqa = cos(qa);
@@ -346,6 +466,27 @@ TEST_F(AcrobotDynamicsTest, COMPLEX_MINV_IS_CORRECT)
     }
 }
 
+// Test to make sure the matrix is pd at each q, and symmetric
+TEST_F(AcrobotDynamicsTest, M_IS_SYMMETRIC_PD)
+{
+    for(auto&& qa : qaVec_)
+    {
+        auto MVec = simpleMAtQa(qa);
+
+        for(auto&& M : MVec)
+        {
+            // Check symmetry
+            ASSERT_DOUBLE_EQ(M.at(1,2), M.at(2,1));
+
+            // Check PD
+            auto determinant = M.at(1,1)*M.at(2,2) - M.at(1,2)*M.at(2,1);
+            EXPECT_GT(M.at(1,1), 0);
+            ASSERT_GT(determinant,0);
+        }
+    }
+
+}
+
 // Test to make sure every matrix is positive definite at each q, and symmetric
 TEST_F(AcrobotDynamicsTest, MINV_IS_SYMMETRIC_PD)
 {
@@ -353,7 +494,7 @@ TEST_F(AcrobotDynamicsTest, MINV_IS_SYMMETRIC_PD)
     // determinant, and that (1,2) = (2,1)
     for(auto&& qa : qaVec_)
     {
-        auto MinvVec = simpleMassesAtQa(qa);
+        auto MinvVec = simpleMinvAtQa(qa);
 
         for(auto&& Minv : MinvVec)
         {

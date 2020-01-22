@@ -22,17 +22,17 @@ namespace SUGAR
 // Constructors //
 //////////////////
 
-Phase::Phase(const AcrobotInverseInertia& Minv)
+Phase::Phase(const AcrobotInertia& M)
 : qu(0)		    ,
   qa(0)		    ,
   pu(0)		    ,
   pa(0)		    ,
   E(0) 		    ,
-  Minv_(Minv) 	
+  M_(M) 	
 {}
 
-Phase::Phase(const AcrobotInverseInertia& Minv, const Configuration& configuration)
-: Phase(Minv)
+Phase::Phase(const AcrobotInertia& M, const Configuration& configuration)
+: Phase(M)
 {
     updateFromConfiguration(configuration);
 }
