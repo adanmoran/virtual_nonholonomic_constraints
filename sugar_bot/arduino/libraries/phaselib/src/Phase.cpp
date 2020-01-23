@@ -34,14 +34,14 @@ Phase::Phase(const AcrobotInertia& M)
 Phase::Phase(const AcrobotInertia& M, const Configuration& configuration)
 : Phase(M)
 {
-    updateFromConfiguration(configuration);
+    fromConfiguration(configuration);
 }
 
 //////////////////////
 // Public Functions //
 //////////////////////
 
-auto Phase::updateFromConfiguration(const Configuration& configuration) -> bool
+auto Phase::fromConfiguration(const Configuration& configuration) -> bool
 {
     // Todo: Update the configuration
 

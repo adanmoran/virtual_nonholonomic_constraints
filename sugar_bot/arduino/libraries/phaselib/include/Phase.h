@@ -44,7 +44,7 @@ public:
     *
     * @return: bool
     */
-    auto updateFromConfiguration(const Configuration& configuration) -> bool;
+    auto fromConfiguration(const Configuration& configuration) -> bool;
 
     double qu; // Configuration unactuated variable = psi
     double qa; // Configuration actuated variable   = alpha
