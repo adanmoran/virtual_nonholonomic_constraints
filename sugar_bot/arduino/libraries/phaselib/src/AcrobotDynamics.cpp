@@ -78,7 +78,7 @@ double Jt, double Jl
     mlll2pJl_(mlll2_ + Jl_)
 {}
 
-auto AcrobotInertia::at(const Configuration& configuration) -> Matrix2
+auto AcrobotInertia::at(const Configuration& configuration) const -> Matrix2
 {
     double cqa = cos(configuration.alpha);
 

@@ -428,9 +428,9 @@ TEST_F(AcrobotDynamicsTest, XINGBO_M_CORRECT)
         // Get the actual content of the Xingbo mass matrix
         double cqa = cos(qa);
         
-        double a11 = (6077509.0*cqa)/(1.25*10e9) + 17727239.0/(2.0*10e9);
-        double a22 = 26533331.0/(1.0*10e10);
-        double a12 = (6077509.0*cqa)/(2.5*10e9) + a22;
+        double a11 = (6077509.0*cqa)/(1.25e9) + 17727239.0/(2.0e9);
+        double a22 = 26533331.0/(1.0e10);
+        double a12 = (6077509.0*cqa)/(2.5e9) + a22;
     }
 }
 
@@ -448,12 +448,12 @@ TEST_F(AcrobotDynamicsTest, XINGBO_MINV_IS_CORRECT)
         // Get the ACTUAL contents of the Xingbo matrix
         auto cqa = cos(qa);
         auto cqa2 = cqa*cqa;
-        double det = (102987240409999.0/(6.25*10e18))
-                     - (36936115645081.0/(6.25*10e18))*cqa2;
+        double det = (102987240409999.0/(6.25e18))
+                     - (36936115645081.0/(6.25e18))*cqa2;
 
-        double a11 = 26533331.0/(10e10);
-        double a12 = -6077509.0*cqa/(2.5*10e9) - a11;
-        double a22 = 6077509.0*cqa/(1.25*10e9) + 17727239.0/(2.0*10e9);
+        double a11 = 26533331.0/(1.0e10);
+        double a12 = -6077509.0*cqa/(2.5e9) - a11;
+        double a22 = 6077509.0*cqa/(1.25e9) + 17727239.0/(2.0e9);
         a11 = a11/det;
         a12 = a12/det;
         a22 = a22/det;

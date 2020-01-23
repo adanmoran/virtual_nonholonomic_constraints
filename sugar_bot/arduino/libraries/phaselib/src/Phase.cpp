@@ -44,9 +44,14 @@ Phase::Phase(const AcrobotInertia& M, const Configuration& configuration)
 auto Phase::fromConfiguration(const Configuration& configuration) -> bool
 {
     // Todo: Update the configuration
+    qu = configuration.psi;
+    qa = configuration.alpha;
 
     //  Update the conjugate of momenta
-    //  TODO: p = Minv(q)*[dpsi; dalpha]
+    //  p = M(q)*[dpsi; dalpha]
+    auto M = M_.at(configuration);
+    pu = M.at(1,1)*configuration.dpsi + M.at(1,2)*configuration.dalpha;
+    pa = M.at(2,1)*configuration.dpsi + M.at(2,2)*configuration.dalpha;
 
     return true;
 }

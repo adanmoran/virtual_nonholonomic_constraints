@@ -106,7 +106,7 @@ public:
      * @return: Matrix2 a 2x2 Matrix object with the value of the inertia matrix at
      * that configuration.
      */
-    auto at(const Configuration& configuration) -> Matrix2;
+    auto at(const Configuration& configuration) const -> Matrix2;
 
     /**
     * @brief: Compute the inverse inertia matrix at a given configruation
