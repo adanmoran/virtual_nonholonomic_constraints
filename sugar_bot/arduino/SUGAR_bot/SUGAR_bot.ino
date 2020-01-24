@@ -38,8 +38,11 @@ const double ll = 0.083;   // m
 const double g = 9.8;      // m/s^2
 
 // Robot Inverse Inertia Matrix
-// TODO: This should take in the robot parameters
-const auto Minv = AcrobotInverseInertia();
+const auto M = AcrobotInertia(
+	Mt, Ml,
+	Rt, Rl,
+	lt, ll,
+	Jt, Jl);
 
 // Energy quantities
 const double E_still_exit = 0.15;
