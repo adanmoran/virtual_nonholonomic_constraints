@@ -39,9 +39,9 @@ public:
         0.148, 0.145,     // d
         0.073, 0.083,     // l
         0.00075, 0.00129), // J
-	  ps1_(simple1_),
-	  ps2_(simple2_),
-	  px_(xingboBot_)
+	  ps1_(),
+	  ps2_(),
+	  px_()
 	{}
 
 protected:
@@ -58,17 +58,17 @@ protected:
 	}
 	void TearDown() override {}
 
-	// Get a vector of configurations where qd = 0
-	auto qd0() -> std::vector<Configuration>
+	// Get a vector of States where qd = 0
+	auto qd0() -> std::vector<State>
 	{
-		std::vector<Configuration> qd_0(3);
+		std::vector<State> qd_0(3);
 		qd_0.push_back(q0_);
 		qd_0.push_back(qpb2000_);
 		qd_0.push_back(q0pb200_);
 		return qd_0;
 	}
 
-	auto qs() -> std::vector<Configuration>
+	auto qs() -> std::vector<State>
 	{
 		auto qVec = qd0();
 		qVec.push_back(q0010_);
@@ -83,13 +83,13 @@ protected:
 	// Set up the xingbo-bot for testing
 	AcrobotInertia xingboBot_;
 
-	// Set up a configuration for updating
-	Configuration q0_; // all zero configuration
-	Configuration qpb2000_; // qu = pi/2
-	Configuration q0pb200_;  // qa = pi/2
-	Configuration q0010_; // qud = 1 (bottom of swing)
-	Configuration q0001_; // qad = 1 
-	Configuration qpb4npb8n2n1_; // qu = pi/4, qa = pi/8, qud = -2, qad = -1
+	// Set up a State for updating
+	State q0_; // all zero configuration
+	State qpb2000_; // qu = pi/2
+	State q0pb200_;  // qa = pi/2
+	State q0010_; // qud = 1 (bottom of swing)
+	State q0001_; // qad = 1 
+	State qpb4npb8n2n1_; // qu = pi/4, qa = pi/8, qud = -2, qad = -1
 
 	// Set up a phase object for each test acrobot
 	Phase ps1_; // Phase for simple2
@@ -104,19 +104,17 @@ TEST_F(PhaseTest, Q_IS_THE_SAME)
 	for(int i = 0; i < qVals.size(); ++i)
 	{
 		auto q = qVals[i];
-		ps1_.fromConfiguration(q);
+		ps1_ = Phase(simple1_, q);
 		ASSERT_DOUBLE_EQ(ps1_.qu, q.psi);
 		ASSERT_DOUBLE_EQ(ps1_.qa, q.alpha);
-		ps2_.fromConfiguration(q);
+		ps2_ = Phase(simple2_, q);
 		ASSERT_DOUBLE_EQ(ps2_.qu, q.psi);
 		ASSERT_DOUBLE_EQ(ps2_.qa, q.alpha);
-		px_.fromConfiguration(q);
+		px_ = Phase(xingboBot_, q);
 		ASSERT_DOUBLE_EQ(px_.qu, q.psi);
 		ASSERT_DOUBLE_EQ(px_.qa, q.alpha);
 	}
 }
-
-
 
 // Test to ensure a non-zero velocity results in the correct output for simple
 // acrobots
@@ -127,15 +125,15 @@ TEST_F(PhaseTest, SIMPLE_ACROBOTS)
 	auto qa = M_PI/8;
 	auto cqa = cos(qa);
 	// M(q)qd = [3+2cqa; 1+cqa]
-	ps1_.fromConfiguration(q0010_);
+	ps1_ = Phase(simple1_, q0010_);
 	ASSERT_DOUBLE_EQ(ps1_.pu, 5);
 	ASSERT_DOUBLE_EQ(ps1_.pa, 2);
 	// M(q)qd = [1+cqa;1]
-	ps1_.fromConfiguration(q0001_);
+	ps1_ = Phase(simple1_, q0001_);
 	ASSERT_DOUBLE_EQ(ps1_.pu,2);
 	ASSERT_DOUBLE_EQ(ps1_.pa,1);
 	// M(q)qd = [(3+2cqa)qud + (1+cqa)qad; (1+cqa)qud + qad];
-	ps1_.fromConfiguration(qpb4npb8n2n1_);
+	ps1_ = Phase(simple1_, qpb4npb8n2n1_);
 	ASSERT_DOUBLE_EQ(ps1_.pu, -2*(3+2*cqa) - (1+cqa));
 	ASSERT_DOUBLE_EQ(ps1_.pa, -2*(1+cqa) - 1);
 
@@ -145,15 +143,15 @@ TEST_F(PhaseTest, SIMPLE_ACROBOTS)
 	auto l = simple2_.lt();
 	auto ml2 = m*l*l;
 	// M(q)qd = ml2*[3+2cqa; 1+cqa]
-	ps2_.fromConfiguration(q0010_);
+	ps2_ = Phase(simple2_, q0010_);
 	ASSERT_DOUBLE_EQ(ps2_.pu, ml2*5);
 	ASSERT_DOUBLE_EQ(ps2_.pa, ml2*2);
 	// M(q)qd = ml2*[1+cqa;1]
-	ps2_.fromConfiguration(q0001_);
+	ps2_ = Phase(simple2_, q0001_);
 	ASSERT_DOUBLE_EQ(ps2_.pu,ml2*2);
 	ASSERT_DOUBLE_EQ(ps2_.pa,ml2*1);
 	// M(q)qd = ml2[(3+2cqa)qud + (1+cqa)qad; (1+cqa)qud + qad];
-	ps2_.fromConfiguration(qpb4npb8n2n1_);
+	ps2_ = Phase(simple2_, qpb4npb8n2n1_);
 	ASSERT_DOUBLE_EQ(ps2_.pu, ml2*(-2*(3+2*cqa) - (1+cqa)));
 	ASSERT_DOUBLE_EQ(ps2_.pa, ml2*(-2*(1+cqa) - 1));
 }
@@ -181,32 +179,57 @@ TEST_F(PhaseTest, XINGBO_BOT)
 	};
 
 	// For qud = 1
-	px_.fromConfiguration(q0010_);
+	px_ = Phase(xingboBot_, q0010_);
 	ASSERT_DOUBLE_EQ(px_.pu, 137256267/(10e9));
 	ASSERT_DOUBLE_EQ(px_.pa, 50843367/(10e9));
 	// For qad = 1
-	px_.fromConfiguration(q0001_);
+	px_ = Phase(xingboBot_, q0001_);
 	ASSERT_DOUBLE_EQ(px_.pu, 50843367/(10e9));
 	ASSERT_DOUBLE_EQ(px_.pa, 26533331/(10e9));
 	// For mixed qa, qd
-	px_.fromConfiguration(qpb4npb8n2n1_);
+	px_ = Phase(xingboBot_, qpb4npb8n2n1_);
 	ASSERT_DOUBLE_EQ(px_.pu, xpu(-M_PI/8, -2, -1));
 	ASSERT_DOUBLE_EQ(px_.pa, xpa(-M_PI/8, -2, -1));
 }
 
-// Test to ensure qd = 0 means p = 0
-TEST_F(PhaseTest, QD_0_IMPLIES_P_0)
+// Test to make sure unactuated phase method returns the unactuated phase
+TEST_F(PhaseTest, UNACTUATED_PHASE_IS_CORRECT)
 {
-	ps1_.fromConfiguration(q0_);
-// TODO: For some reason this causes Ninja test to fail???
-//	EXPECT_DOUBLE_EQ(ps1_.pu, 0.0);
-//		ASSERT_DOUBLE_EQ(ps1_.pa, 0);
-//		ps2_.fromConfiguration(q);
-//		ASSERT_DOUBLE_EQ(ps2_.pu, 0);
-//		ASSERT_DOUBLE_EQ(ps2_.pa, 0);
-//		px_.fromConfiguration(q);
-//		ASSERT_DOUBLE_EQ(px_.pu, 0);
-//		ASSERT_DOUBLE_EQ(px_.pa, 0);
+	auto qVals = qs();
+	for(int i = 0; i < qVals.size(); ++i)
+	{
+		auto q = qVals[i];
+		ps1_ = Phase(simple1_, q);
+
+		auto ps1u = ps1_.unactuatedPhase();
+		ASSERT_DOUBLE_EQ(ps1u.qu, ps1_.qu);
+		ASSERT_DOUBLE_EQ(ps1u.pu, ps1_.pu);
+
+		ps2_ = Phase(simple2_,q);
+		auto ps2u = ps2_.unactuatedPhase();
+		ASSERT_DOUBLE_EQ(ps2u.qu, ps2_.qu);
+		ASSERT_DOUBLE_EQ(ps2u.pu, ps2_.pu);
+
+		px_ = Phase(xingboBot_, q);
+		auto pxu = px_.unactuatedPhase();
+		ASSERT_DOUBLE_EQ(pxu.qu, px_.qu);
+		ASSERT_DOUBLE_EQ(pxu.pu, px_.pu);
+	}
+}
+
+TEST_F(PhaseTest, QD_0_IMLIES_P_0)
+{
+	ps1_ = Phase(simple1_, q0_);
+	EXPECT_DOUBLE_EQ(ps1_.pu, 0);
+	ASSERT_DOUBLE_EQ(ps1_.pa, 0);
+
+	ps2_ = Phase(simple2_, qpb2000_);
+	EXPECT_DOUBLE_EQ(ps2_.pu, 0);
+	ASSERT_DOUBLE_EQ(ps2_.pa, 0);
+
+	px_ = Phase(xingboBot_, q0pb200_);
+	EXPECT_DOUBLE_EQ(px_.pu, 0);
+	ASSERT_DOUBLE_EQ(px_.pa, 0);
 }
 
 int main(int argc, char** argv)

@@ -20,8 +20,14 @@
 // Legacy code by Xingbo -----------------------------
 
 // Structure which holds the configuration object
-typedef struct Configurations { double psi, alpha, dpsi, dalpha, E; }
-Configuration; 
+typedef struct Configurations 
+{ 
+    double psi      = 0.0;
+    double alpha    = 0.0; 
+    double dpsi     = 0.0; 
+    double dalpha   = 0.0; 
+    double E        = 0.0; 
+} Configuration; 
 
 // Global configuration object
 // NOTE: This cannot be in the library or it causes linking issues, put it in
@@ -42,6 +48,9 @@ typedef struct Compensators { double s, xi, rho; } Compensator;
 // Automaton function: VHCState is a function pointer to a function of
 // Configuration and Compensator
 typedef void (*VHCState)(Configuration, Compensator);
+
+// Code by Adan
+using State = Configuration;
 
 #endif
 

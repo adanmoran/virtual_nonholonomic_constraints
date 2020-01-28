@@ -26,6 +26,10 @@ namespace SUGAR
 {
 
 /**
+ * Forward declare the UnactuatedPhase object
+ */
+class UnactuatedPhase;
+/**
  * @brief: Stores the Acrobot phase for the Hamiltonian framework. 
  * It takes an inverse inertia matrix, so that it can
  * compute its own updates.
@@ -33,29 +37,31 @@ namespace SUGAR
 class Phase
 {
 public:
-    Phase (const AcrobotInertia& M);
-    Phase (const AcrobotInertia& M, const Configuration& configuration);
+    Phase ();
+    Phase (const AcrobotInertia& M, const State& state);
 
     /**
-    * @brief: Updates the phase by computing p = M(q) q_dot at the given
-    * configuration.
+    * @brief: Returns the unactuated phase components for use in standard VNHCs
     *
-    * @param: Configuration configuration
-    *
-    * @return: bool
+    * @return: UnactuatedPhase
     */
-    auto fromConfiguration(const Configuration& configuration) -> bool;
+    auto unactuatedPhase() -> UnactuatedPhase;
 
-    double qu; // Configuration unactuated variable = psi
-    double qa; // Configuration actuated variable   = alpha
+    double qu; // State unactuated variable = psi
+    double qa; // State actuated variable   = alpha
     double pu; // Phase unactuated momentum         = e1' * M(q) * p
     double pa; // Phase actuated momentum           = e2' * M(q) * p
-    double E;  // Configuration energy as given by configuration
-
-private:
-    const AcrobotInertia& M_; // The inverse inertia matrix of the acrobot
+    double E;  // State energy as given by State
 }; // class Phase
 
+/**
+ * @brief: Stores the unactuated variables of a phase object
+ */
+struct UnactuatedPhase
+{
+    double qu = 0.0;
+    double pu = 0.0;
+};
 
 }; // namespace SUGAR
 #endif
