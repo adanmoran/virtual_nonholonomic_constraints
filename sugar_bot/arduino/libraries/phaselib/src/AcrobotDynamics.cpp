@@ -153,6 +153,11 @@ auto AcrobotPotential::at(const Configuration& configuration) -> double
     return gmldtpmtlt_ * (1 - cos(qu)) + gmlll_ * (1 - cos(qu + configuration.alpha));
 }
 
+auto AcrobotPotential::dqu(const Configuration& configuration) -> double
+{
+    auto qu = configuration.psi;
+    return gmldtpmtlt_*sin(qu) + gmlll_*sin(qu + configuration.alpha);
+}
 
 }; // namespace SUGAR
 /* vim: set tw=80 ts=4 sw=4 sts=0 et ffs=unix : */

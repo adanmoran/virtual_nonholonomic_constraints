@@ -621,6 +621,49 @@ TEST_F(AcrobotPotentialTest, XINGBO_POTENTIAL_CORRECT)
     }
 }
 
+// Test to make sure the derivative is correct for simple systems
+TEST_F(AcrobotPotentialTest, DV_DQU_SIMPLE)
+{
+    auto m = simplem_;
+    auto l = simplel_;
+    auto g = g_;
+
+    Configuration q;
+
+    for(int i = -9; i <= 9; ++i)
+    {
+        q.psi = M_PI*i/9.0;
+        for(int j = -9; j <= 9; ++j)
+        {
+            q.alpha = M_PI*j/9.0;
+            auto qu = q.psi;
+            auto qa = q.alpha;
+            auto correct_DP = 2*m*g*l*sin(qu) + m*g*l*sin(qu + qa);
+            ASSERT_PRED3(Within, simpleP_.dqu(q), correct_DP, 10e-14);
+        }
+    }
+}
+
+// Test to make sure the derivative is ccorrect for xingbo's acrobot
+TEST_F(AcrobotPotentialTest, DV_DQU_XINGBO)
+{
+    Configuration q;
+
+    for(int i = -9; i <= 9; ++i)
+    {
+        q.psi = M_PI*i/9.0;
+        for(int j = -9; j <= 9; ++j)
+        {
+            q.alpha = M_PI*j/9.0;
+            auto qu = q.psi;
+            auto qa = q.alpha;
+            auto correct_DP = 109643427.0/250000000.0*sin(qu) + 161136117.0/1000000000.0*sin(qu + qa);
+            ASSERT_PRED3(Within, xingboP_.dqu(q), correct_DP, 10e-14);
+        }
+    }
+
+}
+
 int main(int argc, char** argv)
 {
     ::testing::InitGoogleTest(&argc, argv);

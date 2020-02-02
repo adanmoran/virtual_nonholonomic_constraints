@@ -237,8 +237,15 @@ public:
     */
     auto at(const Configuration& configuration) -> double;
 
-//    TODO: A function which computes d/dqu of the potential at the given state
-//    or phase
+    /**
+    * @brief: Computes the derivative of the potential function with respect to
+    * the unactuated variable qu, at the configuration
+    *
+    * @param: const Configuration& configuration
+    *
+    * @return: double The partial derivative d/dqu V(q)
+    */
+    auto dqu(const Configuration& configuration) -> double;
 
 private:
 
