@@ -15,6 +15,8 @@
 
 #include "AcrobotDynamics.h"
 
+#include <iostream>
+
 namespace SUGAR
 {
 
@@ -39,9 +41,9 @@ auto Matrix2::at(unsigned int i, unsigned int j) -> double
     return matrix_[i-1][j-1];
 }
 
-///////////////////////////
+////////////////////
 // AcrobotInertia //
-///////////////////////////
+////////////////////
 
 AcrobotInertia::AcrobotInertia(double m, double l)
 : AcrobotInertia(
@@ -120,6 +122,39 @@ auto AcrobotInertia::inverseAt(const Configuration& configuration) -> Matrix2
 
     return Matrix2(a11,a12,a12,a22);
 }
+
+//////////////////////
+// AcrobotPotential //
+//////////////////////
+
+AcrobotPotential::AcrobotPotential(double m, double l, double g)
+: AcrobotPotential(
+    m,m,
+    l,
+    l,l,
+    g)
+{}
+
+AcrobotPotential::AcrobotPotential(
+double mt, double ml,
+double dt,
+double lt, double ll,
+double g
+)
+:   mt_(mt), ml_(ml),
+    dt_(dt),
+    lt_(lt), ll_(ll),
+    g_(g),
+    gmlll_(g*ml*ll),
+    gmldtpmtlt_(g*(ml*dt + mt*lt))
+{}
+
+auto AcrobotPotential::at(const Configuration& configuration) -> double
+{
+    auto qu = configuration.psi;
+    return gmldtpmtlt_ * (1 - cos(qu)) + gmlll_ * (1 - cos(qu + configuration.alpha));
+}
+
 
 }; // namespace SUGAR
 /* vim: set tw=80 ts=4 sw=4 sts=0 et ffs=unix : */

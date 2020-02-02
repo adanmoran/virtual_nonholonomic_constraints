@@ -60,9 +60,6 @@ private:
 }; // class Matrix
 
 
-// TODO: Rework this into AcrobotInertia, and set .at() and .inverseAt() as
-// functions (rather than having a full object for the inverse matrix)
-
 /**
  * class AcrobotInertia
  *
@@ -194,6 +191,73 @@ private:
     double mlll2pJl_; // ml*ll^2 + Jl
     
 }; // class AcrobotInertia
+
+/**
+ * class AcrobotPotential 
+ *
+ * @brief: A class which stores the acrobot's potential energy and can compute
+ * it at a given State or Phase. It can also give the derivative of the inertia
+ * with respect to its unactuated variable
+ */
+class AcrobotPotential
+{
+public:
+
+    /**
+     * @brief: Constructs an acrobot's potential function for a simple acrobot
+     *
+     * @param: double m = mass of each link, kg
+     * @param: double l = length of each link, m
+     * @param: double g = gravitational acceleration, m/(s^2)
+     */
+    AcrobotPotential(double m, double l, double g);
+    /**
+     * @brief: Constructs an acrobot's potential function
+     *
+     * @param: double mt = mass of torso link, kg
+     * @param: double ml = mass of leg link, kg
+     * @param: double dt = length of torso link, m
+     * @param: double lt = distance from hand to mt, m
+     * @param: double ll = distance from hip to ml, m
+     * @param: double g = gravitational acceleration m/(s^2)
+     */
+    AcrobotPotential(
+            double mt, double ml, 
+            double dt,            
+            double lt, double ll,
+            double g
+    );
+
+    /**
+    * @brief: compute the potential at the given state value
+    *
+    * @param: const Configuration& configuration
+    *
+    * @return: double The potential V(q)
+    */
+    auto at(const Configuration& configuration) -> double;
+
+//    TODO: A function which computes d/dqu of the potential at the given state
+//    or phase
+
+private:
+
+    // Masses in kg
+    double mt_;
+    double ml_;
+    // Lengths of links in m
+    double dt_;
+    // Distance of masses from base of links, in m
+    double lt_;
+    double ll_;
+    // Gravitational acceleration, in m/(s^2)
+    double g_;
+
+    // Constants for the computation of the potential
+    double gmlll_; //g*(ml_*ll_)
+    double gmldtpmtlt_; //g*(ml_*dt_ + mt_*lt_)
+
+}; // class AcrobotPotential
 
 }; // namespace SUGAR
 

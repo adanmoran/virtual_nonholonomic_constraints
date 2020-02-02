@@ -1,5 +1,5 @@
 /*******************************************************************************
-* File:	        AcrobotDynamicsTest.cpp
+* File:	        AcrobotInertiaTest.cpp
 *		 
 * Author:       Adan Moran-MacDonald
 * Created:      17/Jan/20
@@ -138,13 +138,13 @@ TEST(Matrix2Tests, MATRIX_GETTERS_INVALID_INPUT)
     EXPECT_FALSE(std::isnan(m.at(2,2)));
 }
 
-///////////////////////////
-// Inverse Inertia Tests //
-///////////////////////////
-class AcrobotDynamicsTest : public ::testing::Test
+///////////////////
+// Inertia Tests //
+///////////////////
+class AcrobotInertiaTest : public ::testing::Test
 {
 public:
-    AcrobotDynamicsTest()
+    AcrobotInertiaTest()
     :   eps_(10e-13),
         simple1_(1,1),
         simple2_(30,1),
@@ -238,7 +238,7 @@ protected:
 
 // Test to make sure that, for simple acrobots, we have
 // mt = ml, dt = dl = lt = ll, and Jt = Jl = 0
-TEST_F(AcrobotDynamicsTest, SIMPLE_MASSES_AND_LENGTHS_MATCH)
+TEST_F(AcrobotInertiaTest, SIMPLE_MASSES_AND_LENGTHS_MATCH)
 {
     for(auto&& simple : simpleAcrobots_)
     {
@@ -251,7 +251,7 @@ TEST_F(AcrobotDynamicsTest, SIMPLE_MASSES_AND_LENGTHS_MATCH)
     }
 }
 
-TEST_F(AcrobotDynamicsTest, SIMPLE_M_IS_CORRECT)
+TEST_F(AcrobotInertiaTest, SIMPLE_M_IS_CORRECT)
 {
     // Loop through and test the simple acrobot dynamics at each qa
     for(auto&& qa : qaVec_)
@@ -293,7 +293,7 @@ TEST_F(AcrobotDynamicsTest, SIMPLE_M_IS_CORRECT)
 
 // Test to make sure that the outputs of simple acrobots match what MATLAB gives
 // us for the value of Minv at each qa
-TEST_F(AcrobotDynamicsTest, SIMPLE_MINV_IS_CORRECT)
+TEST_F(AcrobotInertiaTest, SIMPLE_MINV_IS_CORRECT)
 {
     // Loop through and test the simple acrobot dynamics at each qa
     for(auto&& qa : qaVec_)
@@ -338,7 +338,7 @@ TEST_F(AcrobotDynamicsTest, SIMPLE_MINV_IS_CORRECT)
 }
 
 // Test to make sure changing qa does not affect the inertia matrix
-TEST_F(AcrobotDynamicsTest, SIMPLE_M_IS_FUNC_OF_QA)
+TEST_F(AcrobotInertiaTest, SIMPLE_M_IS_FUNC_OF_QA)
 {
     // For each qa, we want M(q) to be a function of only qa
     // We use pi/3 since it's a strange number and cannot be faked easily
@@ -378,7 +378,7 @@ TEST_F(AcrobotDynamicsTest, SIMPLE_M_IS_FUNC_OF_QA)
 
 // Test to make sure that changing qu does not affect the value of the inverse
 // inertia matrix (i.e. Minv(q) = Minv(qa)) for simple acrobots.
-TEST_F(AcrobotDynamicsTest, SIMPLE_MINV__IS_FUNC_OF_QA)
+TEST_F(AcrobotInertiaTest, SIMPLE_MINV__IS_FUNC_OF_QA)
 {
     // For each qa, we want Minv(q) to be a function of only qa
     // We use pi/3 since it's a strange number and cannot be faked easily
@@ -417,7 +417,7 @@ TEST_F(AcrobotDynamicsTest, SIMPLE_MINV__IS_FUNC_OF_QA)
 
 // Test to make sure Xingbo's acrobot's inertia matrix matches the one MATLAB
 // returns to us
-TEST_F(AcrobotDynamicsTest, XINGBO_M_CORRECT)
+TEST_F(AcrobotInertiaTest, XINGBO_M_CORRECT)
 {
     for(auto&& qa : qaVec_)
     {
@@ -436,7 +436,7 @@ TEST_F(AcrobotDynamicsTest, XINGBO_M_CORRECT)
 
 // Test to make sure that the outputs of complex acrobots matches what we expect
 // them to be for certain acrobots
-TEST_F(AcrobotDynamicsTest, XINGBO_MINV_IS_CORRECT)
+TEST_F(AcrobotInertiaTest, XINGBO_MINV_IS_CORRECT)
 {
     // Test Xingbo's acrobot, which has non-zero Jl and Jt
     for(auto&& qa : qaVec_)
@@ -467,7 +467,7 @@ TEST_F(AcrobotDynamicsTest, XINGBO_MINV_IS_CORRECT)
 }
 
 // Test to make sure the matrix is pd at each q, and symmetric
-TEST_F(AcrobotDynamicsTest, M_IS_SYMMETRIC_PD)
+TEST_F(AcrobotInertiaTest, M_IS_SYMMETRIC_PD)
 {
     for(auto&& qa : qaVec_)
     {
@@ -488,7 +488,7 @@ TEST_F(AcrobotDynamicsTest, M_IS_SYMMETRIC_PD)
 }
 
 // Test to make sure every matrix is positive definite at each q, and symmetric
-TEST_F(AcrobotDynamicsTest, MINV_IS_SYMMETRIC_PD)
+TEST_F(AcrobotInertiaTest, MINV_IS_SYMMETRIC_PD)
 {
     // Make sure that each matrix has positive (1,1) element, positive
     // determinant, and that (1,2) = (2,1)
@@ -505,6 +505,118 @@ TEST_F(AcrobotDynamicsTest, MINV_IS_SYMMETRIC_PD)
             auto determinant = Minv.at(1,1)*Minv.at(2,2) - Minv.at(1,2)*Minv.at(2,1);
             EXPECT_GT(Minv.at(1,1), 0);
             EXPECT_GT(determinant,0);
+        }
+    }
+}
+
+/////////////////////
+// Potential Tests //
+/////////////////////
+class AcrobotPotentialTest : public ::testing::Test
+{
+public:
+    AcrobotPotentialTest()
+    : simpleP_(simplem_, simplel_, g_),
+      xingboP_(
+        0.2112, 0.1979, //mt, ml,
+        0.148, // dt
+        0.073, 0.083, //lt, ll,
+        g_)
+    {}
+
+protected:
+    void SetUp() override
+    {
+    }
+
+    void TearDown() override
+    {}
+
+    // Simple potential functions to test
+    double simplem_ = 30.0;
+    double simplel_ = 1.0;
+    const double g_ = 9.81;
+
+    // Define the acrobots. This must come after the constants.
+    AcrobotPotential simpleP_;
+
+    // Complex potential functions
+    AcrobotPotential xingboP_;
+
+
+
+}; // AcrobotPotentialTest
+
+// Test for when qa = 0, qu varies i.e. the acrobot is a pendulum
+TEST_F(AcrobotPotentialTest, SIMPLE_POTENTIAL_QU_VARYING)
+{
+    // We expect the mass to be 2*m at length = 3/2*l
+    auto M = 2*simplem_;
+    auto l = 3.0/2.0*simplel_;
+
+    Configuration q;
+    q.alpha = 0;
+
+    for(int i = -9; i <= 9; ++i)
+    {
+        q.psi = M_PI*i/9.0;
+        ASSERT_DOUBLE_EQ(simpleP_.at(q), M*g_*l*(1 - cos(q.psi)));
+    }
+}
+
+// TEST for when qu = 0 and qa varies i.e. the first link is fied and the
+// acrobot is a shorter pendulum
+TEST_F(AcrobotPotentialTest, SIMPLE_POTENTIAL_QA_VARYING)
+{
+    auto m = simplem_;
+    auto l = simplel_;
+
+    Configuration q;
+    q.psi= 0;
+
+    for(int i = -9; i <= 9; ++i)
+    {
+        q.alpha = M_PI*i/9.0;
+        ASSERT_DOUBLE_EQ(simpleP_.at(q), m*g_*l*(1 - cos(q.alpha)));
+    }
+}
+
+// Test for generic qu and qa variations of  asimple acrobot
+TEST_F(AcrobotPotentialTest, SIMPLE_POTENTIAL_CORRECT)
+{
+    auto m = simplem_;
+    auto l = simplel_;
+
+    Configuration q;
+
+    for(int i = -9; i <= 9; ++i)
+    {
+        q.psi = M_PI*i/9.0;
+        for(int j = -9; j <= 9; ++j)
+        {
+            q.alpha = M_PI*j/9.0;
+            auto qu = q.psi;
+            auto qa = q.alpha;
+            ASSERT_DOUBLE_EQ(simpleP_.at(q), g_*((m*l*(1-cos(qu+qa)) + 2*m*l*(1-cos(qu)))));
+        }
+    }
+}
+
+// Test for the xingbo-bot
+TEST_F(AcrobotPotentialTest, XINGBO_POTENTIAL_CORRECT)
+{
+    Configuration q;
+
+    for(int i = -9; i <= 9; ++i)
+    {
+        q.psi = M_PI*i/9.0;
+        for(int j = -9; j <= 9; ++j)
+        {
+            q.alpha = M_PI*j/9.0;
+            auto qu = q.psi;
+            auto qa = q.alpha;
+            auto correct_P = 23988393.0/40000000.0 - 109643427.0/250000000.0*cos(qu) - 161136117.0/1000000000.0*cos(qu+qa);
+            ASSERT_PRED3(Within, xingboP_.at(q), correct_P, 10e-14);
         }
     }
 }
