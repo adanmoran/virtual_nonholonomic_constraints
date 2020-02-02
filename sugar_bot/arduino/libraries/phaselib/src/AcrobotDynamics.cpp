@@ -15,8 +15,6 @@
 
 #include "AcrobotDynamics.h"
 
-#include <iostream>
-
 namespace SUGAR
 {
 
