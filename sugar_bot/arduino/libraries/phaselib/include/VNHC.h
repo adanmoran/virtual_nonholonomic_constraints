@@ -28,7 +28,7 @@ namespace SUGAR
 class AcrobotVNHC
 {
 public:
-	AcrobotVNHC(const AcrobotInertia& M, const AcrobotPotential& V);
+	AcrobotVNHC(const Acrobot& acrobot);
 	virtual ~AcrobotVNHC();
 
 	/**
@@ -39,7 +39,7 @@ public:
 	 * @param: const UnactuatedPhase& the input to f(qu,pu)
 	 * @return: double the value qa
 	 */
-	virtual auto qa(const UnactuatedPhase& qpu) -> double = 0;
+	virtual auto qa(const UnactuatedPhase& qpu) const -> double = 0;
 
     /**
     * @brief: Computes the actuated momentum on the constraint manifold. This is
@@ -49,7 +49,7 @@ public:
     * @param: const UnactuatedPhase& qpu
     * @return: double pa the actuated momentum
     */
-    auto pa(const UnactuatedPhase& qpu) -> double;
+    auto pa(const UnactuatedPhase& qpu) const -> double;
 
     /**
     * @brief: Abstract function which, upon implementation, must compute the
@@ -59,7 +59,7 @@ public:
     *
     * @return: double dh/dqu
     */
-    virtual auto dqu(const UnactuatedPhase& qpu) -> double = 0;
+    virtual auto dqu(const UnactuatedPhase& qpu) const -> double = 0;
 
     /**
     * @brief: Computes the value dh/dqa, which for this type of constraint is
@@ -69,7 +69,7 @@ public:
     *
     * @return: auto
     */
-    auto dqa(const UnactuatedPhase& qpu) -> double;
+    auto dqa(const UnactuatedPhase& qpu) const -> double;
 
     /**
     * @brief: Abstract function which, upon implementation, must compute the
@@ -79,28 +79,19 @@ public:
     *
     * @return: double dh/dpu
     */
-    virtual auto dpu(UnactuatedPhase qpu) -> double = 0;
+    virtual auto dpu(UnactuatedPhase qpu) const -> double = 0;
 
 protected:
 
     /**
-    * @brief: Get the inertia matrix object for the acrobot
+    * @brief: Get the acrobot used by this vnhc
     *
-    * @return: auto
+    * @return: const Acrobot&
     */
-    auto M() const -> const AcrobotInertia&;
-
-    /**
-     * @brief: Get the potential object for the acrobot
-     *
-     * @return auto
-     */
-    auto V() const -> const AcrobotPotential&;
+    auto acrobot() const -> const Acrobot& { return acrobot_; }
 
 private:
-    // Define the energy components for the acrobot
-    const AcrobotInertia& M_;
-    const AcrobotPotential& V_;
+    const Acrobot& acrobot_;
 
 }; // class AcrobotVNHC
 

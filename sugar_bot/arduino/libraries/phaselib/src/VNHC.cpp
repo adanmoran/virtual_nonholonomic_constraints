@@ -21,37 +21,23 @@ namespace SUGAR
 // AcrobotVNHC //
 /////////////////
 
-AcrobotVNHC::AcrobotVNHC(const AcrobotInertia& M, const AcrobotPotential& V)
-: M_(M),
-  V_(V)
+AcrobotVNHC::AcrobotVNHC(const Acrobot& acrobot)
+: acrobot_(acrobot)
 {}
 
 AcrobotVNHC::~AcrobotVNHC()
 {}
 
-auto AcrobotVNHC::pa(const UnactuatedPhase& qpu) -> double
+auto AcrobotVNHC::pa(const UnactuatedPhase& qpu) const -> double
 {
     // TODO: Compute pa with the equation from VNHC research
     return 0.0;
 }
 
-auto AcrobotVNHC::dqa(const UnactuatedPhase& qpu) -> double
+auto AcrobotVNHC::dqa(const UnactuatedPhase& qpu) const -> double
 {
     // for qa = f(qu,pu), this is always true
     return 1;
-}
-
-//-------------------//
-// Private Functions //
-//-------------------//
-auto AcrobotVNHC::M() const -> const AcrobotInertia&
-{
-    return M_;
-}
-
-auto AcrobotVNHC::V() const -> const AcrobotPotential&
-{
-    return V_;
 }
 
 //////////////
