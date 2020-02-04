@@ -9,6 +9,16 @@ target_include_directories(PhaseLib PUBLIC
     ${CMAKE_SOURCE_DIR}/include/
 )
 
+add_library(VNHCLib
+    VNHC.cpp
+)
+target_include_directories(VNHCLib PUBLIC
+    ${CMAKE_SOURCE_DIR}/includ/
+)
+target_link_libraries(VNHCLib
+    PhaseLib
+)
+
 ########
 # Test #
 ########
