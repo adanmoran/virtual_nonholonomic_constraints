@@ -664,6 +664,59 @@ TEST_F(AcrobotPotentialTest, DV_DQU_XINGBO)
 
 }
 
+TEST_F(AcrobotPotentialTest, V_GETTERS)
+{
+    EXPECT_DOUBLE_EQ(xingboP_.g(), g_);
+    EXPECT_DOUBLE_EQ(simpleP_.g(), g_);
+}
+
+///////////////////
+// Acrobot Tests //
+///////////////////
+
+TEST(AcrobotTest, ACROBOT_OBJECT_IS_VALID)
+{
+    double mt = 0.2112;  double ml = 0.1979;  // m
+    double dt = 0.148;   double dl = 0.145;   // d
+    double lt = 0.073;   double ll = 0.083;   // l
+    double Jt = 0.00075; double Jl = 0.00129; // J
+    double g = 9.81;
+
+    // Create data which is to be put into the acrobot
+    AcrobotInertia xingboM(mt,ml,dt,dl,lt,ll,Jt,Jl);
+    AcrobotPotential xingboV(mt,ml,dt,lt,ll,g);
+
+    // Input it into an acrobot, then verify that we get the same objects
+    Acrobot xingBot(xingboM, xingboV);
+
+    auto xingBotM = xingBot.M();
+    auto xingBotV = xingBot.V();
+    ASSERT_EQ(xingBotM.mt(), mt);
+    ASSERT_EQ(xingBotM.ml(), ml);
+    ASSERT_EQ(xingBotM.dt(), dt);
+    ASSERT_EQ(xingBotM.dl(), dl);
+    ASSERT_EQ(xingBotM.lt(), lt);
+    ASSERT_EQ(xingBotM.ll(), ll);
+    ASSERT_EQ(xingBotM.Jt(), Jt);
+    ASSERT_EQ(xingBotM.Jl(), Jl);
+    ASSERT_EQ(xingBotV.g(), g);
+
+    // Now verify the same for if we make the acrobot directly
+    Acrobot xingBotGenerated(mt,ml,dt,dl,lt,ll,Jt,Jl,g);
+
+    auto xingBotM2 = xingBotGenerated.M();
+    auto xingBotV2 = xingBotGenerated.V();
+    ASSERT_EQ(xingBotM2.mt(), mt);
+    ASSERT_EQ(xingBotM2.ml(), ml);
+    ASSERT_EQ(xingBotM2.dt(), dt);
+    ASSERT_EQ(xingBotM2.dl(), dl);
+    ASSERT_EQ(xingBotM2.lt(), lt);
+    ASSERT_EQ(xingBotM2.ll(), ll);
+    ASSERT_EQ(xingBotM2.Jt(), Jt);
+    ASSERT_EQ(xingBotM2.Jl(), Jl);
+    ASSERT_EQ(xingBotV2.g(), g);
+}
+
 int main(int argc, char** argv)
 {
     ::testing::InitGoogleTest(&argc, argv);

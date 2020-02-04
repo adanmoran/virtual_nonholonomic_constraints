@@ -53,7 +53,7 @@ public:
     * @return: double The element value at (i,j). Returns NAN if (i,j) out of
     * range.
     */
-    auto at(unsigned int i, unsigned int j) -> double;
+    auto at(unsigned int i, unsigned int j) const -> double;
 
 private:
     double matrix_[2][2] = {{0,0},{0,0}};
@@ -112,56 +112,56 @@ public:
     *
     * @return: auto
     */
-    auto inverseAt(const Configuration& configuration) -> Matrix2;
+    auto inverseAt(const Configuration& configuration) const -> Matrix2;
 
     /**
      * @brief: Get the torso mass in kg
      *
      * @return: double
      */
-    inline auto mt() -> double { return mt_; }
+    inline auto mt() const -> double { return mt_; }
     /**
      * @brief: Get the leg mass in kg
      *
      * @return: double
      */
-    inline auto ml() -> double { return ml_; }
+    inline auto ml() const -> double { return ml_; }
     /**
      * @brief: Get the torso length in m
      *
      * @return: double
      */
-    inline auto dt() -> double { return dt_; }
+    inline auto dt() const -> double { return dt_; }
     /**
      * @brief: Get the leg length in m
      *
      * @return: double
      */
-    inline auto dl() -> double { return dl_; }
+    inline auto dl() const -> double { return dl_; }
     /**
      * @brief: Get the distance from hands to torso COM in m
      *
      * @return: double
      */
-    inline auto lt() -> double { return lt_; }
+    inline auto lt() const -> double { return lt_; }
     /**
      * @brief: Get the distance from hips to leg COM in m
      *
      * @return: double
      */
-    inline auto ll() -> double { return ll_; }
+    inline auto ll() const -> double { return ll_; }
      /**
      * @brief: Get the absolute moment of inertia of the torso in kg*m^2
      *
      * @return: double
      */
-    inline auto Jt() -> double { return Jt_; }
+    inline auto Jt() const -> double { return Jt_; }
      /**
      * @brief: Get the absolute moment of inertia of the legs in kg*m^2
      *
      * @return: double
      */
-    inline auto Jl() -> double { return Jl_; }
+    inline auto Jl() const -> double { return Jl_; }
           
 private:
     // Masses in kg
@@ -235,7 +235,7 @@ public:
     *
     * @return: double The potential V(q)
     */
-    auto at(const Configuration& configuration) -> double;
+    auto at(const Configuration& configuration) const -> double;
 
     /**
     * @brief: Computes the derivative of the potential function with respect to
@@ -245,7 +245,14 @@ public:
     *
     * @return: double The partial derivative d/dqu V(q)
     */
-    auto dqu(const Configuration& configuration) -> double;
+    auto dqu(const Configuration& configuration) const -> double;
+
+    /**
+     * @brief: returns the force of gravity used by this potential function
+     *
+     * @return: double g
+     */
+    auto g() const -> double { return g_; }
 
 private:
 
@@ -265,6 +272,49 @@ private:
     double gmldtpmtlt_; //g*(ml_*dt_ + mt_*lt_)
 
 }; // class AcrobotPotential
+
+/**
+ * @brief: A class which holds all the acrobot dynamics for a system. It stores
+ * the inertia matrix along with the potential.
+ */
+class Acrobot
+{
+public:
+    /**
+     * @brief: Consructor. Given masses and gravity, this generates an acrobot
+     * with the correct inertia and potential.
+     */
+    Acrobot(
+        double mt, double ml,
+        double dt, double dl,
+        double lt, double ll,
+        double Jt, double Jl,
+        double g);
+
+    /**
+     * @brief: Constructor which holds the inputted mass and potential objects.
+     */
+    Acrobot(const AcrobotInertia& M, const AcrobotPotential V);
+
+    /**
+     * @brief: Get the acrobot inertia matrix
+     *
+     * @return: const AcrobotInertia&
+     */
+    auto M() const -> const AcrobotInertia& { return M_; }
+    
+    /**
+     * @brief: Get the acrobot potential object
+     *
+     * @return: const AcrobotPotential&
+     */
+    auto V() const -> const AcrobotPotential& { return V_; }
+
+private:
+    AcrobotInertia M_;
+    AcrobotPotential V_;
+
+}; // class Acrobot
 
 }; // namespace SUGAR
 

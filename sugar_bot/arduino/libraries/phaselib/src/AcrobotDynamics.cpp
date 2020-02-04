@@ -29,7 +29,7 @@ Matrix2::Matrix2(double a11, double a12, double a21, double a22)
     matrix_[1][1] = a22;
 }
 
-auto Matrix2::at(unsigned int i, unsigned int j) -> double
+auto Matrix2::at(unsigned int i, unsigned int j) const -> double
 {
     if(i <= 0 || i > 2 || j <= 0 || j > 2)
     {
@@ -95,7 +95,7 @@ auto AcrobotInertia::at(const Configuration& configuration) const -> Matrix2
     return Matrix2(a11,a12,a12,a22);
 }
 
-auto AcrobotInertia::inverseAt(const Configuration& configuration) -> Matrix2
+auto AcrobotInertia::inverseAt(const Configuration& configuration) const -> Matrix2
 {
     // Get the configuration value for qa, which is all we need
     double qa = configuration.alpha;
@@ -147,17 +147,42 @@ double g
     gmldtpmtlt_(g*(ml*dt + mt*lt))
 {}
 
-auto AcrobotPotential::at(const Configuration& configuration) -> double
+auto AcrobotPotential::at(const Configuration& configuration) const -> double
 {
     auto qu = configuration.psi;
     return gmldtpmtlt_ * (1 - cos(qu)) + gmlll_ * (1 - cos(qu + configuration.alpha));
 }
 
-auto AcrobotPotential::dqu(const Configuration& configuration) -> double
+auto AcrobotPotential::dqu(const Configuration& configuration) const -> double
 {
     auto qu = configuration.psi;
     return gmldtpmtlt_*sin(qu) + gmlll_*sin(qu + configuration.alpha);
 }
+
+/////////////
+// Acrobot //
+/////////////
+
+Acrobot::Acrobot(
+double mt, double ml,
+double dt, double dl,
+double lt, double ll,
+double Jt, double Jl,
+double g)
+:   M_( mt, ml,
+        dt, dl,
+        lt, ll,
+        Jt, Jl),
+    V_( mt, ml,
+        dt, 
+        lt, ll,
+        g)
+{}
+
+Acrobot::Acrobot(const AcrobotInertia& M, const AcrobotPotential V)
+: M_(M),
+  V_(V)
+{}
 
 }; // namespace SUGAR
 /* vim: set tw=80 ts=4 sw=4 sts=0 et ffs=unix : */
