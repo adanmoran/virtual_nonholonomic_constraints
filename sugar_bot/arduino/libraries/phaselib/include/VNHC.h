@@ -28,6 +28,9 @@ namespace SUGAR
 class AcrobotVNHC
 {
 public:
+    /**
+     * @brief: consructor which generates a VNHC for the given acrobot
+     */
 	AcrobotVNHC(const Acrobot& acrobot);
 	virtual ~AcrobotVNHC();
 
@@ -67,7 +70,7 @@ public:
     *
     * @param: const UnactuatedPhase& qpu
     *
-    * @return: auto
+    * @return: double dh/dqa
     */
     auto dqa(const UnactuatedPhase& qpu) const -> double;
 
@@ -75,11 +78,21 @@ public:
     * @brief: Abstract function which, upon implementation, must compute the
     * value dh/dpu = -df/dpu.
     *
-    * @param: UnactuatedPhase qpu
+    * @param: const UnactuatedPhase& qpu
     *
     * @return: double dh/dpu
     */
-    virtual auto dpu(UnactuatedPhase qpu) const -> double = 0;
+    virtual auto dpu(const UnactuatedPhase& qpu) const -> double = 0;
+
+    /**
+     * @brief: Computes the value dh/dpa, which for this type of constraint is
+     * always equal to 0 for all inputs.
+     *
+     * @param: const UnactuatedPhase& qpu
+     * 
+     * @return: double dh/dpa
+     */
+    auto dpa(const UnactuatedPhase& qpu) const -> double;
 
 protected:
 
@@ -100,10 +113,81 @@ private:
  * regular VNHC that successfully injects energy into the acrobot in simulation.
  */
 // TODO: Fill this in to complete the AcrobotVNHC
-class TanhVNHC //: public AcrobotVNHC
+class TanhVNHC : public AcrobotVNHC
 {
+public:
+    TanhVNHC(const Acrobot& acrobot);
+    ~TanhVNHC();
 
+    /**
+     * @brief: Implementation of AcrobotVNHC's qa function, which gives qa =
+     * tanh(pu)
+     *
+     * @param: const UnactuatedPhase& 
+     * @return: double
+     */
+    auto qa(const UnactuatedPhase& qpu) const -> double;
+
+    /**
+    * @brief: Implementation of AcrobotVNHC's dqu function, whch gives 
+    * dh/dqu = 0 since d/dqu tanh(pu) = 0.
+    *
+    * @param: const UnactuatedPhase&
+    * @return: double
+    */
+    auto dqu(const UnactuatedPhase& qpu) const -> double;
+
+    /**
+    * @brief: Implementation of AcrobotVNHC's dpu function, which gives dh/dpu =
+    * -d/dpu tanh(pu)
+    *
+    * @param: const UnactuatedPhase& qpu
+    * @return: double 
+    */
+    auto dpu(const UnactuatedPhase& qpu) const -> double;
 }; // class TanhVNHC
+
+/**
+ * @brief: A class for the acrobot VNHC of the type qa = sin(atan2(pu,qu)),
+ * which is NOT a regular VNHC yet it still injects energy into the acrobot in
+ * simulation (and it does it quite well).
+ */
+class SinuVNHC : public AcrobotVNHC
+{
+public:
+    SinuVNHC(double qmax, const Acrobot& acrobot);
+    ~SinuVNHC();
+
+    /**
+     * @brief: Implementation of AcrobotVNHC's qa function, which gives qa =
+     * sin(atan2(pu,qu))
+     *
+     * @param: const UnactuatedPhase& 
+     * @return: double
+     */
+    auto qa(const UnactuatedPhase& qpu) const -> double;
+
+    /**
+    * @brief: Implementation of AcrobotVNHC's dqu function, whch gives 
+    * dh/dqu = - d/dqu sin(atan2(pu,qu))
+    *
+    * @param: const UnactuatedPhase&
+    * @return: double
+    */
+    auto dqu(const UnactuatedPhase& qpu) const -> double;
+
+    /**
+    * @brief: Implementation of AcrobotVNHC's dpu function, which gives dh/dpu =
+    * -d/dpu sin(atan2(pu,qu))
+    *
+    * @param: const UnactuatedPhase& qpu
+    * @return: double 
+    */
+    auto dpu(const UnactuatedPhase& qpu) const -> double;
+
+private:
+    double qmax_;
+}; // class SinuVNHC
 
 } // namespace SUGAR
 #endif /* VNHC_H */
