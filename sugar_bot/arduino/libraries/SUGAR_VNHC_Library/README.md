@@ -1,15 +1,22 @@
 # SUGAR_VNHC_LIB
 This library enables VNHC control of the SUGAR Acrobot system. 
 
-This library contains two sections:
-* The Arduino library, consisting of symbolic links to the actual code.
-* The pure C++ code, which can be compiled and tested on any computer.
+## Using the Library in Arduino
+To use this library in Windows on an Arduino, you must first copy this entire folder to
+your Arduino libraries folder. This is usually located in `Documents\Arduino\libraries\`. 
 
-The pure C++ code is found in the `include/` and `src/` folders, 
-while the folder labelled `SUGAR_VNHC_Library` has symbolic links to the relevant files that the
-Arduino can use to compile the code.
+IMPORTANT: You must then run the batch script in the `scripts` folder to copy the relevant cpp files to
+this folder's root directory. This will allow the Arduino compiler to actually compile the library for use.
 
-If you want to compile and test the code on a computer, perform the following commands from the root folder of this library:
+Simply put
+```c++
+#include "SUGAR_VNHC.h"
+```
+at the top of your arduino code to include this library and use all of its components.
+
+## Editing the library 
+If you want to compile and test the code, especially on a linux machine, 
+perform the following commands from the root folder of this library:
 ```
 mkdir build/
 cd build
@@ -19,4 +26,3 @@ ninja
 ```
 Optionally, you can test the code with `ninja test`, which runs the gtest suite.
 
-If you want to include the library in your Arduino, copy this whole folder into your Arduino libraries folder (in Windows this is usually under `Documents\Arduino\libraries\`). Then, in your Arduino IDE you can load in the folder labelled `SUGAR_VNHC_Library`. Simply include the file `VNHC.h`.
