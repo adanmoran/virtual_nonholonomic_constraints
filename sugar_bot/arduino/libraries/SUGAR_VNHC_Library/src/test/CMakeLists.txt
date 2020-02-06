@@ -3,18 +3,27 @@
 ####################
 
 add_executable(AcrobotDynamicsTest AcrobotDynamicsTest.cpp)
+target_include_directories(AcrobotDynamicsTest PUBLIC
+	${CMAKE_SOURCE_DIR}/include/
+)
 target_link_libraries(AcrobotDynamicsTest
 	PhaseLib
 	gtest
 )
 
 add_executable(PhaseTest PhaseTest.cpp)
+target_include_directories(PhaseTest PUBLIC
+	${CMAKE_SOURCE_DIR}/include/
+)
 target_link_libraries(PhaseTest
 	PhaseLib
     gtest
 )
 
 add_executable(VNHCTest VNHCTest.cpp)
+target_include_directories(VNHCTest PUBLIC
+	${CMAKE_SOURCE_DIR}/include/
+)
 target_link_libraries(VNHCTest
 	VNHCLib
     gtest

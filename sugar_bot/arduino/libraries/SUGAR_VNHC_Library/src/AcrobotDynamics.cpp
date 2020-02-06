@@ -13,7 +13,7 @@
 * Description:   Implements AcrobotDynamics.h
 *******************************************************************************/
 
-#include "AcrobotDynamics.h"
+#include "include/AcrobotDynamics.h"
 
 namespace SUGAR
 {

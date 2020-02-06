@@ -6,14 +6,14 @@ add_library(PhaseLib
     Phase.cpp
 )
 target_include_directories(PhaseLib PUBLIC
-    ${CMAKE_SOURCE_DIR}/include/
+    ${CMAKE_SOURCE_DIR}
 )
 
 add_library(VNHCLib
     VNHC.cpp
 )
 target_include_directories(VNHCLib PUBLIC
-    ${CMAKE_SOURCE_DIR}/includ/
+    ${CMAKE_SOURCE_DIR}
 )
 target_link_libraries(VNHCLib
     PhaseLib

@@ -13,7 +13,7 @@
 * Description:   Implements VNHC.h, the virutal nonholonomic constraint code
 *******************************************************************************/
 
-#include "VNHC.h"
+#include "include/VNHC.h"
 // For tanh, cosh, sin, cos, etc
 #include <math.h>
 

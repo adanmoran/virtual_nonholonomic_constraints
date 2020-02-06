@@ -13,7 +13,7 @@
 * Description:   Source file for the Phase library
 *******************************************************************************/
 
-#include "Phase.h"
+#include "include/Phase.h"
 
 namespace SUGAR
 {
