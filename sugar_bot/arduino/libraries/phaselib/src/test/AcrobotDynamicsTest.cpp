@@ -17,6 +17,8 @@
 // Includes to test
 #include "AcrobotDynamics.h"
 #include "StateSpace.h"
+// Include custom predicates
+#include "test/Predicates.h"
 // C++ libraries
 #include <vector>
 #include <iostream>
@@ -27,24 +29,7 @@
 #include "gtest/gtest.h"
 
 using namespace SUGAR;
-
-///////////////////////
-// Custom Predicates //
-///////////////////////
-
-/**
-* @brief: Predicate to decide if a and b are within tolerance of each other
-*
-* @param: double a
-*       : double b
-*       : double tolerance
-*
-* @return: bool
-*/
-bool Within(double a, double b, double tolerance)
-{
-    return std::abs(a-b) <= tolerance;
-}
+using SUGAR::predicates::Within;
 
 ///////////////////
 // Matrix2 Tests //

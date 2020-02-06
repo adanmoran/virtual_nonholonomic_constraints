@@ -186,6 +186,15 @@ public:
     auto dpu(const UnactuatedPhase& qpu) const -> double;
 
 private:
+    /**
+    * @brief: Returns the norm of the unactuated phase, sqrt(qu^2_pu^2)
+    *
+    * @param: const UnactuatedPhase& qpu
+    *
+    * @return: double
+    */
+    auto norm(const UnactuatedPhase& qpu) const -> double;
+
     double qmax_;
 }; // class SinuVNHC
 
