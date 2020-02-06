@@ -53,7 +53,9 @@ Phase::Phase(const AcrobotInertia& M, const State& state)
 
 auto Phase::unactuatedPhase() -> UnactuatedPhase
 {
-    return (UnactuatedPhase){.qu = qu, .pu = pu};
+    UnactuatedPhase qpu;
+    qpu.qu = qu; qpu.pu = pu;
+    return qpu;
 }
 
 }; // namespace SUGAR
