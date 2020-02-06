@@ -38,7 +38,8 @@ auto AcrobotVNHC::pa(const UnactuatedPhase& qpu) const -> double
     
     // The acrobot inertia matrix depends on qa, so take qa = f(qu,pu) and
     // use that in the configuration state.
-    Configuration q{.psi = qpu.qu, .alpha = qa(qpu)};
+    Configuration q;
+	q.psi = qpu.qu; q.alpha = qa(qpu);
     auto Minv = acrobot_.M().inverseAt(q);
 
     // Now compute dhq*Minv, which is a row vector with two components
