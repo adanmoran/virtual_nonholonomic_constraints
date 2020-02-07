@@ -286,11 +286,9 @@ TEST_F(VNHCTest, Tanh_QMAX)
     TanhVNHC tanh_0(xingbot_, 0);
     TanhVNHC tanh_1(xingbot_, 1);
     TanhVNHC tanh_pi(xingbot_, M_PI);
-    // Negative values are allowed to dissipate energy 
-    TanhVNHC tanh_npi(xingbot_, -M_PI);
-    // Values outside of [-M_PI, M_PI] should be capped to within that range.
+    // Values outside of [0, M_PI] should be capped to within that range.
     TanhVNHC tanh_above_pi(xingbot_,  10);
-    TanhVNHC tanh_below_npi(xingbot_, -5);
+    TanhVNHC tanh_below_0(xingbot_, -5);
 
     for (int i = -10; i <= 10; ++i)
     {
@@ -307,11 +305,9 @@ TEST_F(VNHCTest, Tanh_QMAX)
                 EXPECT_PRED3(Within, tanh_0.qa(qpu_), 0, eps_);
                 EXPECT_PRED3(Within, tanh_1.qa(qpu_), tanh(qpu_.pu), eps_);
                 EXPECT_PRED3(Within, tanh_pi.qa(qpu_), M_PI*tanh(qpu_.pu), eps_);
-                // Test the energy dissipation VNHC
-                EXPECT_PRED3(Within, tanh_npi.qa(qpu_), -M_PI*tanh(qpu_.pu), eps_);
                 // Test the outside of range vnhc, which should be capped
                 EXPECT_PRED3(Within, tanh_above_pi.qa(qpu_), M_PI*tanh(qpu_.pu), eps_);
-                ASSERT_PRED3(Within, tanh_below_npi.qa(qpu_), -M_PI*tanh(qpu_.pu), eps_);
+                ASSERT_PRED3(Within, tanh_below_0.qa(qpu_), 0, eps_);
             }
         }
     }
@@ -323,11 +319,9 @@ TEST_F(VNHCTest, SINU_QMAX)
     SinuVNHC sinu_0(xingbot_, 0);
     SinuVNHC sinu_1(xingbot_, 1);
     SinuVNHC sinu_pi(xingbot_, M_PI);
-    // Negative values are allowed to dissipate energy 
-    SinuVNHC sinu_npi(xingbot_, -M_PI);
-    // Values outside of [-M_PI, M_PI] should be capped to within that range.
+    // Values outside of [0, M_PI] should be capped to within that range.
+    SinuVNHC sinu_below_0(xingbot_, -M_PI);
     SinuVNHC sinu_above_pi(xingbot_,  10);
-    SinuVNHC sinu_below_npi(xingbot_, -5);
 
     for (int i = -10; i <= 10; ++i)
     {
@@ -346,11 +340,9 @@ TEST_F(VNHCTest, SINU_QMAX)
                 EXPECT_PRED3(Within, sinu_0.qa(qpu_), 0, eps_);
                 EXPECT_PRED3(Within, sinu_1.qa(qpu_), sin(theta), eps_);
                 EXPECT_PRED3(Within, sinu_pi.qa(qpu_), M_PI*sin(theta), eps_);
-                // Test the energy dissipation VNHC
-                EXPECT_PRED3(Within, sinu_npi.qa(qpu_), -M_PI*sin(theta), eps_);
                 // Test the outside of range vnhc, which should be capped
+                EXPECT_PRED3(Within, sinu_below_0.qa(qpu_), 0, eps_);
                 EXPECT_PRED3(Within, sinu_above_pi.qa(qpu_), M_PI*sin(theta), eps_);
-                ASSERT_PRED3(Within, sinu_below_npi.qa(qpu_), -M_PI*sin(theta), eps_);
             }
         }
     }

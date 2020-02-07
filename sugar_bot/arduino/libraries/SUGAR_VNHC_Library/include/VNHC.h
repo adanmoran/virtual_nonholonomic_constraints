@@ -34,9 +34,20 @@ class AcrobotVNHC
 {
 public:
     /**
-     * @brief: consructor which generates a VNHC for the given acrobot
+     * @brief: consructor which generates a VNHC for the given acrobot with
+     * actuator limit qa in [-pi, pi].
      */
 	AcrobotVNHC(const Acrobot& acrobot);
+
+    /**
+     * @brief: Constructor which generates a VNHC for the given acrobot. It take
+     * in an actuator limit, which is limited to be within the range [0, pi].
+     * The actuator will be able to go within [-qmax, qmax]. 
+     *
+     * @param: const Acrobot&
+     * @param: ActuatorLimit
+     */
+    AcrobotVNHC(const Acrobot& acrobot, ActuatorLimit qmax);
 	virtual ~AcrobotVNHC();
 
 	/**
@@ -106,10 +117,19 @@ protected:
     *
     * @return: const Acrobot&
     */
-    auto acrobot() const -> const Acrobot& { return acrobot_; }
+    inline auto acrobot() const -> const Acrobot& { return acrobot_; }
+
+    /**
+     * @brief: Get the actuator limit for this vnhc
+     *
+     * @return: ActuatorLimit
+     */
+    inline auto qmax() const -> ActuatorLimit { return qmax_; }
 
 private:
     const Acrobot& acrobot_;
+
+    ActuatorLimit qmax_;
 
 }; // class AcrobotVNHC
 
@@ -117,15 +137,13 @@ private:
  * @brief: A class for the acrobot VNHC of the type qa = tanh(pu), which is a
  * regular VNHC that successfully injects energy into the acrobot in simulation.
  */
-// TODO: Fill this in to complete the AcrobotVNHC
 class TanhVNHC : public AcrobotVNHC
 {
 public:
     /**
      * @brief: Constructs a VNHC of the type qa = qmax*tanh(pu). Note that qmax
-     * must be wtihin [-pi, pi]. If not, it is truncated to be within that
-     * value. A positive qmax should gain energy, while a negative one should
-     * dissipate it.
+     * must be wtihin [0, pi]. If not, it is truncated to be within that
+     * value.
      *
      * @param: const Acrobot&
      * @param: ActuatorLimit
@@ -160,8 +178,6 @@ public:
     */
     auto dpu(const UnactuatedPhase& qpu) const -> double;
 
-private:
-    ActuatorLimit qmax_;
 }; // class TanhVNHC
 
 /**
@@ -174,9 +190,8 @@ class SinuVNHC : public AcrobotVNHC
 public:
     /**
      * @brief: Construct a VNHC of the type qmax*sin(atan2(pu,qu)). The actuator
-     * limit qmax must be within [-pi, pi]. If not, it will be truncated to
-     * within that range. A positive qmax should gain energy while a negative
-     * one will lose it.
+     * limit qmax must be within [0, pi]. If not, it will be truncated to
+     * within that range.
      *
      * @param: const Acrobot&
      * @param: ActuatorLimit
@@ -221,7 +236,6 @@ private:
     */
     auto norm(const UnactuatedPhase& qpu) const -> double;
 
-    ActuatorLimit qmax_;
 }; // class SinuVNHC
 
 } // namespace SUGAR

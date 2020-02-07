@@ -24,8 +24,25 @@ namespace SUGAR
 /////////////////
 
 AcrobotVNHC::AcrobotVNHC(const Acrobot& acrobot)
-: acrobot_(acrobot)
+: acrobot_(acrobot),
+  qmax_(M_PI)
 {}
+
+AcrobotVNHC::AcrobotVNHC(const Acrobot& acrobot, ActuatorLimit qmax)
+: acrobot_(acrobot)
+{
+    // Limit ourselves to have an actuator limit within -PI to PI, since this is
+    // an acrobot after all.
+    if(qmax < 0)
+    {
+        qmax = 0;
+    }
+    else if(qmax > M_PI)
+    {
+        qmax = M_PI;
+    }
+    qmax_ = qmax;
+}
 
 AcrobotVNHC::~AcrobotVNHC()
 {}
@@ -73,20 +90,8 @@ auto AcrobotVNHC::dpa(const UnactuatedPhase& qpu) const -> double
 //////////////
 
 TanhVNHC::TanhVNHC(const Acrobot& acrobot, ActuatorLimit qmax)
-: AcrobotVNHC(acrobot)
-{
-    // Limit ourselves to have an actuator limit within -PI to PI, since this is
-    // an acrobot after all.
-    if(qmax < -M_PI)
-    {
-        qmax = -M_PI;
-    }
-    else if(qmax > M_PI)
-    {
-        qmax = M_PI;
-    }
-    qmax_ = qmax;
-}
+: AcrobotVNHC(acrobot, qmax)
+{}
 
 TanhVNHC::~TanhVNHC()
 {}
@@ -94,7 +99,7 @@ TanhVNHC::~TanhVNHC()
 auto TanhVNHC::qa(const UnactuatedPhase& qpu) const -> double
 {
     // This should return qmax*tanh(pu)
-    return qmax_*tanh(qpu.pu);
+    return qmax()*tanh(qpu.pu);
 }
 
 auto TanhVNHC::dqu(const UnactuatedPhase& qpu) const -> double
@@ -105,32 +110,20 @@ auto TanhVNHC::dqu(const UnactuatedPhase& qpu) const -> double
 
 auto TanhVNHC::dpu(const UnactuatedPhase& qpu) const -> double
 {
-    // TODO: This should return the derivative dh/dpu = -qmax* d/dpu tanh(pu) =
+    // This returns the derivative dh/dpu = -qmax* d/dpu tanh(pu) =
     // qmax_*(tanh(pu)^2 - 1)
     auto tanhpu = tanh(qpu.pu);
     auto tanhpu2 = tanhpu*tanhpu;
 
-    return qmax_*(tanhpu2 - 1);
+    return qmax()*(tanhpu2 - 1);
 }
 
 //////////////
 // SinuVNHC //
 //////////////
 SinuVNHC::SinuVNHC(const Acrobot& acrobot, ActuatorLimit qmax)
-: AcrobotVNHC(acrobot)
-{
-    // Limit ourselves to have an actuator limit within -PI to PI, since this is
-    // an acrobot after all.
-    if(qmax < -M_PI)
-    {
-        qmax = -M_PI;
-    }
-    else if(qmax > M_PI)
-    {
-        qmax = M_PI;
-    }
-    qmax_ = qmax;
-}
+: AcrobotVNHC(acrobot, qmax)
+{}
 
 SinuVNHC::~SinuVNHC()
 {}
@@ -140,7 +133,7 @@ auto SinuVNHC::qa(const UnactuatedPhase& qpu) const -> double
     // This should return qmax*sin(theta). For simplicity, we won't solve for
     // theta, we'll just use the expanded form. This is because sqrt is faster
     // than atan2 and sine (usually).
-    return qmax_*qpu.pu/norm(qpu);
+    return qmax()*qpu.pu/norm(qpu);
 }
 
 auto SinuVNHC::dqu(const UnactuatedPhase& qpu) const -> double
@@ -152,7 +145,7 @@ auto SinuVNHC::dqu(const UnactuatedPhase& qpu) const -> double
     // should get qmax*qu*pu / ((qu^2 + pu^2)^(3/2))
     auto qpu_norm = norm(qpu);
     auto qpu_norm3 = qpu_norm*qpu_norm*qpu_norm;
-    return qmax_*qpu.qu*qpu.pu/qpu_norm3;
+    return qmax()*qpu.qu*qpu.pu/qpu_norm3;
 }
 
 auto SinuVNHC::dpu(const UnactuatedPhase& qpu) const -> double
@@ -163,7 +156,7 @@ auto SinuVNHC::dpu(const UnactuatedPhase& qpu) const -> double
     // should get -qmax*qu^2 / ((qu^2 + pu^2)^(3/2))
     auto qpu_norm = norm(qpu);
     auto qpu_norm3 = qpu_norm*qpu_norm*qpu_norm;
-    return -qmax_*qpu.qu*qpu.qu/qpu_norm3;
+    return -qmax()*qpu.qu*qpu.qu/qpu_norm3;
 }
 
 //-------------------//
