@@ -1,1 +1,6 @@
+# Ignore the build folder
 build/
+# Ignore links used by the Arduino
+AcrobotDynamics.cpp
+Phase.cpp
+VNHC.cpp
