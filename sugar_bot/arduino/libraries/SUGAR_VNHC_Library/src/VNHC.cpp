@@ -72,17 +72,29 @@ auto AcrobotVNHC::dpa(const UnactuatedPhase& qpu) const -> double
 // TanhVNHC //
 //////////////
 
-TanhVNHC::TanhVNHC(const Acrobot& acrobot)
+TanhVNHC::TanhVNHC(const Acrobot& acrobot, ActuatorLimit qmax)
 : AcrobotVNHC(acrobot)
-{}
+{
+    // Limit ourselves to have an actuator limit within -PI to PI, since this is
+    // an acrobot after all.
+    if(qmax < -M_PI)
+    {
+        qmax = -M_PI;
+    }
+    else if(qmax > M_PI)
+    {
+        qmax = M_PI;
+    }
+    qmax_ = qmax;
+}
 
 TanhVNHC::~TanhVNHC()
 {}
 
 auto TanhVNHC::qa(const UnactuatedPhase& qpu) const -> double
 {
-    // This should return tanh(pu)
-    return tanh(qpu.pu);
+    // This should return qmax*tanh(pu)
+    return qmax_*tanh(qpu.pu);
 }
 
 auto TanhVNHC::dqu(const UnactuatedPhase& qpu) const -> double
@@ -93,21 +105,32 @@ auto TanhVNHC::dqu(const UnactuatedPhase& qpu) const -> double
 
 auto TanhVNHC::dpu(const UnactuatedPhase& qpu) const -> double
 {
-    // TODO: This should return the derivative dh/dpu = - d/dpu tanh(pu) =
-    // tanh(pu)^2 - 1
-    auto tanhpu = qa(qpu);
+    // TODO: This should return the derivative dh/dpu = -qmax* d/dpu tanh(pu) =
+    // qmax_*(tanh(pu)^2 - 1)
+    auto tanhpu = tanh(qpu.pu);
     auto tanhpu2 = tanhpu*tanhpu;
 
-    return tanhpu2 - 1;
+    return qmax_*(tanhpu2 - 1);
 }
 
 //////////////
 // SinuVNHC //
 //////////////
-SinuVNHC::SinuVNHC(double qmax, const Acrobot& acrobot)
-: AcrobotVNHC(acrobot),
-  qmax_(qmax)
-{}
+SinuVNHC::SinuVNHC(const Acrobot& acrobot, ActuatorLimit qmax)
+: AcrobotVNHC(acrobot)
+{
+    // Limit ourselves to have an actuator limit within -PI to PI, since this is
+    // an acrobot after all.
+    if(qmax < -M_PI)
+    {
+        qmax = -M_PI;
+    }
+    else if(qmax > M_PI)
+    {
+        qmax = M_PI;
+    }
+    qmax_ = qmax;
+}
 
 SinuVNHC::~SinuVNHC()
 {}

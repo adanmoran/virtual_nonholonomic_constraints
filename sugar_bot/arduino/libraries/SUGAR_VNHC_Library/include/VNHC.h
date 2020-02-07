@@ -22,6 +22,11 @@ namespace SUGAR
 {
 
 /**
+ * @brief: Define an object which defines an actuator limit for VNHCs
+ */
+using ActuatorLimit = double;
+
+/**
  * @brief: An abstract function which allows for virtual nonholonomic
  * constraints for the acrobot of the type qa = f(qu,pu)
  */
@@ -116,7 +121,16 @@ private:
 class TanhVNHC : public AcrobotVNHC
 {
 public:
-    TanhVNHC(const Acrobot& acrobot);
+    /**
+     * @brief: Constructs a VNHC of the type qa = qmax*tanh(pu). Note that qmax
+     * must be wtihin [-pi, pi]. If not, it is truncated to be within that
+     * value. A positive qmax should gain energy, while a negative one should
+     * dissipate it.
+     *
+     * @param: const Acrobot&
+     * @param: ActuatorLimit
+     */
+    TanhVNHC(const Acrobot& acrobot, ActuatorLimit qmax);
     ~TanhVNHC();
 
     /**
@@ -145,6 +159,9 @@ public:
     * @return: double 
     */
     auto dpu(const UnactuatedPhase& qpu) const -> double;
+
+private:
+    ActuatorLimit qmax_;
 }; // class TanhVNHC
 
 /**
@@ -155,7 +172,16 @@ public:
 class SinuVNHC : public AcrobotVNHC
 {
 public:
-    SinuVNHC(double qmax, const Acrobot& acrobot);
+    /**
+     * @brief: Construct a VNHC of the type qmax*sin(atan2(pu,qu)). The actuator
+     * limit qmax must be within [-pi, pi]. If not, it will be truncated to
+     * within that range. A positive qmax should gain energy while a negative
+     * one will lose it.
+     *
+     * @param: const Acrobot&
+     * @param: ActuatorLimit
+     */
+    SinuVNHC(const Acrobot& acrobot, ActuatorLimit qmax);
     ~SinuVNHC();
 
     /**
@@ -195,7 +221,7 @@ private:
     */
     auto norm(const UnactuatedPhase& qpu) const -> double;
 
-    double qmax_;
+    ActuatorLimit qmax_;
 }; // class SinuVNHC
 
 } // namespace SUGAR
