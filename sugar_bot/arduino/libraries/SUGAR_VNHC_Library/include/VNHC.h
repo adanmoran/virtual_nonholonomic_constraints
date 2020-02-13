@@ -27,6 +27,11 @@ namespace SUGAR
 using ActuatorLimit = double;
 
 /**
+ * @brief: Define an object which defines a scaling factor  for VNHCs
+ */
+using ScalingFactor = double;
+
+/**
  * @brief: An abstract function which allows for virtual nonholonomic
  * constraints for the acrobot of the type qa = f(qu,pu)
  */
@@ -149,6 +154,18 @@ public:
      * @param: ActuatorLimit
      */
     TanhVNHC(const Acrobot& acrobot, ActuatorLimit qmax);
+
+    /**
+     * @brief: Constructs a VNHC of the type qa = qmax*tanh(scale*pu). Note that
+     * qmax must be within [0, pi]. If not, it is truncated to be within that
+     * value.
+     *
+     * @param: const Acrobot&
+     * @param: ActuatorLimit
+     * @param: ScalingFactor
+     */
+    TanhVNHC(const Acrobot& acrobot, ActuatorLimit qmax, ScalingFactor scale);
+
     ~TanhVNHC();
 
     /**
@@ -177,6 +194,10 @@ public:
     * @return: double 
     */
     auto dpu(const UnactuatedPhase& qpu) const -> double;
+
+private:
+    // Store the scaling factor
+    ScalingFactor scale_;
 
 }; // class TanhVNHC
 

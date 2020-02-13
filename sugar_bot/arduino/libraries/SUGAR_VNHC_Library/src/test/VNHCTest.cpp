@@ -312,6 +312,46 @@ TEST_F(VNHCTest, Tanh_QMAX)
         }
     }
 }
+// Test for TanhVNHC to test different inner scaling values
+TEST_F(VNHCTest, Tanh_INNER_SCALING)
+{
+    auto qmax = M_PI/2;
+    // Zero scaling should result in tanh(0) = 0
+    TanhVNHC tanh_zero(xingbot_, qmax, 0 );
+    // scaling of 1 should be the same as non-scaling
+    TanhVNHC tanh_unscaled(xingbot_, qmax);
+    TanhVNHC tanh_one(xingbot_, qmax, 1);
+
+    // More than one
+    TanhVNHC tanh_ten(xingbot_, qmax, 10);
+    // Less than 0
+    TanhVNHC tanh_negative(xingbot_, qmax, -1);
+
+    for (int i = -10; i <= 10; ++i)
+    {
+        qpu_.qu = i*M_PI/10.0;
+        qpu_.qu = i/2.0;
+        for(int j = -5; j <= 5; ++j)
+        {
+            qpu_.pu = j*10/5.0;
+
+            EXPECT_PRED3(Within, tanh_zero.qa(qpu_), 0, eps_);
+            // Verify that not adding scaling is the same as scaling by 1
+            EXPECT_DOUBLE_EQ(tanh_unscaled.qa(qpu_), tanh_one.qa(qpu_));
+            EXPECT_PRED3(Within, tanh_one.qa(qpu_), qmax*tanh(qpu_.pu), eps_);
+
+            // Verify that a larger scaling results in a larger output, but
+            // still within [-qmax qmax], and that the derivative takes this
+            // scaling into account
+            double tanh10pu = tanh(10*qpu_.pu);
+            EXPECT_PRED3(Within, tanh_ten.qa(qpu_), qmax*tanh10pu, eps_);
+            EXPECT_PRED3(Within, tanh_ten.dpu(qpu_), qmax*10*(tanh10pu*tanh10pu - 1), eps_);
+            
+            // Make sure that tanh(-pu) = -tanh(pu)
+            EXPECT_DOUBLE_EQ(tanh_negative.qa(qpu_), -tanh_one.qa(qpu_));
+        }
+    }
+}
 // Test for SinuVNHC to test different q_max values
 TEST_F(VNHCTest, SINU_QMAX)
 {
