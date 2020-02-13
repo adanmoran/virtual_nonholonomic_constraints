@@ -25,7 +25,7 @@ fprintf('-----------------\n');
 % Script parameters
 script.smooth_control.run = true; % Run the smooth controller sin(theta)
 script.kick_control.run = true; % Run the kick controller
-script.simplify_acrobot = true; % Make both links the same
+script.simplify_acrobot = false; % Make both links the same
 % Find qa(theta) to generate a VLP controller in the effective pendulum
 % which represents the acrobot.
 script.controller.as_vlp = false; 
@@ -67,17 +67,19 @@ if script.simplify_acrobot
     Jt = 0; Jl = 0; %m*d^2; Jl = m*d^2;
     ll = d; lt = d; dt = d; dl = d;
     dynamics.symbolic = [m d g];
-    dynamics.concrete = [30 1 9.8]; % A Gymnast
-    %dynamics.concrete = [0.2 0.4 9.8]; % A small test robot
+    dynamics.gymnast = [30 1 9.81]; % A Gymnast
+    dynamics.acrobot = [0.2 0.4 9.81]; % A small test robot
+    dynamics.manfredi = [0.2 0.2 9.81]; % Manfredi's test simulation
+    % Assign the dynamics
+    dynamics.concrete = dynamics.gymnast;
 else
     % Convedt the dynamics into parameter arrays for substitution
     dynamics.symbolic = [mt, ml, Jt, Jl, lt ,  ll ,  dt, dl, g  ];
-    dynamics.concrete = [1, 1 , 1 , 1 , 2,  1,  4 , 2 , 9.8];
+    dynamics.xingbo = [0.2112, 0.1979, 0.00075, 0.00129, ...
+                        0.073, 0.083, 0.148, 0.145, 9.81]; % Xingbo's robot
+    dynamics.rando = [1, 1 , 1 , 1 , 2,  1,  4 , 2 , 9.81];
+    dynamics.concrete = dynamics.xingbo;
 end
-% Define the maximum range over which qa can vary.
-qa_max = pi/8;
-% Define the time frame for which we simulate
-T = 10;
 
 % Get the motion model
 fprintf('Getting EOM for the acrobot.\n');
@@ -108,9 +110,13 @@ eom = [qd; pd];
 % Equations of motion specifically for the pair (qu,pu)
 eomu = simplify([qd(1);pd(1)]);
 
+% Define the maximum range over which qa can vary.
+qa_max = pi/8;
+% Define the time frame for which we simulate
+T = 20;
 % Initial conditions (q0,0) for each test
 q0s = [pi/16 pi/8  pi/4 pi/2 3*pi/2 pi-eps];
-q0sToUse = 2*qa_max/(3+2*cos(qa_max));
+q0sToUse = 3*pi/4;%2*qa_max/(3+2*cos(qa_max));
 
 % Base options for plotting the odes
 baseOptions = odeset('RelTol',10^-8,'AbsTol',10^-8, 'OutputFcn',@odephas2);
@@ -155,8 +161,8 @@ if script.smooth_control.run
     eomqa_a = subs(eomu,pa,pa_a);
     eomqa_a = subs(eomqa_a, qa, qa_a);
     eomqa_a = subs(eomqa_a, dynamics.symbolic, dynamics.concrete);
-    eomqa_aFun = matlabFunction(eomqa_a, 'vars', [qu pu]);
-    eomqa_aFun = @(q,p)sign(eomqa_aFun(q,p)).*abs(eomqa_aFun(q,p));
+    eomqa_aF = matlabFunction(eomqa_a, 'vars', [qu pu]);
+    eomqa_aFun = @(q,p)sign(eomqa_aF(q,p)).*abs(eomqa_aF(q,p));
     
     % Get the actual energy function for this controller
     E_a = subs(E, [qa pa], [qa_a pa_a]);
@@ -314,7 +320,10 @@ if script.smooth_control.run
     for q0 = q0sToUse
         % Plot the orbit
         figure;
-        sol = ode45(@(t,x)eomqa_aFun(x(1),x(2)), [0, T], [q0;0],baseOptions);
+        % Compute the orbit with a wrapToPi around q, so that we always
+        % ensure we are getting the actual value for qa in phase space (and
+        % not on q in R).
+        sol = ode45(@(t,x)eomqa_aFun(wrapToPi(x(1)),x(2)), [0, T], [q0;0],baseOptions);
         xlabel('q');
         ylabel('p');
         title(sprintf('Orbits for q0 = %.1f',q0));
