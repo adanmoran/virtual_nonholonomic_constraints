@@ -8,10 +8,16 @@
  * Implementation of VNHC code for use with the SUGAR system.
  * Adapted from Xingbo Wang's work (MASc 2016).
  *
- * Last Modified: 07 February 2020
+ * Last Modified: 12 February 2020
  * Last Editor: Adan Moran-MacDonald
  */
 
+// Do this if you want to print everything out to Serial WITHOUT using the motor
+// That is, if you set DEBUG_ENABLE, all Serial interaction with the
+// RX24F servo is disabled so we can read Arduino debug data from serial
+#define DEBUG_ENABLE 0
+
+// Includes for our system to work
 #include <Wire.h>
 #include <Event.h>
 #include <Timer.h>
@@ -40,7 +46,7 @@ const double Rt = 0.148;   // m
 const double Rl = 0.145;   // m
 const double lt = 0.073;   // m
 const double ll = 0.083;   // m
-const double g = 9.8;      // m/s^2h
+const double g = 9.81;      // m/s^2h
 
 // Generate an acrobot object, which will contain the Acrobot inertia and
 // potential functions
@@ -53,14 +59,23 @@ Acrobot acrobot(
 );
 
 // Define the actuator limit for the acrobot, which must be in the range
-// [0, M_PI]. For feasibility with the physical acrobot, 
-// it should really be within [0, M_PI/2].
-ActuatorLimit qa_max = M_PI/8;
+// [0, M_PI/2] for feasibility with the physical acrobot.
+// Note: small actuator limits may make it impossible for the acrobot
+// to achieve full rotations, since it cannot overcome friction.
+ActuatorLimit qa_max = M_PI/2;
 
-// Generate a VNHC for the tanh(pu) function
-TanhVNHC tanh_vnhc(acrobot, qa_max);
+// Generate a VNHC for the qa_max*tanh(scale*pu) function:
+// Note: since we have very small momentum (the largest pu is around 0.2)
+//, we set tanh_scale to be large so that the controller will gain energy.
+// This is done heuristically
+// at the moment, though hopefully there will be a theoretical value
+// based on the masses / lengths of the links / actuator limits
+// which we can employ later.
+ScalingFactor tanh_scale = 20;
+TanhVNHC tanh_vnhc(acrobot, qa_max, tanh_scale);
+
 // Generate a VNHC for the sin(theta) function
-//SinuVNHC sinu_vnhc(acrobot, qa_max);
+SinuVNHC sinu_vnhc(acrobot, qa_max);
 
 // Assign the VNHC pointer
 AcrobotVNHC* pVNHC = &tanh_vnhc;
@@ -130,6 +145,13 @@ void setup() {
   Wire.setClock(400000L);
   Wire.begin();
 
+#if DEBUG_ENABLE
+  Serial.begin(9600);
+  Serial.println("---------------");
+  Serial.println(" Debug Enabled ");
+  Serial.println("---------------");
+  
+#else // DEBUG_ENABLE
   // The Dynamixel RX-24F servo uses RS485 protocol
   // 500kHz should be fast enough for a loop rate of 500Hz
   // 2 is the direction pin, as required by RS485
@@ -140,7 +162,8 @@ void setup() {
   RX24F.setCSlope(SERVO_ID, 0x02, 0x02);
   RX24F.setCMargin(SERVO_ID, 0x00, 0x00);
   RX24F.setAngleLimit(SERVO_ID, 512 + 308, 512 - 308);
-
+#endif // ifdef DEBUG_ENABLE
+  
   // A real-time loop that executes once every Ts_ms (2) milliseconds
   // NOTE after further investigation into the timer library, this is NOT
   // guaranteed to be real time (...duh)
@@ -180,11 +203,11 @@ void rtloop() {
   
   // Check the state of the master switch
   bool switch_on = (main_switch_state == 1);
+#if !DEBUG_ENABLE
   RX24F.ledStatus(SERVO_ID, switch_on);
+#endif // ifdef DEBUG_ENABLE
   
   if (switch_on) {
-    RX24F.torqueStatus(SERVO_ID, true);
-  
     // Convert the current configuration object to a phase object, then
     // get its unactuated component
     Phase phase(acrobot.M(), configuration);
@@ -194,11 +217,26 @@ void rtloop() {
     
     // Send it off to the servo
     int pos = radiansToServo(servo_goal_rad);
+#if DEBUG_ENABLE
+    Serial.print("Psi = ");
+    Serial.print(phase.qu);
+    Serial.print(" | Psi_d = ");
+    Serial.print(encoder_vel_rad_s);
+    Serial.print(" | pu = ");
+    Serial.print(phase.pu);
+    Serial.print(" | qa_des = ");
+    Serial.println(servo_goal_rad);
+    Serial.print("Desired Servo angle: ");
+    Serial.println(servo_goal_rad);
+  } else {
+  }
+#else // ~DEBUG_ENABLE
+    RX24F.torqueStatus(SERVO_ID, true);
     RX24F.move(1, pos);
-  
   } else {
     RX24F.torqueStatus(SERVO_ID, false);
   }
+#endif // ifdef DEBUG_ENABLE
   
   // Send data back to the other box
   send_wire_data();
@@ -229,7 +267,11 @@ void loop() {
 void update_velocities()
 {
   // Update the servo position and calculate velocity
+#if DEBUG_ENABLE
+  servo_pos_rad = 0;
+#else // !DEBUG_ENABLE
   servo_pos_rad = servoToRadians(RX24F.readPosition(SERVO_ID));
+#endif // ifdef DEBUG_ENABLE
 
   // TODO: What are these magic constants? Check the servo's datasheet
   //       and replace them with constant variables
