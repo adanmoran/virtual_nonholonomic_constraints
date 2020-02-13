@@ -7,7 +7,14 @@
  * 
  * For use with the SUGAR system
  * Code for the switch box arduino nano
+ * 
+ * Last Modified: 12 February 2020
+ * Last Editor: Adan Moran-MacDonald (MASc 2020)
  */
+
+// Define this to enable Serial outputs, to read the data we are
+// sending to the SUGAR_box over the wire.
+#define DEBUG_ENABLE 1
 
 #define ENCODER_OPTIMIZE_INTERRUPTS
 #include <Encoder.h>
@@ -155,9 +162,9 @@ void setup() {
   // 8, and use a slower baud rate to transmit the data over
   // several iterations.
   Serial.begin(250000);
-
   // A real-time loop that executes once every Ts_ms (2) milliseconds
   timer.every(Ts_ms, rtloop);
+
 }
 
 // LOOPS -----------------------------------------------------------------------
@@ -334,6 +341,30 @@ void wireReceiveEvent(int howmany){
 void loop() {
   // Update the timer, do nothing else here
   timer.update();
+#if DEBUG_ENABLE
+  Serial.println("");
+  Serial.println("-------------------------");
+  Serial.print("Switch State = ");
+  Serial.println(main_switch_state);
+  Serial.print("Switch State (bot view) = ");
+  Serial.println(bot_switch_state);
+  Serial.print("Encoder angle = ");
+  Serial.println(encoder_angle_rad);
+  Serial.print("Encoder Velocity = ");
+  Serial.println(encoder_vel_rad_s);
+  Serial.print("Potentiometer Value = ");
+  Serial.println(potentiometer_state);
+  Serial.print("Servo Position = ");
+  Serial.println(servo_pos_rad);
+  Serial.print("Servo Velocity = ");
+  Serial.println(servo_vel_rad_s);
+  Serial.print("* Desired Servo Position = ");
+  Serial.println(servo_goal_rad);
+  Serial.print("Acrobot Energy = ");
+  Serial.println(energy);
+  Serial.println("-------------------------");
+  Serial.println("");
+#endif
 }
 
 // AUXILIARY STUFF ----------------------------------------------------------
@@ -356,4 +387,3 @@ float sgn(float x)
     return x < 0 ? -1.0 : 1.0;
   }
 }
-
