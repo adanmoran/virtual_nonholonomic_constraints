@@ -1,0 +1,79 @@
+%! TEX program = lualatex
+
+\documentclass[12pt]{article}
+\usepackage[utf8]{inputenc}
+
+%----------- Choose Margins ----------%
+\usepackage[margin=1in]{geometry}
+
+%---------- Bibliography Style ----------%
+\usepackage[style=ieee,backend=biber]{biblatex}
+\addbibresource{bib.bib}
+
+%/========== Preamble ==========/%
+
+%----------- Math Packages -----------%
+\usepackage{amsfonts}
+\usepackage{mathtools}
+\usepackage{amsthm} % allow theorems and definitions as a block
+
+%---------- Remove indenting from paragraphs ----------%
+% Also makes each new paragraph start with an vertical space.
+\usepackage[parfill]{parskip}
+
+%/========== /Preamble ==========/%
+
+%/========== Main Document ==========/%
+\begin{document}
+%---------- Title ----------%
+\title{Energy Injection for Mechanical Systems via Virtual Nonholonomic Constraints}
+\author{Adan Moran-MacDonald}
+\maketitle
+
+%---------- Content ----------%
+When a gymnast hanging on a bar performs a swing-up routine (a so-called ``giant"),
+they do not attempt to track a trajectory over time to start doing backflips.
+Likewise, a child on a swing does not swing higher by kicking their legs at
+specific time intervals; rather, these natural human motions change one's leg
+angle based on the current direction and speed of motion. In doing so, the
+gymnast will gain enough energy to start rotating on the bar, 
+and the child will reach greater heights on their swing.
+This type of motion can be adapted to the control of mechanical systems 
+using the method of virtual nonholonomic constraints.
+
+A \textit{virtual nonholonomic constraint} (VNHC) is a smooth relation 
+\[
+    h : T^\star \mathcal{Q} \rightarrow \mathbb{R}^{n-1}
+\]
+between the \(n\) configuration variables \(q \in \mathcal{Q}\) and conjugate of
+momenta \(p\) of a mechanical system with \(n-1\) control inputs.
+Enforcing these types of constraints via feedback control provides
+time-independent controllers which can inject or remove energy from the system.
+
+This talk will give sufficient conditions under which a VNHC 
+can be enforced by feedback control.
+Then, using the motivations of the child on the swing and the gymnast,
+we apply the theory to create VNHCs for two classical mechanical systems:
+the variable-length pendulum and the two-link acrobot. 
+
+For the variable-length pendulum we design and enforce a VNHC which achieves a
+time-optimal swingup motion, without tracking a time signal. 
+Then, we prove that a system constrained by this VNHC will gain energy and start
+rotating.
+
+For the acrobot, we design several VNHCs which achieve human-like motion by
+observing the leg motions of human gymnasts. We then apply one of these
+VNHCs to a real acrobot and, through experiments, demonstrate the
+energy-injection properties of the VNHC. 
+
+This talk demonstrates the potential of VNHCs in generating realistic,
+biologically-inspired motions which can inject energy into a mechanical system
+while forgoing any dependence on time in the control architecture.
+
+%---------- Bibliography ----------%
+\newpage
+\printbibliography
+\end{document}
+%/========== /Main Document ==========/%
+
+% vim: set tw=80 ts=4 sw=4 sts=0 et ffs=unix :
