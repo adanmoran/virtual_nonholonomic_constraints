@@ -44,12 +44,12 @@ constraints.
 
 %---------- Summary of Ideas ----------%
 A \textit{virtual nonholonomic constraint} (VNHC) is a smooth relation 
-\[
+\(
     h : T^\star \mathcal{Q} \rightarrow \mathbb{R}^{n-1}
-\]
-between the \(n\) configuration variables \(q \in \mathcal{Q}\) and conjugate of
-momenta \(p \in T_q^\star\mathcal{Q}\) of a mechanical system with 
-\(n-1\) control inputs.
+\) 
+between the configuration variables \(q \in \mathcal{Q}\) and conjugate of
+momenta \(p \in T_q^\star\mathcal{Q}\) of an \(n\)-degree-of-freedom mechanical
+system with \(n-1\) control inputs, such that \(h(q,p) = 0\).
 Enforcing these types of constraints via feedback control provides
 time-independent controllers which can inject or remove energy from the system.
 
@@ -62,14 +62,14 @@ classical systems: the variable-length pendulum and the two-link acrobot.
 
 For the variable-length pendulum we design and enforce a VNHC which achieves a
 time-optimal swingup motion, without tracking a signal over time. 
-We then prove that anyone swinging while constrained by this VNHC will gain
+We then prove that any pendulum constrained by this VNHC will gain
 enough energy to start rotating completely around the swinging axis.
 
 For the acrobot, we design several VNHCs (modelled from the leg motions of human
 gymnasts) which achieve human-like ``giant" motion.
 We then apply one of these VNHCs to a real acrobot and, through experiments,
 demonstrate the energy-injection properties of the VNHC as the robot kicks its
-legs and starts doing backflips on the bar. 
+legs until it begins doing backflips on the bar. 
 
 %---------- Conclusion ----------%
 In summary, this talk introduces the notion of virtual nonholonomic constraints
