@@ -1,27 +1,3 @@
-%! TEX program = lualatex
-
-\documentclass[12pt]{article}
-\usepackage[utf8]{inputenc}
-
-%----------- Choose Margins ----------%
-\usepackage[margin=1in]{geometry}
-
-%/========== Preamble ==========/%
-
-%---------- Remove indenting from paragraphs ----------%
-% Also makes each new paragraph start with an vertical space.
-\usepackage[parfill]{parskip}
-
-%/========== /Preamble ==========/%
-
-%/========== Main Document ==========/%
-\begin{document}
-%---------- Title ----------%
-\title{Energy Injection for Mechanical Systems via Virtual Nonholonomic Constraints}
-\author{Adan Moran-MacDonald}
-\maketitle
-
-%---------- Motivation ----------%
 When a gymnast hangs on a bar, they do not attempt to track a
 trajectory over time to perform their swing-up routine (a so-called
 ``giant"); likewise, a child on a standing swing does not swing higher
@@ -33,7 +9,6 @@ greater heights on their swing.  This style of realistic,
 energy-increasing motion can be achieved when controlling mechanical
 systems by using the method of virtual nonholonomic constraints.
 
-%---------- Summary of Ideas ----------%
 A virtual nonholonomic constraint (VNHC) is a smooth relation between
 the configuration variables and conjugate of momenta of an
 n-degree-of-freedom mechanical system with n-1 control inputs.
@@ -41,7 +16,6 @@ Enforcing these constraints via feedback control provides
 time-independent controllers which, under certain circumstances, may
 inject or remove energy from the system.
 
-%---------- Results ----------%
 This talk will give sufficient conditions under which a VNHC can be
 enforced by feedback control.  Then, using the motivations of the
 child on the standing swing and the gymnast on a bar, we apply the
@@ -59,7 +33,3 @@ We then apply one of these VNHCs to a real acrobot and, through
 experiments, demonstrate the energy-injection properties of the VNHC
 as the robot kicks its legs until it begins doing backflips on the
 bar.
-\end{document}
-%/========== /Main Document ==========/%
-
-% vim: set tw=80 ts=4 sw=4 sts=0 et ffs=unix :
