@@ -40,48 +40,49 @@ swing their legs based on their current speed and position. In doing so, they
 are able to generate enough momentum to perform backflips on the bar. When
 controlling mechanical systems, standard practice is to have a robot's actuators
 track a position dependent on time. Much like the gymnast, this tends to
-produce unnatural motion. Furthermore, it is liable to timin errors if the
+produce unnatural motion. Furthermore, it is liable to timing errors if the
 motion is interrupted in any way. The more recent techniques of virtual constraints 
-can rectify these issues and produce realistic, biologically inspired motion.
+can rectify these issues and produce realistic, biologically plausible motion.
 
-Mechanical systems can have their motion constrained in two ways. Holonomic 
-constraints restrict position, while nonholonomic constraints restrict
-velocities (such as how a car cannot normally slide sideways). Previous research
-has shown that one can enforce holonomic constraints through a robot's
-actuators \cite{vhcs_for_el_systems}. These are called ``virtual holonomic
-constraints" (VHCs). VHCs have been used to control walking robots \cite{stable-walking},
-autonomous bicycles \cite{bicycle}, gymnastics robots \cite{xingbo-thesis}, and
-snake robots \cite{snake-robot} among others. Likewise, in my 
-master's thesis \textbf{TODO: HOW TO CITE?} I developed a general theory for
-enforcing virtual nonholonomic constraints (VNHCs). I designed constraints which
-injected energy into the gymnastics robot created by 
-Wang \cite{xingbo-thesis}, enabling it to perform backflips on a bar.
+Mechanical systems can be constrained in two ways. Holonomic constraints
+restrict position (for instance, car tires remain a fixed distance apart), while
+nonholonomic constraints restrict velocities (such as how those tires cannot
+slide sideways). Previous research has shown that one can enforce holonomic
+constraints through a robot's actuators \cite{vhcs_for_el_systems}. These are
+called ``virtual holonomic constraints" (VHCs). VHCs have been used to control
+walking robots \cite{stable-walking}, autonomous bicycles \cite{bicycle},
+gymnastics robots \cite{xingbo-thesis}, and snake robots \cite{snake-robot}
+among others. These VHCs are a special case of the more general virtual
+nonholonomic constraints (VNHCs); in my master's thesis \textbf{TODO: HOW TO
+CITE?} I developed a general theory for enforcing VNHCs and designed
+one which injects energy into the gymnastics robot created by Wang
+\cite{xingbo-thesis}, thereby enabling it to perform backflips on a bar.
 
 \begin{large} \textbf{Proposal} \end{large}
 
 Mohammadi \textit{et.al.} showed that a single VHC can result in several motion
-patterns, from which one pattern can be chosen if the robot is initialized with
-a configuration that is ``close enough” to the desired motion pattern
+patterns (also called ``orbits"), from which one specific motion can be chosen
+if the robot is initialized with a configuration that is ``close enough” to it
 \cite{manfredi-orbit-stabilization}. However, their method does not work for all
-starting configurations of the robot. We propose to investigate a method to
-stabilize and transition between desired motion patterns from any starting
-configuration of the robot. Rather than using VHCs, we will use VNHCs to
-generate these motions.
+starting configurations of the robot. We propose to extend this work and 
+investigate a method to stabilize and transition between two VNHCs, which should
+also allow one to stabilize an orbit from any starting configuration.
 
-VNHCs have been studied for application to human-robot cooperation in
-\cite{vnhc-human-robot-coop} and walking robots in \cite{vnhc-biped-robot}. Horn
+VNHCs have been studied for application to human-robot cooperation
+\cite{vnhc-human-robot-coop} and walking robots \cite{vnhc-biped-robot}. Horn
 \textit{et.al.} have also examined properties of VNHCs for general mechanical
-systems \cite{hybrid_zero_dynamics_bipedal_nhvcs} and then applied their results
-to walking robots. Our approach is novel since we will study VNHCs on general
-mechanical systems with the aim of transitioning between desired motion patterns.
+systems \cite{hybrid_zero_dynamics_bipedal_nhvcs} and applied their results
+to stabilizing a chosen gait on walking robots. 
+Our approach is novel since we will develop techniques to transition between  
+VNHCs on general mechanical systems while maintaining safety constraints, 
+rather than stabilizing a single VNHC.
 
 We will first study mathematical conditions under which on can transition
 between two VNHCs. These conditions will allow us to create a control algorithm
 to switch between motion patterns. After completing this mathematical
-formulation, we will apply the results to the gymanstics robot built by Wang
-\cite{xingbo-thesis}. We will use the theory to create control algorithms which
-enable this robot to perform an entire gymnastics routine by transitioning
-between different VNHCs.
+formulation, we will test the theory on the gymanstics robot built by Wang
+\cite{xingbo-thesis} by designing a gymnastics routine which is performed 
+by transitioning between different VNHCs.
 
 The advancement in mathematics from this research will enable improvements to
 control of other robotic systems. The ability to transition between complex
