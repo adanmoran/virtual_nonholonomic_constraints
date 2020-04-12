@@ -34,7 +34,6 @@
 \textbf{Background}
 \end{large}
 
-\textbf{TODO: CITATIONS FOR THIS PARAGRAPH}
 When a gymnast is performing a swing-up routine on a bar, they do not kick their
 feet at specified time intervals. Rather, a more natural human motion is to
 smoothly swing their legs based on their current speed and position
@@ -42,13 +41,13 @@ smoothly swing their legs based on their current speed and position
 enough momentum to perform backflips on the bar. When controlling mechanical
 systems, standard practice is to have a robot's actuators track a function of
 time. Much like the gymnast, it is often more natural to track a
-function of the robot's current speed and position. The more recent techniques
+function of the robot's current speed and position. The recent techniques
 of virtual constraints offer this ability and produce realistic, biologically
 plausible motion.
 
 Mechanical systems can be constrained in two ways. Holonomic constraints
 restrict position (for instance, car tires remain a fixed distance apart), while
-nonholonomic constraints restrict velocities (such as how those tires cannot
+nonholonomic constraints restrict velocities (such as how car tires cannot
 slide sideways). Previous research has shown that one can enforce holonomic
 constraints through a robot's actuators, using the method of "virtual holonomic
 constraints" (VHCs) \cite{vhcs_for_el_systems}. VHCs have been used to control
@@ -64,32 +63,33 @@ on a bar.
 
 Mohammadi \textit{et.al.} \cite{manfredi-orbit-stabilization} showed that a
 single VHC can result in several motion patterns (known as ``orbits"), from
-which one specific motion can be chosen if the robot is initialized with a
+which one specific motion pattern can be chosen if the robot is initialized with a
 configuration that is ``close enough" to it. However, their method does not
 work for all starting configurations of the robot. We propose to extend this
-work and investigate a method to transition between VNHCs; doing so should allow
-one to start anywhere and move the configuration close enough to stabilize the
-chosen orbit.
+work by investigating a method for transitioning between VHCs and VNHCs.
 
 VNHCs have been studied with applications to human-robot cooperation
 \cite{vnhc-human-robot-coop} and walking robots \cite{vnhc-biped-robot}. Horn
 \textit{et.al.} \cite{hybrid_zero_dynamics_bipedal_nhvcs} have also examined
 properties of VNHCs for general mechanical systems and applied their results to
-stabilizing a chosen gait on walking robots. Our approach is novel since we will
-assume one has already stabilized a VNHC and develop techniques to transition to
-a different VNHC while maintaining pre-specified safety constraints.
+stabilizing a chosen gait on walking robots. Our approach is novel since we 
+assume one has already stabilized a VNHC, and will develop techniques to
+transition to a different VNHC while maintaining pre-specified safety
+constraints. Doing so should allow one to start at any configuration and chain
+together VNHCs to bring the robot ``close enough" to stabilize a desired orbit.
 
 First we will study mathematical conditions under which on can transition
 between two VNHCs. These conditions will allow us to create a control algorithm
 to switch between motion patterns. After completing this mathematical
 formulation, we will test the theory on a gymnastics robot by designing a
-gymnastics routine which is performed by transitioning between different VNHCS. 
+gymnastics routine which is performed by transitioning between several different
+VNHCS. 
 
-The advancement in mathematics from this research will enable improvements to
-control of other robotic systems. The ability to transition between complex
-constraints will allow for more natural expressive motion in many autonomous
-systems and may become a standard technique for controlling biologically
-inspired robots.
+Finally, the advancement in mathematics from this research will enable
+improvements to control of other robotic systems. The ability to transition
+between complex constraints will allow for more natural expressive motion in
+many autonomous systems and may become a standard technique for controlling
+biologically inspired robots.
 
 %---------- Bibliography ----------%
 \printbibliography
