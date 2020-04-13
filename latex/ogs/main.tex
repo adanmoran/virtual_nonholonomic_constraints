@@ -54,7 +54,7 @@ constraints" (VHCs) \cite{vhcs_for_el_systems}. VHCs have been used to control
 walking robots \cite{stable-walking}, autonomous bicycles \cite{bicycle},
 gymnastics robots \cite{xingbo-thesis}, and snake robots \cite{snake-robot}
 among others. These VHCs are a special case of the more general virtual
-nonholonomic constraints (VNHCs); in my master's thesis \cite{my-thesis} I
+nonholonomic constraints (VNHCs). In my master's thesis \cite{my-thesis} I
 developed a theory for enforcing VNHCs and designed one which injects energy
 into the gymnastics robot created by Wang \cite{xingbo-thesis}, thereby enabling
 it to perform backflips on a bar.
@@ -66,18 +66,17 @@ single VHC can result in several motion patterns (known as ``orbits"), from
 which one specific motion pattern can be chosen if the robot is initialized with a
 configuration that is ``close enough" to it. However, their method does not
 work for all starting configurations of the robot. We propose to extend this
-work by investigating a method for transitioning between VHCs and VNHCs.
+work by investigating a method for transitioning between VNHCs.
 
 VNHCs have been studied with applications to human-robot cooperation
 \cite{vnhc-human-robot-coop} and walking robots \cite{vnhc-biped-robot}. Horn
 \textit{et.al.} \cite{hybrid_zero_dynamics_bipedal_nhvcs} have also examined
 properties of VNHCs for general mechanical systems and applied their results to
 stabilizing a chosen gait on walking robots. Our approach is novel since we 
-assume one has already stabilized a VNHC, and will develop techniques to
-transition to a second one while maintaining certain safety
-constraints. Doing so should allow one to start at any configuration and chain
-together VNHCs which drive the configuration close enough to a desired orbit for
-stabilization.
+assume one can stabilize two distinct VNHCs independently, and will develop
+techniques to transition between them while maintaining safety constraints.
+Doing so will allow one to chain together VNHCs which drive a robot's
+configuration towards a desired orbit, regardless of the initial configuration.
 
 First we will study mathematical conditions under which one can transition
 between two VNHCs. These conditions will allow us to create a control algorithm
@@ -88,7 +87,7 @@ VNHCS.
 
 The advancements in mathematics from this research will bring improvements to
 the control of other autonomous systems. The ability to transition between
-complex constraints will allow for more natural expressive motion and may become
+complex constraints will allow for more expressive motion and may become
 a standard technique for controlling biologically inspired robots.
 
 %---------- Bibliography ----------%
