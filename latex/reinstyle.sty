@@ -1,0 +1,103 @@
+% General
+\usepackage{hyperref}
+
+% Math packages
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{mathtools}
+\usepackage{amsthm}
+\usepackage{siunitx}
+
+\newtheorem{prop}{Proposition}
+\newtheorem{lemma}{Lemma}
+\newtheorem{thm}{Theorem}
+
+\theoremstyle{remark}
+\newtheorem{remark}{Remark}
+
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}
+\newtheorem{problem}{Problem}
+\newtheorem{example}{Example}
+
+\DeclarePairedDelimiter{\norm}{\lVert}{\rVert}
+\DeclarePairedDelimiter{\abs}{\lvert}{\rvert}
+\DeclareMathOperator{\adj}{adj}
+\DeclareMathOperator{\Span}{span}
+\DeclareMathOperator{\Image}{Im}
+\DeclareMathOperator{\rank}{rank}
+\DeclareMathOperator{\hess}{Hess}
+
+\newcommand*{\tpose}{^\mathsf{T}} 
+\newcommand*{\R}{\mathbb{R}}
+\newcommand*{\n}{\mathbf{n}}
+\newcommand*{\N}{\mathbb{N}}
+
+% Typography
+\usepackage{booktabs}
+\usepackage{xspace}
+\usepackage{microtype}
+
+\usepackage{fontspec}
+\setmainfont{texgyrepagella}[
+Extension=.otf,
+UprightFont=*-regular,
+ItalicFont=*-italic,
+BoldFont=*-bold,
+BoldItalicFont=*-bolditalic,
+Numbers=OldStyle,
+SmallCapsFeatures={LetterSpace=8},
+]
+
+\usepackage{unicode-math}
+\setmathfont{texgyrepagella-math.otf}[Scale=MatchLowercase]
+\setmathfont{XITSMath-Regular}[range=cal, Extension=.otf, Scale=MatchUppercase]
+
+\usepackage[capitalize]{cleveref}
+\crefname{thm}{theorem}{theorems}
+\Crefname{thm}{Theorem}{Theorems}
+
+\usepackage[]{caption}
+
+\captionsetup[figure]{
+	font={small},
+	labelfont=sc
+}
+
+\captionsetup[table]{
+	labelfont=sc
+}
+
+\frenchspacing
+
+% Figures
+\usepackage{graphicx}
+\usepackage{subcaption}
+\usepackage{luamplib}
+\mplibtextextlabel{enable}
+\usepackage{tikz}
+\usetikzlibrary{
+    decorations.pathreplacing,
+    decorations.pathmorphing,
+    decorations.markings,
+    arrows,
+    shapes,
+    patterns,
+    angles,
+    quotes,
+    calc
+}
+
+\tikzset{>=stealth'}
+\tikzset{->-/.style={decoration={
+			markings,
+			mark=at position #1 with {\arrow{>}}
+		},
+		postaction={decorate}}}
+\tikzset{-<-/.style={decoration={
+			markings,
+			mark=at position #1 with {\arrow{<}}
+		},
+		postaction={decorate}}}
+
