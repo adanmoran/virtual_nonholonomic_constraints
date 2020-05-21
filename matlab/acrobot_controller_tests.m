@@ -25,7 +25,7 @@ fprintf('-----------------\n');
 % Script parameters
 script.smooth_control.run = true; % Run the smooth controller sin(theta)
 script.kick_control.run = true; % Run the kick controller
-script.simplify_acrobot = false; % Make both links the same
+script.simplify_acrobot = true; % Make both links the same
 % Find qa(theta) to generate a VLP controller in the effective pendulum
 % which represents the acrobot.
 script.controller.as_vlp = false; 
@@ -71,7 +71,7 @@ if script.simplify_acrobot
     dynamics.acrobot = [0.2 0.4 9.81]; % A small test robot
     dynamics.manfredi = [0.2 0.2 9.81]; % Manfredi's test simulation
     % Assign the dynamics
-    dynamics.concrete = dynamics.gymnast;
+    dynamics.concrete = dynamics.acrobot;
 else
     % Convedt the dynamics into parameter arrays for substitution
     dynamics.symbolic = [mt, ml, Jt, Jl, lt ,  ll ,  dt, dl, g  ];
@@ -110,13 +110,32 @@ eom = [qd; pd];
 % Equations of motion specifically for the pair (qu,pu)
 eomu = simplify([qd(1);pd(1)]);
 
+% Set up the VNHC and simulation
+fprintf('Defining VNHCs.\n');
+% Regular VNHCs
+vnhc_x_scale = 3.4;
+tanh_vnhc = tanh(pu*vnhc_x_scale);
+atan_vnhc = atan(pu*vnhc_x_scale);
+% Non-regular VNHCs to use
+theta = atan2(pu,qu); sin_vnhc = sin(theta);
+% Define which vnhc to use
+vnhc = atan_vnhc;
+
 % Define the maximum range over which qa can vary.
 qa_max = pi/8;
-% Define the time frame for which we simulate
-T = 20;
+% Define the offset to add to the VNHC
+qa_avg = 0;
 % Initial conditions (q0,0) for each test
 q0s = [pi/16 pi/8  pi/4 pi/2 3*pi/2 pi-eps];
-q0sToUse = 3*pi/4;%2*qa_max/(3+2*cos(qa_max));
+if vnhc == sin_vnhc
+    q0sToUse = 3*pi/4;%2*qa_max/(3+2*cos(qa_max));
+    % Simulation time
+    T = 20;
+else
+    q0sToUse = pi/8;
+    % Simulation time
+    T = 80;
+end
 
 % Base options for plotting the odes
 baseOptions = odeset('RelTol',10^-8,'AbsTol',10^-8, 'OutputFcn',@odephas2);
@@ -125,8 +144,6 @@ baseOptions = odeset('RelTol',10^-8,'AbsTol',10^-8, 'OutputFcn',@odephas2);
 if script.smooth_control.run
     fprintf('Creating the smooth controller.\n');
     % Define the controller which makes the acrobot gain energy smoothly.
-    theta = atan2(pu,qu);
-    qa_avg = 0;
     if script.controller.as_vlp
         l_max = 3/2*d;
         l_min = d*sqrt(5/4+cos(qa_max));
@@ -135,9 +152,10 @@ if script.smooth_control.run
         % Make the effective VLP have l(theta) = -delta*sin(2theta)+lavg
         qa_a = acos(((-delta_l * sin(2*theta) + lAVG)/d)^2-5/4);
     else
-        qa_a = qa_max * sin(theta) + qa_avg;
+        qa_a = qa_max * vnhc + qa_avg;
     end
-    % For some reason we get qa_a contains an abs(qu + pu*1i). This can be
+    
+    % For some reason we get qa_a can contain abs(qu + pu*1i). This can be
     % converted to a real value by sqrt(qu^2 + pu^2), since sin(theta) =
     % pu normalized
     qa_a = subs(qa_a, abs(qu + pu*1i), sqrt(qu^2 + pu^2));
