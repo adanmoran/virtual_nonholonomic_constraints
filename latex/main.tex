@@ -4,16 +4,16 @@
 %/========== Preamble ==========/%
 \usepackage{adanstyle}
 
-%%---------- Bibliography Style ----------%
-%\usepackage[style=ieee,backend=biber]{biblatex}
-%\addbibresource{bib.bib}
+%---------- Bibliography Style ----------%
+\usepackage[style=ieee,backend=biber]{biblatex}
+\addbibresource{bib.bib}
 
 %---------- Ut-Thesis Recommendations ----------%
 %% List only down to subsections in the table of contents;
 %% 0=chapter, 1=section, 2=subsection, 3=subsubsection, etc.
 \setcounter{tocdepth}{2}
 
-%% Make each page fill up the entire page.
+%% Make each page fills up the entire page.
 \flushbottom
 
 %/========== /Preamble ==========/%
@@ -35,7 +35,7 @@
 
 % Generate the abstract page, with line spacing adjusted according to SGS
 % guidelines
-%\include{abstract}
+\include{abstract}
 
 %% Anything placed between the abstract and table of contents will
 %% appear on a separate page since the abstract ends with \newpage and
@@ -43,46 +43,64 @@
 %% for anything that you want to appear on a right-hand page.
 
 %% This generates the 'dedication' page
-%\include{dedication}
+\include{dedication}
 
 %% The `dedication' and `acknowledgements' sections do not create new
 %% pages so we need to separate them
 \newpage  % separate pages for dedication and acknowledgements
 
 %% This generates the "acknowledgements" section
-%\include{acknowledgements}
+\include{acknowledgements}
 
 %% This generates the Table of Contents (on a separate page).
 \tableofcontents
 
-%% TODO: Finish going through ut-thesis.tex and writing all the sections
+%% This generates the List of Tables (on a separate page), if needed
+%% (uncomment to have it appear in the document).
+%\listoftables
+
+%% This generates the List of Figures (on a separate page), if needed
+%% (uncomment to have it appear in the document).
+%\listoffigures
+
+%% You can add commands here to generate any other material that belongs
+%% in the head matter (for example, List of Plates, Index of Symbols, or
+%% List of Appendices).
+
+% TODO: Index of Symbols and Notation
+
+%% End of the preliminary sections: reset page style and numbering.
 \end{preliminary}
-%%---------- Main Content ----------%
-%TEST CITATIONS:
-%
-%\cite{constrained_hamiltonian_systems}
-%\cite{control_giant_two_link_gymnastic_robot}
-%\cite{dynamical_servo_acrobot_vc}
-%\cite{dynamic_vhcs_stabilize_closed_orbits}
-%\cite{energy_pumping_robotic_swinging}
-%\cite{hamiltonian_nonholonomic_systems}
-%\cite{hamiltonization_of_nh_systems}
-%\cite{how_to_pump_a_swing}
-%\cite{hybrid_zero_dynamics_bipedal_nhvcs}
-%\cite{integrating_factors}
-%\cite{lagrangian_structure_reduced_dynamics_vhcs} 
-%\cite{multiple_lyapunov_functions}
-%\cite{multiple_lyapunov_functions_switched_systems}
-%\cite{nonholonomic_dynamics}
-%\cite{pendulum_length_giant_gymnastics}
-%\cite{pumping_swing_standing_squatting}
-%\cite{swingup_acrobot_pendulum}
-%\cite{swingup_giant_acrobot}
-%\cite{vhcs_for_el_systems}
-%\cite{vlp_energy_shaping}
-%\cite{xingbo_thesis}
-%\cite{khalil_nonlinear}
-%
+
+%---------- Main Content ----------%
+TEST CITATIONS:
+
+\cite{constrained_hamiltonian_systems}
+\cite{control_giant_two_link_gymnastic_robot}
+\cite{dynamical_servo_acrobot_vc}
+\cite{dynamic_vhcs_stabilize_closed_orbits}
+\cite{energy_pumping_robotic_swinging}
+\cite{hamiltonian_nonholonomic_systems}
+\cite{hamiltonization_of_nh_systems}
+\cite{how_to_pump_a_swing}
+\cite{hybrid_zero_dynamics_bipedal_nhvcs}
+\cite{integrating_factors}
+\cite{lagrangian_structure_reduced_dynamics_vhcs} 
+\cite{multiple_lyapunov_functions}
+\cite{multiple_lyapunov_functions_switched_systems}
+\cite{nonholonomic_dynamics}
+\cite{pendulum_length_giant_gymnastics}
+\cite{pumping_swing_standing_squatting}
+\cite{swingup_acrobot_pendulum}
+\cite{swingup_giant_acrobot}
+\cite{vhcs_for_el_systems}
+\cite{vlp_energy_shaping}
+\cite{xingbo_thesis}
+\cite{khalil_nonlinear}
+
+% TODO: Re-organize and rewrite all this as per Manfredi and my discussion in
+% 2020.
+
 %% Notation page
 %\include{notation}
 %% Re-do VHCs from the Hamiltonian approach
@@ -94,9 +112,13 @@
 %% Give the Acrobot Model and Reduced Dynamics
 %\include{acrobot}
 %
-%%---------- Bibliography ----------%
+%---------- Bibliography ----------%
 %\newpage
-%\printbibliography
+%% This adds a line for the Bibliography in the Table of Contents.
+\addcontentsline{toc}{chapter}{Bibliography}
+%{\begin{thebibliography}
+\printbibliography
+%\end{thebibliography}
 \end{document}
 %/========== /Main Document ==========/%
 
