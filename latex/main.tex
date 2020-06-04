@@ -1,100 +1,102 @@
 %! TEX program = lualatex
 
-\documentclass[12pt]{article}
-\usepackage[utf8]{inputenc}
-
+\documentclass[12pt]{ut-thesis}
 %/========== Preamble ==========/%
+\usepackage{adanstyle}
 
-%----------- Choose Margins ----------%
-\usepackage[margin=1in]{geometry}
+%%---------- Bibliography Style ----------%
+%\usepackage[style=ieee,backend=biber]{biblatex}
+%\addbibresource{bib.bib}
 
-%---------- Bibliography Style ----------%
-\usepackage[style=ieee,backend=biber]{biblatex}
-\addbibresource{bib.bib}
+%---------- Ut-Thesis Recommendations ----------%
+%% List only down to subsections in the table of contents;
+%% 0=chapter, 1=section, 2=subsection, 3=subsubsection, etc.
+\setcounter{tocdepth}{2}
 
-%----------- Math Packages -----------%
-\usepackage{amsfonts}
-\usepackage{mathtools}
-\usepackage{amsthm} % allow theorems and definitions as a block
-
-%% Define Theorem Styles %%
-\theoremstyle{plain}
-\newtheorem{thm}{Theorem}[section] % reset theorem numbering for each section
-\newtheorem{lemma}[thm]{Lemma}
-\newtheorem{prop}[thm]{Proposition}
-\newtheorem*{cor}{Corollary}
-%% Define Definition Styles %%
-\theoremstyle{definition}
-\newtheorem{defn}[thm]{Definition} % def'n number depends on section number
-\newtheorem{exmp}[thm]{Example} % same for example numbers
-\newtheorem{assm}[thm]{Assumption} % and for assumption numbers
-%% Define Remark Styles %%
-\theoremstyle{remark}
-\newtheorem*{remark}{Remark}
-
-%---------- Layout packages ----------%
-\usepackage{minipage-marginpar}
-
-%---------- Remove indenting from paragraphs ----------%
-% Also makes each new paragraph start with an vertical space.
-\usepackage[parfill]{parskip}
-
-%---------- Custom Commands ----------%
-\newcommand{\etal}{\textit{et al}. }
-\newcommand{\ie}{\textit{i}.\textit{e}., }
-\newcommand{\eg}{\textit{e}.\textit{g}. }
-\newcommand{\Minv}{M^{-1}}
+%% Make each page fill up the entire page.
+\flushbottom
 
 %/========== /Preamble ==========/%
 
 %/========== Main Document ==========/%
 \begin{document}
 
-%---------- Title Page -----------%
+%---------- Preliminary Pages -----------%
+\begin{preliminary}
+
+% Generate the title page
 \include{title}
 
-%---------- Acknowledgements, TOC, Abstract, Intro -----------%
-% TODO: all of this section
+%% There should be NOTHING between the title page and abstract.
+%% However, if your document is two-sided and you want the abstract
+%% _not_ to appear on the back of the title page, then uncomment the
+%% following line.
+%\cleardoublepage
 
-%---------- Main Content ----------%
-TEST CITATIONS:
+% Generate the abstract page, with line spacing adjusted according to SGS
+% guidelines
+%\include{abstract}
 
-\cite{constrained_hamiltonian_systems}
-\cite{control_giant_two_link_gymnastic_robot}
-\cite{dynamical_servo_acrobot_vc}
-\cite{dynamic_vhcs_stabilize_closed_orbits}
-\cite{energy_pumping_robotic_swinging}
-\cite{hamiltonian_nonholonomic_systems}
-\cite{hamiltonization_of_nh_systems}
-\cite{how_to_pump_a_swing}
-\cite{hybrid_zero_dynamics_bipedal_nhvcs}
-\cite{integrating_factors}
-\cite{lagrangian_structure_reduced_dynamics_vhcs} 
-\cite{multiple_lyapunov_functions}
-\cite{multiple_lyapunov_functions_switched_systems}
-\cite{nonholonomic_dynamics}
-\cite{pendulum_length_giant_gymnastics}
-\cite{pumping_swing_standing_squatting}
-\cite{swingup_acrobot_pendulum}
-\cite{swingup_giant_acrobot}
-\cite{vhcs_for_el_systems}
-\cite{vlp_energy_shaping}
-\cite{xingbo_thesis}
+%% Anything placed between the abstract and table of contents will
+%% appear on a separate page since the abstract ends with \newpage and
+%% the table of contents starts with \clearpage.  Use \cleardoublepage
+%% for anything that you want to appear on a right-hand page.
 
-% Notation page
-\include{notation}
-% Re-do VHCs from the Hamiltonian approach
-\include{vhcs}
-% Nonholonomic Constraints
-\include{vnhcs}
-% Discuss the variable length pendulum
-\include{vlp}
-% Give the Acrobot Model and Reduced Dynamics
-\include{acrobot}
+%% This generates the 'dedication' page
+%\include{dedication}
 
-%---------- Bibliography ----------%
-\newpage
-\printbibliography
+%% The `dedication' and `acknowledgements' sections do not create new
+%% pages so we need to separate them
+\newpage  % separate pages for dedication and acknowledgements
+
+%% This generates the "acknowledgements" section
+%\include{acknowledgements}
+
+%% This generates the Table of Contents (on a separate page).
+\tableofcontents
+
+%% TODO: Finish going through ut-thesis.tex and writing all the sections
+\end{preliminary}
+%%---------- Main Content ----------%
+%TEST CITATIONS:
+%
+%\cite{constrained_hamiltonian_systems}
+%\cite{control_giant_two_link_gymnastic_robot}
+%\cite{dynamical_servo_acrobot_vc}
+%\cite{dynamic_vhcs_stabilize_closed_orbits}
+%\cite{energy_pumping_robotic_swinging}
+%\cite{hamiltonian_nonholonomic_systems}
+%\cite{hamiltonization_of_nh_systems}
+%\cite{how_to_pump_a_swing}
+%\cite{hybrid_zero_dynamics_bipedal_nhvcs}
+%\cite{integrating_factors}
+%\cite{lagrangian_structure_reduced_dynamics_vhcs} 
+%\cite{multiple_lyapunov_functions}
+%\cite{multiple_lyapunov_functions_switched_systems}
+%\cite{nonholonomic_dynamics}
+%\cite{pendulum_length_giant_gymnastics}
+%\cite{pumping_swing_standing_squatting}
+%\cite{swingup_acrobot_pendulum}
+%\cite{swingup_giant_acrobot}
+%\cite{vhcs_for_el_systems}
+%\cite{vlp_energy_shaping}
+%\cite{xingbo_thesis}
+%\cite{khalil_nonlinear}
+%
+%% Notation page
+%\include{notation}
+%% Re-do VHCs from the Hamiltonian approach
+%\include{vhcs}
+%% Nonholonomic Constraints
+%\include{vnhcs}
+%% Discuss the variable length pendulum
+%\include{vlp}
+%% Give the Acrobot Model and Reduced Dynamics
+%\include{acrobot}
+%
+%%---------- Bibliography ----------%
+%\newpage
+%\printbibliography
 \end{document}
 %/========== /Main Document ==========/%
 
