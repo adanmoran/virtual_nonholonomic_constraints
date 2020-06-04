@@ -1,17 +1,32 @@
-% General
+%=================== 
+% Thesis Style File
+%===================
+% This style file is originally borrowed from Rein Otsason, and was adapted by
+% Adan Moran-MacDonald for his own purposes.
+%
+% Please copy this to ~/texmf/tex/latex/local/adanstyle.sty before using.
+%
+% Additional instructions are at the bottom of this file.
+
+%---------- General ----------%
 \usepackage{hyperref}
 
-% Math packages
+%---------- Math packages ----------%
 \usepackage{amsmath}
 \usepackage{amsfonts}
 \usepackage{amssymb}
 \usepackage{mathtools}
 \usepackage{amsthm}
+% Allows for simple SI unit management, number management, etc
+% See tug.ctan.org/macros/latex/exptl/siunitx/siunitx.pdf
 \usepackage{siunitx}
 
+%% Define theorem styles
+% Optional: put [thm] between }{ to have everything depend on section number
+\newtheorem{thm}{Theorem}%[section] % Uncomment: reset numbering at each scn
 \newtheorem{prop}{Proposition}
 \newtheorem{lemma}{Lemma}
-\newtheorem{thm}{Theorem}
+\newtheorem*{cor}{Corollary}
 
 \theoremstyle{remark}
 \newtheorem{remark}{Remark}
@@ -20,7 +35,9 @@
 \newtheorem{definition}{Definition}
 \newtheorem{problem}{Problem}
 \newtheorem{example}{Example}
+\newtheorem{assm}{Assumption}
 
+%---------- Custom Math ----------%
 \DeclarePairedDelimiter{\norm}{\lVert}{\rVert}
 \DeclarePairedDelimiter{\abs}{\lvert}{\rvert}
 \DeclareMathOperator{\adj}{adj}
@@ -33,8 +50,24 @@
 \newcommand*{\R}{\mathbb{R}}
 \newcommand*{\n}{\mathbf{n}}
 \newcommand*{\N}{\mathbb{N}}
+\newcommand*{\Minv}{M^{-1}}
 
-% Typography
+%---------- Text Layout ----------%
+% Remove paragraph indenting and start new pars with a vertical space
+% \usepackage[parfill]{parskip}
+
+% Allow for use of minipages
+% \usepackage{minipage-marginpar}
+
+% Choose margin size
+% \usepackage[margin=1in]{geometry}
+
+%---------- Custom Text ----------%
+\newcommand*{\ie}{\textit{i}.\textit{e}., }
+\newcommand*{\eg}{\textit{e}.\textit{g}. }
+\newcommand*{\etal}{\textit{et al}. }
+
+%---------- Typography ----------%
 \usepackage{booktabs}
 \usepackage{xspace}
 \usepackage{microtype}
@@ -71,7 +104,7 @@ SmallCapsFeatures={LetterSpace=8},
 
 \frenchspacing
 
-% Figures
+%---------- Figures ----------%
 \usepackage{graphicx}
 \usepackage{subcaption}
 \usepackage{luamplib}
@@ -101,3 +134,29 @@ SmallCapsFeatures={LetterSpace=8},
 		},
 		postaction={decorate}}}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%            Additional Instructions
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% This style file assumes you will be using the XITS-Regular and
+% XITSMath-Regular fonts; these do not come pre-installed on many TexLive
+% distributions. To find out if you have them, go to your texlive location and
+% search under the opentype fonts. For example, search under:
+% /usr/share/texlive/texmf-dist/fonts/opentype/public/xits/
+%
+% If you do not have XITS-Regular.otf, etc. then you need to download them.
+% 1. Find your local texlive through the command 
+% `kpsewchich --var-value TEXMFLOCAL`
+% 2. Go to this folder, and create the subfolder fonts/opentype/public/xits if
+% it does not exist (you may need to use sudo)
+% 3. Download the files through
+% `sudo wget
+% https://raw.githubusercontent.com/alif-type/xits/master/{filenames}.otf`
+% where {filenames} is the list of .otf files found at
+% github.com/alif-type/xits.
+% 4. Create a .fonts.conf file in the directory of your main.tex, and put the
+% line <your_texmflocal_dir>/fonts/opentype/public/xits/
+% where <your_texmflocal_dir> is the folder location you found in step 1.
+%%
+
+
+% vim: set tw=80 ts=4 sw=4 sts=0 et ffs=unix :
