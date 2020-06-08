@@ -100,25 +100,26 @@ TEST CITATIONS:
 \cite{xingbo_thesis}
 \cite{khalil_nonlinear}
 
-% TODO: Re-organize and rewrite all this as per Manfredi and my discussion in
-% 2020.
+% Introduce the thesis
+\include{introduction}
 
-%% Re-do VHCs from the Hamiltonian approach
-%\include{vhcs}
-%% Nonholonomic Constraints
-%\include{vnhcs}
-%% Discuss the variable length pendulum
-%\include{vlp}
-%% Give the Acrobot Model and Reduced Dynamics
-%\include{acrobot}
-%
+% Develop the formulation of VNHCs
+\include{vnhcs}
+
+% Discuss the variable length pendulum and prove our VNHC gains energy
+\include{vlp}
+
+% Give the Acrobot model, its VNHC, and prove it gains energy
+\include{acrobot}
+
+% Concluding remarks and future work
+\include{conclusion}
+
 %---------- Bibliography ----------%
 %\newpage
-%% This adds a line for the Bibliography in the Table of Contents.
+% This adds a line for the Bibliography in the Table of Contents.
 \addcontentsline{toc}{chapter}{Bibliography}
-%{\begin{thebibliography}
 \printbibliography
-%\end{thebibliography}
 \end{document}
 %/========== /Main Document ==========/%
 
