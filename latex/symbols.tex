@@ -1,0 +1,31 @@
+%! TEX root = main.tex
+
+%/========== Symbols ==========/%
+
+% Set the heading so it appears in the Table of Contents
+\addcontentsline{toc}{chapter}{List of Symbols}
+\chapter*{List of Symbols}
+
+% Define a table for the symbols using the booktabs convention
+\noindent
+\begin{table}[h!]
+\resizebox{\textwidth}{!}{%
+\centering
+\begin{tabular}{ll}
+   \toprule
+   Symbol & Definition \\
+   \midrule
+   \(\R^n\) & Real numbers in \(n\) dimensions \\
+   \(q_u\) & Unactuated coordinates \\
+   \(q_a\) & Actuated coordinates \\
+   \(p_u\) & Conjugate of momentum to \(q_u\) \\
+   \(p_a\) & Conjugate of momentum to \(q_a\) \\
+   A & Some really long description to see how this works when we write long text inside the table. \\
+   \bottomrule
+\end{tabular}
+
+}% resizebox
+\end{table}
+
+%/========== /Symbols ==========/%
+% vim: set ts=3 sw=3 sts=0 et ffs=unix :

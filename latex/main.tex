@@ -31,7 +31,7 @@
 %% However, if your document is two-sided and you want the abstract
 %% _not_ to appear on the back of the title page, then uncomment the
 %% following line.
-%\cleardoublepage
+\cleardoublepage
 
 % Generate the abstract page, with line spacing adjusted according to SGS
 % guidelines
@@ -42,7 +42,8 @@
 %% the table of contents starts with \clearpage.  Use \cleardoublepage
 %% for anything that you want to appear on a right-hand page.
 
-%% This generates the 'dedication' page
+%% This generates the 'dedication' page, which will appear on a right-hand page
+\cleardoublepage
 \include{dedication}
 
 %% The `dedication' and `acknowledgements' sections do not create new
@@ -68,6 +69,7 @@
 %% List of Appendices).
 
 % TODO: Index of Symbols and Notation
+\include{symbols}
 
 %% End of the preliminary sections: reset page style and numbering.
 \end{preliminary}
@@ -101,8 +103,6 @@ TEST CITATIONS:
 % TODO: Re-organize and rewrite all this as per Manfredi and my discussion in
 % 2020.
 
-%% Notation page
-%\include{notation}
 %% Re-do VHCs from the Hamiltonian approach
 %\include{vhcs}
 %% Nonholonomic Constraints
