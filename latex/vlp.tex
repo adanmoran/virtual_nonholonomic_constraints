@@ -7,7 +7,48 @@
 \section{The VLP Constraint}
 % TODO: Go through the development of the constraint and prove it gains energy
 
+\begin{thm}
+For the variable-length pendulum, define \(\theta := \arctan_2(p,q)\). 
+A VNHC of the form \(l = l(\theta)\) injects energy if there exists \(l_{avg} \in \R_{>0}\) such that
+\[
+   \left(l(\theta) - l_{avg}\right)sin(2\theta) \leq 0 \text{ }\forall \theta \in \mathbb{S}^1
+\]
+with the property that the inequality is strict for almost every \(\theta\).
+\end{thm}
+\begin{proof}
+    Choose, as a candidate anti-Lyapunov function, the energy for the average-length pendulum 
+    \[
+       E_{avg}(q,p) := \frac{1}{2}\frac{p^2}{m l_{avg}^2} 
+                    + m g l_{avg} (1-\cos(q))
+    \]
+
+    which is non-negative and has derivative 
+    \[
+      \dot{E}_{avg} = \frac{-g\sin(q)p \left(l(\theta)^3 - l_{avg}^3\right)}
+                 {l_{avg}^2l(\theta)^2}
+    \]
+
+    We will show that \(E_{avg}\) is increasing.
+
+    % VBOX UNDERFULL WARNING HERE, IGNORE IT
+    Observe that \(\sign{\sin(q)p} = \sign{\sin(2\theta)}\) and, 
+    by Lemma \textbf{TODO: REF LEMMA},
+    \( \sign{l(\theta)^3 - l_{avg}^3} 
+     = \sign{ l(\theta) - l_{avg}}\). 
+
+     Then the derivative of \(E_{avg}\) is almost always positive, since
+     \begin{align*}
+        \label{eq:}
+        \sign{\dot{E}_{avg}} &= \sign{-\sin(q)p \left(l(\theta)^3 - l_{avg}^3\right)} \\
+                    &= -\sign{\sin(2\theta) \left(l(\theta) - l_{avg}\right)} \\
+                    &\geq 0 \text{ (by assumption)}
+     \end{align*}
+
+      Hence, \(E_{avg}\) is an anti-Lyapunov function with positive derivative,  
+      so the variable-length pendulum is gaining energy.
+\end{proof}
+
 \section{Simulation Results}
 
 %/========== /Variable Length Pendulum ==========/%
-% vim: set ts=3 sw=3 sts=0 et ffs=unix :
+% vim: set ts=3 sw=3 sts=0 et tw=80 ffs=unix :
