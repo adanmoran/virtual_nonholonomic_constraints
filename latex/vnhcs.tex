@@ -4,51 +4,99 @@
 
 \chapter{Development of Virtual Nonholonomic Constraints}
 \section{Preliminaries on Analytical Mechanics}
-In classical mechanics, the position of a point-mass is described using the
-three cartesian coordinates (one for each spatial axis) and its motion with the
-three corresponding equations of motion (EOM). The position is typically
-represented in vector format as a vector in \(\R^3\), while the EOM
-are ordinary differential equations derived from Newton's second law 
-\(F = m a\).
-Generalizing this to a mechanical system with \(N\) point-masses, 
-the position of the system can be represented by a vector in \(\R^{3N}\) and the
-motion by the \(3N\) EOM. These equations, known as the dynamics of the system, 
-are once again derived through Newton's second law \textbf{TODO: SOURCE}. 
+In classical mechanics, a mechanical system is comprised of \(N\) point masses
+representing the center of mass of a physical body, where the position of each
+mass is described using three cartesian coordinates (one for each spatial axis). 
+The system as a whole is represented by a vector in \(\R^{3N}\), and the
+dynamics of the system are computed by deriving the \(3N\) \textit{equations of
+motion} (EOM) produced by Newton's second law \(F = m a\).  
+While this method works for simple cases, it unfortunately proves impossible
+to apply to a majority of mechanical systems since most of the forces
+are not known explicitly. 
 
-While the classical approach to mechanics works well for simple systems, solving
-for the EOM of a system with more than two particles can be incredibly
-challenging - especially if the forces on the system are not known explicitly.
+Most mechanical systems are not solely a collection of point masses which can 
+freely move about three-dimensional space; the masses are usually restricted
+physically by some equations of constraint (EOC). 
+Rather than representing the system by one vector in \(\R^{3N}\) and \(k\) EOC, 
+it is often feasible to represent the position of the system using \(n\)
+independent scalar-valued variables \(q_1,\ldots,q_n\) called 
+\textit{generalized coordinates}, where \(n = 3N - k\) is the number of
+\textit{degrees of freedom} (DOF) of the system.
+
+Each generalized coordinate \(q_i\) takes values in \(\Rt{T_i}\), where
+\(T_i = \infty\) if \(q_i\) represents a length or \(T_i = 2\pi\) if \(q_i\)
+represents an angle.
+It is convention to write these as a \textit{configuration} vector
+\(q = (q_1,\ldots,q_n) \in \mathcal{Q}\) where the \textit{configuration space}
+\(\mathcal{Q}\) has the following structure:
+\[
+    \mathcal{Q} = \Rt{T_1} \times \cdot \times \Rt{T_n}
+\] 
+The derivative \(\dot{q} = (\dot{q}_1,\ldots,\dot{q}_n)\) of a configuration
+is called a \textit{generalized velocity}, and the joint vector
+\((q,\dot{q})\) is called a \textit{state} of the system.
+
 The field of analytical mechanics provides a computational method for finding
-these dynamics using only the kinetic and potential energies of the system.
+the EOM of a system in generalized coordinates. The two most common methods for
+modelling robotic systems are \textit{Lagrangian} and \textit{Hamiltonian}
+mechanics.
 
-Most mechanical systems are not just a collection of point masses which can 
-freely move about three-dimensional space; the points are usually restricted
-physically by some equations of constraint (EOC). In a mechanical system with
-\(N\) particles with \(m\) EOC, we define the value \(n = 3N - m\) and say the
-system has \(n\) degrees of freedom.
-Rather than representing the system by one vector in \(\R^{3N}\), it is often
-more desirable to represent the position of the system using \(n\)
-independent scalar-valued variables called the generalized coordinates. 
+% ---------- Lagrangian Mechanics ---------- % 
+\subsection{Lagrangian Mechanics}
 
-For example, take two planar spheres linked by an axle as in Figure
-\textbf{TODO: draw the points with tikz}. This has 2 point masses at
-\((x_1,y_1,z_1)\) and \((x_2,y_2,z_2)\) along with the three EOC 
-\((x_2 - x_1)^2 + (y_2 - y_1)^2 - 1 = 0\), \(z_1 = 0\), and \(z_2 = 0\).
-The system has 3 degrees of freedom. Instead of using cartesian coordinates, it
-is simpler to represent the system with three generalized coordinates:
-the \((x,y)\) position of the center of mass and the angle
-\(\theta\) between the axle and the horizontal axis.
+Lagrangian mechanics uses the kinetic energy \(T(q,\dot{q})\) and potential
+energy \(P(q)\) of the system to define the Lagrangian
+(\ref{eqn:lagrangian_general})
+\begin{equation}\label{eqn:lagrangian_general}
+    \mathcal{L}(q,\dot{q}) = T(q,\dot{q}) - P(q)
+\end{equation}
+In actuated mechanical systems, the EOM are described by \(n\) second-order
+differential equations obtained from the \textit{Euler-Lagrange
+equations} with \textit{input torques} \(\tau \in \R^m\) 
+(\ref{eqn:el_eqns_general}). 
+\begin{equation}\label{eqn:el_eqns_general}
+    \diff{}{t}\left\{ \pdiff{\mathcal{L}}{\dot{q}_i} \right\}
+    - \pdiff{\mathcal{L}}{q_i} = B_i(q) \tau
+\end{equation}
+Here, \(B_i: \mathcal{Q} \rightarrow \R^{1\times m}\) is an input vector 
+and the matrix  \(B: \mathcal{Q} \rightarrow \R^{n \times m}\) given by
+\[
+    B(q) =\begin{bmatrix}
+        - & B_1(q) & - \\
+          & \vdots & \\
+        - & B_n(q) & -
+    \end{bmatrix}
+\]
+is the \textit{input matrix} for the system. If \(m < n\), we say the system is
+\textit{underactuated} with degree of underactuation \(n - m\).
 
-Generalized coordinates are labelled \(q_i, \, i \in \{1,\ldots,n\}\). 
-Each coordinate takes values in \(\Rt{T_i}\), where \(T_i = \infty\) if 
-\(q_i\) represents a length, and \(T_i = 2\pi\) if \(q_i\) represents an angle.
-It is convention to write \(q = (q_1,\ldots,q_n) \in \mathcal{Q}\) where 
-\(\mathcal{Q} = \Rt{T_1} \times \cdot \times \Rt{T_n}\) is called 
-the configuration space.
+Many actuated mechanical systems have quadratic kinetic energies, so that the
+Lagrangian can be written explicitly as
+\[
+    \mathcal{L}(q,\dot{q}) = \dot{q}\tpose D(q) \dot{q} - P(q)
+\]
+where the \textit{inertia matrix} \(D: \mathcal{Q} \rightarrow \R^{n\times n}\) 
+is symmetric, positive definite matrix for all \(q \in \mathcal{Q}\) and the
+potential function \(P : \mathcal{Q} \rightarrow \R\) is smooth. 
+If this is the case, the Euler-Lagrange equations
+(\ref{eqn:el_eqns_general}) reduce to (\ref{eqn:el_eqns}),
+\begin{equation}\label{eqn:el_eqns}
+    D(q)\ddot{q} + C(q,\dot{q})\dot{q} + \nabla P(q) = B(q)\tau
+\end{equation}
+where the \textit{Coriolis matrix} \(C(q,\dot{q})\) is of the form
+\[
+    [C]_{i,j} = \frac{1}{2}\sum\limits_{k = 1}^n 
+    \left(\pdiff{[D]_{i,j}}{q_k}  +
+     \pdiff{[D]_{i,k}}{q_j} -
+     \pdiff{[D]_{k,j}}{q_i}\right)\dot{q}_k
+\]
 
-% TODO: Describe the basics of the lagrangian formulation for mechanical systems
+% ---------- Hamiltonian Mechanics ---------- %
+\subsection{Hamiltonian Mechanics}
 % TODO: Describe how to get the Hamiltonian from the lagrangian, and show that
 % you can write the hamiltonian directly in certain conditions of the system
+
+
 \section{Canonical Control Coordinates for Hamiltonian Systems}
 % TODO: Describe the change of coordinates to get into q_u/q_a mode and show
 % that the actuator directly affects pa but not pu. Use M for simply actuated
