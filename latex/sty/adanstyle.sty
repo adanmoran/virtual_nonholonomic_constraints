@@ -17,6 +17,7 @@
 \usepackage{amssymb}
 \usepackage{mathtools}
 \usepackage{amsthm}
+\usepackage{bm}
 % Allows for simple SI unit management, number management, etc
 % See tug.ctan.org/macros/latex/exptl/siunitx/siunitx.pdf
 \usepackage{siunitx}
@@ -32,7 +33,7 @@
 \newtheorem{remark}{Remark}
 
 \theoremstyle{definition}
-\newtheorem{definition}{Definition}
+\newtheorem{defn}{Definition}
 \newtheorem{problem}{Problem}
 \newtheorem{example}{Example}
 \newtheorem{assm}{Assumption}
@@ -53,6 +54,8 @@
 \newcommand*{\n}{\mathbf{n}}
 \newcommand*{\N}{\mathbb{N}}
 \newcommand*{\Minv}{M^{-1}}
+\newcommand*{\Id}[1]{I_{#1}}
+\newcommand*{\Zmat}[1]{\bm{0}_{#1}}
 \newcommand*{\sign}[1]{\sgn\left(#1\right)}
 \newcommand*{\diff}[2]{\frac{d #1}{d #2}}
 \newcommand*{\pdiff}[2]{\frac{\partial #1}{\partial #2}}
