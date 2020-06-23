@@ -4,15 +4,15 @@
 
 \chapter{Development of Virtual Nonholonomic Constraints}
 \section{Preliminaries on Analytical Mechanics}
-In classical mechanics, a mechanical system is comprised of \(N\) point masses
-representing the center of mass of a physical body, where the position of each
-mass is described using three cartesian coordinates (one for each spatial axis). 
-The system as a whole is represented by a vector in \(\R^{3N}\), and the
-dynamics of the system are computed by deriving the \(3N\) \textit{equations of
-motion} (EOM) produced by Newton's second law \(F = m a\).  
-While this method works for simple cases, it unfortunately proves impossible
-to apply to a majority of mechanical systems since most of the forces
-are not known explicitly. 
+In classical mechanics, a mechanical system is comprised of \(N\) point masses.
+Each point mass represents the center of mass of a physical body, where the
+position of each mass is described using three cartesian coordinates (one for
+each spatial axis).  The system as a whole is represented by a vector in
+\(\R^{3N}\), and the dynamics of the system are computed by deriving the \(3N\)
+\textit{equations of motion} (EOM) produced by Newton's second law \(F = m a\).
+While this method works for simple cases, it unfortunately proves impossible to
+apply to a majority of mechanical systems since most of the forces are not known
+explicitly. 
 
 Most mechanical systems are not solely a collection of point masses which can 
 freely move about three-dimensional space; the masses are usually restricted
@@ -26,14 +26,15 @@ independent scalar-valued variables \(q_1,\ldots,q_n\) called
 Each generalized coordinate \(q_i\) takes values in \(\Rt{T_i}\), where
 \(T_i = \infty\) if \(q_i\) represents a length or \(T_i = 2\pi\) if \(q_i\)
 represents an angle.
-It is convention to write these as a \textit{configuration} vector
-\(q = (q_1,\ldots,q_n) \in \mathcal{Q}\) where the \textit{configuration space}
-\(\mathcal{Q}\) has the following structure:
+It is convention to write these as a \textit{configuration} vector 
+\(q = (q_1,\ldots,q_n) \in \mathcal{Q}\) 
+where the \textit{configuration manifold} \(\mathcal{Q}\) of the system has the
+following structure:
 \[
     \mathcal{Q} = \Rt{T_1} \times \cdot \times \Rt{T_n}
 \] 
 The derivative \(\dot{q} = (\dot{q}_1,\ldots,\dot{q}_n)\) of a configuration
-is called a \textit{generalized velocity}, and the joint vector
+is called a \textit{generalized velocity}, and the combined vector
 \((q,\dot{q})\) is called a \textit{state} of the system.
 
 The field of analytical mechanics provides a computational method for finding
@@ -46,19 +47,19 @@ mechanics.
 
 Lagrangian mechanics uses the kinetic energy \(T(q,\dot{q})\) and potential
 energy \(P(q)\) of the system to define the Lagrangian
-(\ref{eqn:lagrangian_general})
-\begin{equation}\label{eqn:lagrangian_general}
+(\ref{eqn:lagrangian-general})
+\begin{equation}\label{eqn:lagrangian-general}
     \mathcal{L}(q,\dot{q}) = T(q,\dot{q}) - P(q)
 \end{equation}
 In actuated mechanical systems, the EOM are described by \(n\) second-order
-differential equations obtained from the \textit{Euler-Lagrange
-equations} with \textit{input torques} \(\tau \in \R^m\) 
-(\ref{eqn:el_eqns_general}). 
-\begin{equation}\label{eqn:el_eqns_general}
+ordinary differential equations (ODEs) obtained from the \textit{Euler-Lagrange
+equations} with \textit{generalized input forces} \(\tau \in \R^m\) 
+(\ref{eqn:el-eqns-general}). 
+\begin{equation}\label{eqn:el-eqns-general}
     \diff{}{t}\left\{ \pdiff{\mathcal{L}}{\dot{q}_i} \right\}
     - \pdiff{\mathcal{L}}{q_i} = B_i(q) \tau
 \end{equation}
-Here, \(B_i: \mathcal{Q} \rightarrow \R^{1\times m}\) is an input vector 
+Here, \(B_i: \mathcal{Q} \rightarrow \R^{1\times m}\)
 and the matrix  \(B: \mathcal{Q} \rightarrow \R^{n \times m}\) given by
 \[
     B(q) =\begin{bmatrix}
@@ -72,15 +73,15 @@ is the \textit{input matrix} for the system. If \(m < n\), we say the system is
 
 Many actuated mechanical systems have quadratic kinetic energies, so that the
 Lagrangian can be written explicitly as
-\[
-    \mathcal{L}(q,\dot{q}) = \dot{q}\tpose D(q) \dot{q} - P(q)
-\]
+\begin{equation}\label{eqn:lagrangian}
+    \mathcal{L}(q,\dot{q}) = \frac{1}{2} \dot{q}\tpose D(q) \dot{q} - P(q)
+\end{equation}
 where the \textit{inertia matrix} \(D: \mathcal{Q} \rightarrow \R^{n\times n}\) 
-is symmetric, positive definite matrix for all \(q \in \mathcal{Q}\) and the
+is a symmetric, positive definite matrix for all \(q \in \mathcal{Q}\) and the
 potential function \(P : \mathcal{Q} \rightarrow \R\) is smooth. 
 If this is the case, the Euler-Lagrange equations
-(\ref{eqn:el_eqns_general}) reduce to (\ref{eqn:el_eqns}),
-\begin{equation}\label{eqn:el_eqns}
+(\ref{eqn:el-eqns-general}) reduce to (\ref{eqn:el-eqns}),
+\begin{equation}\label{eqn:el-eqns}
     D(q)\ddot{q} + C(q,\dot{q})\dot{q} + \nabla P(q) = B(q)\tau
 \end{equation}
 where the \textit{Coriolis matrix} \(C(q,\dot{q})\) is of the form
@@ -95,12 +96,138 @@ where the \textit{Coriolis matrix} \(C(q,\dot{q})\) is of the form
 \subsection{Hamiltonian Mechanics}
 % TODO: Describe how to get the Hamiltonian from the lagrangian, and show that
 % you can write the hamiltonian directly in certain conditions of the system
+Hamiltonian mechanics provides an equivalent representation of the EOM
+by converting the \(n\) second-order ODEs generated by Lagrangian mechanics into
+\(2n\) first-order ODEs.
 
+To do this, we first define the \textit{conjugate of momentum to \(q_i\)} by
+\begin{equation}\label{eqn:p-i}
+    p_i(q,\dot{q}) = \pdiff{\mathcal{L}}{\dot{q}_i}(q,\dot{q})
+\end{equation}
+To ease notation, we will write \(p = (p_1, \ldots, p_n)\) and say that \(p\) is
+the \textit{conjugate of momenta to \(q\)} Note that each \(p_i\) is a linear
+function of \(\dot{q}\), so one can typically solve for \(\dot{q}(q,p)\) by
+inverting the expressions from (\ref{eqn:p-i}). The combined vector \((q,p)\) is
+called the \textit{phase} of the system.
 
-\section{Canonical Control Coordinates for Hamiltonian Systems}
+Next we define the \textit{Hamiltonian} (\ref{eqn:hamiltonian-general}) 
+as the Legendre transform of the Lagrangian \textbf{SOURCE}:
+\begin{equation}\label{eqn:hamiltonian-general}
+    \mathcal{H}(q,p) = p\tpose \dot{q}(q,p) - \mathcal{L}(q,\dot{q}(q,p))
+\end{equation}
+The EOM in this framework can be shown to be the \(2n\)
+first-order equations
+\begin{equation}\label{eqn:hamiltonian-eom-general}
+    \begin{cases}
+        \dot{q} = \pdiff{\mathcal{H}}{p} \\
+        \dot{p} = -\pdiff{\mathcal{H}}{q} + B(q)\tau \\
+    \end{cases}
+\end{equation}
+where \(B(q) \in \R^{n\times m}\) is the input matrix and 
+\(\tau \in \R^m\) is the vector of generalized input forces.
+
+If the Lagrangian is given as in (\ref{eqn:lagrangian}), the conjugate of
+momenta is computed explicitly by
+\[
+    p = D(q)\dot{q}
+\]
+which gives the Hamiltonian (\ref{eqn:hamiltonian})
+\begin{equation}\label{eqn:hamiltonian}
+    \mathcal{H}(q,p) = \frac{1}{2} p\tpose D^{-1}(q) p + P(q)
+\end{equation}
+and the EOM from (\ref{eqn:hamiltonian-eom-general}) reduce to 
+(\ref{eqn:hamiltonian-eom}).
+\begin{equation}\label{eqn:hamiltonian-eom}
+    \begin{cases}
+        \dot{q} = D^{-1}(q)p \\
+        \dot{p_i} = -\frac{1}{2} p\tpose \pdiff{D^{1}}{q_i}(q) p -
+        \pdiff{P}{q_i}(q) + B_i(q) \tau \\
+    \end{cases}
+\end{equation}
+
+\section{Simply Actuated Hamiltonian Systems}
 % TODO: Describe the change of coordinates to get into q_u/q_a mode and show
 % that the actuator directly affects pa but not pu. Use M for simply actuated
 % inertia, D for normal coordinates
+Given a mechanical system with phase coordinates \((q,p)\) and Hamiltonian
+(\ref{eqn:hamiltonian}), it is not in general obvious how the input forces
+\(\tau\) are affecting the conjugate of momenta since they are scaled by
+\(B(q)\), which may be quite complicated. Even if \(B(q)\) is constant, multiple
+forces may affect each \(p_i\). This section will demonstrate a useful change of
+coordinates which results in a simpler input matrix.
+
+Throughout the rest of this thesis, we will make the following assumptions.
+\begin{assm}\label{assm:B-const}
+    The input matrix \(B : \mathcal{Q} \rightarrow \R^{n\times k}\) is constant
+    and full rank.
+\end{assm}
+\begin{assm}\label{assm:B-orthogonal}
+    The input matrix is left-semi-orthogonal, whereby \(B\tpose B = \Id{k}\).
+\end{assm}
+\begin{assm}\label{assm:B-perp}
+    There exists a right-semi-orthogonal matrix 
+    \(B^\perp \in \R^{(n-k)\times n}\) for \(B\)
+    which is a left-annihilator for \(B\). That is,
+    \(B^\perp(B^\perp)\tpose = \Id{(n-k)}\) and
+    \(B^\perp B = \Zmat{(n-k) \times k}\) 
+\end{assm}
+
+Observe that Assumption \ref{assm:B-orthogonal} can be taken without loss of
+generality (WLOG). If \(B\) is a constant full-rank matrix, 
+it has a singular-value decomposition 
+\(B = U \Sigma V\tpose\) where \(U^{-1} = U\tpose \in \R^{n \times n}\), 
+\(V^{-1} = V\tpose \in \R^{n \times k}\), and \(\Sigma \in \R^{n \times k}\) is
+defined by
+\[
+    \Sigma = \begin{bmatrix}
+        \sigma_1 & 0 & \cdots & 0 & 0 \\
+        0 & \sigma_2 & \cdots & 0 & 0 \\
+        \vdots & & \ddots &  & \vdots \\
+        0 & 0 & \cdots & 0 & \sigma_k \\
+          & - & \Zmat{(n-k)\times k} & -  &\\
+    \end{bmatrix}
+\]
+where \(\sigma_i \neq 0\).
+\textbf{SOURCE}
+Defining \(T \in \R^{k \times k}\) by
+\[
+    T = \begin{bmatrix}
+        \frac{1}{\sigma_1} & 0 & \cdots & 0 \\
+        0 & \frac{1}{\sigma_2} & \cdots & 0 \\
+    \vdots & & \ddots & \vdots \\
+    0 & 0 & \cdots & \frac{1}{\sigma_k} \\
+    \end{bmatrix}
+\]
+and assigning the input forces to \(\tau = V T \hat{\tau}\), we get a new input
+matrix for \(\hat{\tau}\) given by \(\hat{B} = B V T = U \Sigma T\) 
+which is still constant and full-rank. In particular, 
+\(\hat{B}\tpose \hat{B} = T\tpose \Sigma\tpose \Sigma\tpose T = \Id{k}\).
+
+If \(k = (n-1)\) then if there is a left annihilator \(A\) for
+\(B\), then \(B^\perp = A/\norm{A}\) satisfies Assumption
+\ref{assm:B-perp}.
+
+To perform our coordinate transformation, we define a transformation matrix
+\[
+    \mathbf{B} = 
+    \begin{bmatrix}
+        B^\perp \\
+        B\tpose \\
+    \end{bmatrix}
+\]
+Since both \(B^\perp\) and \(B\tpose\) are right-semi-orthogonal, 
+\(\mathbf{B}\) is orthogonal. That is,
+\(\mathbf{B}\mathbf{B}\tpose = \Id{n}\) which means
+\(\mathbf{B}^{-1} = \mathbf{B}\tpose\).
+
+\begin{defn}
+    We call \(q_u = B^\perp q\) the \textbf{unactuated coordinates} and 
+    \(q_a = B\tpose\) the \textbf{actuated coordinates}, which are obtained
+    through the transformation
+    \[
+        \begin{bmatrix} q_u \\ q_a \end{bmatrix} = \mathbf{B}q
+    \]
+\end{defn}
 
 \section{Virtual Nonholonomic Constraints}
 % TODO: Perform the full development of VNHCs, including its stabilizing
