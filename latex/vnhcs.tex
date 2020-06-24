@@ -61,12 +61,15 @@ equations} with \textit{generalized input forces} \(\tau \in \R^m\)
 \end{equation}
 Here, \(B_i: \mathcal{Q} \rightarrow \R^{1\times m}\)
 and the matrix  \(B: \mathcal{Q} \rightarrow \R^{n \times m}\) given by
+%\[
+%    B(q) =\begin{bmatrix}
+%        - & B_1(q) & - \\
+%          & \vdots & \\
+%        - & B_n(q) & -
+%    \end{bmatrix}
+%\]
 \[
-    B(q) =\begin{bmatrix}
-        - & B_1(q) & - \\
-          & \vdots & \\
-        - & B_n(q) & -
-    \end{bmatrix}
+    B(q) = [B_i(q)]
 \]
 is the \textit{input matrix} for the system. If \(m < n\), we say the system is
 \textit{underactuated} with degree of underactuation \(n - m\).
@@ -87,9 +90,9 @@ If this is the case, the Euler-Lagrange equations
 where the \textit{Coriolis matrix} \(C(q,\dot{q})\) is of the form
 \[
     [C]_{i,j} = \frac{1}{2}\sum\limits_{k = 1}^n 
-    \left(\pdiff{[D]_{i,j}}{q_k}  +
-     \pdiff{[D]_{i,k}}{q_j} -
-     \pdiff{[D]_{k,j}}{q_i}\right)\dot{q}_k
+    \left(\pdiff{D_{i,j}}{q_k}  +
+     \pdiff{D_{i,k}}{q_j} -
+     \pdiff{D_{k,j}}{q_i}\right)\dot{q}_k
 \]
 
 % ---------- Hamiltonian Mechanics ---------- %
@@ -116,15 +119,17 @@ as the Legendre transform of the Lagrangian \textbf{SOURCE}:
     \mathcal{H}(q,p) = p\tpose \dot{q}(q,p) - \mathcal{L}(q,\dot{q}(q,p))
 \end{equation}
 The EOM in this framework can be shown to be the \(2n\)
-first-order equations
-\begin{equation}\label{eqn:hamiltonian-eom-general}
+first-order equations called \textit{Hamilton's equations}
+\begin{equation}\label{eqn:hamiltons-eqns}
     \begin{cases}
-        \dot{q} = \pdiff{\mathcal{H}}{p} \\
-        \dot{p} = -\pdiff{\mathcal{H}}{q} + B(q)\tau \\
+        \dot{q} = \nabla_p\mathcal{H} \\
+        \dot{p} = -\nabla_q\mathcal{H} + B(q)\tau \\
     \end{cases}
 \end{equation}
 where \(B(q) \in \R^{n\times m}\) is the input matrix and 
-\(\tau \in \R^m\) is the vector of generalized input forces.
+\(\tau \in \R^m\) is the vector of generalized input forces. A pair of
+coordinates \((q,p)\) which satisfy Hamilton's equations are said to be 
+\textit{canonical coordinates for} \(\mathcal{H}\).
 
 If the Lagrangian is given as in (\ref{eqn:lagrangian}), the conjugate of
 momenta is computed explicitly by
@@ -135,13 +140,13 @@ which gives the Hamiltonian (\ref{eqn:hamiltonian})
 \begin{equation}\label{eqn:hamiltonian}
     \mathcal{H}(q,p) = \frac{1}{2} p\tpose D^{-1}(q) p + P(q)
 \end{equation}
-and the EOM from (\ref{eqn:hamiltonian-eom-general}) reduce to 
+and the EOM from (\ref{eqn:hamiltons-eqns}) reduce to 
 (\ref{eqn:hamiltonian-eom}).
 \begin{equation}\label{eqn:hamiltonian-eom}
     \begin{cases}
         \dot{q} = D^{-1}(q)p \\
-        \dot{p_i} = -\frac{1}{2} p\tpose \pdiff{D^{1}}{q_i}(q) p -
-        \pdiff{P}{q_i}(q) + B_i(q) \tau \\
+        \dot{p} = -\frac{1}{2} \left[p\tpose \pdiff{D^{-1}}{q_i}(q) p\right] 
+        - \nabla_q P(q) + B(q) \tau \\
     \end{cases}
 \end{equation}
 
@@ -149,12 +154,14 @@ and the EOM from (\ref{eqn:hamiltonian-eom-general}) reduce to
 % TODO: Describe the change of coordinates to get into q_u/q_a mode and show
 % that the actuator directly affects pa but not pu. Use M for simply actuated
 % inertia, D for normal coordinates
-Given a mechanical system with phase coordinates \((q,p)\) and Hamiltonian
-(\ref{eqn:hamiltonian}), it is not in general obvious how the input forces
+Given a mechanical system with Lagrangian (\ref{eqn:lagrangian}) yielding 
+Hamiltonian (\ref{eqn:hamiltonian}) and canonical coordinates \((q,p)\), 
+it is not in general obvious how the input forces
 \(\tau\) are affecting the conjugate of momenta since they are scaled by
-\(B(q)\), which may be quite complicated. Even if \(B(q)\) is constant, multiple
+\(B(q)\) (which may be quite complicated). Even if \(B(q)\) is constant, multiple
 forces may affect each \(p_i\). This section will demonstrate a useful change of
-coordinates which results in a simpler input matrix.
+coordinates which results in a new Hamiltonian mechanical system with simpler
+input matrix.
 
 Throughout the rest of this thesis, we will make the following assumptions.
 \begin{assm}\label{assm:B-const}
@@ -215,19 +222,92 @@ To perform our coordinate transformation, we define a transformation matrix
         B\tpose \\
     \end{bmatrix}
 \]
-Since both \(B^\perp\) and \(B\tpose\) are right-semi-orthogonal, 
-\(\mathbf{B}\) is orthogonal. That is,
-\(\mathbf{B}\mathbf{B}\tpose = \Id{n}\) which means
+Since both \(B^\perp\) and \(B\tpose\) are right-semi-orthogonal and
+\(\mathbf{B} \in \R^{n \times n}\) is full rank, \(\mathbf{B}\) is orthogonal. 
+That is, \(\mathbf{B}\mathbf{B}\tpose = \Id{n}\) which means 
 \(\mathbf{B}^{-1} = \mathbf{B}\tpose\).
 
 \begin{defn}
-    We call \(q_u = B^\perp q\) the \textbf{unactuated coordinates} and 
-    \(q_a = B\tpose\) the \textbf{actuated coordinates}, which are obtained
-    through the transformation
-    \[
-        \begin{bmatrix} q_u \\ q_a \end{bmatrix} = \mathbf{B}q
-    \]
+    Define \(q_u = B^\perp q \in \R^{(n-k)}\) and 
+    \(q_a = B\tpose q \in \R^k\). We say \(q_u\) are the \textit{unactuated
+    coordinates} while \(q_a\) are the \textit{actuated coordinates} of the
+    system. Their corresponding conjugate of momenta are labelled \(p_u\) and
+    \(p_a\).
 \end{defn}
+
+In these new coordinates the input matrix will be modified such
+that \(\tau_i\) only affects \(p_{a,i}\), and all \(p_u\) are unaffected by the
+inputs.
+
+To derive this result, observe that the coordinates 
+\(\hat{q} = (q_u,q_a)\) can be written 
+as the transformation (\ref{eqn:q-transformation}).
+\begin{equation}\label{eqn:q-transformation}
+    \hat{q} = \mathbf{B}q
+\end{equation}
+Since \(\mathbf{B}\) is
+an orthogonal invertible matrix, we can equivalently write this as
+\(q = \mathbf{B}\tpose \hat{q}\). Applying this change of coordinates to the
+Lagrangian (\ref{eqn:lagrangian}) gives the new Lagrangian
+\[
+    \hat{\mathcal{L}}(\hat{q},\dot{\hat{q}}) = 
+    \frac{1}{2}\dot{\hat{q}}\tpose \mathbf{B} 
+    D(\mathbf{B}\tpose\hat{q}) 
+    \mathbf{B}\tpose\dot{\hat{q}} - P(\mathbf{B}\hat{q})
+\]
+From here it is straightforward to show that the 
+conjugate of momenta \(\hat{p} = (p_u,p_a)\) to \(\hat{q}\) is given by 
+(\ref{eqn:p-transformation}).
+\begin{equation}\label{eqn:p-transformation}
+    \hat{p} = \pdiff{\hat{\mathcal{L}}}{\dot{\hat{q}}}
+            = \mathbf{B}D(q)\dot{q} = \mathbf{B}p
+\end{equation}
+
+For ease of notation, we define
+\(M(\hat{q}) := \mathbf{B}D\left(\mathbf{B}\tpose\hat{q}\right)\mathbf{B}\tpose\)
+and 
+\(V(\hat{q}) := P\left(\mathbf{B}\tpose \hat{q}\right)\)
+Then the Hamiltonian (\ref{eqn:hamiltonian}) is given in
+\((\hat{q},\hat{p})\) coordinates by
+\begin{align*}
+    \hat{\mathcal{H}}(\hat{q},\hat{p})
+    &=
+    \frac{1}{2}\hat{p}\tpose\mathbf{B}
+    D^{-1}\left(\mathbf{B}\tpose\hat{q}\right)
+    \mathbf{B}\tpose\hat{p}
+    + P\left(\mathbf{B}\hat{q}\right) \\
+    &= \hat{p}\tpose \Minv(\hat{q})\hat{p} + V(\hat{q})
+\end{align*}
+
+Now we will show \((\hat{q},\hat{p})\) are canonical coordinates
+for \(\hat{\mathcal{H}}\). From the definition of \(\hat{q}\) in
+(\ref{eqn:q-transformation}), we obtain
+\begin{align*}
+    \dot{\hat{q}} &= \mathbf{B}\dot{q} = \mathbf{B}D^{-1}(q)p \\
+        &= \mathbf{B}D^{-1}(\mathbf{B}\tpose \hat{q})\mathbf{B}\tpose \hat{p} \\
+        &= \Minv(\hat{q})\hat{p} \\
+        &= \nabla_{\hat{p}}\hat{\mathcal{H}}
+\end{align*}
+
+The dynamics of \(\hat{p}\) are given by
+\[
+    \dot{\hat{p}}_i = \mathbf{B}\dot{p}
+                    = -\frac{1}{2}\mathbf{B}
+                    \left[p\tpose \pdiff{D^{-1}}{q_i}p\right]
+                    -\mathbf{B} \nabla_q P(q) + \mathbf{B}B \tau
+\]
+where 
+\[
+    \mathbf{B} \nabla_q P(q)
+    = \nabla_{\hat{q}}(\mathbf{B}\tpose \hat{q})\nabla_q P(q)
+    = \nabla_{\hat{q}}q \nabla_q P(q)
+    = \nabla_{\hat{q}}P(\mathbf{B}\tpose\hat{q}) 
+    = \nabla_{\hat{q}} V(\hat{q}) 
+\]
+
+\textbf{LOOK INTO SYMPLECTIc jacobian method for canonical transformations to
+show this is a canonical transformation}
+
 
 \section{Virtual Nonholonomic Constraints}
 % TODO: Perform the full development of VNHCs, including its stabilizing
