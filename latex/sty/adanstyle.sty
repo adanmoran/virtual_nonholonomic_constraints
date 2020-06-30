@@ -45,19 +45,21 @@
 \DeclareMathOperator{\adj}{adj}
 \DeclareMathOperator{\Span}{span}
 \DeclareMathOperator{\Image}{Im}
-\DeclareMathOperator{\rank}{rank}
-\DeclareMathOperator{\hess}{Hess}
-\DeclareMathOperator{\sgn}{sgn}
+\DeclareMathOperator{\Rank}{rank}
+\DeclareMathOperator{\Hess}{Hess}
+\DeclareMathOperator{\Sign}{sgn}
+\newcommand*{\rank}[1]{\Rank\left(#1\right)}
+\newcommand*{\sign}[1]{\Sign\left(#1\right)}
 
 \newcommand*{\tpose}{^\mathsf{T}} 
+\newcommand*{\inv}{^\mathsf{-1}}
 \newcommand*{\Rt}[1]{[\R]_{#1}}
 \newcommand*{\R}{\mathbb{R}}
 \newcommand*{\n}{\mathbf{n}}
 \newcommand*{\N}{\mathbb{N}}
-\newcommand*{\Minv}{M^{-1}}
+\newcommand*{\Minv}{M^\mathsf{-1}}
 \newcommand*{\Id}[1]{I_{#1}}
 \newcommand*{\Zmat}[1]{\bm{0}_{#1}}
-\newcommand*{\sign}[1]{\sgn\left(#1\right)}
 \newcommand*{\diff}[2]{\frac{d #1}{d #2}}
 \newcommand*{\pdiff}[2]{\frac{\partial #1}{\partial #2}}
 
