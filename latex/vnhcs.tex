@@ -3,6 +3,8 @@
 %/========== Virtual Nonholonomic Constraints ==========/%
 
 \chapter{Development of Virtual Nonholonomic Constraints}
+% TODO: Brief introduction before preliminaries
+
 \section{Preliminaries on Analytical Mechanics}
 A mechanical system can be represented by \(N\) point masses, where each point
 represents the center of mass of a physical body, along with \(r\)
@@ -298,7 +300,7 @@ and all \(p_u\) are unaffected by the input forces.
     For any constant matrix \(A\), the transformation
     \((Q = Aq, P = Ap)\) satisfies
     \(\pdiff{Q_i}{p_m} = \pdiff{P_i}{q_m} = 0\) for all 
-    \(i,m \in \{1,\ldots,n\}\). Hence, the Poisson brackets between the
+    \(i,m \in \n\). Hence, the Poisson brackets between the
     new coordinates are zero:
     \begin{align*}
         [Q_i,Q_j] &:= \sum\limits_{m = 1}^n \pdiff{Q_i}{p_m}\pdiff{Q_j}{q_m} - 
@@ -340,10 +342,23 @@ and all \(p_u\) are unaffected by the input forces.
 \end{proof}
 
 \section{Virtual Nonholonomic Constraints}
+% TODO: Motivation for VNHCs, they are an extension of VHCs, etc.
+
 % TODO: Perform the full development of VNHCs, including its stabilizing
 % controller.
+\begin{defn}
+    A \textit{virtual nonholonomic constraint of order \(k\)} is a relation
+    \(h(q,p) = 0\) where \(h \in C^2\left(? ; \R^k\right)\) is smooth,
+    \(\rank{\left[ dh_q,\, dh_p \right]} = k\) for all \((q,p) \in h\inv(0)\),
+    and there exists a feedback controller \(\tau(q,p)\) stabilizing the set
+    \[
+        \Gamma = \left\{(q,p) | h(q,p) = 0, dh_q \dot{q} + dh_p \dot{p} = 0\right\}
+    \]
+    which is called the \textit{constraint manifold}.
+\end{defn}
 %TODO: Special case: when dM/dqu = 0, show that we have a nice form and that we
 %can solve for p_a and the closed-loop dynamics (qu,pu)_dot
+
 
 
 
