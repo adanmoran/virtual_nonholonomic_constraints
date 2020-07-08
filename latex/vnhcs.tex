@@ -177,10 +177,7 @@ form the backbone for the rest of the theory developed in this thesis.
     \(\mathcal{H}\) are said to be \textit{simply actuated coordinates} if the
     input matrix \(B(q) \in \R^{n \times k}\) is of the form
     \[
-        B(q) = \begin{bmatrix}
-            \Zmat{(n-k)\times k} \\
-            \Id{k}
-        \end{bmatrix}
+        B(q) = \simpleB    
     \]
 \end{defn}
 \begin{defn}
@@ -363,19 +360,115 @@ and all \(p_u\) are unaffected by the input forces.
 
 \section{Virtual Nonholonomic Constraints}
 % TODO: Motivation for VNHCs, they are an extension of VHCs, etc.
+Let us imagine a child on a swing, who wants to go as high as possible. The
+child will push off the ground and start a swing with a very small oscillation,
+then extend and retract their feet appropriately to gain energy. 
+If a roboticist were designing a machine to do this task, they might design a
+control mechanism which makes the legs track a trajectory over time. For
+example, they might tell the robot to extend and retract its legs every two
+seconds. In ideal situtations, this technique would work perfectly because the
+leg motion is synchronized with the swing to gain energy as fast as possible.
+
+Unfortunately for engineers, reality does not provide ideal scenarios very often. 
+Most children have an adult pushing the swing to help them go higher; or perhaps
+the child is swinging on a windy day. In either case, they adjust their leg
+motion accordingly and do not keep track of time when kicking their legs. This
+standard control technique of tracking a function of time, known as
+\textit{trajectory tracking}, would not work because the disturbance affecting
+the swing will desynchronize the motion of the legs with the swing and stop the
+energy-gaining effects.
+
+This is a common issue in the control of many biologically-inspired systems. 
+One method which can provide more realistic, robust motion is the method of
+of virtual holonomic constraints (VHCs). Instead of a robot's actuators tracking
+a trajectory over time, VHCs use the actuators to enforce a relation
+\(h(q) = 0\) of the configuration \cite{vhcs_for_el_systems}. 
+This method has provided incredible results in the development of 
+walking robots \cite{vhc_robotic_walking, vhc_stable_walking}, 
+vehicle motion \cite{vhc_bicycle, vhc_helicopter}, 
+and has even been used to design a snake-like robot that can swim
+\cite{vhc_snake}.
+
+Recent papers have attempted to extend these results to use the robot's
+actuators to enforce a relation 
+\(h(q,\dot{q}) = 0\) of the full state. Since these relations use both
+the configuration and generalized velocity, they are called
+\textit{nonholonomic} constraints. Furthermore, they are called \textit{virtual}
+because the constraint is enforced by the robot's actuators.
+We will give our own characterization of these virtual nonholonomic constraints
+in the Hamiltonian framework, using the phase \((q,p)\) of a Hamiltonian
+system instead of the state \((q,\dot{q})\) of a lagrangian system.
 
 % TODO: Perform the full development of VNHCs, including its stabilizing
 % controller.
 \begin{defn}
-    A \textit{virtual nonholonomic constraint of order \(k\)} is a relation
-    \(h(q,p) = 0\) where \(h : \mathcal{Q}\times\R^n \rightarrow \R^k\) is smooth,
-    \(\rank{\left[ dh_q,\, dh_p \right]} = k\) for all \((q,p) \in h\inv(0)\),
-    and there exists a feedback controller \(\tau(q,p)\) stabilizing the set
+    A \textit{virtual nonholonomic constraint} (VNHC) \textit{of order \(k\)} is a
+    relation \(h(q,p) = 0\) where \(h : \mathcal{Q}\times\R^n \rightarrow \R^k\) is
+    smooth, \(\rank{\left[ dh_q,\, dh_p \right]} = k\) for all 
+    \((q,p) \in h\inv(0)\), and there exists a feedback controller \(\tau(q,p)\)
+    stabilizing the set
     \[
-        \Gamma = \left\{(q,p) | h(q,p) = 0, dh_q \dot{q} + dh_p \dot{p} = 0\right\}
+        \Gamma = \left\{(q,p) \vert h(q,p) = 0, dh_q \dot{q} + dh_p \dot{p} = 0\right\}
     \]
     which is called the \textit{constraint manifold}.
 \end{defn}
+
+Defining the error term  \(e = h(q,p)\), stabilizing \(\Gamma\) is equivalent to 
+solving for \(\tau(q,p)\) which drives \(e \rightarrow 0\)
+and \(\dot{e} \rightarrow 0\).
+Let us imagine that we have no further structure on the VNHC. 
+Then \(\dot{e} = dh_q \dot{q} + dh_p \dot{p}\), so \(\tau\) appears inside
+\(\dot{e}\). To solve for \(\tau\) explicitly, we must have that \(dh_p\) is
+invertible, which means that \(h(q,p)\) is strictly monotonic in \(p\).
+
+This is a very restrictive condition, which many VNHCs will not satisfy. For
+this reason, it is preferable to have the torque \(\tau\) appear after two 
+derivatives of \(e\) so that there is more freedom in the types of constraints
+one can use.
+The terminology for this is to say that \(e\) is of \textit{relative degree}
+\(\{2,2,\ldots,2\}\). We thus define a special type of VNHC which satisfies this
+property.
+
+\begin{defn}
+    A VNHC of order \(k\) \(h(q,p) = 0\) is \textit{regular} if the output 
+    \(e = h(q,p)\) is of relative degree \(\{2,2.\ldots,2\}\) everywhere on the
+    constraint manifold \(\Gamma\).
+\end{defn}
+
+\citeauthor{hybrid_zero_dynamics_bipedal_nhvcs} showed that relations which use only
+the unactuated momentum \(p_u\) result in \(\tau\) appearing only after two
+derivatives of \(e\) \cite{hybrid_zero_dynamics_bipedal_nhvcs}. 
+In the remainder of this chapter, we will formalize and generalize this idea 
+under the following assumption.
+
+% TODO: Write the [p' M p] matrix in our nice nottation
+\begin{assm}\label{assm:H-is-simply-actuated}
+    The mechanical system under consideration is an underactuated 
+    Hamiltonian system of order \((n-k) \geq 0\) in simply
+    actuated coordinates \(\{q = (q_u,q_a), p = (p_u, p_a)\}\):
+    \begin{align*}
+        \mathcal{H}(q,p) &= p\tpose \Minv(q) p + V(q) \\
+         &\begin{cases}
+            \dot{q} = \Minv p \\
+            \dot{p} = -\frac{1}{2} ? - \nabla_q V(q) + \simpleB \tau \\
+        \end{cases}
+    \end{align*}
+\end{assm}
+
+% TODO: write out ??? = [p' dM/(dqu_i)] the matrix of size nxn
+\begin{prop}
+    A VNHC of order \(k\) is regular if and only if \(dh_{p_a} = 0\) 
+    (\ie \(h(q,p) \equiv h(q,p_u)\)) and
+    \[
+        \rank{\left(dh_q \Minv(q) + dh_{p_u} ??? \right)\simpleB} = k
+    \]
+    everywhere on the constraint manifold \(\Gamma\).
+\end{prop}
+\begin{proof}
+\end{proof}
+
+
+
 %TODO: Special case: when dM/dqu = 0, show that we have a nice form and that we
 %can solve for p_a and the closed-loop dynamics (qu,pu)_dot
 
