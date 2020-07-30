@@ -27,12 +27,14 @@
          & If \(M\) is a matrix, the \(i\)th column of \(M\). \\
    \(M_{i,j}\) & The value of row \(i\), column \(j\) for the matrix \(M\). \\
    \(\dot{x}\) & Derivative of \(x\) with respect to time \(t\). \\
-   \(\nabla_v F\) & Gradient of the \(\R\)-valued function \(F\) with respect to \(v\). \\
-   \(dF_v\) & Total differential (Jacobian) of the function \(F\) with respect to \(v\).\\
-           & If \(F\) is \(\R\)-valued, equivalent to \((\nabla_v F)\tpose\). \\
-   \(\Hess F\) & Hessian matrix of double derivatives of \(F : \R^n \rightarrow \R\). \\
+   \(\nabla_v F\) & If \(F\) is \(\R\)-valued, the gradient of \(F\) with respect to \(v\). \\
+            & If \(F : \R^m \rightarrow \R^{n\times n}\), the block matrix gradient \((\pdiff{F}{v_1},\ldots,\pdiff{F}{v_m}) \in \R^{nm \times n}\). \\
+   \(dF_v\) & Total differential (Jacobian) of \(F\), equivalent to \((\nabla_v F)\tpose\). \\
+   \(\Hess F\) & If \(F : \R^n \rightarrow \R\), the \(n \times n\) Hessian matrix of double derivatives of \(F\). \\
+               & If \(F : \R^n \rightarrow \R^k\), the block matrix \((\Hess F_1, \ldots, \Hess F_k) \in \R^{n \times nk}\). \\
    \(\partial_v \partial_w F\) & Derivative matrix of \(F : \R^n \times \R^m \rightarrow \R\), with \((i,j)\) element \(\ppdiff{F}{v_i}{w_j}\). \\
    \(\delta_{i,j}\) & The Kronecker delta: 1 if \(i = j\) and 0 otherwise. \\
+   \(\otimes\) & The matrix kronecker product (see Appendix \ref{appendix:matrix-kron-prod}). \\
    \bottomrule
 \end{tabular}
 

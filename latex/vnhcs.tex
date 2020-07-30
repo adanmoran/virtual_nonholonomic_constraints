@@ -6,7 +6,7 @@
 % TODO: Brief introduction before preliminaries
 
 \section{Preliminaries on Analytical Mechanics}
-A mechanical system can be represented by \(N\) point masses, where each point
+A mechanical system can be represented by \(N\) point masses where each point
 represents the center of mass of a physical body, along with \(r\)
 \textit{equations of constraint} (EOC) which model the physical restrictions
 between these masses.
@@ -25,7 +25,7 @@ independent scalar-valued variables \(q_1,\ldots,q_n\) called
 \textit{generalized coordinates}, where \(n = 3N - r\) is the number of
 \textit{degrees of freedom} (DOF) of the system \cite{greenwood_dynamics}.
 
-For the mechanical systems of interest in this thesis, we assume that
+For the robotic systems of interest in this thesis, we assume that
 each generalized coordinate \(q_i\) represents either the distance or the angle
 between two parts of the system.
 Mathematically, each \(q_i\) takes values in \(\Rt{T_i}\), where
@@ -41,7 +41,7 @@ so-called \textit{generalized cylinder}:
 The derivative \(\dot{q} = (\dot{q}_1,\ldots,\dot{q}_n)\) of a configuration
 is called a \textit{generalized velocity} of the system. For arbitrary systems,
 the space of allowable velocities depends on the current configuration of the
-system.  However, since \(\mathcal{Q}\) is a generalized cylinder,
+system.  However, since \(\mathcal{Q}\) is a generalized cylinder, we find that 
 \(\dot{q} \in \R^n\).
 The combined vector \((q,\dot{q}) \in \mathcal{Q}\times\R^n\) is called a 
 \textit{state} of the system.
@@ -146,17 +146,17 @@ The resulting Hamiltonian system reduces to (\ref{eqn:hamiltonian}).
 \begin{align}\label{eqn:hamiltonian}
     \mathcal{H}(q,p) &= \frac{1}{2} p\tpose D^{-1}(q) p + P(q) \\
                      &\begin{cases}
-        \dot{q} = D^{-1}(q)p \\
-        \dot{p} = -\frac{1}{2} \left[p\tpose \pdiff{D^{-1}}{q_i}(q) p\right] 
+        \dot{q} = D\inv(q)p \\
+        \dot{p} = -\frac{1}{2} (I_n \otimes p\tpose) \nabla_q D\inv(q) p
         - \nabla_q P(q) + B(q) \tau \\
     \end{cases} 
 \end{align}
 
 A set of coordinates \(\{q,p\}\) which satisfy Hamilton's equations 
-under the Hamiltonian \(\mathcal{H}(q,p)\) are
+under the Hamiltonian \(\mathcal{H}\) are
 said to be \textit{canonical coordinates} for the system. A change of
 coordinates \((q,p) \rightarrow (Q,P)\) is a \textit{canonical
-transformation} if \((Q,P)\) are canonical coordinates with 
+transformation} if \(\{Q,P\}\) are canonical coordinates with Hamiltonian
 \(H(Q,P) = \mathcal{H}\left(q(Q,P), p(Q,P)\right)\).
 
 \section{Simply Actuated Hamiltonian Systems}
@@ -173,12 +173,19 @@ forces on the conjugate of momenta is made obvious. This class of systems will
 form the backbone for the rest of the theory developed in this thesis.
 
 \begin{defn}
-    A set of canonical coordinates \(\{q,p\}\) for a Hamiltonian system 
-    \(\mathcal{H}\) are said to be \textit{simply actuated coordinates} if the
+    Let \(\mathcal{H}\) be an underactuated Hamiltonian system 
+    \(\mathcal{H}\) with degree of underactuation \((n-k)\geq 0\). 
+    A pair of canonical coordinates \(\{q,p\}\) for this system
+    are said to be \textit{simply actuated coordinates} if the
     input matrix \(B(q) \in \R^{n \times k}\) is of the form
     \[
         B(q) = \simpleB    
     \]
+    The first \((n-k)\) coordinates \(q_u\) are called the \textit{unactuated
+    coordinates}, while the remaining \(k\) coordinates \(q_a\) are called the
+    \textit{actuated coordinates}. We write \(q = (q_u, q_a)\) and the
+    corresponding conjugate of momenta \(p = (p_u, p_a)\) are the called the
+    unactuated and actuated momenta (respectively).
 \end{defn}
 \begin{defn}
     A Hamiltonian system is said to be \textit{simply actuated} if there exists
@@ -202,8 +209,8 @@ Hamiltonian system (\ref{eqn:hamiltonian}) is simply actuated.
     (\ie \(B^\perp B = \Zmat{(n-k) \times k}\)).
 \end{assm}
 
-Note that if \(k = (n-1)\), the existence of a left annihilator \(A^0\) for
-\(B\) implies \(B^\perp := A^0/\norm{A^0}\) satisfies Assumption
+Note that if \(k = (n-1)\), the existence of any left annihilator \(A^0\) for
+\(B\) implies the left annihilator \(B^\perp := A^0/\norm{A^0}\) satisfies Assumption
 \ref{assm:B-perp}.
 
 \begin{assm}\label{assm:B-orthogonal}
@@ -219,15 +226,14 @@ it has a singular-value decomposition
 defined by
 \[
     \Sigma = \begin{bmatrix}
-        \sigma_1 & 0 & \cdots & 0 & 0 \\
-        0 & \sigma_2 & \cdots & 0 & 0 \\
-        \vdots & & \ddots &  & \vdots \\
-        0 & 0 & \cdots & 0 & \sigma_k \\
-          & - & \Zmat{(n-k)\times k} & -  &\\
+        \sigma_1 & 0 & \cdots & 0 \\
+        0 & \sigma_2 & \cdots & 0 \\
+        \vdots & & \ddots & \vdots \\
+        0 & 0 & \cdots & \sigma_k \\
+        - &   & \Zmat{(n-k)\times k} & -  \\
     \end{bmatrix}
 \]
-where \(\sigma_i \neq 0\) because \(B\) is full-rank.
-\textbf{SOURCE}
+where \(\sigma_i \neq 0\) because \(B\) is full-rank \textbf{SOURCE?}.
 Defining \(T \in \R^{k \times k}\) by
 \[
     T = \begin{bmatrix}
@@ -264,51 +270,34 @@ orthogonal:
     \mathbf{B}^{-1} = \mathbf{B}\tpose
 \]
 
-\begin{defn}
-    Let \(\{q,p\}\) be canonical coordinates for a Hamiltonian mechanical system
-    and define the coordinate transformation 
-    \((q_u,q_a) = \mathbf{B}q\), where \(q_u = B^\perp q\)
-    and \(q_a = B\tpose q\).
-    We call \(q_u\) the \textit{unactuated coordinates} and \(q_a\) the
-    \textit{actuated coordinates} of the system. 
-    Their corresponding conjugate of momenta are 
-    \((p_u,p_a) = \mathbf{B}p\).
-\end{defn}
-
-The following theorem shows that these new coordinates are simply actuated
-coordinates, so that \(\tau_i\) only affects \(p_{a,i}\)
-and all \(p_u\) are unaffected by the input forces. 
+The following theorem shows that \(\mathbf{B}\) provides a canonical
+transformation into simply actuated coordinates, so that all unactuated momenta
+are unaffected by the input forces.
 
 % TODO: Replace the [P M_i P] with new notation
 \begin{thm}
     Under Assumptions \ref{assm:B-const},\ref{assm:B-perp}, and
-    \ref{assm:B-orthogonal}, the change of coordinates 
-    \(\{Q = (q_u, q_a), P = (p_u,p_a)\}\) 
-    is a canonical transformation of the
-    original Hamiltonian system (\ref{eqn:hamiltonian}) into
-    the simply actuated Hamiltonian system (\ref{eqn:simple-hamiltonian}),
+    \ref{assm:B-orthogonal}, the Hamiltonian system (\ref{eqn:hamiltonian}) is
+    simply actuated with simply actuated coordinates 
+    \(\{Q = \mathbf{B}q, P = \mathbf{B}p\}\). The resulting dynamics are 
+    given by (\ref{eqn:simple-hamiltonian}),
     \begin{align}\label{eqn:simple-hamiltonian}
         \hat{H}(Q,P) &= 
         \frac{1}{2} P\tpose \Minv(Q) P + V(Q) \\
        &\begin{cases}
             \dot{Q} = \Minv(Q)P \\
-            \dot{P} = -\frac{1}{2}
-                \left[P\tpose \pdiff{\Minv}{Q_i}(Q) P \right] 
-                - \nabla_Q V(Q) + 
-                \begin{bmatrix}
-                    \Zmat{(n-k)\times k} \\
-                    \Id{k} \\
-                \end{bmatrix} \tau
+            \dot{P} = -\frac{1}{2} (I_n \otimes P\tpose) \nabla_Q \Minv(Q) P
+                - \nabla_Q V(Q) + \simpleB \tau
         \end{cases} \nonumber
     \end{align}
     where
     \begin{align*}
-        \Minv(Q) &= \mathbf{B}D^{-1}(\mathbf{B}\tpose Q)\mathbf{B}\tpose \\
-        V(Q) &= P(\mathbf{B}\tpose Q) \\
+        \Minv(Q) &:= \mathbf{B}D^{-1}(\mathbf{B}\tpose Q)\mathbf{B}\tpose \\
+        V(Q) &:= P(\mathbf{B}\tpose Q) \\
     \end{align*}
 \end{thm}
 \begin{proof}
-    The Poisson bracket between \(f(q,p)\) and \(g(q,p)\) is defined by
+    The Poisson bracket between the functions \(f(q,p)\) and \(g(q,p)\) is defined by
     \cite{landau_mechanics} as follows:
     \[
         [f,g] := \sum \limits_{i=1}^n \pdiff{f}{p_i}\pdiff{g}{q_i} - 
@@ -354,14 +343,14 @@ and all \(p_u\) are unaffected by the input forces.
             \Id{k}
         \end{bmatrix}
     \]
-    so the coordinates \(\{q_u,q_a,p_u,p_a\}\) are simply actuated coordinates for 
+    so the coordinates \(\{Q = (q_u,q_a), P = (p_u,p_a)\}\) are simply actuated coordinates for 
     \(\hat{H}\) as desired.
 \end{proof}
 
 \section{Virtual Nonholonomic Constraints}
 % TODO: Motivation for VNHCs, they are an extension of VHCs, etc.
 Let us imagine a child on a swing, who wants to go as high as possible. The
-child will push off the ground and start a swing with a very small oscillation,
+child will push off the ground and start swinging with small oscillations,
 then extend and retract their feet appropriately to gain energy. 
 If a roboticist were designing a machine to do this task, they might design a
 control mechanism which makes the legs track a trajectory over time. For
@@ -369,10 +358,9 @@ example, they might tell the robot to extend and retract its legs every two
 seconds. In ideal situtations, this technique would work perfectly because the
 leg motion is synchronized with the swing to gain energy as fast as possible.
 
-Unfortunately for engineers, reality does not provide ideal scenarios very often. 
 Most children have an adult pushing the swing to help them go higher; or perhaps
 the child is swinging on a windy day. In either case, they adjust their leg
-motion accordingly and do not keep track of time when kicking their legs. This
+motion accordingly and do not keep track of time when kicking their legs. Te
 standard control technique of tracking a function of time, known as
 \textit{trajectory tracking}, would not work because the disturbance affecting
 the swing will desynchronize the motion of the legs with the swing and stop the
@@ -386,18 +374,29 @@ a trajectory over time, VHCs use the actuators to enforce a relation
 This method has provided incredible results in the development of 
 walking robots \cite{vhc_robotic_walking, vhc_stable_walking}, 
 vehicle motion \cite{vhc_bicycle, vhc_helicopter}, 
-and has even been used to design a snake-like robot that can swim
+and has even been used to design a snake-like swimming robot
 \cite{vhc_snake}.
 
-Recent papers have attempted to extend these results to use the robot's
-actuators to enforce a relation 
-\(h(q,\dot{q}) = 0\) of the full state. Since these relations use both
-the configuration and generalized velocity, they are called
-\textit{nonholonomic} constraints. Furthermore, they are called \textit{virtual}
-because the constraint is enforced by the robot's actuators.
-We will give our own characterization of these virtual nonholonomic constraints
-in the Hamiltonian framework, using the phase \((q,p)\) of a Hamiltonian
-system instead of the state \((q,\dot{q})\) of a lagrangian system.
+Many authors have attempted to extend these results to enforce a relation 
+\(h(q,\dot{q}) = 0\) of the full state. Since these relations use actuators to
+restrict both the configuration and generalized velocity, they are called
+virtual \textit{nonholonomic} constraints. This idea has been used for
+human-robot interaction
+\cite{vnhc_human_robot_cooperation,psd_based_vnhc_redundant_manipulator,haptic_vnhc},
+error-reduction on time-delayed systems \cite{vnhc_time_delay_teleop},
+and improving bipedal locomotion \cite{nhvc_dynamic_walking,
+hybrid_zero_dynamics_bipedal_nhvcs,nhvc_incline_walking,output_nhvc_bipedal_control}.
+
+Unlike the theory of VHCs, there does not appear to be a standard definition of virtual
+nonholonomic constraints. One issue is that Lagrangian dynamics is not
+particularly suited to finding controllers which stabilize desired constraints. Because
+of this, all the applications listed above use their own definition of a virtual
+nonholonomic constraint, which makes it difficult to compare and analyze their
+work.
+
+This section will provide a new characterization of virtual nonholonomic
+constraints. The goal is to provide a consistent, rigorous foundation for
+designing constraints on a general class of systems.
 
 % TODO: Perform the full development of VNHCs, including its stabilizing
 % controller.
@@ -413,20 +412,22 @@ system instead of the state \((q,\dot{q})\) of a lagrangian system.
     which is called the \textit{constraint manifold}.
 \end{defn}
 
-Defining the error term  \(e = h(q,p)\), stabilizing \(\Gamma\) is equivalent to 
-solving for \(\tau(q,p)\) which drives \(e \rightarrow 0\)
-and \(\dot{e} \rightarrow 0\).
+If we define the error term  \(e = h(q,p)\), stabilizing \(\Gamma\) is
+equivalent to solving for \(\tau(q,p)\) which drives \(e \rightarrow 0\) and
+\(\dot{e} \rightarrow 0\).
 Let us imagine that we have no further structure on the VNHC. 
 Then \(\dot{e} = dh_q \dot{q} + dh_p \dot{p}\), so \(\tau\) appears inside
 \(\dot{e}\). To solve for \(\tau\) explicitly, we must have that \(dh_p\) is
-invertible, which means that \(h(q,p)\) is strictly monotonic in \(p\).
+invertible for all \(p\), which is the same as requiring that \(h(q,p)\) is
+strictly monotonic in \(p\).
 
 This is a very restrictive condition, which many VNHCs will not satisfy. For
 this reason, it is preferable to have the torque \(\tau\) appear after two 
 derivatives of \(e\) so that there is more freedom in the types of constraints
 one can use.
-The terminology for this is to say that \(e\) is of \textit{relative degree}
-\(\{2,2,\ldots,2\}\). We thus define a special type of VNHC which satisfies this
+Mathematically, if \(\tau\) appears only after two derivatives, one says 
+that \(e\) is of \textit{relative degree} \(\{2,2,\ldots,2\}\). 
+We thus define a special type of VNHC which satisfies this
 property.
 
 \begin{defn}
@@ -435,11 +436,13 @@ property.
     constraint manifold \(\Gamma\).
 \end{defn}
 
-\citeauthor{hybrid_zero_dynamics_bipedal_nhvcs} showed that relations which use only
-the unactuated momentum \(p_u\) result in \(\tau\) appearing only after two
-derivatives of \(e\) \cite{hybrid_zero_dynamics_bipedal_nhvcs}. 
-In the remainder of this chapter, we will formalize and generalize this idea 
-under the following assumption.
+Modifying the results of
+\cite{nhvc_dynamic_walking,hybrid_zero_dynamics_bipedal_nhvcs,nhvc_incline_walking}
+into the Hamiltonian framework, one observes that
+relations which use only the unactuated momentum \(p_u\) result in \(\tau\)
+appearing only after two derivatives of \(e\).
+To be able to use \(p_u\), we will continue with the following assumption for
+the rest of the chapter.
 
 % TODO: Write the [p' M p] matrix in our nice nottation
 \begin{assm}\label{assm:H-is-simply-actuated}
@@ -450,7 +453,8 @@ under the following assumption.
         \mathcal{H}(q,p) &= p\tpose \Minv(q) p + V(q) \\
          &\begin{cases}
             \dot{q} = \Minv p \\
-            \dot{p} = -\frac{1}{2} ? - \nabla_q V(q) + \simpleB \tau \\
+            \dot{p} = -\frac{1}{2} (I_n \otimes p\tpose) \nabla_q \Minv(q) p
+            - \nabla_q V(q) + \simpleB \tau \\
         \end{cases}
     \end{align*}
 \end{assm}
@@ -458,9 +462,11 @@ under the following assumption.
 % TODO: write out ??? = [p' dM/(dqu_i)] the matrix of size nxn
 \begin{prop}
     A VNHC of order \(k\) is regular if and only if \(dh_{p_a} = 0\) 
-    (\ie \(h(q,p) \equiv h(q,p_u)\)) and
+    and
     \[
-        \rank{\left(dh_q \Minv(q) + dh_{p_u} ??? \right)\simpleB} = k
+        \rank{\left(dh_q \Minv(q) + 
+          dh_{p_u} (I_n \otimes p\tpose)\nabla_{q_u}\Minv(q) 
+         \right)\simpleB} = k
     \]
     everywhere on the constraint manifold \(\Gamma\).
 \end{prop}
