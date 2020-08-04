@@ -407,7 +407,7 @@ designing constraints on a general class of systems.
     \((q,p) \in h\inv(0)\), and there exists a feedback controller \(\tau(q,p)\)
     stabilizing the set
     \[
-        \Gamma = \left\{(q,p) \vert h(q,p) = 0, dh_q \dot{q} + dh_p \dot{p} = 0\right\}
+        \Gamma = \left\{(q,p) \mid h(q,p) = 0, dh_q \dot{q} + dh_p \dot{p} = 0\right\}
     \]
     which is called the \textit{constraint manifold}.
 \end{defn}
@@ -446,9 +446,11 @@ the rest of the chapter.
 
 % TODO: Write the [p' M p] matrix in our nice nottation
 \begin{assm}\label{assm:H-is-simply-actuated}
-    The mechanical system under consideration is an underactuated 
-    Hamiltonian system of order \((n-k) \geq 0\) in simply
-    actuated coordinates \(\{q = (q_u,q_a), p = (p_u, p_a)\}\):
+    The mechanical system under consideration is a
+    Hamiltonian system with \(n\) degrees of freedom and 
+    \(k < n\) actuators. It is described in simply
+    actuated coordinates \(\{q = (q_u,q_a), p = (p_u, p_a)\}\) and has the
+    following dynamics:
     \begin{align*}
         \mathcal{H}(q,p) &= p\tpose \Minv(q) p + V(q) \\
          &\begin{cases}
@@ -459,8 +461,7 @@ the rest of the chapter.
     \end{align*}
 \end{assm}
 
-% TODO: write out ??? = [p' dM/(dqu_i)] the matrix of size nxn
-\begin{prop}
+\begin{thm}\label{thm:vnhc-regularity}
     A VNHC of order \(k\) is regular if and only if \(dh_{p_a} = 0\) 
     and
     \[
@@ -469,24 +470,108 @@ the rest of the chapter.
          \right)\simpleB} = k
     \]
     everywhere on the constraint manifold \(\Gamma\).
-\end{prop}
+\end{thm}
 \begin{proof}
+    % TODO: complete this proof with our notation
 \end{proof}
 
+From the proof for Theorem \ref{thm:vnhc-regularity}, a regular VNHC of order
+\(k\) can be stabilized by the output-linearizing phase-feedback controller
+(\ref{eqn:vnhc-torque-controller}).
+% TODO: Controller for VNHC in closed form
+\begin{equation}\label{eqn:vnhc-torque-controller}
+    \tau(q,p) = ? - k_p e - k_d \dot{e}
+\end{equation}
+where \(k_p, k_d \in \R_{>0}\) can be tuned using standard linear control
+techniques.
 
+Note that one generally cannot measure conjugate of momenta directly, as sensors
+on mechanical systems typically only measure the state \((q,\dot{q})\). To
+implement this controller in practice, one must compute \(p = M(q)\dot{q}\) at
+every iteration. In other words, this controller requires knowledge of the full
+state of the system.
 
 %TODO: Special case: when dM/dqu = 0, show that we have a nice form and that we
 %can solve for p_a and the closed-loop dynamics (qu,pu)_dot
 
+Now that we have found a controller to enforce a regular VNHC of order \(k\), we
+would like to solve for the closed-loop dynamics. Naturally, these dynamics
+should be specified through \((q_u, p_u)\) since \(q_a\) is a function of these
+as specified by \(h(q,p_u) = 0\).
+Unfortunately, \(\dot{q}_u\) depends on \(p_a\), and for general systems one
+cannot solve explicitly for \(p_a\) in terms of \((q_u,p_u)\). This is because
+the \(\dot{p}\) dynamics contains the coupling term 
+\((I_n \otimes p\tpose)\nabla_{q_u}M(q)p\). 
 
+We now introduce a class of systems where explicitly solving for the closed-loop
+dynamics is feasible.
 
+\begin{defn}
+    A mechanical system is ------ if \(\nabla_{q_u}M(q) = 0\)
+\end{defn}
 
+\begin{thm}\label{thm:zero-dynamics}
+    Let \(\mathcal{H}\) be a ----- mechanical system satisfying Assumption
+    \ref{assm:H-is-simply-actuated}. Let
+    \(h(q,p_u) = 0\) be a regular VNHC of order \(k\) with constraint manifold
+    \(\Gamma\).
+    Then, on \(\Gamma\), the closed-loop dynamics are given by
+    \begin{equation}\label{eqn:qpu-dynamics}
+        \left.\begin{aligned}
+            \dot{q}_u &= M(q)p \\
+            \dot{p}_u &= -\nabla_{q_u}V(q) \\
+            \end{aligned}\right|_{\begin{array}{c}
+                h(q,p_u) = 0 \\ 
+                pa = g(q_u,p_u) \\
+            \end{array}}
+    \end{equation}
+    where
+    % TODO: This is too wide, shrink it somehow
+    \begin{equation}\label{eqn:g-qpu}
+        g(q_u,p_u) := \left.\left(dh_q \Minv(q) \simpleB \right)\inv 
+        \left(dh_{p_u} \nabla_{q_u}V(q) - dh_q \Minv(q)
+        \begin{bmatrix}
+            I_{n-k} \\
+            \Zmat{k \times (n-k)} \\
+        \end{bmatrix} p_u\right)\right|_{h(q,p_u) = 0}
+    \end{equation}
+\end{thm}
+\begin{proof}
+%TODO: Complete the proof for this theorem
+\end{proof}
 
+The most fascinating part of Theorem \ref{thm:zero-dynamics} is that it shows
+that the dynamics on \(\Gamma\) are entirely described by the \(2(n-k)\)
+unactuated coordinates, regardless of the number of degrees of freedom of the
+system. This means that \(\Gamma\) is a \(2(n-k)\)-dimensional surface from
+which the system cannot escape. This becomes especially important when analyzing
+systems of degree of underactuation one, since it means the constraint is always
+a curve which can be plotted on the plane with axes \(q_u\) and \(p_u\)
+regardless of the original dimension \(n\) of the system. 
 
+In future sections of this thesis, we will apply a very specific type of
+constraint. The following corollay applies Theorem \ref{thm:zero-dynamics} to
+these constraints.
 
-
-
-
+\begin{cor}\label{cor:2d-zero-dynamics}
+    Suppose \(\mathcal{H}\) is a ---- mechanical system satisfying Assumption
+    \ref{assm:H-is-simply-actuated} which has degree of underactuation one.
+    Let \(h(q,p_u) = q_a - f(q_u,p_u)\) be a regular VNHC of order \((n-1)\),
+    where \(f\) is a suitably-defined smooth function.
+    Defining \(e_1 := (1,0,\ldots,0) \in \R^n\), the actuated momentum 
+    is given by
+    \begin{equation}\label{eqn:g-qupu}
+        p_a = -\left.\left(dh_q \Minv(q)
+        \begin{bmatrix}
+            \Zmat{1\times (n-1)}\\
+            I_{(n-1)}
+        \end{bmatrix}\right)\inv 
+        \left(\partial_{p_u}f \partial_{q_u}V + dh_q \Minv(q)e_1 p_u\right) 
+            \right|_{q_a =f(q_u,p_u)}
+    \end{equation}
+    Since \(q_u \in \Rt{T}\) for some \(T > 0\), \((q_u(t),p_u(t))\) traces out
+    a curve on the so-called \((q,p)\)-plane \(\Rt{T} \times \R\).
+\end{cor}
 
 
 
