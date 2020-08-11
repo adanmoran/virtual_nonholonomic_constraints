@@ -66,6 +66,8 @@
 \newcommand*{\ppdiff}[3]{\frac{\partial^2 #1}{\partial #2 \partial #3}}
 
 \newcommand*{\simpleB}{\begin{bmatrix}\Zmat{(n-k)\times k}\\ \Id{k}\end{bmatrix}}
+\newcommand*{\pdmat}{(\Id{n} \otimes p\tpose)\nabla_q\Minv(q)p}
+\newcommand*{\pudmat}{(\Id{n-k} \otimes p\tpose)\nabla_{q_u}\Minv(q)p}
 %---------- Text Layout ----------%
 % Remove paragraph indenting and start new pars with a vertical space
 % \usepackage[parfill]{parskip}

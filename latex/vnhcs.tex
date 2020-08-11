@@ -147,7 +147,7 @@ The resulting Hamiltonian system reduces to (\ref{eqn:hamiltonian}).
     \mathcal{H}(q,p) &= \frac{1}{2} p\tpose D^{-1}(q) p + P(q) \\
                      &\begin{cases}
         \dot{q} = D\inv(q)p \\
-        \dot{p} = -\frac{1}{2} (I_n \otimes p\tpose) \nabla_q D\inv(q) p
+        \dot{p} = -\frac{1}{2} (\Id{n} \otimes p\tpose) \nabla_q D\inv(q) p
         - \nabla_q P(q) + B(q) \tau \\
     \end{cases} 
 \end{align}
@@ -286,7 +286,7 @@ are unaffected by the input forces.
         \frac{1}{2} P\tpose \Minv(Q) P + V(Q) \\
        &\begin{cases}
             \dot{Q} = \Minv(Q)P \\
-            \dot{P} = -\frac{1}{2} (I_n \otimes P\tpose) \nabla_Q \Minv(Q) P
+            \dot{P} = -\frac{1}{2} (\Id{n} \otimes P\tpose) \nabla_Q \Minv(Q) P
                 - \nabla_Q V(Q) + \simpleB \tau
         \end{cases} \nonumber
     \end{align}
@@ -444,7 +444,6 @@ appearing only after two derivatives of \(e\).
 To be able to use \(p_u\), we will continue with the following assumption for
 the rest of the chapter.
 
-% TODO: Write the [p' M p] matrix in our nice nottation
 \begin{assm}\label{assm:H-is-simply-actuated}
     The mechanical system under consideration is a
     Hamiltonian system with \(n\) degrees of freedom and 
@@ -455,35 +454,203 @@ the rest of the chapter.
         \mathcal{H}(q,p) &= p\tpose \Minv(q) p + V(q) \\
          &\begin{cases}
             \dot{q} = \Minv p \\
-            \dot{p} = -\frac{1}{2} (I_n \otimes p\tpose) \nabla_q \Minv(q) p
-            - \nabla_q V(q) + \simpleB \tau \\
+            \dot{p} = -\frac{1}{2} \pdmat - \nabla_q V(q) + \simpleB \tau \\
         \end{cases}
     \end{align*}
 \end{assm}
+\begin{notation}
+    We will write \(q_u \in \mathcal{Q}_u\), \(q_a \in \mathcal{Q}_a\) where
+    \(\mathcal{Q}_u \times \mathcal{Q}_a = \mathcal{Q}\). 
+    We also write
+    \(p_u \in \mathcal{P}_u = \R^{n-k}\) and 
+    \(p_a \in \mathcal{P}_a = \R^k\), so that 
+    \(p \in \mathcal{P} := \mathcal{P}_u \times \mathcal{P}_a\). 
+    In this manner, the phase space of our system can be written as
+    \(\mathcal{Q} \times \mathcal{P}\).
+\end{notation}
 
 \begin{thm}\label{thm:vnhc-regularity}
     A VNHC of order \(k\) is regular if and only if \(dh_{p_a} = 0\) 
     and
     \[
-        \rank{\left(dh_q \Minv(q) + 
-          dh_{p_u} (I_n \otimes p\tpose)\nabla_{q_u}\Minv(q) 
+        \rank{\left(dh_q \Minv(q) - 
+          dh_{p_u} (\Id{n-k} \otimes p\tpose)\nabla_{q_u}\Minv(q) 
          \right)\simpleB} = k
     \]
     everywhere on the constraint manifold \(\Gamma\).
 \end{thm}
 \begin{proof}
     % TODO: complete this proof with our notation
+    Let \(e = h(q,p) \in \R^k\). Then 
+    \begin{align*}
+        \dot{e} &= dh_q \dot{q} + dh_p \dot{p} \\
+                &= dh_q \Minv(q)p +{}  \\
+            & \begin{bmatrix} dh_{p_u} & dh_{p_a} \end{bmatrix}
+        \left( -\frac{1}{2} \begin{bmatrix}
+            (\Id{n-k} \otimes p\tpose) \nabla_{q_u}\Minv(q)p \\
+            (\Id{k} \otimes p\tpose) \nabla_{q_a}\Minv(q)p
+            \end{bmatrix} - \begin{bmatrix}
+            \nabla_{q_u}V(q) \\
+            \nabla_{q_a}V(q)
+        \end{bmatrix} + \simpleB \tau\right)
+    \end{align*}
+    If \(dh_{p_a} \neq \Zmat{k \times k}\) for some \((q,p)\) on \(\Gamma\), 
+    then \(\tau\) appears in \(\dot{e}\) and the VNHC is not of relative degree
+    \(\{2,2,\ldots,2\}\).
+    Hence, we must have that \(dh_{p_a} = \Zmat{k \times k}\) if we want the
+    VNHC to be regular. Proceeding with this assumption, we now find that
+    \(h : \mathcal{Q} \times \mathcal{P}_u \rightarrow \R^k\), which means
+    \[
+        \dot{e} = dh_q \Minv(q)p - 
+        dh_{p_u} \left(\frac{1}{2} \pudmat + \nabla_{q_u}V(q)\right)
+    \]
+    Taking one further derivative provides
+    \begin{align*}
+        \ddot{e} &= \diff{}{t}\left\{dh_q\right\}\Minv(q) p + 
+        dh_q \left(\sum\limits_{i=1}^n \pdiff{\Minv}{q_i}(q)\dot{q_i}\right)p + 
+        dh_q \Minv(q) \dot{p} - \\
+         & \diff{}{t}\left\{dh_{p_u}\right\}
+         \left(\frac{1}{2}\pudmat + \nabla_{q_u}V(q)\right) - \\
+         & dh_{p_u}\left(\frac{1}{2}\diff{}{t}\left\{\pudmat\right\} + 
+         \diff{}{t}\left\{\nabla_{q_u}V(q)\right\} \right)
+    \end{align*}
+    We will compute the explicit expression of \(\ddot{e}\) in pieces. 
+    First we begin with \(\diff{}{t}\left\{dh_q\right\}\). 
+    Since \(h = (h^1,\ldots,h^k)\) where 
+    \(h^i : \mathcal{Q} \times \mathcal{P}_u \rightarrow \R\), we have that 
+    \[
+        dh_q = \begin{bmatrix}
+            dh^1_q \\
+            \vdots \\
+            dh^k_q
+        \end{bmatrix} = \begin{bmatrix}
+        \pdiff{h^1}{q_1} & \cdots & \pdiff{h^1}{q_n} \\
+        \vdots & \ddots & \vdots \\
+        \pdiff{h^k}{q_1} & \cdots & \pdiff{h^k}{q_n}
+        \end{bmatrix}
+    \]
+    The derivative is taken element-wise in each matrix, yielding
+    \[
+        \diff{}{t}\left\{dh_q\right\} = \begin{bmatrix}
+            \sum_{j=1}^n \ppdiff{h^1}{q_1}{q_j}\dot{q}_j & \cdots & \sum_{j=1}^n
+            \ppdiff{h^1}{q_n}{q_j}\dot{q}_j \\
+            \vdots & \ddots & \vdots \\
+            \sum_{j=1}^n \ppdiff{h^k}{q_1}{q_j}\dot{q}_j & \cdots & \sum_{j=1}^n
+            \ppdiff{h^k}{q_n}{q_j}\dot{q}_j \\
+        \end{bmatrix} + \begin{bmatrix}
+            \sum_{l=1}^{n-k}\ppdiff{h^1}{q_1}{p_{u_l}}\dot{p}_{u_l} & \cdots &
+            \sum_{l=1}^{n-k}\ppdiff{h^1}{q_n}{p_{u_l}}\dot{p}_{u_l} \\
+            \vdots & \ddots & \vdots \\
+            \sum_{l=1}^{n-k}\ppdiff{h^k}{q_1}{p_{u_l}}\dot{p}_{u_l} & \cdots & 
+            \sum_{l=1}^{n-k}\ppdiff{h^k}{q_n}{p_{u_l}}\dot{p}_{u_l} \\
+        \end{bmatrix}
+    \]
+    It is straightforward computation to confirm that each row of this
+    derivative can be written in vector form as follows:
+    \begin{align*}
+        \diff{}{t}\left\{dh^i_q\right\} &= \begin{bmatrix}
+        \sum_{j=1}^n \ppdiff{h^i}{q_1}{q_j}\dot{q}_j & \cdots & 
+        \sum_{j=1}^n \ppdiff{h^i}{q_n}{q_j}\dot{q}_j 
+        \end{bmatrix} + \begin{bmatrix}
+        \sum_{l=1}^{n-k}\ppdiff{h^i}{q_1}{p_{u_l}}\dot{p}_{u_l} & \cdots &
+        \sum_{l=1}^{n-k}\ppdiff{h^i}{q_n}{p_{u_l}}\dot{p}_{u_l}
+        \end{bmatrix} \\
+       &= \dot{q}\tpose \Hess_q\left\{h^i\right\}\tpose + 
+       \dot{p}_u\tpose \partial_{p_u}\partial_{q}h^i \\
+       &= p\tpose \Minv(q)\Hess_q\left\{h^i\right\}\tpose -
+       \left(\frac{1}{2}p\tpose d\Minv_{q_u}(q)(\Id{n-k}\otimes p) + 
+       dV_{q_u}(q)\right)\partial_{p_u}\partial_{q}h^i
+    \end{align*}
+    This means that the entire matrix is given by
+    \begin{align*}
+        \diff{}{t}\left\{dh_q\right\} &= 
+        \left(\Id{n} \otimes 
+        \left(p\tpose \Minv(q)\right)\right)
+        \Hess_q\left\{h\right\}\tpose -{} \\
+      & \left(\frac{1}{2}\Id{n} \otimes 
+          \left(p\tpose d\Minv_{q_u}(q)(\Id{n-k}\otimes p)\right)
+        + \Id{n}\otimes dV_{q_u}(q)\right)\partial_{p_u}\partial_{q}h
+    \end{align*}
+    For the next segment, let \(e_j \in \R^n\) be the vector of all zeros,
+    except for a single \(1\) at position \(j\). We define
+    \(C_1 : \mathcal{Q} \times \mathcal{P} \rightarrow \R^{n\times n}\) by
+    \[
+        C_1(q,p) := \sum\limits_{j=1}^n \pdiff{\Minv}{q_j}(q)\dot{q}_j 
+        = \sum\limits_{j=1}^n \pdiff{\Minv}{q_j}(q)\left(e_j\tpose\Minv(q)p\right)
+    \]
+    Moving on, one can use a similar approach to \(\diff{}{t}\left\{dh_q\right\}\)
+    to find the derivative of \(dh_{p_u}\) in matrix form. It is given by
+    \begin{align*}
+        \diff{}{t}\left\{dh_{p_u}\right\} &= 
+        \left( \Id{n} \otimes \left(p\tpose \Minv(q)\right)\right) 
+        \partial_q\partial_{p_u}h -{} \\
+      & \left(\frac{1}{2}\Id{n} \otimes \left(\pudmat\right) + 
+      \Id{n} \otimes \nabla_{q_u}V(q)\right)\Hess_{p_u}\left\{h\right\}\tpose
+    \end{align*}
+    Now observe that the \(i^\text{th}\) row of
+    \[
+        \frac{1}{2} \diff{}{t} \left\{ \pudmat \right\}
+    \]
+    is given by
+    \begin{align*}
+        \frac{1}{2} \diff{}{t}\left\{p\tpose \pdiff{\Minv}{q_{u_i}}(q)p\right\}
+        = p\tpose \pdiff{\Minv}{q_{u_i}}(q) \dot{p} + 
+        \frac{1}{2} p\tpose \left( \sum_{j=1}^n \ppdiff{\Minv}{q_{u_i}}{q_j}
+        \dot{q}_j \right) p
+    \end{align*}
+    Defining \(C_2 : \mathcal{Q} \times \mathcal{P} \rightarrow \R^{n(n-k)\times n}\)
+    allows us to write the entire derivative in matrix form:
+    \begin{align*}
+        & \frac{1}{2} \diff{}{t} \left\{ \pudmat \right\} ={} \\
+        & (\Id{n-k} \otimes p\tpose)\nabla_{q_u}\Minv(q)
+        \left(-\frac{1}{2}\pudmat - \nabla_{q_u}V(q) + \simpleB \tau \right) +{}
+        \\
+        & \frac{1}{2}\left(\Id{n-k}\otimes p\tpose\right) C_2(q,p) p
+    \end{align*}
+    Finally, we compute the derivative of \(\nabla_{q_u}V(q)\)
+    \[
+        \diff{}{t}\left\{\nabla_{q_u}V(q)\right\} = 
+        \begin{bmatrix}
+            \sum_{j=1}^n \ppdiff{V}{q_{u_1}}{q_j}\dot{q}_j \\
+            \vdots \\
+            \sum_{j=1}^n \ppdiff{V}{q_{u_{n-k}}}{q_j}\dot{q}_j
+        \end{bmatrix = \partial_{q_u} \partial_q V(q) \dot{q}
+    \]
+    and so we get that
+    \[
+        \diff{}{t}\left\{\nabla_{q_u}V(q)\right\} = 
+        \partial_{q_u} \partial_q V(q) \Minv(q)p
+    \]
+    Putting this all together, we can find the explicit form for \(\ddot{e}\):
+    \begin{align*}
+        \ddot{e} &= \diff{}{t}\left\{dh_q\right\}\Minv(q)p + dh_q C_1(q,p)p -{}\\
+     & \frac{1}{2}dh_q\Minv(q)(\pdmat) + 
+        dh_q\Minv(q)\nabla_qV(q) -{}\\
+     & \diff{}{t}\left\{dh_{p_u}\right\}
+     \left(\frac{1}{2}\pudmat + \nabla_{q_u}V(q)\right) +{} \\
+     & dh_{p_u}(\Id{n-k}\otimes p\tpose)\nabla_{q_u}\Minv(q)\left(
+     \frac{1}{2}\pudmat + \nabla_{q_u}V(q)\right) -{}\\
+     \frac{1}{2}dh_{p_u}(\Id{n-k}\otimes p\tpose)C_2(q,p)p - 
+     dh_{p_u} \partial_{q_u}\partial_q V(q)\Minv(q)p +{} \\
+     \left(dh_q \Minv(q) - dh_{p_u}(\Id{n-k} \otimes
+     p\tpose)\nabla_{q_u}\Minv(q) \right) \simpleB \tau
+    \end{align*}
+    The VNHC \(h\) is regular iff \(e\) is of relative degree
+    \(\{2,\ldots,2\}\), which is true iff \(\tau\) appears in each element of
+    \(e\) on the constraint manifold. 
+    Letting \(\ddot{e} = E(q,p) + H(q,p)\tau\), this is equivalent to requiring
+    that the matrix \(H\) be full rank.
 \end{proof}
 
-From the proof for Theorem \ref{thm:vnhc-regularity}, a regular VNHC of order
-\(k\) can be stabilized by the output-linearizing phase-feedback controller
+Using the expression \(\ddot{e} = E(q,p) + H(q,p)\tau\) from the proof of 
+Theorem \ref{thm:vnhc-regularity}, a regular VNHC of order \(k\) can be
+stabilized by the output-linearizing phase-feedback controller
 (\ref{eqn:vnhc-torque-controller}).
-% TODO: Controller for VNHC in closed form
 \begin{equation}\label{eqn:vnhc-torque-controller}
-    \tau(q,p) = ? - k_p e - k_d \dot{e}
+    \tau(q,p) = -H\inv(q,p)\left(E(q,p) + k_p e + k_d \dot{e}\right)
 \end{equation}
-where \(k_p, k_d \in \R_{>0}\) can be tuned using standard linear control
-techniques.
+where \(k_p, k_d \in \R_{>0}\) are control parameters which can be tuned on the
+resulting linear system \(\ddot{e} = -k_p e - k_d\dot{e}\). 
 
 Note that one generally cannot measure conjugate of momenta directly, as sensors
 on mechanical systems typically only measure the state \((q,\dot{q})\). To
@@ -501,7 +668,7 @@ as specified by \(h(q,p_u) = 0\).
 Unfortunately, \(\dot{q}_u\) depends on \(p_a\), and for general systems one
 cannot solve explicitly for \(p_a\) in terms of \((q_u,p_u)\). This is because
 the \(\dot{p}\) dynamics contains the coupling term 
-\((I_n \otimes p\tpose)\nabla_{q_u}M(q)p\). 
+\((\Id{n} \otimes p\tpose)\nabla_{q_u}M(q)p\). 
 
 We now introduce a class of systems where explicitly solving for the closed-loop
 dynamics is feasible.
@@ -526,14 +693,16 @@ dynamics is feasible.
             \end{array}}
     \end{equation}
     where
-    % TODO: This is too wide, shrink it somehow
     \begin{equation}\label{eqn:g-qpu}
-        g(q_u,p_u) := \left.\left(dh_q \Minv(q) \simpleB \right)\inv 
+    \begin{aligned}
+        g(q,p_u) &:= \\
+           &\left.\left(dh_q \Minv(q) \simpleB \right)\inv 
         \left(dh_{p_u} \nabla_{q_u}V(q) - dh_q \Minv(q)
         \begin{bmatrix}
             I_{n-k} \\
             \Zmat{k \times (n-k)} \\
         \end{bmatrix} p_u\right)\right|_{h(q,p_u) = 0}
+    \end{aligned}
     \end{equation}
 \end{thm}
 \begin{proof}
@@ -573,8 +742,8 @@ these constraints.
     a curve on the so-called \((q,p)\)-plane \(\Rt{T} \times \R\).
 \end{cor}
 
-
-
+\section{Summary of Results}
+%TODO: summarize the assumptions and results 
 
 
 
