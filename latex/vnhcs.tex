@@ -141,7 +141,6 @@ If the Lagrangian has quadratic kinetic energy as in (\ref{eqn:lagrangian}),
 the conjugate of
 momenta to \(q\) can be computed explicitly by \(p = D(q)\dot{q}\).
 
-% TODO: Replace [p D_i p] here with our new notation
 The resulting Hamiltonian system reduces to (\ref{eqn:hamiltonian}).
 \begin{align}\label{eqn:hamiltonian}
     \mathcal{H}(q,p) &= \frac{1}{2} p\tpose D^{-1}(q) p + P(q) \\
@@ -160,7 +159,7 @@ transformation} if \(\{Q,P\}\) are canonical coordinates with Hamiltonian
 \(H(Q,P) = \mathcal{H}\left(q(Q,P), p(Q,P)\right)\).
 
 \section{Simply Actuated Hamiltonian Systems}
-% TODO: Describe the change of coordinates to get into q_u/q_a mode and show
+% Describe the change of coordinates to get into q_u/q_a mode and show
 % that the actuator directly affects pa but not pu. Use M for simply actuated
 % inertia, D for normal coordinates
 Given a Hamiltonian mechanical system (\ref{eqn:hamiltonian}), it is not obvious
@@ -274,7 +273,6 @@ The following theorem shows that \(\mathbf{B}\) provides a canonical
 transformation into simply actuated coordinates, so that all unactuated momenta
 are unaffected by the input forces.
 
-% TODO: Replace the [P M_i P] with new notation
 \begin{thm}
     Under Assumptions \ref{assm:B-const},\ref{assm:B-perp}, and
     \ref{assm:B-orthogonal}, the Hamiltonian system (\ref{eqn:hamiltonian}) is
@@ -348,7 +346,7 @@ are unaffected by the input forces.
 \end{proof}
 
 \section{Virtual Nonholonomic Constraints}
-% TODO: Motivation for VNHCs, they are an extension of VHCs, etc.
+% Motivation for VNHCs, they are an extension of VHCs, etc.
 Let us imagine a child on a swing, who wants to go as high as possible. The
 child will push off the ground and start swinging with small oscillations,
 then extend and retract their feet appropriately to gain energy. 
@@ -398,7 +396,7 @@ This section will provide a new characterization of virtual nonholonomic
 constraints. The goal is to provide a consistent, rigorous foundation for
 designing constraints on a general class of systems.
 
-% TODO: Perform the full development of VNHCs, including its stabilizing
+% Perform the full development of VNHCs, including its stabilizing
 % controller.
 \begin{defn}
     A \textit{virtual nonholonomic constraint} (VNHC) \textit{of order \(k\)} is a
@@ -480,7 +478,6 @@ the rest of the chapter.
     everywhere on the constraint manifold \(\Gamma\).
 \end{thm}
 \begin{proof}
-    % TODO: complete this proof with our notation
     Let \(e = h(q,p) \in \R^k\). Then 
     \begin{align*}
         \dot{e} &= dh_q \dot{q} + dh_p \dot{p} \\
@@ -515,6 +512,7 @@ the rest of the chapter.
          \diff{}{t}\left\{\nabla_{q_u}V(q)\right\} \right)
     \end{align*}
     We will compute the explicit expression of \(\ddot{e}\) in pieces. 
+% d/dt(dh_q)
     First we begin with \(\diff{}{t}\left\{dh_q\right\}\). 
     Since \(h = (h^1,\ldots,h^k)\) where 
     \(h^i : \mathcal{Q} \times \mathcal{P}_u \rightarrow \R\), we have that 
@@ -571,13 +569,15 @@ the rest of the chapter.
           \left(p\tpose d\Minv_{q_u}(q)(\Id{n-k}\otimes p)\right)
         + \Id{n}\otimes dV_{q_u}(q)\right)\partial_{p_u}\partial_{q}h
     \end{align*}
-    For the next segment, let \(e_j \in \R^n\) be the vector of all zeros,
+% C_1(q,p)
+    For the next segment, let \(1_j \in \R^n\) be the vector of all zeros,
     except for a single \(1\) at position \(j\). We define
     \(C_1 : \mathcal{Q} \times \mathcal{P} \rightarrow \R^{n\times n}\) by
     \[
         C_1(q,p) := \sum\limits_{j=1}^n \pdiff{\Minv}{q_j}(q)\dot{q}_j 
-        = \sum\limits_{j=1}^n \pdiff{\Minv}{q_j}(q)\left(e_j\tpose\Minv(q)p\right)
+        = \sum\limits_{j=1}^n \pdiff{\Minv}{q_j}(q)\left(1_j\tpose\Minv(q)p\right)
     \]
+% d/dt(dh_pu)
     Moving on, one can use a similar approach to \(\diff{}{t}\left\{dh_q\right\}\)
     to find the derivative of \(dh_{p_u}\) in matrix form. It is given by
     \begin{align*}
@@ -598,8 +598,16 @@ the rest of the chapter.
         \frac{1}{2} p\tpose \left( \sum_{j=1}^n \ppdiff{\Minv}{q_{u_i}}{q_j}
         \dot{q}_j \right) p
     \end{align*}
-    Defining \(C_2 : \mathcal{Q} \times \mathcal{P} \rightarrow \R^{n(n-k)\times n}\)
-    allows us to write the entire derivative in matrix form:
+    Define \(C_2 : \mathcal{Q} \times \mathcal{P} \rightarrow \R^{n(n-k)\times n}\) 
+    by
+    \[
+        C_2(q,p) := \begin{bmatrix}
+            \sum_{j=1}^n \ppdiff{\Minv}{q_{u_1}}{q_j} (1_j\tpose \Minv(q)p) \\
+            \vdots \\
+            \sum_{j=1}^n \ppdiff{\Minv}{q_{u_{n-k}}}{q_j} (1_j\tpose \Minv(q)p) \\
+        \end{bmatrix}
+    \]
+    This allows us to write the entire derivative in matrix form:
     \begin{align*}
         & \frac{1}{2} \diff{}{t} \left\{ \pudmat \right\} ={} \\
         & (\Id{n-k} \otimes p\tpose)\nabla_{q_u}\Minv(q)
@@ -607,20 +615,18 @@ the rest of the chapter.
         \\
         & \frac{1}{2}\left(\Id{n-k}\otimes p\tpose\right) C_2(q,p) p
     \end{align*}
-    Finally, we compute the derivative of \(\nabla_{q_u}V(q)\)
-    \[
+% d/dt(nabla_qu V)
+    Finally, we compute the derivative of \(\nabla_{q_u}V(q)\):
+    \begin{align*}
         \diff{}{t}\left\{\nabla_{q_u}V(q)\right\} = 
         \begin{bmatrix}
             \sum_{j=1}^n \ppdiff{V}{q_{u_1}}{q_j}\dot{q}_j \\
             \vdots \\
             \sum_{j=1}^n \ppdiff{V}{q_{u_{n-k}}}{q_j}\dot{q}_j
-        \end{bmatrix = \partial_{q_u} \partial_q V(q) \dot{q}
-    \]
-    and so we get that
-    \[
-        \diff{}{t}\left\{\nabla_{q_u}V(q)\right\} = 
-        \partial_{q_u} \partial_q V(q) \Minv(q)p
-    \]
+        \end{bmatrix} = \partial_{q_u} \partial_q V(q) \dot{q} 
+        = \partial_{q_u} \partial_q V(q) \Minv(q)p
+    \end{align*}
+% Full ddot(e)
     Putting this all together, we can find the explicit form for \(\ddot{e}\):
     \begin{align*}
         \ddot{e} &= \diff{}{t}\left\{dh_q\right\}\Minv(q)p + dh_q C_1(q,p)p -{}\\
@@ -630,16 +636,19 @@ the rest of the chapter.
      \left(\frac{1}{2}\pudmat + \nabla_{q_u}V(q)\right) +{} \\
      & dh_{p_u}(\Id{n-k}\otimes p\tpose)\nabla_{q_u}\Minv(q)\left(
      \frac{1}{2}\pudmat + \nabla_{q_u}V(q)\right) -{}\\
-     \frac{1}{2}dh_{p_u}(\Id{n-k}\otimes p\tpose)C_2(q,p)p - 
+     & \frac{1}{2}dh_{p_u}(\Id{n-k}\otimes p\tpose)C_2(q,p)p - 
      dh_{p_u} \partial_{q_u}\partial_q V(q)\Minv(q)p +{} \\
-     \left(dh_q \Minv(q) - dh_{p_u}(\Id{n-k} \otimes
+     & \left(dh_q \Minv(q) - dh_{p_u}(\Id{n-k} \otimes
      p\tpose)\nabla_{q_u}\Minv(q) \right) \simpleB \tau
     \end{align*}
-    The VNHC \(h\) is regular iff \(e\) is of relative degree
-    \(\{2,\ldots,2\}\), which is true iff \(\tau\) appears in each element of
-    \(e\) on the constraint manifold. 
-    Letting \(\ddot{e} = E(q,p) + H(q,p)\tau\), this is equivalent to requiring
-    that the matrix \(H\) be full rank.
+% End of Proof
+    For shorthand, we'll write \(\ddot{e} = E(q,p) + H(q,p)\tau\) where \(E\)
+    and \(H\) are defined appropriately.
+    From the definition of regularity, the VNHC \(h\) is regular 
+    iff \(e\) is of relative degree \(\{2,\ldots,2\}\), which is true 
+    iff \(\tau\) appears in each row of \(\ddot{e}\) on \(\Gamma\). 
+    This is equivalent to requiring that the matrix \(H\) be full rank
+    everywhere on the constraint manifold, proving the theorem.
 \end{proof}
 
 Using the expression \(\ddot{e} = E(q,p) + H(q,p)\tau\) from the proof of 
@@ -658,12 +667,12 @@ implement this controller in practice, one must compute \(p = M(q)\dot{q}\) at
 every iteration. In other words, this controller requires knowledge of the full
 state of the system.
 
-%TODO: Special case: when dM/dqu = 0, show that we have a nice form and that we
+% Special case: when dM/dqu = 0, show that we have a nice form and that we
 %can solve for p_a and the closed-loop dynamics (qu,pu)_dot
 
 Now that we have found a controller to enforce a regular VNHC of order \(k\), we
-would like to solve for the closed-loop dynamics. Naturally, these dynamics
-should be specified through \((q_u, p_u)\) since \(q_a\) is a function of these
+would like to solve for the closed-loop dynamics. Intuitively, these dynamics
+should be parameterized by \((q_u, p_u)\) since \(q_a\) is a function of these
 as specified by \(h(q,p_u) = 0\).
 Unfortunately, \(\dot{q}_u\) depends on \(p_a\), and for general systems one
 cannot solve explicitly for \(p_a\) in terms of \((q_u,p_u)\). This is because
@@ -680,9 +689,10 @@ dynamics is feasible.
 \begin{thm}\label{thm:zero-dynamics}
     Let \(\mathcal{H}\) be a ----- mechanical system satisfying Assumption
     \ref{assm:H-is-simply-actuated}. Let
-    \(h(q,p_u) = 0\) be a regular VNHC of order \(k\) with constraint manifold
-    \(\Gamma\).
-    Then, on \(\Gamma\), the closed-loop dynamics are given by
+    \(h(q,p_u) = 0\) be a regular VNHC of order \(k\) 
+    with constraint manifold \(\Gamma\). Suppose that on \(\Gamma\) one can
+    solve linearly for \(q_a\) as a function of \(q_u,p_u\).
+    Then the closed-loop dynamics are given by
     \begin{equation}\label{eqn:qpu-dynamics}
         \left.\begin{aligned}
             \dot{q}_u &= M(q)p \\
@@ -706,26 +716,60 @@ dynamics is feasible.
     \end{equation}
 \end{thm}
 \begin{proof}
-%TODO: Complete the proof for this theorem
+    Setting \(e = h(q,p_u)\) and using the fact that 
+    \(\nabla_{q_u}\Minv(q) = 0\), we find that
+    \[
+        \dot{e} = dh_q\Minv(q)p - dh_{p_u}\nabla_{q_u}V(q)
+    \]
+    Observe that
+    \begin{align*}
+        dh_q\Minv(q)p &= dh_q\Minv(q) \begin{bmatrix}p_u \\ p_a \end{bmatrix} \\
+          &= dh_q\Minv(q) \begin{bmatrix}
+              \Id{n-k} & \Zmat{(n-k)\times k} \\
+              \Zmat{k \times(n-k)} & \Id{k} 
+              \end{bmatrix} \begin{bmatrix} p_u \\ p_a \end{bmatrix} \\
+        &= dh_q\Minv(q)\begin{bmatrix} \Id{n-k} \\ \Zmat{k \times
+        (n-k)}\end{bmatrix} p_u + dh_q \Minv(q)\simpleB p_a
+    \end{align*}
+    On the constraint manifold, we have \(e = \dot{e} = 0\), which means
+    \[
+        dh_q\Minv(q)\simpleB p_a = dh_{p_u}\nabla_{q_u}V(q) -
+            dh_q\Minv(q)\begin{bmatrix} 
+            \Id{n-k} \\ \Zmat{k \times (n-k)}\end{bmatrix} p_u
+    \]
+    Since \(h\) is regular and \(\nabla_{q_u}\Minv(q) = 0\), we have that 
+    \[
+        \rank{dh_q\Minv(q)\simpleB} = k
+    \]
+    Solving for \(p_a\) gives
+    \[
+        p_a = \left(dh_q\Minv(q)\simpleB\right)\inv
+        \left(dh_{p_u}\nabla_{q_u}V(q) - 
+            dh_q\Minv(q)\begin{bmatrix} 
+        \Id{n-k} \\ \Zmat{k \times (n-k)}\end{bmatrix} p_u \right)
+    \]
+    This yields a function \(p_a(q,p_u)\). However, on \(\Gamma\) we have 
+    \(h(q,p_u) = 0\) and can solve for \(q_a\) in terms of \((q_u,p_u)\).
+    Hence, on \(\Gamma\) we have \(p_a = g(q_u,p_u)\). Since \(q_a\) and
+    \(p_a\) can be computed directly from \((q_u,p_u)\), the dynamics on
+    \(\Gamma\) are parameterized only by \((\dot{q}_u,\dot{p}_u)\).
 \end{proof}
 
-The most fascinating part of Theorem \ref{thm:zero-dynamics} is that it shows
-that the dynamics on \(\Gamma\) are entirely described by the \(2(n-k)\)
-unactuated coordinates, regardless of the number of degrees of freedom of the
-system. This means that \(\Gamma\) is a \(2(n-k)\)-dimensional surface from
-which the system cannot escape. This becomes especially important when analyzing
-systems of degree of underactuation one, since it means the constraint is always
-a curve which can be plotted on the plane with axes \(q_u\) and \(p_u\)
-regardless of the original dimension \(n\) of the system. 
+Theorem \ref{thm:zero-dynamics} shows that, for a particular class of systems
+and constraints, the dynamics on \(\Gamma\) are entirely described by the \(2(n-k)\)
+unactuated coordinates. 
+This is trueregardless of the number of degrees of freedom of the system. 
+This means that \(\Gamma\) is a \(2(n-k)\)-dimensional surface inside 
+\(\mathcal{Q}\times \mathcal{P}\). 
 
-In future sections of this thesis, we will apply a very specific type of
-constraint. The following corollay applies Theorem \ref{thm:zero-dynamics} to
-these constraints.
+The following corollay applies Theorem \ref{thm:zero-dynamics} to
+systems with only one unactuated coordinate.
 
 \begin{cor}\label{cor:2d-zero-dynamics}
     Suppose \(\mathcal{H}\) is a ---- mechanical system satisfying Assumption
     \ref{assm:H-is-simply-actuated} which has degree of underactuation one.
-    Let \(h(q,p_u) = q_a - f(q_u,p_u)\) be a regular VNHC of order \((n-1)\),
+    Let \(h(q,p_u) = 0\) be a regular VNHC of order \((n-1)\) of the form
+    \(h(q,p_u) = q_a - f(q_u,p_u)\)
     where \(f\) is a suitably-defined smooth function.
     Defining \(e_1 := (1,0,\ldots,0) \in \R^n\), the actuated momentum 
     is given by
@@ -738,8 +782,9 @@ these constraints.
         \left(\partial_{p_u}f \partial_{q_u}V + dh_q \Minv(q)e_1 p_u\right) 
             \right|_{q_a =f(q_u,p_u)}
     \end{equation}
-    Since \(q_u \in \Rt{T}\) for some \(T > 0\), \((q_u(t),p_u(t))\) traces out
-    a curve on the so-called \((q,p)\)-plane \(\Rt{T} \times \R\).
+    Since \(q_u \in \Rt{T}\) for some \(T \in ]0,\infty]\) and \(p_u \in \R\),
+    the orbit \((q_u(t),p_u(t))\) traces out
+    a curve on the 2D-plane \(\Rt{T} \times \R\) which we call the \((q,p)\)-plane.
 \end{cor}
 
 \section{Summary of Results}
