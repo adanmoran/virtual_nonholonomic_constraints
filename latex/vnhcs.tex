@@ -645,10 +645,14 @@ the rest of the chapter.
     For shorthand, we'll write \(\ddot{e} = E(q,p) + H(q,p)\tau\) where \(E\)
     and \(H\) are defined appropriately.
     From the definition of regularity, the VNHC \(h\) is regular 
-    iff \(e\) is of relative degree \(\{2,\ldots,2\}\), which is true 
-    iff \(\tau\) appears in each row of \(\ddot{e}\) on \(\Gamma\). 
-    This is equivalent to requiring that the matrix \(H\) be full rank
-    everywhere on the constraint manifold, proving the theorem.
+    when \(e\) is of relative degree \(\{2,\ldots,2\}\), which is true 
+    if and only if
+    %\(\tau\) appears in each row of \(\ddot{e}\) on \(\Gamma\). 
+    one can solve for \(\tau\) when \(\ddot{e} = 0\).
+    This is equivalent to requiring that the matrix \(H\) be
+    %full rank everywhere on the constraint manifold, 
+    invertible,
+    proving the theorem.
 \end{proof}
 
 Using the expression \(\ddot{e} = E(q,p) + H(q,p)\tau\) from the proof of 
@@ -682,10 +686,12 @@ the \(\dot{p}\) dynamics contains the coupling term
 We now introduce a class of systems where explicitly solving for the closed-loop
 dynamics is feasible.
 
+% TODO: Come up with a name for this type of system
 \begin{defn}
     A mechanical system is ------ if \(\nabla_{q_u}M(q) = 0\)
 \end{defn}
 
+% TODO: Do we need the assumption that one can solve for qa linearly?
 \begin{thm}\label{thm:zero-dynamics}
     Let \(\mathcal{H}\) be a ----- mechanical system satisfying Assumption
     \ref{assm:H-is-simply-actuated}. Let
