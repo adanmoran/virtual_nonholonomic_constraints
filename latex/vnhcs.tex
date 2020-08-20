@@ -52,7 +52,7 @@ methods for modelling robotic systems are \textit{Lagrangian} and
 \textit{Hamiltonian} mechanics.
 
 % ---------- Lagrangian Mechanics ---------- % 
-\subsection{Lagrangian Mechanics}
+\subsection{Lagrangian Mechanics}\label{sec:lagrangian-mechanics}
 
 Lagrangian mechanics uses the kinetic energy \(T(q,\dot{q})\) and potential
 energy \(P(q)\) of the system to define the Lagrangian 
@@ -273,7 +273,7 @@ The following theorem shows that \(\mathbf{B}\) provides a canonical
 transformation into simply actuated coordinates, so that all unactuated momenta
 are unaffected by the input forces.
 
-\begin{thm}
+\begin{thm}\label{thm:simply-actuated}
     Under Assumptions \ref{assm:B-const},\ref{assm:B-perp}, and
     \ref{assm:B-orthogonal}, the Hamiltonian system (\ref{eqn:hamiltonian}) is
     simply actuated with simply actuated coordinates 
@@ -468,7 +468,7 @@ the rest of the chapter.
 \end{notation}
 
 \begin{thm}\label{thm:vnhc-regularity}
-    A VNHC of order \(k\) is regular if and only if \(dh_{p_a} = 0\) 
+    A VNHC \(h(q,p) = 0\) of order \(k\) is regular if and only if \(dh_{p_a} = 0\) 
     and
     \[
         \rank{\left(dh_q \Minv(q) - 
@@ -476,6 +476,9 @@ the rest of the chapter.
          \right)\simpleB} = k
     \]
     everywhere on the constraint manifold \(\Gamma\).
+    That is, a regular VNHC is a function with domain 
+    \(\mathcal{Q} \times \mathcal{P}_u\) which satisfies the rank condition.
+    condition.
 \end{thm}
 \begin{proof}
     Let \(e = h(q,p) \in \R^k\). Then 
