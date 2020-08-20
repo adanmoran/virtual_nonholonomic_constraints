@@ -3,9 +3,65 @@
 %/========== Variable Length Pendulum ==========/%
 \chapter{Application of VNHCS: The Variable Length Pendulum}\label{sec:vlp}
 \section{Motivation}
+The variable length pendulum (VLP) is modelled as a point with mass \(m\)
+connected to a pivot by a massless rod of length \(l\).
+
 % TODO: Why is this a good problem to study? What is the problem? What would a human do on a standing swing?
+
+Before computing the dynamics of the VLP, we must make it clear that this
+VLP model uses \(l\) directly as the control input to the system, rather than the
+generalized forces \(\tau\) described in Section \ref{sec:lagrangian-mechanics}.
+Since the control input is not considered a configuration variable of the
+system, the configuration of the VLP is
+the angle \(q \in \mathbb{S}^1\) between the rod and the vertical axis. We set
+\(q = 0\) when the mass is at the bottom of its swing.
+
+With this in mind, we can now compute the Hamiltonian dynamics of the system.
+The cartesian position of the mass is given by \(x = (l\sin(q),l\cos(q))\),
+which has velocity 
+\(\dot{x} = (\dot{l}\sin(q) + l\cos{q}\dot{q}, \dot{l}\cos(q) - l\sin{q}\dot{q})\)
+Computing the kinetic energy \(T\) yields
+\[
+   T(q,\dot{q}) = \frac{1}{2}m\norm{\dot{x}}^2 = \frac{1}{2}m\left(\dot{l}^2 +
+   l^2\dot{q}^2\right)
+\]
+The potential energy \(P\) with respect to the pivot (under a gravitational
+acceleration \(g\)) is
+\[
+   P(q) = -mgl\cos(q)
+\]
+which means, the Lagrangian is
+\[
+   \mathcal{L}(q,\dot{q}) = \frac{1}{2}m\left(\dot{l}^2 + l^2\dot{q}^2\right)
+      + mgl\cos(q)
+\]
+Computing the conjugate of momentum to \(q\), we get 
+\[
+   p = \pdiff{\mathcal{L}}{\dot{q}} = ml^2\dot{q}
+\]
+Since \(q\) is not actuated by any generalized force \(\tau\), the system
+is simply actuated. 
+Solving for the Hamiltonian \(\mathcal{H} = \dot{q}p - \mathcal{L}\)
+and applying Theorem \ref{thm:simply-actuated}, we find the dynamics of the VLP
+are given in Hamiltonian form by (\ref{eqn:vlp-hamiltonian}). 
+\begin{align}\label{eqn:vlp-hamiltonian}
+   \mathcal{H}(q,p) &= \frac{p^2}{2ml^2} - \frac{1}{2}m\dot{l}^2 - mgl\cos(q) \\
+     &\begin{cases}
+        \dot{q} = \frac{p}{ml^2} \\
+        \dot{p} = -mgl\sin(q) \\
+   \end{cases} \nonumber
+\end{align}
+
+
 \section{The VLP Constraint}
 % TODO: Go through the development of the constraint and prove it gains energy
+% TODO: Explain how we came up with the constraint first. Talk about the child
+% on a swing, the paper showing the time-optimal control input, and describe why
+% we want to remove time from the equation. Discuss the lmin and lmax choices.
+% Why do we need to use a VNHC instead of a VHC: we are modelling the
+% time-optimal controller in a time-independent way, which requires knowledge of
+% which quadrant in (q,p)-space we're in. This means using the angle theta,
+% which is inherently a VNHC.
 
 \begin{thm}
 For the variable-length pendulum, define \(\theta := \arctan_2(p,q)\). 
