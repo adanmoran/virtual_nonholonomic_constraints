@@ -3,56 +3,109 @@
 %/========== Variable Length Pendulum ==========/%
 \chapter{Application of VNHCS: The Variable Length Pendulum}\label{sec:vlp}
 \section{Motivation}
+The variable length pendulum (VLP) is a classical dynamical system, which is often
+used to model a the motion of a person on a standing swing
+\cite{dynamics_periodic_vlp,pumping_swing_standing_squatting,how_to_pump_a_swing}.
+% TODO: Why else is it useful? Apparently it models cranes, satellites, etc
+% TODO: Motivate more why this is a good problem to study
+
 The variable length pendulum (VLP) is modelled as a point with mass \(m\)
-connected to a pivot by a massless rod of length \(l\).
+connected to a pivot by a massless rod of varying length. Label
+\(q \in \mathbb{S}^1\) as the angle from the vertical line to the rod. In a
+realizable VLP, the rod  has length \(l\) which varies between some minimum
+length \(\underline{l} \geq 0\) and some maximum length 
+\(\overline{l} > \underline{l}\). The configuration of the VLP is the vector
+\(\mathbf{q} := (q,l) \in \mathbb{S}^1 \times [\underline{l},\overline{l}]\).
 
-% TODO: Why is this a good problem to study? What is the problem? What would a human do on a standing swing?
-
-Before computing the dynamics of the VLP, we must make it clear that this
-VLP model uses \(l\) directly as the control input to the system, rather than the
-generalized forces \(\tau\) described in Section \ref{sec:lagrangian-mechanics}.
-Since the control input is not considered a configuration variable of the
-system, the configuration of the VLP is
-the angle \(q \in \mathbb{S}^1\) between the rod and the vertical axis. We set
-\(q = 0\) when the mass is at the bottom of its swing.
-
-With this in mind, we can now compute the Hamiltonian dynamics of the system.
-The cartesian position of the mass is given by \(x = (l\sin(q),l\cos(q))\),
-which has velocity 
-\(\dot{x} = (\dot{l}\sin(q) + l\cos{q}\dot{q}, \dot{l}\cos(q) - l\sin{q}\dot{q})\)
+Using this configuration, we will compute the Hamiltonian dynamics of the system.
+The cartesian position of the mass at the tip of the pendulum
+is given by \(x = (l\sin(q),l\cos(q))\), while its velocity is
+\(\dot{x} = (\dot{l}\sin(q) + l\cos{q}\dot{q}, \dot{l}\cos(q) - l\sin{q}\dot{q})\).
 Computing the kinetic energy \(T\) yields
 \[
-   T(q,\dot{q}) = \frac{1}{2}m\norm{\dot{x}}^2 = \frac{1}{2}m\left(\dot{l}^2 +
-   l^2\dot{q}^2\right)
+   T(\mathbf{q},\dot{\mathbf{q}}) = 
+   \frac{1}{2}m\norm{\dot{x}}^2 = \frac{1}{2}m\left(\dot{l}^2 + l^2\dot{q}^2\right)
 \]
 The potential energy \(P\) with respect to the pivot (under a gravitational
 acceleration \(g\)) is
 \[
-   P(q) = -mgl\cos(q)
+   P(\mathbf{q}) = -mgl\cos(q)
 \]
-which means, the Lagrangian is
+Collecting the kinetic energy into a quadratic form, we get the Lagrangian
 \[
-   \mathcal{L}(q,\dot{q}) = \frac{1}{2}m\left(\dot{l}^2 + l^2\dot{q}^2\right)
-      + mgl\cos(q)
+   \mathcal{L}(\mathbf{q},\dot{\mathbf{q}}) 
+   = \frac{1}{2} \dot{\mathbf{q}}\tpose D(\mathbf{q})\dot{\mathbf{q}} - P(\mathbf{q})
+   = \frac{1}{2}
+   \begin{bmatrix} \dot{q} & \dot{l} \end{bmatrix}
+   \begin{bmatrix}
+      ml^2 & 0 \\
+      0 & m \\
+   \end{bmatrix}
+   \begin{bmatrix} 
+      \dot{q} \\ \dot{l}
+   \end{bmatrix}
+   + mgl\cos(q)
 \]
-Computing the conjugate of momentum to \(q\), we get 
+Computing the conjugate of momenta to \(\mathbf{q}\), we get 
 \[
-   p = \pdiff{\mathcal{L}}{\dot{q}} = ml^2\dot{q}
+   \mathbf{p} := \begin{bmatrix} p \\ p_l \end{bmatrix} 
+   = \begin{bmatrix} ml^2\dot{q} \\ m\dot{l} \end{bmatrix} 
 \]
-Since \(q\) is not actuated by any generalized force \(\tau\), the system
-is simply actuated. 
-Solving for the Hamiltonian \(\mathcal{H} = \dot{q}p - \mathcal{L}\)
-and applying Theorem \ref{thm:simply-actuated}, we find the dynamics of the VLP
-are given in Hamiltonian form by (\ref{eqn:vlp-hamiltonian}). 
+Performing the Legendre transform on \(\mathcal{L}\) and setting
+\(M(\mathbf{q}) := D(\mathbf{q})\), \(V(\mathbf{q}) := P(\mathbf{q})\),
+we find the Hamiltonian is equal to the total mechanical energy of the system:
+\[
+   \mathcal{H} = E = \frac{1}{2}\dot{\mathbf{p}}\tpose \Minv(\mathbf{q})
+   \dot{\mathbf{p}}+V(\mathbf{q})
+\]
+Taking the appropriate derivatives, the dynamics of the VLP in Hamiltonian form
+are described in (\ref{eqn:vlp-hamiltonian-with-pl}). 
+\begin{align}\label{eqn:vlp-hamiltonian-with-pl}
+   \mathcal{H} &= \frac{1}{2} \begin{bmatrix} p & p_l \end{bmatrix}
+      \begin{bmatrix}
+         \frac{1}{ml^2}  & 0 \\
+         0 & \frac{1}{m}
+      \end{bmatrix} \begin{bmatrix} p \\ p_l \end{bmatrix} - mgl\cos(q) \\
+     &\begin{cases}
+        \dot{q} = \frac{p}{ml^2} \\
+        \dot{l} = \frac{p_l}{m} \\
+        \dot{p} = -mgl\sin(q) \\
+        \dot{p}_l = \frac{p^2}{ml^3} + mg\cos(q) + \tau \\
+   \end{cases} \nonumber
+\end{align}
+The control input is a force \(\tau \in \mathbb{R}\) affecting the dynamics of
+\(p_l\), acting colinearly with direction of the rod.
+We assume the force does not affect the dynamics of \(p\) in any way -
+that is, there is no lateral force such as when a person is pushed on a swing.
+In this way, the dynamics of \((q,p)\) and \((l,p_l)\) are decoupled. 
+
+This decoupling is extremely useful in simplifying the dynamics. Since one can
+write set \(\dot{p}_l\) to any desired function, we can suppose (with some abuse
+of notation) that \(l\) is tracking some function \(l(t)\). 
+The closed loop dynamics of the system will be described exclusively by
+\((\dot{q},\dot{p})\) with \(l = l(t)\); 
+the fact that \(p_l\) does not appear in these closed-loop dynamics allows us to
+ignore the subdynamics \((\dot{l},\dot{p}_l)\) entirely.
+
+What this means is we can treat \(l\) as the control input directly, rather than
+modelling it as a configuration variable. Re-deriving the Hamiltonian and the
+dynamics with this in mind, we get the system 
+(\ref{eqn:vlp-hamiltonian}) with phase \((q,p) \in \mathbb{S}^1 \times \R\). 
+Note that the control input \(l(t)\) and its derivative \(\dot{l}(t)\) are both
+known variables.
 \begin{align}\label{eqn:vlp-hamiltonian}
-   \mathcal{H}(q,p) &= \frac{p^2}{2ml^2} - \frac{1}{2}m\dot{l}^2 - mgl\cos(q) \\
+   \mathcal{H}(q,p) &= \frac{p^2}{ml^2} - \frac{1}{2}\dot{l}^2 - mgl\cos(q) \\
      &\begin{cases}
         \dot{q} = \frac{p}{ml^2} \\
         \dot{p} = -mgl\sin(q) \\
-   \end{cases} \nonumber
+      \end{cases}\nonumber
 \end{align}
-
-
+In particular, the Hamiltonian of this simplified model is no longer equal to
+the total mechanical energy of the system, which is given by
+(\ref{eqn:vlp-energy}).
+\begin{equation}\label{eqn:vlp-energy}
+   E(q,p) = \frac{p^2}{ml^2} + \frac{1}{2}\dot{l}^2 - mgl\cos(q)
+\end{equation}
 \section{The VLP Constraint}
 % TODO: Go through the development of the constraint and prove it gains energy
 % TODO: Explain how we came up with the constraint first. Talk about the child
