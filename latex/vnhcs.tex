@@ -383,7 +383,13 @@ human-robot interaction
 \cite{vnhc_human_robot_cooperation,psd_based_vnhc_redundant_manipulator,haptic_vnhc},
 error-reduction on time-delayed systems \cite{vnhc_time_delay_teleop},
 and improving bipedal locomotion \cite{nhvc_dynamic_walking,
-hybrid_zero_dynamics_bipedal_nhvcs,nhvc_incline_walking,output_nhvc_bipedal_control}.
+hybrid_zero_dynamics_bipedal_nhvcs,output_nhvc_bipedal_control}.
+Most interestingly, this nonholonomic approach has been shown to be more robust
+than standard VHCs when applied to bipedal robotics \cite{nhvc_incline_walking}.
+This suggests that virtual nonholonomic constraints are more capable of
+stabilizing specific energy levels while rejecting disturbances, all while
+producing realistic biological motion. It is for this reason we choose to study
+nonholonomic constraints in this thesis.
 
 Unlike the theory of VHCs, there does not appear to be a standard definition of virtual
 nonholonomic constraints. One issue is that Lagrangian dynamics is not

@@ -3,16 +3,35 @@
 %/========== Variable Length Pendulum ==========/%
 \chapter{Application of VNHCS: The Variable Length Pendulum}\label{sec:vlp}
 \section{Motivation}
-The variable length pendulum (VLP) is a classical dynamical system, which is often
-used to model a the motion of a person on a standing swing
-\cite{dynamics_periodic_vlp,pumping_swing_standing_squatting,how_to_pump_a_swing}.
-% TODO: Why else is it useful? Apparently it models cranes, satellites, etc
-% TODO: Motivate more why this is a good problem to study
+The variable length pendulum (VLP) is a classical underactuated dynamical system
+which is often used to model the motion of a person on a swing
+\cite{pumping_swing_standing_squatting,how_to_pump_a_swing}.
+The VLP also represents the swinging of a crane, the (simplified) motion of a
+gymnast on a bar \cite{pendulum_length_giant_gymnastics}, and the
+tuned-mass-damper systems which stabilize skyscrapers
+\cite{vlp_tuned_mass_damper}, among others.
 
-The variable length pendulum (VLP) is modelled as a point with mass \(m\)
-connected to a pivot by a massless rod of varying length \(l\) and angle 
+The motion of the VLP has been well studied (see for instance
+\cite{dynamics_periodic_vlp}, and many control mechanisms exist
+to stabilize trajectories of the system. While many of these control mechanism
+are time-dependent, \cite{vlp_energy_shaping}
+offers a time-independent technique to inject energy into the system and
+stabilize desired energy level sets. The authors designed a controller through a
+technique called \textit{energy shaping}, and proved that their control
+mechanism would allow the VLP to achieve any desired energy level set.
+However, the energy injection mechanism is
+ad-hoc in the sense that it is not derived from any human-like behaviour. In
+this chapter, we will use VNHCs to provably stabilize energy level sets as well;
+the difference is that the control mechanism we derive will stay true to human
+motion and can be implemented by any person on a swing.
+
+\section{Dynamics of the Variable Length Pendulum}
+% Derive the dynamics of the VLP in Hamiltonian form
+We will model the VLP as a point mass \(m\)
+connected to a fixed pivot by a massless rod of varying length \(l\) with angle 
 \(q \in \mathbb{S}^1\) from the vertical, as is seen in Figure
 \ref{fig:vlp_model}. 
+We will also ignore any damping and frictional forces in this model.
 In a realistic VLP, the rod length \(l\) varies between some minimum
 length \(\underline{l} \geq 0\) and some maximum length 
 \(\overline{l} > \underline{l}\). The configuration of the VLP is the vector
@@ -21,8 +40,8 @@ length \(\underline{l} \geq 0\) and some maximum length
 \begin{figure}
    \centering
    \includestandalone[width=0.4\textwidth]{images/vlp_model}
-   \caption{The variable length pendulum with a mass at the
-   tip.}\label{fig:vlp_model}
+   \caption{The representation of the variable length pendulum as a mass at the
+      tip of a massless rod.}\label{fig:vlp_model}
 \end{figure}
 
 Using this configuration, we will compute the Hamiltonian dynamics of the system.
@@ -114,6 +133,7 @@ the total mechanical energy of the system, which is given by
 \begin{equation}\label{eqn:vlp-energy}
    E(q,p) = \frac{p^2}{ml^2} + \frac{1}{2}\dot{l}^2 - mgl\cos(q)
 \end{equation}
+
 \section{The VLP Constraint}
 % TODO: Go through the development of the constraint and prove it gains energy
 % TODO: Explain how we came up with the constraint first. Talk about the child
