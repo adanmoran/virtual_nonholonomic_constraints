@@ -9,6 +9,8 @@
 % Additional instructions are at the bottom of this file.
 
 %---------- General ----------%
+% Standalone is for external image files, and must be loaded first
+\usepackage{standalone} 
 \usepackage{hyperref}
 
 %---------- Math packages ----------%
@@ -125,30 +127,6 @@ SmallCapsFeatures={LetterSpace=8},
 \usepackage{subcaption}
 \usepackage{luamplib}
 \mplibtextextlabel{enable}
-\usepackage{tikz}
-\usetikzlibrary{
-    decorations.pathreplacing,
-    decorations.pathmorphing,
-    decorations.markings,
-    arrows,
-    shapes,
-    patterns,
-    angles,
-    quotes,
-    calc
-}
-
-\tikzset{>=stealth'}
-\tikzset{->-/.style={decoration={
-			markings,
-			mark=at position #1 with {\arrow{>}}
-		},
-		postaction={decorate}}}
-\tikzset{-<-/.style={decoration={
-			markings,
-			mark=at position #1 with {\arrow{<}}
-		},
-		postaction={decorate}}}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %            Additional Instructions

@@ -116,20 +116,24 @@ TEST CITATIONS:
 \cite{nhvc_incline_walking}
 \cite{output_nhvc_bipedal_control}
 
+% When using external files, we use \input instead of \include because \input
+% allows you to nest the inclusion. This way, we can separate the .tikz files
+% for our images and still input them into the code.
+
 % Introduce the thesis
-\include{introduction}
+\input{introduction}
 
 % Develop the formulation of VNHCs
-\include{vnhcs}
+\input{vnhcs}
 
 % Discuss the variable length pendulum and prove our VNHC gains energy
-\include{vlp}
+\input{vlp}
 
 % Give the Acrobot model, its VNHC, and prove it gains energy
-\include{acrobot}
+\input{acrobot}
 
 % Concluding remarks and future work
-\include{conclusion}
+\input{conclusion}
 
 %---------- Bibliography ----------%
 %\newpage
