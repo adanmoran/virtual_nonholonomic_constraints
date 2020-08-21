@@ -1,0 +1,24 @@
+\usetikzlibrary{
+    decorations.pathreplacing,
+    decorations.pathmorphing,
+    decorations.markings,
+    arrows,
+    shapes,
+    patterns,
+    angles,
+    quotes,
+    calc
+}
+
+\tikzset{>=stealth'}
+\tikzset{->-/.style={decoration={
+			markings,
+			mark=at position #1 with {\arrow{>}}
+		},
+		postaction={decorate}}}
+\tikzset{-<-/.style={decoration={
+			markings,
+			mark=at position #1 with {\arrow{<}}
+		},
+		postaction={decorate}}}
+
