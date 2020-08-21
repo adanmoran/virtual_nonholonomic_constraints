@@ -10,12 +10,20 @@ used to model a the motion of a person on a standing swing
 % TODO: Motivate more why this is a good problem to study
 
 The variable length pendulum (VLP) is modelled as a point with mass \(m\)
-connected to a pivot by a massless rod of varying length. Label
-\(q \in \mathbb{S}^1\) as the angle from the vertical line to the rod. In a
-realizable VLP, the rod  has length \(l\) which varies between some minimum
+connected to a pivot by a massless rod of varying length \(l\) and angle 
+\(q \in \mathbb{S}^1\) from the vertical, as is seen in Figure
+\ref{fig:vlp_model}. 
+In a realistic VLP, the rod length \(l\) varies between some minimum
 length \(\underline{l} \geq 0\) and some maximum length 
 \(\overline{l} > \underline{l}\). The configuration of the VLP is the vector
 \(\mathbf{q} := (q,l) \in \mathbb{S}^1 \times [\underline{l},\overline{l}]\).
+
+\begin{figure}
+   \centering
+   \includestandalone[width=0.4\textwidth]{images/vlp_model}
+   \caption{The variable length pendulum with a mass at the
+   tip.}\label{fig:vlp_model}
+\end{figure}
 
 Using this configuration, we will compute the Hamiltonian dynamics of the system.
 The cartesian position of the mass at the tip of the pendulum
