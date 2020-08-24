@@ -144,6 +144,21 @@ the total mechanical energy of the system, which is given by
 % time-optimal controller in a time-independent way, which requires knowledge of
 % which quadrant in (q,p)-space we're in. This means using the angle theta,
 % which is inherently a VNHC.
+We return once again to the example of a person standing on a swing.
+Condensing them into a center of mass gives a VLP model of their motion, where
+the pendulum shrinks when the person stands and lengthens when they squat
+(as in Figure \ref{fig:child-vlp}).
+\begin{figure}
+   \centering
+   \begin{subfigure}[t]{0.5\textwidth}
+      % TODO: Insert child standing figure + caption
+   \end{subfigure}
+   \begin{subfigure}[t]{0.5\textwidth}
+      % TODO: Insert child squatting figure + captions
+   \end{subfigure}
+   \caption{The variable length pendulum representation of a child on a
+   swing}\label{fig:child-vlp}
+\end{figure}
 
 \begin{thm}
 For the variable-length pendulum, define \(\theta := \arctan_2(p,q)\). 
