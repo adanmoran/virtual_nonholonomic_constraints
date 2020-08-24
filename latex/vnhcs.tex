@@ -19,11 +19,14 @@ While this technique works for simple systems, it is impossible to
 apply to a majority of mechanical systems since most of the forces 
 on the system are not explicitly known. 
 
-Rather than modeling a mechanical system with point masses and constraints,
+Rather than modeling a mechanical system by cartesion positions and constraints,
 it is often feasible to represent the position of the system using \(n\)
 independent scalar-valued variables \(q_1,\ldots,q_n\) called 
 \textit{generalized coordinates}, where \(n = 3N - r\) is the number of
 \textit{degrees of freedom} (DOF) of the system \cite{greenwood_dynamics}.
+
+% TODO:
+\textbf{TODO: Image comparing Newtonian to g.c.}
 
 For the robotic systems of interest in this thesis, we assume that
 each generalized coordinate \(q_i\) represents either the distance or the angle
@@ -63,8 +66,8 @@ energy \(P(q)\) of the system to define the Lagrangian
 \end{equation}
 When the mechanical system is actuated, the EOM are described by \(n\) second-order
 ordinary differential equations (ODEs) obtained from the \textit{Euler-Lagrange
-equations} with \textit{generalized input forces} \(\tau \in \R^k\) 
-(\ref{eqn:el-eqns-general}). 
+equations} (\ref{eqn:el-eqns-general}) with \textit{generalized input forces} 
+\(\tau \in \R^k\) . 
 \begin{equation}\label{eqn:el-eqns-general}
     \diff{}{t}\left\{ \pdiff{\mathcal{L}}{\dot{q}_i} \right\}
     - \pdiff{\mathcal{L}}{q_i} = B_i\tpose(q) \tau
@@ -115,8 +118,8 @@ To do this, we first define the \textit{conjugate of momentum \(p_i\) to \(q_i\)
 \end{equation}
 To ease notation, we will write \(p = (p_1, \ldots, p_n) \in \R^n\) and say that
 \(p\) is the \textit{conjugate of momenta to \(q\)}.
-Note that each \(p_i\) is a linear function of \(\dot{q}\), so one can typically
-solve for \(\dot{q}(q,p)\) by inverting the expressions from (\ref{eqn:p-i}).
+Note that each \(p_i\) is a linear function of \(\dot{q}\), and one can typically
+solve for \(\dot{q}(q,p)\) by inverting all the expressions from (\ref{eqn:p-i}).
 The combined vector \((q,p) \in \mathcal{Q}\times\R^n\) is called a 
 \textit{phase} of the system. 
 
@@ -124,7 +127,7 @@ The \textit{Hamiltonian} of the system in
 \(\{q,p\}\) coordinates is defined as the Legendre transform 
 (\ref{eqn:hamiltonian-legendre}) of the Lagrangian \cite{landau_mechanics}.
 \begin{equation}\label{eqn:hamiltonian-legendre}
-    \mathcal{H}(q,p) = p\tpose \dot{q}(q,p) - \mathcal{L}(q,\dot{q}(q,p))
+    \mathcal{H}(q,p) := p\tpose \dot{q}(q,p) - \mathcal{L}(q,\dot{q}(q,p))
 \end{equation}
 The EOM in this framework can be shown to be the \(2n\)
 first-order equations called \textit{Hamilton's equations}
@@ -151,7 +154,7 @@ The resulting Hamiltonian system reduces to (\ref{eqn:hamiltonian}).
     \end{cases} 
 \end{align}
 
-A set of coordinates \(\{q,p\}\) which satisfy Hamilton's equations 
+Any set of coordinates \(\{q,p\}\) which satisfy Hamilton's equations 
 under the Hamiltonian \(\mathcal{H}\) are
 said to be \textit{canonical coordinates} for the system. A change of
 coordinates \((q,p) \rightarrow (Q,P)\) is a \textit{canonical
@@ -163,9 +166,9 @@ transformation} if \(\{Q,P\}\) are canonical coordinates with Hamiltonian
 % that the actuator directly affects pa but not pu. Use M for simply actuated
 % inertia, D for normal coordinates
 Given a Hamiltonian mechanical system (\ref{eqn:hamiltonian}), it is not obvious
-how the input forces \(\tau\) affect the conjugate of momenta \(p_i\). 
-This is because \(\tau\) is transformed by the input matrix \(B(q)\), which may
-be quite complicated. 
+how any particular input force \(\tau_i\) affects the conjugate of momenta. 
+This is because \(\tau\) is transformed by the input matrix \(B(q)\) before
+entering the EOM.
 
 We will define a new class of Hamiltonian systems where the effect of the input
 forces on the conjugate of momenta is made obvious. This class of systems will
@@ -182,8 +185,8 @@ form the backbone for the rest of the theory developed in this thesis.
     \]
     The first \((n-k)\) coordinates \(q_u\) are called the \textit{unactuated
     coordinates}, while the remaining \(k\) coordinates \(q_a\) are called the
-    \textit{actuated coordinates}. We write \(q = (q_u, q_a)\) and the
-    corresponding conjugate of momenta \(p = (p_u, p_a)\) are the called the
+    \textit{actuated coordinates}. We write \(q = (q_u, q_a)\); the
+    corresponding conjugate of momenta \(p = (p_u, p_a)\) are called the
     unactuated and actuated momenta (respectively).
 \end{defn}
 \begin{defn}
@@ -203,9 +206,9 @@ Hamiltonian system (\ref{eqn:hamiltonian}) is simply actuated.
     There exists a matrix 
     \(B^\perp \in \R^{(n-k)\times n}\)
     which is right semi-orthogonal 
-    (\ie \(B^\perp(B^\perp)\tpose = \Id{(n-k)}\))
+    (\(B^\perp(B^\perp)\tpose = \Id{(n-k)}\))
     and which is a left-annihilator for \(B\)
-    (\ie \(B^\perp B = \Zmat{(n-k) \times k}\)).
+    (\(B^\perp B = \Zmat{(n-k) \times k}\)).
 \end{assm}
 
 Note that if \(k = (n-1)\), the existence of any left annihilator \(A^0\) for
@@ -213,9 +216,8 @@ Note that if \(k = (n-1)\), the existence of any left annihilator \(A^0\) for
 \ref{assm:B-perp}.
 
 \begin{assm}\label{assm:B-orthogonal}
-    Assume without loss of generality that the input matrix \(B\) is left
-    semi-orthogonal.
-    That is, assume \(B\tpose B = \Id{k}\).
+    Assume \textbf{without loss of generality} that the input matrix \(B\) is
+    left semi-orthogonal (\(B\tpose B = \Id{k}\)).
 \end{assm}
 \begin{proof}
 Since \(B\) is a constant matrix, 
@@ -232,7 +234,8 @@ defined by
         - &   & \Zmat{(n-k)\times k} & -  \\
     \end{bmatrix}
 \]
-where \(\sigma_i \neq 0\) because \(B\) is full-rank \textbf{SOURCE?}.
+% TODO: Find a source for SVD
+where \(\sigma_i \neq 0\) because \(B\) is full-rank \textbf{TODO: source?}.
 Defining \(T \in \R^{k \times k}\) by
 \[
     T = \begin{bmatrix}
@@ -313,8 +316,8 @@ are unaffected by the input forces.
         \pdiff{P_i}{q_m}\pdiff{P_j}{p_m} = 0
     \end{align*}
     Since the matrix \(\mathbf{B}\) is orthogonal,
-    \((\mathbf{B}_i)\tpose \mathbf{B}\tpose_j = (\mathbf{B}_i)\tpose (\mathbf{B}^{-1})_j = \delta_{i,j}\). Using this
-    fact we see that the Poisson brackets between \(P\) and \(Q\) are given by:
+    \((\mathbf{B}_i)\tpose (\mathbf{B}\tpose)_j = (\mathbf{B}_i)\tpose (\mathbf{B}^{-1})_j = \delta_{i,j}\). Using this
+    fact we see that the Poisson brackets between \(P_i\) and \(Q_j\) are given by:
     \begin{align*}
         [P_i,Q_j] &= \sum\limits_{m=1}^n\pdiff{P_i}{p_m}\pdiff{Q_j}{q_m}
         - \pdiff{P_i}{q_m}\pdiff{Q_j}{p_m} \\
@@ -356,13 +359,14 @@ example, they might tell the robot to extend and retract its legs every two
 seconds. In ideal situtations, this technique would work perfectly because the
 leg motion is synchronized with the swing to gain energy as fast as possible.
 
-Most children have an adult pushing the swing to help them go higher; or perhaps
-the child is swinging on a windy day. In either case, they adjust their leg
-motion accordingly and do not keep track of time when kicking their legs. Te
+Most children have an adult pushing the swing to help them go higher, or perhaps
+they are swinging on a windy day. In either case, they adjust their leg
+motion accordingly when presented with these external disturbances, without
+keeping track of the time it takes to kick their legs. The
 standard control technique of tracking a function of time, known as
-\textit{trajectory tracking}, would not work because the disturbance affecting
-the swing will desynchronize the motion of the legs with the swing and stop the
-energy-gaining effects.
+\textit{trajectory tracking}, does not work as well as human motion 
+because the disturbance affecting the swing will desynchronize the leg motion
+and the swing, thereby stopping the energy-gaining effects.
 
 This is a common issue in the control of many biologically-inspired systems. 
 One method which can provide more realistic, robust motion is the method of
@@ -392,14 +396,14 @@ producing realistic biological motion. It is for this reason we choose to study
 nonholonomic constraints in this thesis.
 
 Unlike the theory of VHCs, there does not appear to be a standard definition of virtual
-nonholonomic constraints. One issue is that Lagrangian dynamics is not
-particularly suited to finding controllers which stabilize desired constraints. Because
-of this, all the applications listed above use their own definition of a virtual
+nonholonomic constraints: 
+all the applications listed above use their own definition of a virtual
 nonholonomic constraint, which makes it difficult to compare and analyze their
-work.
+work. 
 
 This section will provide a new characterization of virtual nonholonomic
-constraints. The goal is to provide a consistent, rigorous foundation for
+constraints in the Hamiltonian framework. 
+The goal is to provide a consistent, rigorous foundation for
 designing constraints on a general class of systems.
 
 % Perform the full development of VNHCs, including its stabilizing
@@ -420,33 +424,33 @@ If we define the error term  \(e = h(q,p)\), stabilizing \(\Gamma\) is
 equivalent to solving for \(\tau(q,p)\) which drives \(e \rightarrow 0\) and
 \(\dot{e} \rightarrow 0\).
 Let us imagine that we have no further structure on the VNHC. 
-Then \(\dot{e} = dh_q \dot{q} + dh_p \dot{p}\), so \(\tau\) appears inside
-\(\dot{e}\). To solve for \(\tau\) explicitly, we must have that \(dh_p\) is
-invertible for all \(p\), which is the same as requiring that \(h(q,p)\) is
-strictly monotonic in \(p\).
+Then \(\dot{e} = dh_q \dot{q} + dh_p \dot{p}\), where \(\tau\) appears inside
+\(\dot{p}\). To solve for \(\tau\) explicitly, we must have that \(dh_p\) is
+invertible for all \((q,p)\).
+%which is the same as requiring that \(h(q,p)\) is strictly monotonic in \(p\).
 
 This is a very restrictive condition, which many VNHCs will not satisfy. For
 this reason, it is preferable to have the torque \(\tau\) appear after two 
 derivatives of \(e\) so that there is more freedom in the types of constraints
 one can use.
-Mathematically, if \(\tau\) appears only after two derivatives, one says 
+Mathematically, if each \(\tau_i\) appears only after two derivatives, one says 
 that \(e\) is of \textit{relative degree} \(\{2,2,\ldots,2\}\). 
 We thus define a special type of VNHC which satisfies this
 property.
 
 \begin{defn}
-    A VNHC of order \(k\) \(h(q,p) = 0\) is \textit{regular} if the output 
+    A VNHC \(h(q,p) = 0\) of order \(k\) is \textit{regular} if the output 
     \(e = h(q,p)\) is of relative degree \(\{2,2.\ldots,2\}\) everywhere on the
     constraint manifold \(\Gamma\).
 \end{defn}
 
-Modifying the results of
+The authors of
 \cite{nhvc_dynamic_walking,hybrid_zero_dynamics_bipedal_nhvcs,nhvc_incline_walking}
-into the Hamiltonian framework, one observes that
-relations which use only the unactuated momentum \(p_u\) result in \(\tau\)
-appearing only after two derivatives of \(e\).
-To be able to use \(p_u\), we will continue with the following assumption for
-the rest of the chapter.
+observed that a relation which uses only the unactuated conjugate of momentum
+\(p_u\) cannot have \(\tau\) appearing after only one derivative. Of course,
+they performed their research in Lagrangian form; 
+for us to be able to use \(p_u\) in its Hamiltonian form, 
+we will continue with the following assumption for the rest of the chapter.
 
 \begin{assm}\label{assm:H-is-simply-actuated}
     The mechanical system under consideration is a
@@ -466,9 +470,9 @@ the rest of the chapter.
     We will write \(q_u \in \mathcal{Q}_u\), \(q_a \in \mathcal{Q}_a\) where
     \(\mathcal{Q}_u \times \mathcal{Q}_a = \mathcal{Q}\). 
     We also write
-    \(p_u \in \mathcal{P}_u = \R^{n-k}\) and 
-    \(p_a \in \mathcal{P}_a = \R^k\), so that 
-    \(p \in \mathcal{P} := \mathcal{P}_u \times \mathcal{P}_a\). 
+    \(p_u \in \mathcal{P}_u := \R^{n-k}\) and 
+    \(p_a \in \mathcal{P}_a := \R^k\), so that 
+    \(p \in \mathcal{P} := \mathcal{P}_u \times \mathcal{P}_a = \R^n\). 
     In this manner, the phase space of our system can be written as
     \(\mathcal{Q} \times \mathcal{P}\).
 \end{notation}
@@ -484,7 +488,6 @@ the rest of the chapter.
     everywhere on the constraint manifold \(\Gamma\).
     That is, a regular VNHC is a function with domain 
     \(\mathcal{Q} \times \mathcal{P}_u\) which satisfies the rank condition.
-    condition.
 \end{thm}
 \begin{proof}
     Let \(e = h(q,p) \in \R^k\). Then 
@@ -503,9 +506,9 @@ the rest of the chapter.
     If \(dh_{p_a} \neq \Zmat{k \times k}\) for some \((q,p)\) on \(\Gamma\), 
     then \(\tau\) appears in \(\dot{e}\) and the VNHC is not of relative degree
     \(\{2,2,\ldots,2\}\).
-    Hence, we must have that \(dh_{p_a} = \Zmat{k \times k}\) if we want the
-    VNHC to be regular. Proceeding with this assumption, we now find that
-    \(h : \mathcal{Q} \times \mathcal{P}_u \rightarrow \R^k\), which means
+    Hence, we must have that \(dh_{p_a} = \Zmat{k \times k}\).
+    Proceeding with this assumption, we now find that
+    \(h : \mathcal{Q} \times \mathcal{P}_u \rightarrow \R^k\), which means that
     \[
         \dot{e} = dh_q \Minv(q)p - 
         dh_{p_u} \left(\frac{1}{2} \pudmat + \nabla_{q_u}V(q)\right)
@@ -520,11 +523,13 @@ the rest of the chapter.
          & dh_{p_u}\left(\frac{1}{2}\diff{}{t}\left\{\pudmat\right\} + 
          \diff{}{t}\left\{\nabla_{q_u}V(q)\right\} \right)
     \end{align*}
-    We will compute the explicit expression of \(\ddot{e}\) in pieces. 
+    We will compute the explicit expression of \(\ddot{e}\) in pieces to find
+    out where \(\tau\) appears. 
 % d/dt(dh_q)
-    First we begin with \(\diff{}{t}\left\{dh_q\right\}\). 
-    Since \(h = (h^1,\ldots,h^k)\) where 
-    \(h^i : \mathcal{Q} \times \mathcal{P}_u \rightarrow \R\), we have that 
+    We begin with \(\diff{}{t}\left\{dh_q\right\}\). 
+    Let \(h = (h^1,\ldots,h^k)\) with
+    \(h^i : \mathcal{Q} \times \mathcal{P}_u \rightarrow \R\). By definition of
+    the total differential, we have 
     \[
         dh_q = \begin{bmatrix}
             dh^1_q \\
@@ -536,7 +541,7 @@ the rest of the chapter.
         \pdiff{h^k}{q_1} & \cdots & \pdiff{h^k}{q_n}
         \end{bmatrix}
     \]
-    The derivative is taken element-wise in each matrix, yielding
+    The time derivative is taken element-wise, yielding
     \[
         \diff{}{t}\left\{dh_q\right\} = \begin{bmatrix}
             \sum_{j=1}^n \ppdiff{h^1}{q_1}{q_j}\dot{q}_j & \cdots & \sum_{j=1}^n
@@ -587,8 +592,9 @@ the rest of the chapter.
         = \sum\limits_{j=1}^n \pdiff{\Minv}{q_j}(q)\left(1_j\tpose\Minv(q)p\right)
     \]
 % d/dt(dh_pu)
-    Moving on, one can use a similar approach to \(\diff{}{t}\left\{dh_q\right\}\)
-    to find the derivative of \(dh_{p_u}\) in matrix form. It is given by
+    Moving on to \(\diff{dh_{p_u}}{t}\), a similar approach as
+    \(\diff{}{t}\left\{dh_q\right\}\) yields the derivative in matrix form.
+    It is given by:
     \begin{align*}
         \diff{}{t}\left\{dh_{p_u}\right\} &= 
         \left( \Id{n} \otimes \left(p\tpose \Minv(q)\right)\right) 
@@ -597,9 +603,7 @@ the rest of the chapter.
       \Id{n} \otimes \nabla_{q_u}V(q)\right)\Hess_{p_u}\left\{h\right\}\tpose
     \end{align*}
     Now observe that the \(i^\text{th}\) row of
-    \[
-        \frac{1}{2} \diff{}{t} \left\{ \pudmat \right\}
-    \]
+    \(\frac{1}{2} \diff{}{t} \left\{ \pudmat \right\}\)
     is given by
     \begin{align*}
         \frac{1}{2} \diff{}{t}\left\{p\tpose \pdiff{\Minv}{q_{u_i}}(q)p\right\}
@@ -675,7 +679,7 @@ where \(k_p, k_d \in \R_{>0}\) are control parameters which can be tuned on the
 resulting linear system \(\ddot{e} = -k_p e - k_d\dot{e}\). 
 
 Note that one generally cannot measure conjugate of momenta directly, as sensors
-on mechanical systems typically only measure the state \((q,\dot{q})\). To
+on mechanical systems will only measure the state \((q,\dot{q})\). To
 implement this controller in practice, one must compute \(p = M(q)\dot{q}\) at
 every iteration. In other words, this controller requires knowledge of the full
 state of the system.
@@ -697,7 +701,8 @@ dynamics is feasible.
 
 % TODO: Come up with a name for this type of system
 \begin{defn}
-    A mechanical system is ------ if \(\nabla_{q_u}M(q) = 0\)
+    A mechanical system is \textbf{TODO: name this} ------ if 
+    \(\nabla_{q_u}M(q) = \Zmat{n(n-k) \times n}\).
 \end{defn}
 
 % TODO: Do we need the assumption that one can solve for qa linearly?
@@ -706,7 +711,7 @@ dynamics is feasible.
     \ref{assm:H-is-simply-actuated}. Let
     \(h(q,p_u) = 0\) be a regular VNHC of order \(k\) 
     with constraint manifold \(\Gamma\). Suppose that on \(\Gamma\) one can
-    solve linearly for \(q_a\) as a function of \(q_u,p_u\).
+    solve linearly for \(q_a\) as a function of \((q_u,p_u)\).
     Then the closed-loop dynamics are given by
     \begin{equation}\label{eqn:qpu-dynamics}
         \left.\begin{aligned}
@@ -758,23 +763,27 @@ dynamics is feasible.
     \]
     Solving for \(p_a\) gives
     \[
-        p_a = \left(dh_q\Minv(q)\simpleB\right)\inv
+        p_a(q,p_u) = \left(dh_q\Minv(q)\simpleB\right)\inv
         \left(dh_{p_u}\nabla_{q_u}V(q) - 
             dh_q\Minv(q)\begin{bmatrix} 
         \Id{n-k} \\ \Zmat{k \times (n-k)}\end{bmatrix} p_u \right)
     \]
     This yields a function \(p_a(q,p_u)\). However, on \(\Gamma\) we have 
-    \(h(q,p_u) = 0\) and can solve for \(q_a\) in terms of \((q_u,p_u)\).
-    Hence, on \(\Gamma\) we have \(p_a = g(q_u,p_u)\). Since \(q_a\) and
+    \(h(q,p_u) = 0\) and can solve for \(q_a\) in terms of \((q_u,p_u)\);
+    hence, we can solve for \(p_a = g(q_u,p_u)\). Since \(q_a\) and
     \(p_a\) can be computed directly from \((q_u,p_u)\), the dynamics on
     \(\Gamma\) are parameterized only by \((\dot{q}_u,\dot{p}_u)\).
+
+    \textbf{MANFREDI: Do we need this assumption that \(q_a\) can be solved in
+        terms of \((q_u,p_u)\) or is there some other way of parameterizing it
+    like you did with \(s\) for VHCs?}
 \end{proof}
 
 Theorem \ref{thm:zero-dynamics} shows that, for a particular class of systems
 and constraints, the dynamics on \(\Gamma\) are entirely described by the \(2(n-k)\)
 unactuated coordinates. 
-This is trueregardless of the number of degrees of freedom of the system. 
-This means that \(\Gamma\) is a \(2(n-k)\)-dimensional surface inside 
+This is true regardless of the number of degrees of freedom of the system, which
+means that \(\Gamma\) is a \(2(n-k)\)-dimensional surface inside 
 \(\mathcal{Q}\times \mathcal{P}\). 
 
 The following corollay applies Theorem \ref{thm:zero-dynamics} to
@@ -786,8 +795,10 @@ systems with only one unactuated coordinate.
     Let \(h(q,p_u) = 0\) be a regular VNHC of order \((n-1)\) of the form
     \(h(q,p_u) = q_a - f(q_u,p_u)\)
     where \(f\) is a suitably-defined smooth function.
-    Defining \(e_1 := (1,0,\ldots,0) \in \R^n\), the actuated momentum 
-    is given by
+    Then \(dh_q = \begin{bmatrix} -\partial f_{q_u} & \Id{(n-1)}
+    \end{bmatrix}\).
+    Defining \(e_1 := (1,0,\ldots,0) \in \R^n\), the actuated momentum is given
+    by (\ref{eqn:g-qupu}):
     \begin{equation}\label{eqn:g-qupu}
         p_a = -\left.\left(dh_q \Minv(q)
         \begin{bmatrix}
@@ -804,6 +815,7 @@ systems with only one unactuated coordinate.
 
 \section{Summary of Results}
 %TODO: summarize the assumptions and results 
+\textbf{TODO: summarize the assumptions and results }
 
 
 

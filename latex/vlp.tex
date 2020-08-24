@@ -20,10 +20,11 @@ stabilize desired energy level sets. The authors designed a controller through a
 technique called \textit{energy shaping}, and proved that their control
 mechanism would allow the VLP to achieve any desired energy level set.
 However, the energy injection mechanism is
-ad-hoc in the sense that it is not derived from any human-like behaviour. In
-this chapter, we will use VNHCs to provably stabilize energy level sets as well;
-the difference is that the control mechanism we derive will stay true to human
-motion and can be implemented by any person on a swing.
+ad-hoc in the sense that it is not derived from natural behaviour. In
+this chapter we will use VNHCs to inject energy into the VLP in a
+time-independent way;
+the difference is that our control mechanism will maintain the structured motion
+of a human on a swing.
 
 \section{Dynamics of the Variable Length Pendulum}
 % Derive the dynamics of the VLP in Hamiltonian form
@@ -103,11 +104,11 @@ are described in (\ref{eqn:vlp-hamiltonian-with-pl}).
 The control input is a force \(\tau \in \mathbb{R}\) affecting the dynamics of
 \(p_l\), acting colinearly with direction of the rod.
 We assume the force does not affect the dynamics of \(p\) in any way -
-that is, there is no lateral force such as when a person is pushed on a swing.
+that is, the control input cannot enact any lateral force on the pendulum.
 In this way, the dynamics of \((q,p)\) and \((l,p_l)\) are decoupled. 
 
-This decoupling is extremely useful in simplifying the dynamics. Since one can
-write set \(\dot{p}_l\) to any desired function, we can suppose (with some abuse
+This decoupling is extremely useful for simplifying the dynamics. Since one can
+use \(\tau\) to set \(\dot{p}_l\) to any desired function, we can assume (with abuse
 of notation) that \(l\) is tracking some function \(l(t)\). 
 The closed loop dynamics of the system will be described exclusively by
 \((\dot{q},\dot{p})\) with \(l = l(t)\); 
