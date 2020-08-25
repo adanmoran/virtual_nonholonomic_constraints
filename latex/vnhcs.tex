@@ -359,6 +359,8 @@ example, they might tell the robot to extend and retract its legs every two
 seconds. In ideal situtations, this technique would work perfectly because the
 leg motion is synchronized with the swing to gain energy as fast as possible.
 
+% TODO: Get some sources here. Show with research that trajectory control is
+% unsafe, and that path tracking is better.
 Most children have an adult pushing the swing to help them go higher, or perhaps
 they are swinging on a windy day. In either case, they adjust their leg
 motion accordingly when presented with these external disturbances, without
@@ -366,11 +368,17 @@ keeping track of the time it takes to kick their legs. The
 standard control technique of tracking a function of time, known as
 \textit{trajectory tracking}, does not work as well as human motion 
 because the disturbance affecting the swing will desynchronize the leg motion
-and the swing, thereby stopping the energy-gaining effects.
+and the swing, thereby stopping the energy-gaining effects. 
+As has been observed in the field of mobile robotics,
+a trajectory tracking controller which has lagged behind due to a disturbance
+will do whatever is required to ``catch up" to
+the trajectory. This can cause major safety issues, which is why mobile
+roboticists prefer to design controllers which drive a vehicle towards a path in
+space rather than a trajectory in time.
 
-This is a common issue in the control of many biologically-inspired systems. 
-One method which can provide more realistic, robust motion is the method of
-of virtual holonomic constraints (VHCs). Instead of a robot's actuators tracking
+This path tracking approach has been extended to biologically-inspired robotics
+in a method known as virtual holonomic constraints (VHCs).
+Instead of a robot's actuators tracking
 a trajectory over time, VHCs use the actuators to enforce a relation
 \(h(q) = 0\) of the configuration \cite{vhcs_for_el_systems}. 
 This method has provided incredible results in the development of 
@@ -379,24 +387,28 @@ vehicle motion \cite{vhc_bicycle, vhc_helicopter},
 and has even been used to design a snake-like swimming robot
 \cite{vhc_snake}.
 
-Many authors have attempted to extend these results to enforce a relation 
-\(h(q,\dot{q}) = 0\) of the full state. Since these relations use actuators to
+The downside to VHCs is that they do not use the additional information imparted
+by the generalized velocities of a system.
+Many authors have attempted to extend VHCs to enforce these relations 
+\(h(q,\dot{q}) = 0\) of the full state to account for this drawback. 
+Since these relations use actuators to
 restrict both the configuration and generalized velocity, they are called
 virtual \textit{nonholonomic} constraints. This idea has been used for
 human-robot interaction
 \cite{vnhc_human_robot_cooperation,psd_based_vnhc_redundant_manipulator,haptic_vnhc},
 error-reduction on time-delayed systems \cite{vnhc_time_delay_teleop},
-and improving bipedal locomotion \cite{nhvc_dynamic_walking,
+and has shown marked improvements to the field of bipedal locomotion 
+\cite{nhvc_dynamic_walking,
 hybrid_zero_dynamics_bipedal_nhvcs,output_nhvc_bipedal_control}.
-Most interestingly, this nonholonomic approach has been shown to be more robust
+Most interestingly, the nonholonomic approach has been shown to be more robust
 than standard VHCs when applied to bipedal robotics \cite{nhvc_incline_walking}.
 This suggests that virtual nonholonomic constraints are more capable of
 stabilizing specific energy levels while rejecting disturbances, all while
 producing realistic biological motion. It is for this reason we choose to study
 nonholonomic constraints in this thesis.
 
-Unlike the theory of VHCs, there does not appear to be a standard definition of virtual
-nonholonomic constraints: 
+Unlike the theory of VHCs, there does not appear to be a standard definition of
+virtual nonholonomic constraints: 
 all the applications listed above use their own definition of a virtual
 nonholonomic constraint, which makes it difficult to compare and analyze their
 work. 
