@@ -311,7 +311,7 @@ time the path hits the \(p\)-axis, which means the VLP is, on average,
 increasing in energy.
 
 We will show that anti-Lyapunov function exists for our VNHC.
-In order to do so however, we need to prove the following lemma.
+In order to do so, we require the following lemma.
 
 \begin{lemma}\label{lemma:sign-of-cube}
    For any \(x,y \in \R\):
@@ -331,16 +331,18 @@ In order to do so however, we need to prove the following lemma.
    which means \(x^2 + xy + y^2 \geq 0\), proving the lemma.
 \end{proof}
 
-\begin{thm}\label{thm:vlp-gains-energy}
+\begin{thm}\label{thm:vlp-energy-stabilization}
    Take the VLP with Hamiltonian dyanmics (\ref{eqn:vlp-hamiltonian}) and define
    \(\theta := \arctan_2(p,q)\). Suppose the initial condition is not one of the
-   equilibria: \((q(0),p(0)) \not \in \left\{(0,0), (\pi,0)\right\}\).
+   equilibria: \((q(0),p(0)) \not \in \left\{(0,0), (\pm\pi,0)\right\}\).
    A VNHC of the form \(h(q,p) = l - l(\theta)\) injects energy if there exists 
    \(l_\text{avg} \in [\underbar{l},\bar{l}]\) such that 
-   \[
+   \begin{equation}\label{eqn:vlp-energy-gain-condition}
       \left(l(\theta) - l_\text{avg}\right)sin(2\theta) \leq 0 \text{ }\forall \theta \in \mathbb{S}^1
-   \]
+   \end{equation}
    with the property that the inequality is strict for almost every \(\theta\).
+   Flipping the inequality of (\ref{eqn:vlp-energy-gain-condition}) leads to
+   energy dissipation.
 \end{thm}
 \begin{proof}
     Choose, as a candidate anti-Lyapunov function, the energy for the average-length pendulum 
@@ -348,7 +350,7 @@ In order to do so however, we need to prove the following lemma.
        E_\text{avg}(q,p) := \frac{1}{2}\frac{p^2}{m l_\text{avg}^2} 
                     + m g l_\text{avg} (1-\cos(q))
     \]
-    which is positive definite and has derivative 
+    which is positive definite at \((0,0)\) and has derivative 
     \[
       \dot{E}_\text{avg} = \frac{-g\sin(q)p \left(l(\theta)^3 - l_\text{avg}^3\right)}
                  {l_\text{avg}^2l(\theta)^2}
@@ -369,28 +371,64 @@ In order to do so however, we need to prove the following lemma.
     Since the initial condition is not an equilibrium,
     the orbit of the VNHC in the \((q,p)\) plane is diverging away from the
     origin and the VLP is gaining energy on average.
+    Flipping the inequality of (\ref{eqn:vlp-energy-gain-condition}) 
+    means \(E_\text{avg}\) is a regular Lyapunov function, since its derivative
+    will be negative almost everywhere.
 \end{proof}
 
 \begin{cor}
-   The VNHC \(h(q,p) = l - l_\frac{\pi}{2}(\theta)\) injects energy into the VLP
+   The VNHC \(l = l_\frac{\pi}{2}(\theta)\) injects energy into the VLP
    over time, since 
-   \(\left(l_\frac{\pi}{2}(\theta) - l_\text{avg}\right)\sin(2\theta) = 
-   -\Delta l \sin(2\theta) < 0\) for almost every \(\theta\).
+   \[
+      \left(l_\frac{\pi}{2}(\theta) - l_\text{avg}\right)\sin(2\theta) = 
+   -\Delta l \sin^2(2\theta) \geq 0
+   \] 
+   Likewise, let 
+   \(l\inv_\frac{\pi}{2}(\theta) := l_\text{avg} - \Delta l \sin(2\theta)\).
+    The VNHC \(h(q,p) = l - l\inv_\frac{\pi}{2}(\theta)\) which flips 
+    \(l_\frac{\pi}{2}(\theta)\) about \(l_\text{avg}\) will dissipate energy from
+   the VLP, since 
+   \[
+      \left(l\inv_\frac{\pi}{2}(\theta) - l_\text{avg}\right)\sin(2\theta) = 
+      -\Delta l \sin^2(2\theta) \leq 0
+   \] 
 \end{cor}
 
-% TODO: Describe energy reduction, which comes from switching the sign
+The types of VNHCs which satisfy Theorem \ref{thm:vlp-energy-stabilization} are illustrated by Figure
+\ref{fig:vlp-energy-in-out}. To stabilize specific energy level sets, one simple
+approach is to switch between injection and dissipation VNHCs depending on the
+current energy level.
+For the VNHCs we designed in this section, this means toggling
+between \(l_\frac{\pi}{2}(\theta)\) and \(l\inv_\frac{\pi}{2}(\theta)\),
+possibly with some hysteresis to avoid infinite switching.  
 
-Theorem \ref{thm:vlp-gains-energy} provides an alternate explanation for why the
-optimal controller \(l^\star(\theta)\) works so well at injecting energy: it
-maximizes the derivative of \(E_\text{avg}\) under the restriction 
-\(l(\theta) \in [\underbar{l},\bar{l}]\), so that the orbit in the
-\((q,p)\)-plane diverges from the origin as fast as possible. The differentiable
-controllers \(l_T(\theta)\) will also inject energy, albeit at a rate which
-decreases as \(T\) increases. That said, Theorem \ref{thm:vlp-gains-energy} and the
-subsequent Corollary shows that VNHCs are a powerful tool in creating effective energy
-pumping strategies based on natural human motion.
+\begin{figure}
+   \centering
+   % TODO: Add a figure showing regions for injection vs dissipation
+   \caption{}\label{fig:vlp-energy-in-out}
+\end{figure}
 
-% TODO: How would we stabilize a specific energy level?
+Theorem \ref{thm:vlp-energy-stabilization} also provides an alternate
+explanation for why the ``optimal" VNHC \(l^\star(\theta)\) works so well at
+injecting energy: it maximizes the derivative of \(E_\text{avg}\) under the
+restriction \(l(\theta) \in [\underbar{l},\bar{l}]\), so that the orbit in the
+\((q,p)\)-plane diverges from the origin as fast as possible. 
+
+Let us define \((l^\star)\inv(\theta)\) by swapping the order of 
+\(\underbar{l}\) and \(\bar{l}\) in \(l^\star(\theta)\). Since this 
+\textit{minimizes} the derivative of \(E_\text{avg}\) under the restriction
+\(l(\theta) \in [\underbar{l},\bar{l}]\), we can predict that 
+\((l^\star)\inv(\theta)\) is the VNHC representation of an optimal 
+energy dissipation controller.
+This is, in fact, true: \cite{pumping_swing_standing_squatting} showed 
+that squatting at the lowest point of a swing and standing at the highest
+point (instead of standing and squatting resp.) produces the
+time-optimal trajectory for stopping a standing swing. 
+
+All together, these results show that VNHCs can replicate the time-optimal
+strategy performed by humans in a time-independent manner. Furthermore, we see
+that VNHCs are a powerful tool for creating simple energy stabilization
+techniques based on natural human motion.
 
 \section{Simulation Results}
 % TODO: Show the simulations of the VLP VNHCs (multiple of them). How does the
