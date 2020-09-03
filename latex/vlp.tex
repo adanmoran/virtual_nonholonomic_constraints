@@ -9,11 +9,11 @@ which is often used to model the motion of a person on a swing
 The VLP also represents the swinging of a crane, the (simplified) motion of a
 gymnast on a bar \cite{pendulum_length_giant_gymnastics}, and the
 tuned-mass-damper systems which stabilize skyscrapers
-\cite{vlp_tuned_mass_damper}, among others.
+\cite{vlp_tuned_mass_damper}.
 
 The motion of the VLP has been well studied (see for instance
 \cite{dynamics_periodic_vlp}), and many control mechanisms exist
-to stabilize trajectories of the system. While many of these control mechanism
+to stabilize trajectories of the system. While many of these controllers 
 are time-dependent, \cite{vlp_energy_shaping}
 offers a time-independent technique to inject energy into the system and
 stabilize desired energy level sets. The authors designed a controller through a
@@ -21,10 +21,10 @@ technique called \textit{energy shaping}, and proved that their control
 mechanism would allow the VLP to achieve any desired energy level set.
 However, the energy injection mechanism is
 ad-hoc in the sense that it is not derived from natural behaviour. In
-this chapter we will use VNHCs to inject energy into the VLP in a
-time-independent way;
-the difference is that our control mechanism will maintain the structured motion
-of a human on a swing.
+this chapter we will design VNHCs to inject energy into the VLP in a
+time-independent way.
+The difference compared to \cite{vlp_energy_shaping} is that our 
+controller will maintain the structured motion of a human on a swing.
 
 \section{Dynamics of the Variable Length Pendulum}
 % Derive the dynamics of the VLP in Hamiltonian form
@@ -40,7 +40,7 @@ length \(\underline{l} \geq 0\) and some maximum length
 
 \begin{figure}
    \centering
-   \includestandalone[width=0.4\textwidth]{images/vlp_model}
+   \includestandalone[width=0.5\textwidth]{images/vlp_model}
    \caption{The representation of the variable length pendulum as a mass at the
       tip of a massless rod.}\label{fig:vlp-model}
 \end{figure}
@@ -105,19 +105,17 @@ The control input is a force \(\tau \in \mathbb{R}\) affecting the dynamics of
 \(p_l\), acting colinearly with direction of the rod.
 We assume the force does not affect the dynamics of \(p\) in any way -
 that is, the control input cannot enact any lateral force on the pendulum.
-In this way, the dynamics of \((q,p)\) and \((l,p_l)\) are decoupled. 
-
-This decoupling is extremely useful for simplifying the dynamics. Since one can
-use \(\tau\) to set \(\dot{p}_l\) to any desired function, we can assume (with abuse
-of notation) that \(l\) is tracking some function \(l(t)\). 
+This is extremely useful for simplifying the dynamics: since one can choose
+\(\tau\) which sets \(\dot{p}_l\) to any desired function, we can assume (with abuse
+of notation) that \(l\) is tracking some known function \(l(t)\). 
 The closed loop dynamics of the system will be described exclusively by
-\((\dot{q},\dot{p})\) with \(l = l(t)\); 
-the fact that \(p_l\) does not appear in these closed-loop dynamics allows us to
-ignore the subdynamics \((\dot{l},\dot{p}_l)\) entirely.
+\((\dot{q},\dot{p})\) with \(l \equiv l(t)\).
+The fact that \(p_l\) does not appear in these closed-loop dynamics allows us to
+ignore the subdynamics \((\dot{l},\dot{p}_l)\) entirely. 
 
 What this means is we can treat \(l\) as the control input directly, rather than
 modelling it as a configuration variable. Re-deriving the Hamiltonian and the
-dynamics with this in mind, we get the system 
+dynamics from this approach, we get the system 
 (\ref{eqn:vlp-hamiltonian}) with phase \((q,p) \in \mathbb{S}^1 \times \R\). 
 Note that the control input \(l(t)\) and its derivative \(\dot{l}(t)\) are both
 known variables.
@@ -153,36 +151,42 @@ the pendulum shrinks when the person stands and lengthens when they squat. This
 is equivalent to the VLP model from Figure \ref{fig:vlp-model}.
 \begin{figure}
    \centering
-   \begin{subfigure}[t]{0.5\textwidth}
-      % TODO: Insert child standing figure + caption
+   \begin{subfigure}[t]{0.45\textwidth}
+      \includegraphics[]{images/child_vlp_standing.png}
+      \caption{A person standing on a swing has their center of mass 
+      close to the pivot.}
    \end{subfigure}
-   \begin{subfigure}[t]{0.5\textwidth}
-      % TODO: Insert child squatting figure + captions
+   \hfill
+   \begin{subfigure}[t]{0.45\textwidth}
+      \includegraphics[]{images/child_vlp_squatting.png}
+      \caption{When a person squats on a swing, their center of mass extends
+      away from the pivot.}
    \end{subfigure}
-   \caption{The variable length pendulum representation of a child on a
-   swing}\label{fig:child-vlp}
+   \caption{The variable length pendulum representation of a person on a
+   standing swing.}\label{fig:child-vlp}
 \end{figure}
 
-The regulation of pendulum length to add energy to the VLP is known as
-``pumping"`. \citeauthor{pumping_swing_standing_squatting} asked whether
+The action of regulating pendulum length to add energy to the VLP is known as
+``pumping". \citeauthor{pumping_swing_standing_squatting} asked whether
 the pumping strategy performed by children is time-optimal, assuming the
 children could squat or stand instantaneously
 \cite{pumping_swing_standing_squatting}. Indeed, they discovered that 
-a child will pump energy into the VLP as fast as is physically possible. 
+a child's pumping strategy will inject energy into the VLP as fast as is 
+physically possible. 
 
-The pumping strategy performed by children is quite 
-straightforward: they stand up at the lowest point of their swing, and squat at
-the highest point. Looking at their VLP representation, the pendulum shortens
-at the bottom of the swing, and lengthens at the top. 
-This pumping strategy makes intuitive sense:
-by shortening the pendulum at the bottom, conservation of angular momentum indicates the
-mass must gain speed to compensate for the decrease in pendulum length
+This pumping strategy is straightforward: the child stands up at the lowest point of
+their swing, and squats at the highest point. Looking at their VLP
+representation, the pendulum shortens at the bottom of the swing, and lengthens
+at the top. For an intuitive understanding, conservation of angular momentum
+indicates that shortening the pendulum at the bottom forces the mass to gain
+speed to compensate for the reduced length
 \cite{how_to_pump_a_swing}.
 Energy is not conserved in this process, and the pendulum gains kinetic energy
 which allows the pendulum to reach a higher point in its swing.
 Lengthening the pendulum when it reaches this point means gravity
 imparts a larger angular momentum to the mass by the time it reaches the bottom
-of its swing.
+of its swing, which is converted into a higher velocity the next time the
+pendulum is shortened.
 By alternating these processes, the pendulum experiences a net gain in
 rotational energy which is generated entirely by gravity.
 
@@ -204,8 +208,8 @@ Figure \ref{fig:vlp-optimal-controller} shows this controller as a function of
 \(\theta\).
 \begin{equation}\label{eqn:vlp-optimal-controller}
    l^\star(\theta):= \begin{cases}
-      \underbar{l} & \theta \in [-pi, -\frac{\pi}{2}[ \cup [0,\frac{\pi}{2}[ \\
-      \bar{l} & \theta \in [-\frac{\pi}{2},0[ \cup [\frac{\pi}{2}, \pi[ \\
+      \underline{l} & \theta \in [-pi, -\frac{\pi}{2}[ \cup [0,\frac{\pi}{2}[ \\
+      \overline{l} & \theta \in [-\frac{\pi}{2},0[ \cup [\frac{\pi}{2}, \pi[ \\
    \end{cases}
 \end{equation}
 
@@ -227,16 +231,16 @@ Figure \ref{fig:vlp-optimal-controller} shows this controller as a function of
 To find a continuously differentiable function which approximates this controller,
 we can attach sinusoids at the transition points of
 \(l^\star(\theta)\) (see Figure \ref{fig:vlp-T-controller}). Let
-\(\Delta l := (\bar{l} - \underbar{l})/2\) and 
-\(l_{\text{avg}} := (\bar{l} + \underbar{l})/2\).
+\(\Delta l := (\overline{l} - \underline{l})/2\) and 
+\(l_{\text{avg}} := (\overline{l} + \underline{l})/2\).
 Providing these newly attached sinusoids with a frequency \(\omega = \frac{pi}{T}\) 
 (where \(T \in ]0,\frac{\pi}{2}]\) is a control parameter), we have a new
 controller \(l_T(\theta)\):
 \begin{equation}\label{eqn:vlp-T-controller}
    l_T(\theta) = \begin{cases}
-      \underbar{l} & \theta \in \left[-\pi + \frac{T}{2}, -\frac{\pi}{2} - \frac{T}{2}\right] 
+      \underline{l} & \theta \in \left[-\pi + \frac{T}{2}, -\frac{\pi}{2} - \frac{T}{2}\right] 
       \cup \left[\frac{T}{2}, \frac{\pi}{2} - \frac{T}{2}\right] \\
-      \bar{l} & \theta \in \left[-\frac{\pi}{2} + \frac{T}{2}, -\frac{T}{2}\right] 
+      \overline{l} & \theta \in \left[-\frac{\pi}{2} + \frac{T}{2}, -\frac{T}{2}\right] 
       \cup \left[\frac{\pi}{2} + \frac{T}{2}, \pi - \frac{T}{2}\right] \\
       -\Delta l \sin(\omega(\theta + \pi)) + l_{\text{avg}} & \theta \in
       \left[-\pi,-\pi + \frac{T}{2}\right] \\
@@ -336,7 +340,7 @@ In order to do so, we require the following lemma.
    \(\theta := \arctan_2(p,q)\). Suppose the initial condition is not one of the
    equilibria: \((q(0),p(0)) \not \in \left\{(0,0), (\pm\pi,0)\right\}\).
    A VNHC of the form \(h(q,p) = l - l(\theta)\) injects energy if there exists 
-   \(l_\text{avg} \in [\underbar{l},\bar{l}]\) such that 
+   \(l_\text{avg} \in [\underline{l},\overline{l}]\) such that 
    \begin{equation}\label{eqn:vlp-energy-gain-condition}
       \left(l(\theta) - l_\text{avg}\right)sin(2\theta) \leq 0 \text{ }\forall \theta \in \mathbb{S}^1
    \end{equation}
@@ -411,13 +415,13 @@ possibly with some hysteresis to avoid infinite switching.
 Theorem \ref{thm:vlp-energy-stabilization} also provides an alternate
 explanation for why the ``optimal" VNHC \(l^\star(\theta)\) works so well at
 injecting energy: it maximizes the derivative of \(E_\text{avg}\) under the
-restriction \(l(\theta) \in [\underbar{l},\bar{l}]\), so that the orbit in the
+restriction \(l(\theta) \in [\underline{l},\overline{l}]\), so that the orbit in the
 \((q,p)\)-plane diverges from the origin as fast as possible. 
 
 Let us define \((l^\star)\inv(\theta)\) by swapping the order of 
-\(\underbar{l}\) and \(\bar{l}\) in \(l^\star(\theta)\). Since this 
+\(\underline{l}\) and \(\overline{l}\) in \(l^\star(\theta)\). Since this 
 \textit{minimizes} the derivative of \(E_\text{avg}\) under the restriction
-\(l(\theta) \in [\underbar{l},\bar{l}]\), we can predict that 
+\(l(\theta) \in [\underline{l},\overline{l}]\), we can predict that 
 \((l^\star)\inv(\theta)\) is the VNHC representation of an optimal 
 energy dissipation controller.
 This is, in fact, true: \cite{pumping_swing_standing_squatting} showed 
