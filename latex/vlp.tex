@@ -133,6 +133,11 @@ the total mechanical energy of the system, which is given by
    E(q,p) = \frac{p^2}{ml^2} + \frac{1}{2}\dot{l}^2 - mgl\cos(q)
 \end{equation}
 
+% TODO: Describe the oscillation and rotation motion of a pendulum in the
+% qp-plane, and give a figure showing the orbiting motion for each of these.
+% Then describe what the orbit should do under energy injection (spiral away /
+% begin rotation outward) and energy dissipation (spiral in / rotate inward).
+
 \section{The VLP Constraint}
 % TODO: Go through the development of the constraint and prove it gains energy
 % TODO: Explain how we came up with the constraint first. Talk about the child
@@ -191,20 +196,23 @@ By alternating these processes, the pendulum experiences a net gain in
 rotational energy which is generated entirely by gravity.
 
 The time-optimal controller described by \cite{pumping_swing_standing_squatting}
-depends on a state trajectory in time. We will convert this time-based
-controller into a time-independent controller which still uses this time-optimal
-strategy. Notice that the control strategy depends on knowing when the
+depends on a trajectory in time. We will convert this 
+into a time-independent controller derived from the time-optimal
+strategy. Notice that the optimal controller depends on knowing when the
 system is at the ``bottom" or ``top" of the swing. Since being at the ``bottom"
 is the same as saying the pendulum angle is \(q = 0\) and being at the ``top" is
-equivalent to the pendulum's momentum being \(p = 0\), our method of
-VNHCs is especially well suited to this problem.
+equivalent to the pendulum's momentum being \(p = 0\), the time-independent
+controller will necessarily use the full phase \((q,p)\). While VHCs cannot
+satisfy this requirement, our method of VNHCs is especially well suited to this
+problem.
 
 Figure \ref{fig:vlp-optimal-controller-qp-plane} shows the time-optimal strategy directly
-on the \((q,p)\)-plane. The axes of this plane define where the pendulum should
-change length. Since the pendulum stays the same length inside each quadrant, we
+on the \((q,p)\)-plane.
+Since the VLP must stay the same length inside each quadrant and
+changes length only when it crosses one of the axes, we
 will use the angle \(\theta = \arctan_2(p,q)\) in the \((q,p)\)-plane to define
 the optimal controller \(l^\star(\theta)\) (\ref{eqn:vlp-optimal-controller}).
-Figure \ref{fig:vlp-optimal-controller} shows this controller as a function of
+Figure \ref{fig:vlp-optimal-controller} shows this time-optimal controller as a function of
 \(\theta\).
 \begin{equation}\label{eqn:vlp-optimal-controller}
    l^\star(\theta):= \begin{cases}
@@ -215,7 +223,9 @@ Figure \ref{fig:vlp-optimal-controller} shows this controller as a function of
 
 \begin{figure}
    \centering
-   % TODO: Inser the image of the optimal controller in the (q,p) plane
+   % TODO: Inser the image of the optimal controller in the (q,p) plane: it
+   % should just be 4 coloured quadrants (no spiral) representing squatting and
+   % standing
    \caption{The time-optimal VLP controller from
    \cite{pumping_swing_standing_squatting} displayed in the
 \((q,p)\)-plane.}\label{fig:vlp-optimal-controller-qp-plane}
@@ -223,7 +233,9 @@ Figure \ref{fig:vlp-optimal-controller} shows this controller as a function of
 
 \begin{figure}
    \centering
-   %TODO: Insert the image of the optimal controller as a function of theta
+   %TODO: Insert the image of the optimal controller as a function of theta;
+   %that is, show l(theta) vs theta on ]-pi,pi] and show underline{l} and
+   %overline{l} 
    \caption{The time-optimal VLP controller converted to a discontinuous
    function \(l(\theta)\).}\label{fig:vlp-optimal-controller}
 \end{figure}
@@ -275,7 +287,7 @@ demonstration in Figure \ref{fig:vlp-smoothed-controller}.
 
 \begin{figure}
    \centering
-   % TODO: Insert the image of the smoothed VLP controller
+   % TODO: Insert the image of the smoothed VLP controller around lavg
    \caption{The smoothed VLP controller attained by setting the parameter 
       \(T\) to its upper limit
    \(\frac{\pi}{2}\).}\label{fig:vlp-smoothed-controller}
