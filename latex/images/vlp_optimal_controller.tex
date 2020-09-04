@@ -1,0 +1,37 @@
+%! TEX program = lualatex
+
+% Use :VimtexToggleMain to compile this file alone with Vimtex
+\documentclass[tikz]{standalone}
+
+\usepackage{sty/adantikz}
+
+\begin{document}
+\begin{tikzpicture}
+\begin{axis}[ 
+ % Set the axes to be centered nicely
+ axis x line = center, 
+ axis y line = middle,
+ xlabel = $\theta$,
+ xmin = -3.1415, xmax = 3.1415,
+ ylabel = $l(\theta)$,
+ ymin = 0, ymax = 5,
+ % Custom tick labels at specified positions
+ xticklabels = {$-\pi$, $-\pi/2$, $0$, $\pi/2$, $\pi$},
+ xtick={-3.1415, -1.571, 0, 1.571, 3.1415},
+ yticklabels = {$\underline{l}$,$\overline{l}$},
+ ytick = {2,4}, % Choose the plot values for underline{l} and overline{l}
+ % Move the \overbar{l} label to the right
+ yticklabel style={xshift={(\ticknum == 1)*(0.5cm)}}
+]
+    % Draw the l(theta) function 
+    \addplot[red,domain=-pi:(-pi/2),smooth]{2};
+    \addplot[blue,domain=(-pi/2):0,smooth]{4};
+    \addplot[red,domain=0:(pi/2),smooth]{2};
+    \addplot[blue,domain=(pi/2):pi,smooth]{4};
+    % Draw the vertical dashed lines at theta = +- pi/2
+    \draw[dashed, color=gray!40] (-pi/2,0) -- (-pi/2,5);
+    \draw[dashed, color=gray!40] (pi/2,0) -- (pi/2,5);
+\end{axis}
+\end{tikzpicture}
+\end{document}
+% vim: set tw=80 ts=4 sw=4 sts=0 et ffs=unix :

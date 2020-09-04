@@ -223,21 +223,19 @@ Figure \ref{fig:vlp-optimal-controller} shows this time-optimal controller as a 
 
 \begin{figure}
    \centering
-   % TODO: Inser the image of the optimal controller in the (q,p) plane: it
-   % should just be 4 coloured quadrants (no spiral) representing squatting and
-   % standing
-   \caption{The time-optimal VLP controller from
-   \cite{pumping_swing_standing_squatting} displayed in the
-\((q,p)\)-plane.}\label{fig:vlp-optimal-controller-qp-plane}
+   \includestandalone[width=0.5\textwidth]{images/vlp_optimal_controller_qp_plane}
+   \caption{The representation of the time-optimal controller for a standing
+      swing in the \((q,p)\)-plane. As per 
+      \cite{pumping_swing_standing_squatting}, the red region corresponds to
+      squatting and the blue region corresponds to standing.}
+      \label{fig:vlp-optimal-controller-qp-plane}
 \end{figure}
 
 \begin{figure}
    \centering
-   %TODO: Insert the image of the optimal controller as a function of theta;
-   %that is, show l(theta) vs theta on ]-pi,pi] and show underline{l} and
-   %overline{l} 
+   \includestandalone[width=0.5\textwidth]{images/vlp_optimal_controller}
    \caption{The time-optimal VLP controller converted to a discontinuous
-   function \(l(\theta)\).}\label{fig:vlp-optimal-controller}
+   function \(l(\theta)\), where \(\theta := \arctan_2(p,q)\).}\label{fig:vlp-optimal-controller}
 \end{figure}
 
 To find a continuously differentiable function which approximates this controller,
