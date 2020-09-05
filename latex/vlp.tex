@@ -223,19 +223,20 @@ Figure \ref{fig:vlp-optimal-controller} shows this time-optimal controller as a 
 
 \begin{figure}
    \centering
-   \includestandalone[width=0.5\textwidth]{images/vlp_optimal_controller_qp_plane}
-   \caption{The representation of the time-optimal controller for a standing
-      swing in the \((q,p)\)-plane. As per 
-      \cite{pumping_swing_standing_squatting}, the red region corresponds to
-      squatting and the blue region corresponds to standing.}
+   \begin{subfigure}[t]{0.45\textwidth}
+      \includestandalone[width=\linewidth]{images/vlp_optimal_controller_qp_plane}
+      \caption{The time-optimal controller mapped to the \((q,p)\)-plane.}
       \label{fig:vlp-optimal-controller-qp-plane}
-\end{figure}
-
-\begin{figure}
-   \centering
-   \includestandalone[width=0.5\textwidth]{images/vlp_optimal_controller}
-   \caption{The time-optimal VLP controller converted to a discontinuous
-   function \(l(\theta)\), where \(\theta := \arctan_2(p,q)\).}\label{fig:vlp-optimal-controller}
+   \end{subfigure}
+   \hfill
+   \begin{subfigure}[t]{0.45\textwidth}
+      \includestandalone[width=\linewidth]{images/vlp_optimal_controller}
+      \caption{The time-optimal controller converted to a VNHC-style 
+      function \(l^\star(\theta)\), where \(\theta := \arctan_2(p,q)\).}\label{fig:vlp-optimal-controller}
+   \end{subfigure}
+   \caption{The time-optimal controller for a standing swing as derived by
+      \cite{pumping_swing_standing_squatting}. The colour red
+      corresponds to standing and blue to squatting.}
 \end{figure}
 
 To find a continuously differentiable function which approximates this controller,
@@ -254,17 +255,19 @@ controller \(l_T(\theta)\):
       \cup \left[\frac{\pi}{2} + \frac{T}{2}, \pi - \frac{T}{2}\right] \\
       -\Delta l \sin(\omega(\theta + \pi)) + l_{\text{avg}} & \theta \in
       \left[-\pi,-\pi + \frac{T}{2}\right] \\
-      -\Delta l \sin(\omega(\theta - a)) + l_\text{avg} & 
+      -\Delta l \sin(\omega \theta) + l_\text{avg} & \theta \in [-\frac{T}{2},
+      \frac{T}{2}] \\
+      \Delta l \sin(\omega(\theta - a)) + l_\text{avg} & 
       \theta \in \left[a - \frac{T}{2}, a + \frac{T}{2}\right] \text{ for } 
-      a \in \left\{-\frac{\pi}{2}, 0, \frac{\pi}{2}\right\} \\
+      a \in \left\{-\frac{\pi}{2}, \frac{\pi}{2}\right\} \\
       -\Delta l \sin(\omega(\theta-\pi)) & \theta \in \left[\pi - \frac{T}{2},\pi\right] \\
    \end{cases}
 \end{equation}
 
 \begin{figure}
    \centering
-   % TODO: Insert an image of the controller with sinusoids attached
-   \caption{}\label{fig:vlp-T-controller}
+   \includestandalone[width=0.6\textwidth]{images/vlp_T_controller}
+   \caption{The continuous VNHC-style VLP controller \(l_T(\theta)\).}\label{fig:vlp-T-controller}
 \end{figure}
 
 This controller approximates the optimal controller, since 
