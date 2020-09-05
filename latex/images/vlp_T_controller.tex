@@ -17,6 +17,7 @@
 \pgfmathsetmacro{\w}{pi/\T}
 % Define the figure
 \begin{axis}[ 
+ axis line style = thick,
  % Set the axes to be centered nicely
  axis x line = center, 
  axis y line = middle,
@@ -40,11 +41,14 @@
     \addplot[red,domain=(\T/2):(pi/2-(\T/2)),smooth]{\lu};
     \addplot[blue,domain=(pi/2+(\T/2)):(pi-(\T/2)),smooth]{\lb};
     % Draw The l_(theta) sinusoids
-    \addplot[black,domain=(-pi):(-pi+(\T/2)),smooth]{-\dl*sin(deg(\w*(x+pi)))+\lavg};
-    \addplot[black,domain=(-pi/2-(\T/2)):(-pi/2+(\T/2)),smooth]{\dl*sin(deg(\w*(x+pi/2)))+\lavg};
-    \addplot[black,domain=(-\T/2):(\T/2),smooth]{-\dl*sin(deg(\w*x))+\lavg};
-    \addplot[black,domain=(pi/2-\T/2):(pi/2+\T/2),smooth]{\dl*sin(deg(\w*(x-pi/2)))+\lavg};
-    \addplot[black,domain=(pi-\T/2):(pi),smooth]{-\dl*sin(deg(\w*(x-pi)))+\lavg};
+    % Note that whatever expansions I've done is to prevent BadBox errors, and
+    % should not be simplified (e.g. don't use deg() to convert to degrees, keep
+    % minimal braces, etc)
+    \addplot[black,domain=(-pi):(-pi+(\T/2)),smooth]{-\dl*sin(\w*x*180/pi+\w*180)+\lavg};
+    \addplot[black,domain=(-pi/2-(\T/2)):(-pi/2+(\T/2)),smooth]{\dl*sin(\w*x*180/pi+\w*90) + \lavg};
+    \addplot[black,domain=(-\T/2):(\T/2),smooth]{-\dl*sin(\w*x*180/pi)+\lavg};
+    \addplot[black,domain=(pi/2-\T/2):(pi/2+\T/2),smooth]{\dl*sin(\w*x*180/pi-\w*90)+\lavg};
+    \addplot[black,domain=(pi-\T/2):(pi),smooth]{-\dl*sin(\w*x*180/pi-\w*180)+\lavg};
 
     % Draw the vertical dashed lines at -pi
     \draw[dashed, color=gray!40] (-pi,0) -- (-pi,5);

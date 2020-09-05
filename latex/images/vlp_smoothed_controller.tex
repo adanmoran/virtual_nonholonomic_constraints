@@ -10,32 +10,36 @@
 % Set the underline{l} and overline{l} positions
 \pgfmathsetmacro{\lu}{2}
 \pgfmathsetmacro{\lb}{4}
-
+\pgfmathsetmacro{\dl}{(\lb - \lu)/2}
+\pgfmathsetmacro{\lavg}{(\lb + \lu)/2}
+% Define the figure
 \begin{axis}[ 
  axis line style = thick,
  % Set the axes to be centered nicely
  axis x line = center, 
  axis y line = middle,
- xlabel = $\theta$,
+ xlabel = $\theta$, 
  x label style={at={(axis description cs:1.08,0)},anchor = east},
  xmin = -3.1415, xmax = 3.1415,
  ylabel = $l(\theta)$,
  y label style={at={(axis description cs:0.5,1.1)},anchor = north}, 
  ymin = 0, ymax = 5,
  % Custom tick labels at specified positions
- xticklabels = {$-\pi$, $-\pi/2$, $0$, $\pi/2$, $\pi$},
+ xticklabels = {$-\pi$, $-\frac{\pi}{2}$, $0$, $\frac{\pi}{2}$, $\pi$},
  xtick={-3.1415, -1.571, 0, 1.571, 3.1415},
- yticklabels = {$\underline{l}$,$\overline{l}$},
- ytick = {\lu,\lb}, % Choose the plot values for underline{l} and overline{l}
+ yticklabels = {$\underline{l}$,$l_{avg}$,$\overline{l}$},
+ ytick = {\lu,\lavg,\lb}, % Choose the plot values for underline{l} and overline{l}
  % Move the \overbar{l} label to the right
- yticklabel style={xshift={(\ticknum == 1)*(0.5cm)}}
+ yticklabel style={xshift={(\ticknum==1)*(1cm)},yshift={(\ticknum==1)*(0.25cm)}}
 ]
-    % Draw the l(theta) function 
-    \addplot[red,domain=-pi:(-pi/2),smooth]{\lu};
-    \addplot[blue,domain=(-pi/2):0,smooth]{\lb};
-    \addplot[red,domain=0:(pi/2),smooth]{\lu};
-    \addplot[blue,domain=(pi/2):pi,smooth]{\lb};
-    % Draw the vertical dashed lines at theta = +- pi/2
+    % Draw the sinusoid
+    \addplot[black,domain=(-pi):pi,smooth]{-\dl*sin(360*x/pi)+\lavg};
+    % Draw the horizontal lines at lu, lb
+    \draw[dashed, color=red] (-pi,\lu) -- (pi,\lu);
+    \draw[dashed, color=blue] (-pi,\lb) -- (pi,\lb);
+    % Draw the horizontal line at lavg
+    \draw[dashed, color=gray!40] (-pi,\lavg) -- (pi,\lavg);
+    % Draw the vertical lines at +- pi/2
     \draw[dashed, color=gray!40] (-pi/2,0) -- (-pi/2,5);
     \draw[dashed, color=gray!40] (pi/2,0) -- (pi/2,5);
 \end{axis}
