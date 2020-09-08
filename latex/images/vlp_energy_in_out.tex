@@ -1,0 +1,77 @@
+%! TEX program = lualatex
+
+% Use :VimtexToggleMain to compile this file alone with Vimtex
+\documentclass[tikz]{standalone}
+
+\usepackage{sty/adantikz}
+
+\begin{document}
+\begin{tikzpicture}
+% Set the underline{l} and overline{l} positions
+\pgfmathsetmacro{\lu}{2}
+\pgfmathsetmacro{\lb}{4}
+\pgfmathsetmacro{\dl}{(\lb - \lu)/2}
+\pgfmathsetmacro{\lavg}{(\lb + \lu)/2}
+% Define the figure
+\begin{axis}[ 
+ axis line style = thick,
+ % Set the axes to be centered nicely
+ axis x line = center, 
+ axis y line = middle,
+ xlabel = $\theta$, 
+ x label style={at={(axis description cs:1.08,0)},anchor = east},
+ xmin = -3.1415, xmax = 3.1415,
+ ylabel = $l(\theta)$,
+ y label style={at={(axis description cs:0.5,1.1)},anchor = north}, 
+ ymin = 0, ymax = 5,
+ % Custom tick labels at specified positions
+ xticklabels = {$-\pi$, $-\frac{\pi}{2}$, $0$, $\frac{\pi}{2}$, $\pi$},
+ xtick={-3.1415, -1.571, 0, 1.571, 3.1415},
+ yticklabels = {$\underline{l}$,$l_{avg}$,$\overline{l}$},
+ ytick = {\lu,\lavg,\lb}, % Choose the plot values for underline{l} and overline{l}
+ % Move the \overbar{l} label to the right
+ yticklabel style={xshift={(\ticknum==1)*(1cm)},yshift={(\ticknum==0)*(-0.25cm)+(\ticknum==1)*(0.25cm) + (\ticknum==2)*(0.25cm)}},
+ legend pos=south east,
+ axis on top
+]
+    % Add named boundaries for each of the blocked regions. We use "forget
+    % plot" so they don't appear on the legend
+    \addplot[draw=none, forget plot, name path global=I1U,domain=-pi:(-pi/2)]{\lu};
+    \addplot[draw=none, forget plot, name path global=I2U,domain=(-pi/2):0]{\lu};
+    \addplot[draw=none, forget plot, name path global=I3U,domain=0:(pi/2)]{\lu};
+    \addplot[draw=none, forget plot, name path global=I4U,domain=(pi/2):pi]{\lu};
+
+    \addplot[draw=none, forget plot, name path global=I1A,domain=-pi:(-pi/2)]{\lavg};
+    \addplot[draw=none, forget plot, name path global=I2A,domain=(-pi/2):0]{\lavg};
+    \addplot[draw=none, forget plot, name path global=I3A,domain=0:(pi/2)]{\lavg};
+    \addplot[draw=none, forget plot, name path global=I4A,domain=(pi/2):pi]{\lavg};
+
+    \addplot[draw=none, forget plot, name path global=I1B,domain=-pi:(-pi/2)]{\lb};
+    \addplot[draw=none, forget plot, name path global=I2B,domain=(-pi/2):0]{\lb};
+    \addplot[draw=none, forget plot, name path global=I3B,domain=0:(pi/2)]{\lb};
+    \addplot[draw=none, forget plot, name path global=I4B,domain=(pi/2):pi]{\lb};
+    % Fill in the region where the VNHC needs to be for injection in green
+    \addplot[draw=none, forget plot, fill=green!40] fill between[of=I1U and I1A];
+    \addplot[draw=none, forget plot, fill=green!40] fill between[of=I2A and I2B];
+    \addplot[draw=none, forget plot, fill=green!40] fill between[of=I3U and I3A];
+    \addplot[draw=none, fill=green!40] fill between[of=I4A and I4B];
+    % Fill in the region where the VNHC needs to be for dissipation in yellow
+    \addplot[draw=none, forget plot, fill=yellow!40] fill between[of=I1A and I1B];
+    \addplot[draw=none, forget plot, fill=yellow!40] fill between[of=I2U and I2A];
+    \addplot[draw=none, forget plot, fill=yellow!40] fill between[of=I3A and I3B];
+    \addplot[draw=none, fill=yellow!40] fill between[of=I4U and I4A];
+
+    % Draw the horizontal lines at lu, lb
+    \draw[dashed, color=red] (-pi,\lu) -- (pi,\lu);
+    \draw[dashed, color=blue] (-pi,\lb) -- (pi,\lb);
+    % Draw the horizontal line at lavg
+    \draw[dashed, color=black] (-pi,\lavg) -- (pi,\lavg);
+    % Draw the vertical lines at +- pi/2
+    \draw[dashed, color=gray!40] (-pi/2,0) -- (-pi/2,5);
+    \draw[dashed, color=gray!40] (pi/2,0) -- (pi/2,5);
+
+    \legend{injection, dissipation}; 
+\end{axis}
+\end{tikzpicture}
+\end{document}
+% vim: set tw=80 ts=4 sw=4 sts=0 et ffs=unix :
