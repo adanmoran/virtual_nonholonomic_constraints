@@ -139,14 +139,7 @@ the total mechanical energy of the system, which is given by
 % begin rotation outward) and energy dissipation (spiral in / rotate inward).
 
 \section{The VLP Constraint}
-% TODO: Go through the development of the constraint and prove it gains energy
-% TODO: Explain how we came up with the constraint first. Talk about the child
-% on a swing, the paper showing the time-optimal control input, and describe why
-% we want to remove time from the equation. Discuss the lmin and lmax choices.
-% Why do we need to use a VNHC instead of a VHC: we are modelling the
-% time-optimal controller in a time-independent way, which requires knowledge of
-% which quadrant in (q,p)-space we're in. This means using the angle theta,
-% which is inherently a VNHC.
+% Go through the development of the constraint and prove it gains energy
 Since we wish to define a VNHC which injects energy into the VLP in a human-like
 manner,
 we return once again to the example of a person standing on a swing.
@@ -420,8 +413,11 @@ possibly with some hysteresis to avoid infinite switching.
 
 \begin{figure}
    \centering
-   % TODO: Add a figure showing regions for injection vs dissipation
-   \caption{}\label{fig:vlp-energy-in-out}
+   \includestandalone[width=0.5\textwidth]{images/vlp_energy_in_out}
+   \caption{A VNHC of the form \(l(\theta)\) which is entirely contained within
+      the green (yellow) regions will inject (dissipate) energy into the VLP
+      because it will satisfy Theorem \ref{thm:vlp-energy-stabilization}.}
+      \label{fig:vlp-energy-in-out}
 \end{figure}
 
 Theorem \ref{thm:vlp-energy-stabilization} also provides an alternate
