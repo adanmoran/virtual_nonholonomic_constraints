@@ -1,5 +1,6 @@
 \usepackage{tikz}
 \usepackage{pgfplots}
+\usepackage{stix}
 \pgfplotsset{compat=1.13}
 \usetikzlibrary{
     decorations.pathreplacing,
@@ -26,3 +27,7 @@
 		},
 		postaction={decorate}}}
 
+% Set the center of mass symbol
+\newcommand{\centerofmass}{
+  {\ooalign{$\circleurquadblack$\cr\rotatebox[origin=c]{180}{$\circleurquadblack$}}}
+}
