@@ -18,7 +18,7 @@ simplest models for a biped walking robot
 
 \begin{figure}
     \centering
-    % TODO include acrobot model image
+    \includestandalone[width=0.7\textwidth]{images/acrobot_model}
     \caption{The acrobot model.}%
     \label{fig:acrobot-model}
 \end{figure}
@@ -38,23 +38,41 @@ problem for the acrobot by using VNHCs to generate giant motion. The control of
 giant motion for the acrobot has been studied thoroughly 
 \cite{energy_pumping_robotic_swinging, swingup_giant_acrobot,
 control_giant_two_link_gymnastic_robot}, including several studies which use
-virtual (holonomic) constraints to achieve this
+virtual (holonomic) constraints to achieve this behaviour
 \cite{dynamical_servo_acrobot_vc, control_giant_two_link_gymnastic_robot,
-xingbo_thesis}. However, these controllers are not intuitive nor easy to design:
+xingbo_thesis}. However, these controllers are neither intuitive nor easy to design:
 \cite{control_giant_two_link_gymnastic_robot} defines a constraint by inverting
 a trajectory in time onto the state space; \cite{dynamical_servo_acrobot_vc}
 requires a cascade controller to stabilize both a constraint and a desired limit
 cycle in the state space; and \cite{xingbo_thesis} enforces the giant by adding
-an extra state to estimate the velocity, which is a crude attempt at using
-VNHCs.
+an extra state to estimate the velocity, which increases the dimensionality of
+the problem as a crude approach to using VNHCs.
 
-In this chapter we will design a VNHC which can generate giant motion using much
-more intuitive methods. In the process of proving that this VNHC injects energy,
-we will also show a promising method for generating desirable VNHCs in the
-future.
+In this chapter we will design a physically-intuitive VNHC which generates giant
+motion. We will prove that this VNHC injects energy into the acrobot;
+in the process of completing this proof,
+we will describe a promising method which may be used to generate desirable 
+VNHCs in the future.
 
 \section{Dynamics of the Acrobot}
 % TODO: Derive the acrobot dynamics in Hamiltonian form
+For the acrobot model displayed in Figure \ref{fig:acrobot-model}, 
+the COM of each link lies somewhere along the link itself. 
+While this is the most general representation of an acrobot, the dynamics are
+somewhat complicated and are difficult to use when proving the results in the 
+rest of this chapter. For simplicity, we will
+assume the acrobot is comprised of two massless rods of equal length with 
+equal masses at the tips, as in Figure \ref{fig:simple-acrobot-model}; we call
+this a \textbf{simple} acrobot.
+
+\begin{figure}
+    \centering
+    \includestandalone[width=0.5\textwidth]{images/simple_acrobot_model}
+    \caption{A simple acrobot with lengths \(l\) and masses of size \(m\).}
+    \label{fig:simple-acrobot-model}
+\end{figure}
+
+
 \section{Previous Approaches}
 % TODO: Give Xingbo's intuition, abstract away to qa = sin(theta) constraint
 % based on VLP but show it doesn't work well in our framework
