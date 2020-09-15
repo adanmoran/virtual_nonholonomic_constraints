@@ -7,18 +7,18 @@
 
 \begin{document}
 \begin{tikzpicture}
-    % Define coordinates
-    \coordinate (origin) at (0,0);
     % Define our lengths, etc
     \pgfmathsetmacro{\len}{3};
-    \pgfmathsetmacro{\qu}{30};
-    \pgfmathsetmacro{\qa}{70};
+    \pgfmathsetmacro{\qu}{60};
+    \pgfmathsetmacro{\qa}{160};
     \pgfmathsetmacro{\quc}{\len*cos(\qu)};
     \pgfmathsetmacro{\qus}{\len*sin(\qu)};
     \pgfmathsetmacro{\qac}{\len*cos(\qa)};
     \pgfmathsetmacro{\qas}{\len*sin(\qa)};
+    % Define coordinate for the origin
+    \coordinate (origin) at (0,0);
     % The base of the pivot
-    \draw[thick] (-2,0) coordinate (leftwall) -- (1+\len,0) coordinate (rightwall);
+    \draw[thick] (-2,0) coordinate (leftwall) -- (2+\len,0) coordinate (rightwall);
     \fill[black] (origin) circle (0.05);
     % Fill a cross-hatched wall above the pivot
     \fill[pattern=north east lines] (leftwall) rectangle ($(rightwall) + (0,0.1)$);
@@ -33,8 +33,15 @@
         ($(origin) + (\quc,-\qus)$) coordinate (m1);
     \fill[black] (m1) circle (0.05);
     % The first center of mass somewhere along that rod
-    \node[rotate=-\qu] (comone) at ($0.7*(m1)$) {$\centerofmass$};
-    % TODO: The arrow showing l_1 and l_c1
+    \coordinate (comone) at ($0.7*(m1)$);
+    \fill[black] (comone) circle (0.01); % Add this just in case COM fails
+    \node[rotate=-\qu] at (comone) {\centerofmass};
+    \node[left] at ($(comone)+(0,-\len*0.05)$) {$m_1$};
+    % The arrow showing l_1 and l_c1
+    \draw[draw = black, ->|] (origin)++(\len*0.075,0) -- ($0.65*(m1)+(\len*0.075,0)$)
+        node[fill=white,midway,above,sloped,inner sep=1pt] {$l_{c_1}$};
+    \draw[draw=black, ->|] (origin)++(\len*0.25,0) -- ($0.9*(m1)+(\len*0.25,0)$)
+        node[fill=white,midway,sloped,inner sep=0pt] {$l_1$};
     % The angle q_u
     \pic [draw, ->, "$q_u$", angle eccentricity=1.5] {angle=vert--origin--m1};
 
@@ -45,13 +52,23 @@
     % The second link
     \draw[draw=black, ultra thick] (m1) -- 
         ($(m1) + (-\qac,-\qas)$) coordinate (m2);
-    \draw[draw=black, thick] ($(m2) + 0.2*(-\qas,\qac)$) -- 
-        ($(m2) + 0.2*(\qas,-\qac)$);
+    \draw[draw=black, thick] ($(m2) + 0.1*(-\qas,\qac)$) -- 
+        ($(m2) + 0.1*(\qas,-\qac)$);
     % The second center of mass somewhere along the rod
-    \node[rotate=\qa] (comtwo) at ($(m1) + 0.5*(-\qac,-\qas)$) {$\centerofmass$};
-    % TODO: THe arrow showing l_2 and l_c2
+    \coordinate (comtwo) at ($(m1) + 0.5*(-\qac,-\qas)$);
+    \fill[black] (comtwo) circle (0.01); % Add this just in case COM fails
+    \node[rotate=\qa] at (comtwo) {\centerofmass};
+    \node[below] at ($(comtwo)+(0,-\len*0.05)$) {$m_2$};
+    % The arrow showing l_2 and l_c2
+    \draw[draw = black, |<->|] ($(m1)+(\len*0.05,\len*0.075)$) --
+        ($(comtwo)+(0.025,\len*0.09)$)
+        node[fill=white,pos=0.7,above,sloped,inner sep=1pt] {$l_{c_2}$};
+    \draw[draw=black, |<->|] ($(m1)+(\len*0.15,\len*0.3)$) --
+        ($(m2)+(\len*0.1,\len*0.32)$)
+        node[fill=white,midway,sloped,inner sep=0pt] {$l_2$};
+
     % The angle q_a
-    \pic [draw,<-, "$q_a$", angle eccentricity=1.5] {angle=m2--m1--gray};
+    \pic [draw,->, "$q_a$", angle eccentricity=1.5] {angle=gray--m1--m2};
 
 \end{tikzpicture}
 \end{document}

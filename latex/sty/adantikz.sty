@@ -1,6 +1,5 @@
 \usepackage{tikz}
 \usepackage{pgfplots}
-\usepackage{stix}
 \pgfplotsset{compat=1.13}
 \usetikzlibrary{
     decorations.pathreplacing,
@@ -27,7 +26,12 @@
 		},
 		postaction={decorate}}}
 
-% Set the center of mass symbol
+% Define the center of mass symbol
 \newcommand{\centerofmass}{
-  {\ooalign{$\circleurquadblack$\cr\rotatebox[origin=c]{180}{$\circleurquadblack$}}}
+    \tikz[radius=0.4em]{
+        \fill[] (0,0) -- ++(0.4em,0) arc[start angle=0,end angle=90] --
+            ++(0,-0.8em) arc[start angle=270,end angle=180];
+        \draw[thick] (0,0) circle;
+    }
 }
+% vim: set tw=80 ts=4 sw=4 sts=0 et ffs=unix :
