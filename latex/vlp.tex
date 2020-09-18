@@ -6,22 +6,22 @@
 The variable length pendulum (VLP) is a classical underactuated dynamical system
 which is often used to model the motion of a person on a swing
 \cite{pumping_swing_standing_squatting,how_to_pump_a_swing}.
-The VLP also represents the swinging of a crane, the (simplified) motion of a
-gymnast on a bar \cite{pendulum_length_giant_gymnastics}, and the
-tuned-mass-damper systems which stabilize skyscrapers
-\cite{vlp_tuned_mass_damper}.
+The VLP also represents the motion of the load at the end of a crane, 
+the (simplified) motion of a gymnast on a bar
+\cite{pendulum_length_giant_gymnastics}, and the tuned-mass-damper systems which
+stabilize skyscrapers \cite{vlp_tuned_mass_damper}.
 
 The motion of the VLP has been well studied (see for instance
 \cite{dynamics_periodic_vlp}), and many control mechanisms exist
 to stabilize trajectories of the system. While many of these controllers 
-are time-dependent, \cite{vlp_energy_shaping}
-offers a time-independent technique to inject energy into the system and
-stabilize desired energy level sets. The authors designed a controller through a
-technique called \textit{energy shaping}, and proved that their control
-mechanism would allow the VLP to achieve any desired energy level set.
-However, the energy injection mechanism is
-ad-hoc in the sense that it is not derived from natural behaviour. In
-this chapter we will design VNHCs to inject energy into the VLP in a
+are time-dependent, \citet{vlp_energy_shaping}
+offer a time-independent technique to inject energy into the system. 
+They designed a controller through a technique called \textit{energy
+shaping}, and proved that their control mechanism would allow the VLP to achieve
+any desired energy level set.
+However, the energy injection mechanism is ad-hoc in the sense that it is not
+derived from natural behaviour. 
+In this chapter we will design VNHCs to inject energy into the VLP in a
 time-independent way.
 The difference compared to \cite{vlp_energy_shaping} is that our 
 controller will maintain the structured motion of a human on a swing.
