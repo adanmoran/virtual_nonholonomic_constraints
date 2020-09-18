@@ -5,8 +5,8 @@
 \usepackage{adanstyle}
 
 %---------- Bibliography Style ----------%
-\usepackage[style=ieee,backend=biber]{biblatex}
-\addbibresource{bib.bib}
+\usepackage[numbers,sort&compress]{natbib}
+\bibliographystyle{IEEEtranN}
 
 %---------- Ut-Thesis Recommendations ----------%
 %% List only down to subsections in the table of contents;
@@ -149,7 +149,7 @@ TEST CITATIONS:
 %\newpage
 % This adds a line for the Bibliography in the Table of Contents.
 \addcontentsline{toc}{chapter}{Bibliography}
-\printbibliography
+\bibliography{bib}
 \end{document}
 %/========== /Main Document ==========/%
 
