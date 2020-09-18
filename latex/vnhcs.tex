@@ -371,37 +371,44 @@ are affected by the input forces.
 
 \section{Virtual Nonholonomic Constraints}
 % Motivation for VNHCs, they are an extension of VHCs, etc.
-Let us imagine a child on a swing, who wants to go as high as possible. The
-child will push off the ground and start swinging with small oscillations,
-then extend and retract their feet appropriately to gain energy. 
-If a roboticist were designing a machine to do this task, they might design a
-control mechanism which makes the legs track a trajectory over time. For
-example, they might tell the robot to extend and retract its legs every two
-seconds. In ideal situtations, this technique would work perfectly because the
-leg motion is synchronized with the swing to gain energy as fast as possible.
+Let us imagine a child on a swing who wants to reach the largest height
+possible. 
+To begin, the child pushes off the ground to imbue the swing with small oscillations.
+What allows them to increase the amplitude of these oscillations is the
+appropriate extension and retraction of their feet.
+If a roboticist were creating a machine to replicate this behaviour, they might
+design a robot whose legs extend and retract at specific time intervals. 
+At first glance, this technique should work perfectly because the leg motion
+would synchronize with the swinging frequency, thereby injecting energy as
+quickly as is physically possible.
 
-% TODO: Get some sources here. Show with research that trajectory control is
-% unsafe, and that path tracking is better.
-Most children have an adult pushing the swing to help them go higher, or perhaps
+Unfortunately, a deeper analysis reveals the flaw with this design.
+Most children are not counting out the time in their head; rather, they observe
+their current position and velocity and adjust their legs as required. 
+For example, many children have an adult pushing the swing, or perhaps
 they are swinging on a windy day. In either case, they adjust their leg
 motion accordingly when presented with these external disturbances, without
-keeping track of the time it takes to kick their legs. The
-standard control technique of tracking a function of time, known as
-\textit{trajectory tracking}, does not work as well as human motion 
-because the disturbance affecting the swing will desynchronize the leg motion
-and the swing, thereby stopping the energy-gaining effects. 
-As has been observed in the field of mobile robotics,
-a trajectory tracking controller which has lagged behind due to a disturbance
-will do whatever is required to ``catch up" to
-the trajectory. This can cause major safety issues, which is why mobile
-roboticists prefer to design controllers which drive a vehicle towards a path in
-space rather than a trajectory in time.
+keeping track of time. 
+Hence, the standard control technique of tracking a function of time (known as
+\textit{trajectory tracking}) does not truly replicate human behaviour.
+Even if the robot's legs perfectly track a specified trajectory, 
+an external disturbance will desynchronize the leg motion
+with the swing - thereby stopping the amplitude-increasing effects.
 
-This path tracking approach has been extended to biologically-inspired robotics
-in a method known as virtual holonomic constraints (VHCs).
-Instead of a robot's actuators tracking
-a trajectory over time, VHCs use the actuators to enforce a relation
-\(h(q) = 0\) of the configuration \cite{vhcs_for_el_systems}. 
+%As has been observed in the field of mobile robotics, a trajectory tracking
+%controller which has lagged behind due to a disturbance will do whatever is
+%required to ``catch up" to the trajectory. 
+%This can cause major safety issues, which is why many mobile roboticists prefer to
+%design controllers which drive a vehicle along a gemoetric path in space rather than a
+%trajectory in time.
+
+%This path tracking approach has been extended to biologically-inspired robotics
+%in a method known as \textit{virtual holonomic constraints} (VHCs).
+Rather than tracking a trajectory over time, a more human-like behaviour 
+is to force the robot's legs track a function of the swing's state. 
+One recent control method known as \textit{virtual holonomic constraints} (VHCs)
+uses the actuators to enforce a relation \(h(q) = 0\) of the configuration
+\cite{vhcs_for_el_systems}. 
 This method has provided incredible results in the development of 
 walking robots \cite{vhc_robotic_walking, vhc_stable_walking}, 
 vehicle motion \cite{vhc_bicycle, vhc_helicopter}, 
@@ -409,38 +416,36 @@ and has even been used to design a snake-like swimming robot
 \cite{vhc_snake}.
 
 The downside to VHCs is that they do not use the additional information imparted
-by the generalized velocities of a system.
+by the velocity of a system.
 For the child on a swing, whether they extend or retract their legs
-depends on their direction of motion. This inherently requires knowledge of
-their velocity, which precludes the usage of VHCs. 
-Many authors have attempted to extend the theory of VHCs to enforce relations 
+depends on their direction of motion. 
+This inherently requires knowledge of their current velocity, which precludes
+the usage of VHCs. 
+Many authors have attempted to extend the theory of VHCs to enforce relations
 \(h(q,\dot{q}) = 0\) of the full state to account for this drawback. 
-Since these relations use actuators to
-restrict both the configuration and generalized velocity, they are called
-virtual \textit{nonholonomic} constraints. This idea has been used for
-human-robot interaction
+Since these relations use actuators to restrict both the configuration and
+velocity of a system, they are called virtual \textit{nonholonomic} constraints.
+This idea has been used for human-robot interaction
 \cite{vnhc_human_robot_cooperation,psd_based_vnhc_redundant_manipulator,haptic_vnhc},
 error-reduction on time-delayed systems \cite{vnhc_time_delay_teleop},
 and has shown marked improvements to the field of bipedal locomotion 
 \cite{nhvc_dynamic_walking,
 hybrid_zero_dynamics_bipedal_nhvcs,output_nhvc_bipedal_control}.
-Most interestingly, the nonholonomic approach has been shown to be more robust
+Most interestingly, this nonholonomic approach is more robust
 than standard VHCs when applied to bipedal robotics \cite{nhvc_incline_walking}.
-This suggests that virtual nonholonomic constraints are more capable of
-stabilizing specific energy levels while rejecting disturbances, all while
-producing realistic biological motion. It is for this reason we choose to study
-nonholonomic constraints in this thesis.
+In particular, virtual nonholonomic constraints may be capable of injecting and
+dissipating energy from a system in a robust manner, all while producing
+realistic biological motion. This is what we aim to prove in this thesis.
 
 Unlike the theory of VHCs, there does not appear to be a standard definition of
 virtual nonholonomic constraints: 
-all the applications listed above use their own definition of a virtual
-nonholonomic constraint, which makes it difficult to compare and analyze their
-work. 
+all the applications listed above use their own definitions, which makes it
+difficult to compare and generalize their work. 
 
-This section will provide a new characterization of virtual nonholonomic
-constraints in the Hamiltonian framework. 
-The goal is to provide a consistent, rigorous foundation for
-designing constraints on a general class of systems.
+This section will provide a standard characterization of virtual nonholonomic
+constraints using Hamiltonian mechanics. 
+The goal is to provide a consistent, rigorous foundation for designing
+constraints on a general class of systems.
 
 % Perform the full development of VNHCs, including its stabilizing
 % controller.
@@ -457,18 +462,17 @@ designing constraints on a general class of systems.
 \end{defn}
 
 If we define the error term  \(e = h(q,p)\), stabilizing \(\Gamma\) is
-equivalent to solving for \(\tau(q,p)\) which drives \(e \rightarrow 0\) and
-\(\dot{e} \rightarrow 0\).
-Let us imagine that we have no further structure on the VNHC. 
-Then \(\dot{e} = dh_q \dot{q} + dh_p \dot{p}\), where \(\tau\) appears inside
-\(\dot{p}\). To solve for \(\tau\) explicitly, we must have that \(dh_p\) is
-invertible for all \((q,p)\).
+equivalent to solving for the controller \(\tau(q,p)\) which drives 
+\(e \rightarrow 0\) and \(\dot{e} \rightarrow 0\).
+Supposing there is no further structure on the VNHC, 
+then \(\dot{e} = dh_q \dot{q} + dh_p \dot{p}\). Since \(B(q) \tau\) appears inside
+\(\dot{p}\), solving for \(\tau\) explicitly requires 
+\(dh_p(q,p)B(q) \in \R^{k \times k}\) to be invertible for all \((q,p)\).
 %which is the same as requiring that \(h(q,p)\) is strictly monotonic in \(p\).
 
-This is a very restrictive condition, which many VNHCs will not satisfy. For
-this reason, it is preferable to have the torque \(\tau\) appear after two 
-derivatives of \(e\) so that there is more freedom in the types of constraints
-one can use.
+This condition severely restricts the types of constraints one can use. 
+It is preferable instead to have the torque \(\tau\) appear after two
+derivatives of \(e\) to allow for more freedom in choosing a constraint.
 Mathematically, if each \(\tau_i\) appears only after two derivatives, one says 
 that \(e\) is of \textit{relative degree} \(\{2,2,\ldots,2\}\). 
 We thus define a special type of VNHC which satisfies this
@@ -483,10 +487,10 @@ property.
 The authors of
 \cite{nhvc_dynamic_walking,hybrid_zero_dynamics_bipedal_nhvcs,nhvc_incline_walking}
 observed that a relation which uses only the unactuated conjugate of momentum
-\(p_u\) cannot have \(\tau\) appearing after only one derivative. Of course,
+cannot have \(\tau\) appearing after only one derivative. Of course,
 they performed their research in Lagrangian form; 
-for us to be able to use \(p_u\) in its Hamiltonian form, 
-we will continue with the following assumption for the rest of the chapter.
+for us to be able to use the Hamiltonian coordinate \(p_u\), 
+we must continue with the following assumption for the rest of the chapter.
 
 \begin{assm}\label{assm:H-is-simply-actuated}
     The mechanical system under consideration is a
@@ -522,8 +526,9 @@ we will continue with the following assumption for the rest of the chapter.
          \right)\simpleB} = k
     \]
     everywhere on the constraint manifold \(\Gamma\).
-    That is, a regular VNHC is a function with domain 
-    \(\mathcal{Q} \times \mathcal{P}_u\) which satisfies the rank condition.
+    That is, a regular VNHC is a function 
+    \(h : \mathcal{Q} \times \mathcal{P}_u \rightarrow \R^k\) which satisfies
+    the rank condition.
 \end{thm}
 \begin{proof}
     Let \(e = h(q,p) \in \R^k\). Then 
@@ -609,35 +614,37 @@ we will continue with the following assumption for the rest of the chapter.
        \left(\frac{1}{2}p\tpose d\Minv_{q_u}(q)(\Id{n-k}\otimes p) + 
        dV_{q_u}(q)\right)\partial_{p_u}\partial_{q}h^i
     \end{align*}
-    This means that the entire matrix is given by
-    \begin{align*}
+    This means that \(\diff{}{t}\left\{dh_q\right\}\) is given by
+    \begin{align}
         \diff{}{t}\left\{dh_q\right\} &= 
         \left(\Id{n} \otimes 
         \left(p\tpose \Minv(q)\right)\right)
-        \Hess_q\left\{h\right\}\tpose -{} \\
+        \Hess_q\left\{h\right\}\tpose -{} 
+        \nonumber \\
       & \left(\frac{1}{2}\Id{n} \otimes 
           \left(p\tpose d\Minv_{q_u}(q)(\Id{n-k}\otimes p)\right)
-        + \Id{n}\otimes dV_{q_u}(q)\right)\partial_{p_u}\partial_{q}h
-    \end{align*}
+        + \Id{n}\otimes dV_{q_u}(q)\right)\partial_{p_u}\partial_{q}h 
+    \end{align}
 % C_1(q,p)
     For the next segment, let \(1_j \in \R^n\) be the vector of all zeros,
     except for a single \(1\) at position \(j\). We define
     \(C_1 : \mathcal{Q} \times \mathcal{P} \rightarrow \R^{n\times n}\) by
-    \[
+    \begin{equation}
         C_1(q,p) := \sum\limits_{j=1}^n \pdiff{\Minv}{q_j}(q)\dot{q}_j 
         = \sum\limits_{j=1}^n \pdiff{\Minv}{q_j}(q)\left(1_j\tpose\Minv(q)p\right)
-    \]
+    \end{equation}
 % d/dt(dh_pu)
-    Moving on to \(\diff{}{t}\left\{dh_{p_u}\right\}\), a similar approach as
+    Moving on to \(\diff{}{t}\left\{dh_{p_u}\right\}\), a similar approach to
     \(\diff{}{t}\left\{dh_q\right\}\) yields the derivative in matrix form.
     It is given by:
-    \begin{align*}
+    \begin{align}
         \diff{}{t}\left\{dh_{p_u}\right\} &= 
         \left( \Id{n} \otimes \left(p\tpose \Minv(q)\right)\right) 
-        \partial_q\partial_{p_u}h -{} \\
+        \partial_q\partial_{p_u}h -{} 
+        \nonumber \\
       & \left(\frac{1}{2}\Id{n} \otimes \left(\pudmat\right) + 
       \Id{n} \otimes \nabla_{q_u}V(q)\right)\Hess_{p_u}\left\{h\right\}\tpose
-    \end{align*}
+    \end{align}
 % d/dt(1/2 * pudmat)
     For the next piece, observe that the \(i^\text{th}\) row of
     \(\frac{1}{2} \diff{}{t} \left\{ \pudmat \right\}\)
@@ -648,26 +655,27 @@ we will continue with the following assumption for the rest of the chapter.
         \frac{1}{2} p\tpose \left( \sum_{j=1}^n \ppdiff{\Minv}{q_{u_i}}{q_j}
         \dot{q}_j \right) p
     \end{align*}
-    Define \(C_2 : \mathcal{Q} \times \mathcal{P} \rightarrow \R^{n(n-k)\times n}\) 
+    Defining \(C_2 : \mathcal{Q} \times \mathcal{P} \rightarrow \R^{n(n-k)\times n}\) 
     by
-    \[
+    \begin{equation}
         C_2(q,p) := \begin{bmatrix}
             \sum_{j=1}^n \ppdiff{\Minv}{q_{u_1}}{q_j} (1_j\tpose \Minv(q)p) \\
             \vdots \\
             \sum_{j=1}^n \ppdiff{\Minv}{q_{u_{n-k}}}{q_j} (1_j\tpose \Minv(q)p) \\
         \end{bmatrix}
-    \]
-    In matrix form, this becomes:
-    \begin{align*}
-        & \frac{1}{2} \diff{}{t} \left\{ \pudmat \right\} ={} \\
+    \end{equation}
+    allows us to collapse the derivative into:
+    \begin{align}
+        & \frac{1}{2} \diff{}{t} \left\{ \pudmat \right\} ={} 
+        \nonumber \\
         & (\Id{n-k} \otimes p\tpose)\nabla_{q_u}\Minv(q)
         \left(-\frac{1}{2}\pudmat - \nabla_{q_u}V(q) + \simpleB \tau \right) +{}
-        \\
+        \nonumber \\
         & \frac{1}{2}\left(\Id{n-k}\otimes p\tpose\right) C_2(q,p) p
-    \end{align*}
+    \end{align}
 % d/dt(nabla_qu V)
     Finally, we compute the derivative of \(\nabla_{q_u}V(q)\):
-    \begin{align*}
+    \begin{equation}
         \diff{}{t}\left\{\nabla_{q_u}V(q)\right\} = 
         \begin{bmatrix}
             \sum_{j=1}^n \ppdiff{V}{q_{u_1}}{q_j}\dot{q}_j \\
@@ -675,22 +683,27 @@ we will continue with the following assumption for the rest of the chapter.
             \sum_{j=1}^n \ppdiff{V}{q_{u_{n-k}}}{q_j}\dot{q}_j
         \end{bmatrix} = \partial_{q_u} \partial_q V(q) \dot{q} 
         = \partial_{q_u} \partial_q V(q) \Minv(q)p
-    \end{align*}
+    \end{equation}
 % Full ddot(e)
     Putting this all together, we can find the explicit form for \(\ddot{e}\):
-    \begin{align*}
-        \ddot{e} &= \diff{}{t}\left\{dh_q\right\}\Minv(q)p + dh_q C_1(q,p)p -{}\\
+    \begin{align}
+        \ddot{e} &= \diff{}{t}\left\{dh_q\right\}\Minv(q)p + dh_q C_1(q,p)p -{}
+        \nonumber \\
      & \frac{1}{2}dh_q\Minv(q)(\pdmat) + 
-        dh_q\Minv(q)\nabla_qV(q) -{}\\
+        dh_q\Minv(q)\nabla_qV(q) -{} 
+        \nonumber \\
      & \diff{}{t}\left\{dh_{p_u}\right\}
-     \left(\frac{1}{2}\pudmat + \nabla_{q_u}V(q)\right) +{} \\
+     \left(\frac{1}{2}\pudmat + \nabla_{q_u}V(q)\right) +{} 
+     \nonumber \\
      & dh_{p_u}(\Id{n-k}\otimes p\tpose)\nabla_{q_u}\Minv(q)\left(
-     \frac{1}{2}\pudmat + \nabla_{q_u}V(q)\right) -{}\\
+     \frac{1}{2}\pudmat + \nabla_{q_u}V(q)\right) -{}
+     \nonumber \\
      & \frac{1}{2}dh_{p_u}(\Id{n-k}\otimes p\tpose)C_2(q,p)p - 
-     dh_{p_u} \partial_{q_u}\partial_q V(q)\Minv(q)p +{} \\
+     dh_{p_u} \partial_{q_u}\partial_q V(q)\Minv(q)p +{} 
+     \nonumber \\
      & \left(dh_q \Minv(q) - dh_{p_u}(\Id{n-k} \otimes
      p\tpose)\nabla_{q_u}\Minv(q) \right) \simpleB \tau
-    \end{align*}
+    \end{align}
 % End of Proof
     For shorthand, we'll write \(\ddot{e} = E(q,p) + H(q,p)\tau\) where \(E\)
     and \(H\) are defined appropriately.
@@ -752,11 +765,13 @@ dynamics is feasible.
     Then the closed-loop dynamics are given by
     \begin{equation}\label{eqn:qpu-dynamics}
         \left.\begin{aligned}
-            \dot{q}_u &= M(q)p \\
+                \dot{q}_u &= \begin{bmatrix}
+                    \Id{(n-k)} & \Zmat{(n-k) \times k}
+                \end{bmatrix}\Minv(q)p \\
             \dot{p}_u &= -\nabla_{q_u}V(q) \\
-            \end{aligned}\right|_{\begin{array}{c}
+            \end{aligned}{}\right|_{\begin{array}{c}
                 h(q,p_u) = 0 \\ 
-                pa = g(q_u,p_u) \\
+                p_a = g(q_u,p_u) \\
             \end{array}}
     \end{equation}
     where
