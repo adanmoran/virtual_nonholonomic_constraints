@@ -15,16 +15,14 @@ The motion of the VLP has been well studied (see for instance
 \cite{dynamics_periodic_vlp}), and many control mechanisms exist
 to stabilize trajectories of the system. While many of these controllers 
 are time-dependent, \citet{vlp_energy_shaping}
-offer a time-independent technique to inject energy into the system. 
-They designed a controller through a technique called \textit{energy
-shaping}, and proved that their control mechanism would allow the VLP to achieve
-any desired energy level set.
+offer a time-independent technique to inject energy into the VLP. 
+They designed a controller through a technique called \textit{energy shaping},
+and proved that their control mechanism stabilizes any desired energy level set.
 However, the energy injection mechanism is ad-hoc in the sense that it is not
 derived from natural behaviour. 
-In this chapter we will design VNHCs to inject energy into the VLP in a
-time-independent way.
-The difference compared to \cite{vlp_energy_shaping} is that our 
-controller will maintain the structured motion of a human on a swing.
+In this chapter we will design VNHCs to stabilize energy levels of the VLP in a
+time-independent manner, while maintaining the structured motion of a human on a
+swing.
 
 \section{Dynamics of the Variable Length Pendulum}
 % Derive the dynamics of the VLP in Hamiltonian form
