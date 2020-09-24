@@ -39,14 +39,14 @@ length \(\underline{l} \geq 0\) and some maximum length
 \begin{figure}
    \centering
    \includestandalone[width=0.5\textwidth]{images/vlp_model}
-   \caption{The representation of the variable length pendulum as a mass at the
-      tip of a massless rod.}\label{fig:vlp-model}
+   \caption{The variable length pendulum is a mass attached to the
+      tip of a massless rod which can change length.}\label{fig:vlp-model}
 \end{figure}
 
 Using this configuration, we will compute the Hamiltonian dynamics of the system.
 The cartesian position of the mass at the tip of the pendulum
-is given by \(x = (l\sin(q),l\cos(q))\), while its velocity is
-\(\dot{x} = (\dot{l}\sin(q) + l\cos{q}\dot{q}, \dot{l}\cos(q) - l\sin{q}\dot{q})\).
+is given by \(x = (l\sin(q),-l\cos(q))\), while its velocity is
+\(\dot{x} = (\dot{l}\sin(q) + l\cos{q}\dot{q}, -\dot{l}\cos(q) + l\sin{q}\dot{q})\).
 Computing the kinetic energy \(T\) yields
 \[
    T(\mathbf{q},\dot{\mathbf{q}}) = 
@@ -81,8 +81,8 @@ Performing the Legendre transform on \(\mathcal{L}\) and setting
 \(M(\mathbf{q}) := D(\mathbf{q})\), \(V(\mathbf{q}) := P(\mathbf{q})\),
 we find the Hamiltonian is equal to the total mechanical energy of the system:
 \[
-   \mathcal{H} = E = \frac{1}{2}\dot{\mathbf{p}}\tpose \Minv(\mathbf{q})
-   \dot{\mathbf{p}}+V(\mathbf{q})
+   \mathcal{H} = E = \frac{1}{2}\mathbf{p}\tpose \Minv(\mathbf{q})
+   \mathbf{p}+V(\mathbf{q})
 \]
 Taking the appropriate derivatives, the dynamics of the VLP in Hamiltonian form
 are described in (\ref{eqn:vlp-hamiltonian-with-pl}). 
@@ -138,13 +138,12 @@ the total mechanical energy of the system, which is given by
 
 \section{The VLP Constraint}
 % Go through the development of the constraint and prove it gains energy
-Since we wish to define a VNHC which injects energy into the VLP in a human-like
-manner,
-we return once again to the example of a person standing on a swing.
-As can be seen in Figure \ref{fig:child-vlp}, condensing the person 
-into a center of mass gives a VLP model of their motion, where
-the pendulum shrinks when the person stands and lengthens when they squat. This
-is equivalent to the VLP model from Figure \ref{fig:vlp-model}.
+To motivate why a VNHC could inject energy into the VLP in a human-like
+manner, we will examine the motion of a person standing on a swing.
+As can be seen in Figure \ref{fig:child-vlp}, their center of mass moves closer
+to the swing's pivot when they stand, and moves away from the pivot when they
+squat.
+This is equivalent to the VLP model from Figure \ref{fig:vlp-model}.
 \begin{figure}
    \centering
    \begin{subfigure}[t]{0.45\textwidth}
@@ -158,33 +157,32 @@ is equivalent to the VLP model from Figure \ref{fig:vlp-model}.
       \caption{When a person squats on a swing, their center of mass extends
       away from the pivot.}
    \end{subfigure}
-   \caption{The variable length pendulum representation of a person on a
-   standing swing.}\label{fig:child-vlp}
+   \caption{The VLP representation of a person on a standing swing.}
+   \label{fig:child-vlp}
 \end{figure}
 
 The action of regulating pendulum length to add energy to the VLP is known as
-``pumping". \citeauthor{pumping_swing_standing_squatting} asked whether
+``pumping". \citet{pumping_swing_standing_squatting} asked whether
 the pumping strategy performed by children is time-optimal, assuming the
-children could squat or stand instantaneously
-\cite{pumping_swing_standing_squatting}. Indeed, they discovered that 
-a child's pumping strategy will inject energy into the VLP as fast as is 
-physically possible. 
+children could squat or stand instantaneously. 
+Indeed, they discovered that children increase the height of their swing as fast
+as is physically possible.
 
-This pumping strategy is straightforward: the child stands up at the lowest point of
-their swing, and squats at the highest point. Looking at their VLP
-representation, the pendulum shortens at the bottom of the swing, and lengthens
-at the top. For an intuitive understanding, conservation of angular momentum
-indicates that shortening the pendulum at the bottom forces the mass to gain
-speed to compensate for the reduced length
-\cite{how_to_pump_a_swing}.
-Energy is not conserved in this process, and the pendulum gains kinetic energy
-which allows the pendulum to reach a higher point in its swing.
-Lengthening the pendulum when it reaches this point means gravity
+This optimal pumping strategy is straightforward:
+one stands at the lowest point of the swing, and squats at the highest point.
+Looking at the VLP representation, the pendulum shortens at the bottom of the
+swing, and lengthens at the top. 
+For an intuitive explanation, conservation of angular momentum indicates that
+shortening the pendulum at the bottom forces the mass to gain speed to
+compensate for the reduced length \cite{how_to_pump_a_swing}.
+Energy is not conserved in this process, so the pendulum gains kinetic energy
+and reaches a higher point at the peak of its swing.
+Lengthening the pendulum when it reaches this peak means gravity
 imparts a larger angular momentum to the mass by the time it reaches the bottom
-of its swing, which is converted into a higher velocity the next time the
+of its swing, which in turn is converted to a higher velocity when the
 pendulum is shortened.
 By alternating these processes, the pendulum experiences a net gain in
-rotational energy which is generated entirely by gravity.
+rotational energy on average.
 
 The time-optimal controller described by \cite{pumping_swing_standing_squatting}
 depends on a trajectory in time. We will convert this 
