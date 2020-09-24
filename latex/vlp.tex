@@ -139,11 +139,13 @@ the total mechanical energy of the system, which is given by
 \section{The VLP Constraint}
 % Go through the development of the constraint and prove it gains energy
 To motivate why a VNHC could inject energy into the VLP in a human-like
-manner, we will examine the motion of a person standing on a swing.
+manner, we will examine a person standing on a swing.
 As can be seen in Figure \ref{fig:child-vlp}, their center of mass moves closer
 to the swing's pivot when they stand, and moves away from the pivot when they
 squat.
-This is equivalent to the VLP model from Figure \ref{fig:vlp-model}.
+This is equivalent to the VLP model from Figure \ref{fig:vlp-model}, where
+standing and squatting correspond to shortening and lengthening the pendulum
+(respectively).
 \begin{figure}
    \centering
    \begin{subfigure}[t]{0.45\textwidth}
@@ -168,8 +170,8 @@ children could squat or stand instantaneously.
 Indeed, they discovered that children increase the height of their swing as fast
 as is physically possible.
 
-This optimal pumping strategy is straightforward:
-one stands at the lowest point of the swing, and squats at the highest point.
+A child's optimal pumping strategy is straightforward:
+they stand at the lowest point of the swing, and squat at the highest point.
 Looking at the VLP representation, the pendulum shortens at the bottom of the
 swing, and lengthens at the top. 
 For an intuitive explanation, conservation of angular momentum indicates that
@@ -181,32 +183,42 @@ Lengthening the pendulum when it reaches this peak means gravity
 imparts a larger angular momentum to the mass by the time it reaches the bottom
 of its swing, which in turn is converted to a higher velocity when the
 pendulum is shortened.
-By alternating these processes, the pendulum experiences a net gain in
-rotational energy on average.
+By alternating these processes, the pendulum experiences an average net gain in
+rotational energy.
 
-The time-optimal controller described by \cite{pumping_swing_standing_squatting}
-depends on a trajectory in time. We will convert this 
-into a time-independent controller derived from the time-optimal
-strategy. Notice that the optimal controller depends on knowing when the
-system is at the ``bottom" or ``top" of the swing. Since being at the ``bottom"
-is the same as saying the pendulum angle is \(q = 0\) and being at the ``top" is
-equivalent to the pendulum's momentum being \(p = 0\), the time-independent
-controller will necessarily use the full phase \((q,p)\). While VHCs cannot
-satisfy this requirement, our method of VNHCs is especially well suited to this
-problem.
+Notice that the child's pumping strategy requires knowledge of
+when the system is at the ``bottom" or ``top" of the swing. 
+Since being at the ``bottom" is equivalent to having angle \(q = 0\) and being
+at the ``top" is equivalent to having momentum \(p = 0\), a controller based on
+this strategy will necessarily use the full phase \((q,p)\). 
+This is why we will use VNHCs instead of VHCs.
 
-Figure \ref{fig:vlp-optimal-controller-qp-plane} shows the time-optimal strategy directly
-on the \((q,p)\)-plane.
-Since the VLP must stay the same length inside each quadrant and
-changes length only when it crosses one of the axes, we
-will use the angle \(\theta = \arctan_2(p,q)\) in the \((q,p)\)-plane to define
-the optimal controller \(l^\star(\theta)\) (\ref{eqn:vlp-optimal-controller}).
-Figure \ref{fig:vlp-optimal-controller} shows this time-optimal controller as a function of
-\(\theta\).
+The time-optimal controller from \cite{pumping_swing_standing_squatting} is (in
+our notation)
+\[
+   l_\text{opt}(q,p) := -\sign{qp}
+\]
+which is a piecewise-continuous controller that varies between \(\pm 1\). 
+This looks similar to a VNHC, but it is not smooth and makes the assumption that 
+\(l \in [-1,1]\). 
+Since we want our controller emulate realistic human motion, we need to derive a
+smooth controller where we allow \(l \in [\underbar{l},\overbar{l}]\); then, we
+will prove that it injects energy.
+
+Figure \ref{fig:vlp-optimal-controller-qp-plane} displays \(l_\text{opt}\) 
+directly on the \((q,p)\)-plane.
+Because the length remains constant inside each quadrant and changes only when it
+crosses one of the axes, one can use the angle \(\theta = \arctan_2(p,q)\) to
+redefine the time-optimal controller in a way which is easier to ``smooth out".
+Figure \ref{fig:vlp-optimal-controller} shows the time-optimal pumping strategy
+as a function \(l^\star(\theta)\) (\ref{eqn:vlp-optimal-controller}), where now
+the length varies between \([\underbar{l},\overbar{l}]\) rather than 
+\([-1,1]\). 
+
 \begin{equation}\label{eqn:vlp-optimal-controller}
    l^\star(\theta):= \begin{cases}
-      \underline{l} & \theta \in [-pi, -\frac{\pi}{2}[ \cup [0,\frac{\pi}{2}[ \\
       \overline{l} & \theta \in [-\frac{\pi}{2},0[ \cup [\frac{\pi}{2}, \pi[ \\
+      \underline{l} & \theta \in [-pi, -\frac{\pi}{2}[ \cup [0,\frac{\pi}{2}[ \\
    \end{cases}
 \end{equation}
 
@@ -214,34 +226,37 @@ Figure \ref{fig:vlp-optimal-controller} shows this time-optimal controller as a 
    \centering
    \begin{subfigure}[t]{0.45\textwidth}
       \includestandalone[width=\linewidth]{images/vlp_optimal_controller_qp_plane}
-      \caption{The time-optimal controller mapped to the \((q,p)\)-plane.}
+      \caption{The time-optimal controller \(l_\text{opt}\) mapped onto the \((q,p)\)-plane.}
       \label{fig:vlp-optimal-controller-qp-plane}
    \end{subfigure}
    \hfill
    \begin{subfigure}[t]{0.45\textwidth}
       \includestandalone[width=\linewidth]{images/vlp_optimal_controller}
-      \caption{The time-optimal controller converted to a VNHC-style 
-      function \(l^\star(\theta)\), where \(\theta := \arctan_2(p,q)\).}\label{fig:vlp-optimal-controller}
+      \caption{The time-optimal controller converted to the alternate
+         representation \(l^\star(\theta)\).}
+      \label{fig:vlp-optimal-controller}
    \end{subfigure}
    \caption{The time-optimal controller for a standing swing as derived by
       \cite{pumping_swing_standing_squatting}. The colour red
-      corresponds to standing and blue to squatting.}
+      corresponds to standing, blue to squatting, and 
+      \(\theta := \arctan_2(p,q)\) is the angle of the VLP phase in the
+      \((q,p)\)-plane.}
 \end{figure}
 
-To find a continuously differentiable function which approximates this controller,
-we can attach sinusoids at the transition points of
-\(l^\star(\theta)\) (see Figure \ref{fig:vlp-T-controller}). Let
-\(\Delta l := (\overline{l} - \underline{l})/2\) and 
+We now define a continuous function which
+approximates \(l^\star(\theta)\) by attaching sinusoids at the
+discontinuities (see Figure \ref{fig:vlp-T-controller}). 
+Let \(\Delta l := (\overline{l} - \underline{l})/2\) and 
 \(l_{\text{avg}} := (\overline{l} + \underline{l})/2\).
-Providing these newly attached sinusoids with a frequency \(\omega = \frac{pi}{T}\) 
-(where \(T \in ]0,\frac{\pi}{2}]\) is a control parameter), we have a new
-controller \(l_T(\theta)\):
+Providing these newly attached sinusoids with a frequency \(\omega = \frac{\pi}{T}\) 
+(where \(T \in \, ]0,\frac{\pi}{2}]\) is a control parameter), we get the
+twice-differentiable controller \(l_T(\theta)\) (\ref{eqn:vlp-T-controller}).
 \begin{equation}\label{eqn:vlp-T-controller}
    l_T(\theta) = \begin{cases}
-      \underline{l} & \theta \in \left[-\pi + \frac{T}{2}, -\frac{\pi}{2} - \frac{T}{2}\right] 
-      \cup \left[\frac{T}{2}, \frac{\pi}{2} - \frac{T}{2}\right] \\
       \overline{l} & \theta \in \left[-\frac{\pi}{2} + \frac{T}{2}, -\frac{T}{2}\right] 
       \cup \left[\frac{\pi}{2} + \frac{T}{2}, \pi - \frac{T}{2}\right] \\
+      \underline{l} & \theta \in \left[-\pi + \frac{T}{2}, -\frac{\pi}{2} - \frac{T}{2}\right] 
+      \cup \left[\frac{T}{2}, \frac{\pi}{2} - \frac{T}{2}\right] \\
       -\Delta l \sin(\omega(\theta + \pi)) + l_{\text{avg}} & \theta \in
       \left[-\pi,-\pi + \frac{T}{2}\right] \\
       -\Delta l \sin(\omega \theta) + l_\text{avg} & \theta \in [-\frac{T}{2},
@@ -259,39 +274,38 @@ controller \(l_T(\theta)\):
    \caption{The continuous VNHC-style VLP controller \(l_T(\theta)\).}\label{fig:vlp-T-controller}
 \end{figure}
 
-This controller approximates the optimal controller, since 
+This controller approximates the optimal controller because 
 \[
    \lim\limits_{T \rightarrow 0} l_T(\theta) = l^\star(\theta)
 \]
-Unfortunately, while \(l_T(\theta)\) is continuously differentiable, it is not
-twice continuously differentiable for most values of \(T\).
+Unfortunately, while \(l_T(\theta)\) is twice-differentiable, its second
+derivative is only piecewise continuous for most values of \(T\).
 If we wish to use it as a VNHC, we must ensure that either the generalized
-forces \(\tau\) acting on \(p_l\) can be discontinuous, or we must find a value
-of \(T\) where this controller is smooth.
-Thankfully, \(l_{\frac{\pi}{2}}(\theta)\) is smooth; it can be simplified into
-the expression (\ref{eqn:vlp-smoothed-controller}), and is plotted for
-demonstration in Figure \ref{fig:vlp-smoothed-controller}.
+forces \(\tau\) acting on \(p_l\) can be discontinuous (which is certainly
+achievable by humans), or we must find a value of \(T\) where this controller is
+smooth.
+Thankfully, \(l_{\frac{\pi}{2}}(\theta)\) is smooth as it can be simplified into
+the expression (\ref{eqn:vlp-smoothed-controller}). 
+It is plotted for demonstration in Figure \ref{fig:vlp-smoothed-controller}.
 \begin{equation}\label{eqn:vlp-smoothed-controller}
    l_\frac{\pi}{2}(\theta) = -\Delta l \sin(2\theta) + l_{\text{avg}}
 \end{equation}
 
 \begin{figure}
    \centering
-   \includestandalone[width=0.8\textwidth]{images/vlp_smoothed_controller}
+   \includestandalone[width=0.6\textwidth]{images/vlp_smoothed_controller}
    \caption{The smoothed VLP controller which corresponds to the VNHC \(l =
       l_\frac{\pi}{2}(\theta)\).}\label{fig:vlp-smoothed-controller}
 \end{figure}
 
-We therefore set our VNHC to be
+Because \(l_\frac{\pi}{2}(\theta)\) is smooth and it approximates
+\(l^\star(\theta)\), we set our VNHC to be
 \[
    h(q,p) = l - l_\frac{\pi}{2}\left(\theta(q,p)\right)
 \]
-
-This VNHC is not the same as the optimal controller
-(\ref{eqn:vlp-optimal-controller}), so we need to prove it will still gain
-energy. We will do so by showing the dynamics (\ref{eqn:vlp-hamiltonian}) of the
-VLP diverge from the origin, regardless of the initial condition of the system. 
-To do this, we will use the notion of an anti-Lyapunov function.
+We still need to prove this VNHC will inject energy into a VLP. 
+We will do so by showing the dynamics (\ref{eqn:vlp-hamiltonian}) 
+diverge from the origin via an ``anti-Lyapunov function".
 
 \begin{defn}\label{defn:anti-lyapunov}
    Let \(\dot{x} = f(x) \in R^n\) be an ODE with \(f(0) = 0\). 
@@ -301,22 +315,28 @@ To do this, we will use the notion of an anti-Lyapunov function.
    \]
    where the inequality is strict for almost every \(x \in \R^n\).
 \end{defn}
+\textbf{Manfredi: Does this notion already exist elsewhere? I couldn't find any
+sources on it, but it seems like it should've been done before.}
 
 By applying Lyapunov stability theory \cite{lyapunov},
 we see that an anti-Lyapunov function
 \(V\) is simply a Lyapunov function for the negative-time system 
-\(\dot{x} = -f(x)\). In other words, since \(V\) proves that the orbit \(x(-t)\) 
+\(\dot{x} = -f(x)\). In other words, \(V\) proves that the orbit \(x(-t)\) 
 of the system travelling backwards in time is asymptotically converging to the
-equilibrium, the system must be diverging from the equilibrium in forward time.
-If we can find such a function for the VLP's dynamics under our VNHC, the path
-generated by the VNHC in the \((q,p)\)-plane must be diverging from the origin
-so long as the initial condition is not an equilibrium.
-This in turn tells us the magnitude of the momentum \(p\) is increasing every
-time the path hits the \(p\)-axis, which means the VLP is, on average,
-increasing in energy.
+origin; hence, the system must be diverging from the origin in forward time.
 
-We will show that anti-Lyapunov function exists for our VNHC.
-In order to do so, we require the following lemma.
+From Theorem \ref{thm:zero-dynamics}, the dynamics on the constraint manifold of
+the VNHC are given by \((\dot{q},\dot{p})\) with 
+\(l = l_\frac{\pi}{2}(\theta)\).
+Supposing the initial condition is not an equilibrium, the existence of an
+anti-Lyapunov function would indicate that the curve traced out on the
+\((q,p)\)-plane is diverging from the origin.
+This implies that the momentum \(p\) is increasing in magnitude whenever the
+curve hits the \(p\)-axis, which in turn means the VLP is gaining energy on
+average.
+
+Proving the existence of an anti-Lyapunov function for the VLP
+requires the following lemma.
 
 \begin{lemma}\label{lemma:sign-of-cube}
    For any \(x,y \in \R\):
@@ -329,84 +349,89 @@ In order to do so, we require the following lemma.
    \[
       x^3 - y^3 =  (x-y)(x^2 + xy + y^2)
    \]
-   Since \( (x-y)^2 = x^2 - 2xy + y^2) \geq 0 \), 
+   The inequality \(x^2 + xy + y^2 \geq 0\) holds because
    \[
-      \frac{x^2 + y^2}{2} \geq xy
+      x^2 + xy + y^2 = \left(x  + \frac{y}{2}\right)^2 + \frac{3y^2}{4} \geq 0
    \]
-   which means \(x^2 + xy + y^2 \geq 0\), proving the lemma.
+   which proves the lemma.
 \end{proof}
 
 \begin{thm}\label{thm:vlp-energy-stabilization}
-   Take the VLP with Hamiltonian dyanmics (\ref{eqn:vlp-hamiltonian}) and define
-   \(\theta := \arctan_2(p,q)\). Suppose the initial condition is not one of the
-   equilibria: \((q(0),p(0)) \not \in \left\{(0,0), (\pm\pi,0)\right\}\).
+   Take the Hamiltonian VLP (\ref{eqn:vlp-hamiltonian}) with initial condition 
+   \((q_0,p_0) \not \in \left\{(0,0),(\pm\pi,0)\right\}\).
+   Define \(\theta := \arctan_2(p,q)\). 
    A VNHC of the form \(h(q,p) = l - l(\theta)\) injects energy if there exists 
    \(l_\text{avg} \in [\underline{l},\overline{l}]\) such that 
    \begin{equation}\label{eqn:vlp-energy-gain-condition}
       \left(l(\theta) - l_\text{avg}\right)sin(2\theta) \leq 0 \text{ }\forall \theta \in \mathbb{S}^1
    \end{equation}
    with the property that the inequality is strict for almost every \(\theta\).
-   Flipping the inequality of (\ref{eqn:vlp-energy-gain-condition}) leads to
-   energy dissipation.
+   If the inequality is flipped, the VNHC dissipates energy. 
 \end{thm}
 \begin{proof}
     Choose, as a candidate anti-Lyapunov function, the energy for the
-    average-length pendulum (with zero potential at the bottom of the swing)
+    average-length pendulum with zero-potential at the bottom of the swing:
     \[
        E_\text{avg}(q,p) := \frac{1}{2}\frac{p^2}{m l_\text{avg}^2} 
                     + m g l_\text{avg} (1-\cos(q))
     \]
-    which is positive definite at \((0,0)\) and has derivative 
+    This is positive definite at \((0,0)\) and has derivative 
     \[
       \dot{E}_\text{avg} = \frac{-g\sin(q)p \left(l(\theta)^3 - l_\text{avg}^3\right)}
                  {l_\text{avg}^2l(\theta)^2}
     \]
-    Observe that \(\sign{\sin(q)p} = \sign{\sin(2\theta)}\) and, 
-    by Lemma \ref{lemma:sign-of-cube},
+    The sign of \(\sin(q)p\) is dependent only on the quadrant in the
+    \((q,p)\)-plane, so it is equal to the sign of \(\sin(2\theta)\). 
+    Furthermore, by Lemma \ref{lemma:sign-of-cube}:
     \[ 
        \sign{l(\theta)^3 - l_\text{avg}^3} = \sign{ l(\theta) - l_\text{avg}}
     \]
-    Then the derivative of \(E_\text{avg}\) is almost always positive, since
+    Thus, the derivative of \(E_\text{avg}\) is almost always positive since
     \begin{align*}
        \label{eq:}
        \sign{\dot{E}_\text{avg}} &= \sign{-\sin(q)p \left(l(\theta)^3 - l_\text{avg}^3\right)} \\
                    &= -\sign{\sin(2\theta) \left(l(\theta) - l_\text{avg}\right)} \\
                    &\geq 0 \text{ (by assumption)}
     \end{align*}
-    Hence, \(E_\text{avg}\) is an anti-Lyapunov function.
+    Therefore \(E_\text{avg}\) is an anti-Lyapunov function.
     Since the initial condition is not an equilibrium,
     the orbit of the VNHC in the \((q,p)\) plane is diverging away from the
     origin and the VLP is gaining energy on average.
     Flipping the inequality of (\ref{eqn:vlp-energy-gain-condition}) 
-    means \(E_\text{avg}\) is a regular Lyapunov function, since its derivative
-    will be negative almost everywhere.
-\end{proof}
+    means \(E_\text{avg}\) is a regular Lyapunov function, so the VLP is
+    losing energy while converging to \((0,0)\).
+ \end{proof}
 
 \begin{cor}
+   Recall that
+   \[
+      l_\frac{\pi}{2}(\theta) = -\Delta l \sin(2\theta) + l_\text{avg}
+   \]
+   and define 
+   \[
+      l^{-}_\frac{\pi}{2}(\theta) := \Delta l \sin(2\theta) + l_\text{avg}
+   \]
    The VNHC \(l = l_\frac{\pi}{2}(\theta)\) injects energy into the VLP
    over time, since 
    \[
       \left(l_\frac{\pi}{2}(\theta) - l_\text{avg}\right)\sin(2\theta) = 
-   -\Delta l \sin^2(2\theta) \geq 0
-   \] 
-   Likewise, let 
-   \(l\inv_\frac{\pi}{2}(\theta) := l_\text{avg} - \Delta l \sin(2\theta)\).
-    The VNHC \(h(q,p) = l - l\inv_\frac{\pi}{2}(\theta)\) which flips 
-    \(l_\frac{\pi}{2}(\theta)\) about \(l_\text{avg}\) will dissipate energy from
-   the VLP, since 
-   \[
-      \left(l\inv_\frac{\pi}{2}(\theta) - l_\text{avg}\right)\sin(2\theta) = 
       -\Delta l \sin^2(2\theta) \leq 0
+   \] 
+   The VNHC \(l = l^{-}_\frac{\pi}{2}(\theta)\) dissipates energy
+   from the VLP, since 
+   \[
+      \left(l^{-}_\frac{\pi}{2}(\theta) - l_\text{avg}\right)\sin(2\theta) = 
+      \Delta l \sin^2(2\theta) \geq 0
    \] 
 \end{cor}
 
-The types of VNHCs which satisfy Theorem \ref{thm:vlp-energy-stabilization} are illustrated by Figure
-\ref{fig:vlp-energy-in-out}. To stabilize specific energy level sets, one simple
-approach is to switch between injection and dissipation VNHCs depending on the
-current energy level.
-For the VNHCs we designed in this section, this means toggling
-between \(l_\frac{\pi}{2}(\theta)\) and \(l\inv_\frac{\pi}{2}(\theta)\),
-possibly with some hysteresis to avoid infinite switching.  
+The types of VNHCs which satisfy Theorem \ref{thm:vlp-energy-stabilization} are
+illustrated by Figure \ref{fig:vlp-energy-in-out}. 
+To stabilize specific energy level sets, a basic approach is to switch
+between injection and dissipation VNHCs depending on the current energy level.
+For the VNHCs we designed in this chapter, this means toggling
+between \(l_\frac{\pi}{2}(\theta)\) and \(l^{-}_\frac{\pi}{2}(\theta)\),
+with some hysteresis to avoid infinite switching.  
 
 \begin{figure}
    \centering
@@ -423,21 +448,21 @@ injecting energy: it maximizes the derivative of \(E_\text{avg}\) under the
 restriction \(l(\theta) \in [\underline{l},\overline{l}]\), so that the orbit in the
 \((q,p)\)-plane diverges from the origin as fast as possible. 
 
-Let us define \((l^\star)\inv(\theta)\) by swapping the order of 
+Let us define \((l^\star)^{-}(\theta)\) by swapping the order of 
 \(\underline{l}\) and \(\overline{l}\) in \(l^\star(\theta)\). Since this 
 \textit{minimizes} the derivative of \(E_\text{avg}\) under the restriction
 \(l(\theta) \in [\underline{l},\overline{l}]\), we can predict that 
-\((l^\star)\inv(\theta)\) is the VNHC representation of an optimal 
+\((l^\star)^{-}(\theta)\) is the VNHC representation of an optimal 
 energy dissipation controller.
 This is, in fact, true: \cite{pumping_swing_standing_squatting} showed 
 that squatting at the lowest point of a swing and standing at the highest
 point (instead of standing and squatting resp.) produces the
-time-optimal trajectory for stopping a standing swing. 
+time-optimal trajectory for \textit{stopping} a standing swing. 
 
-All together, these results show that VNHCs can replicate the time-optimal
-strategy performed by humans in a time-independent manner. Furthermore, we see
-that VNHCs are a powerful tool for creating simple energy stabilization
-techniques based on natural human motion.
+All together, these theory in this chapter shows that VNHCs can replicate the
+time-optimal pumping strategy performed by humans. 
+Furthermore, we see that VNHCs are a powerful tool for creating simple energy
+stabilization techniques based on natural human motion.
 
 \section{Simulation Results}
 % TODO: Show the simulations of the VLP VNHCs (multiple of them). How does the
