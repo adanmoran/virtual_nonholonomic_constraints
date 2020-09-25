@@ -26,20 +26,20 @@
 
 %% Define theorem styles
 % Optional: put [thm] between }{ to have everything depend on section number
-\newtheorem{thm}{Theorem}%[section] % Uncomment: reset numbering at each scn
-\newtheorem{prop}{Proposition}
-\newtheorem{lemma}{Lemma}
+\newtheorem{thm}{Theorem}[chapter] % Uncomment: reset numbering at each chapter
+\newtheorem{prop}[thm]{Proposition} % Propositions depend on Theorem number
+\newtheorem{lemma}[thm]{Lemma} % Same with lemmas
 \newtheorem*{cor}{Corollary}
 
 \theoremstyle{remark}
-\newtheorem{remark}{Remark}
-\newtheorem{notation}{Notation}
+\newtheorem*{remark}{Remark}
+\newtheorem*{notation}{Notation}
 
 \theoremstyle{definition}
-\newtheorem{defn}{Definition}
-\newtheorem{problem}{Problem}
+\newtheorem{defn}[thm]{Definition} % Definitions depend on theorem number
+\newtheorem*{problem}{Problem}
 \newtheorem{example}{Example}
-\newtheorem{assm}{Assumption}
+\newtheorem{assm}{Assumption} % Assumptions do not reset 
 
 %---------- Custom Math ----------%
 \DeclarePairedDelimiter{\norm}{\lVert}{\rVert}
