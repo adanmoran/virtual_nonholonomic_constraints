@@ -46,7 +46,7 @@ length \(\underline{l} \geq 0\) and some maximum length
 Using this configuration, we will compute the Hamiltonian dynamics of the system.
 The cartesian position of the mass at the tip of the pendulum
 is given by \(x = (l\sin(q),-l\cos(q))\), while its velocity is
-\(\dot{x} = (\dot{l}\sin(q) + l\cos{q}\dot{q}, -\dot{l}\cos(q) + l\sin{q}\dot{q})\).
+\(\dot{x} = (\dot{l}\sin(q) + l\cos(q)\dot{q}, -\dot{l}\cos(q) + l\sin(q)\dot{q})\).
 Computing the kinetic energy \(T\) yields
 \[
    T(\mathbf{q},\dot{\mathbf{q}}) = 
@@ -104,8 +104,9 @@ The control input is a force \(\tau \in \mathbb{R}\) affecting the dynamics of
 We assume the force does not affect the dynamics of \(p\) in any way -
 that is, the control input cannot enact any lateral force on the pendulum.
 This is extremely useful for simplifying the dynamics: since one can choose
-\(\tau\) which sets \(\dot{p}_l\) to any desired function, we can assume (with abuse
-of notation) that \(l\) is tracking some known function \(l(t)\). 
+\(\tau\) which sets \(\dot{p}_l\) to any desired function and \(\dot{l}\)
+depends only on \(p_l\), we can assume (with abuse of notation) that \(l\) is
+tracking some known function \(l(t)\). 
 The closed loop dynamics of the system will be described exclusively by
 \((\dot{q},\dot{p})\) with \(l \equiv l(t)\).
 The fact that \(p_l\) does not appear in these closed-loop dynamics allows us to
@@ -170,7 +171,7 @@ children could squat or stand instantaneously.
 Indeed, they discovered that children increase the height of their swing as fast
 as is physically possible.
 
-A child's optimal pumping strategy is straightforward:
+A child's optimal pumping strategy is the following: 
 they stand at the lowest point of the swing, and squat at the highest point.
 Looking at the VLP representation, the pendulum shortens at the bottom of the
 swing, and lengthens at the top. 
@@ -250,7 +251,7 @@ Let \(\Delta l := (\overline{l} - \underline{l})/2\) and
 \(l_{\text{avg}} := (\overline{l} + \underline{l})/2\).
 Providing these newly attached sinusoids with a frequency \(\omega = \frac{\pi}{T}\) 
 (where \(T \in \, ]0,\frac{\pi}{2}]\) is a control parameter), we get the
-twice-differentiable controller \(l_T(\theta)\) (\ref{eqn:vlp-T-controller}).
+continuously-differentiable controller \(l_T(\theta)\) (\ref{eqn:vlp-T-controller}).
 \begin{equation}\label{eqn:vlp-T-controller}
    l_T(\theta) = \begin{cases}
       \overline{l} & \theta \in \left[-\frac{\pi}{2} + \frac{T}{2}, -\frac{T}{2}\right] 
@@ -278,18 +279,18 @@ This controller approximates the optimal controller because
 \[
    \lim\limits_{T \rightarrow 0} l_T(\theta) = l^\star(\theta)
 \]
-Unfortunately, while \(l_T(\theta)\) is twice-differentiable, its second
-derivative is only piecewise continuous for most values of \(T\).
+Unfortunately, while \(l_T(\theta)\) is continuously-differentiable, 
+it is not twice-differentiable for most values of \(T\).
 If we wish to use it as a VNHC, we must ensure that either the generalized
 forces \(\tau\) acting on \(p_l\) can be discontinuous (which is certainly
 achievable by humans), or we must find a value of \(T\) where this controller is
 smooth.
 Thankfully, \(l_{\frac{\pi}{2}}(\theta)\) is smooth as it can be simplified into
 the expression (\ref{eqn:vlp-smoothed-controller}). 
-It is plotted for demonstration in Figure \ref{fig:vlp-smoothed-controller}.
 \begin{equation}\label{eqn:vlp-smoothed-controller}
    l_\frac{\pi}{2}(\theta) = -\Delta l \sin(2\theta) + l_{\text{avg}}
 \end{equation}
+It is plotted for demonstration in Figure \ref{fig:vlp-smoothed-controller}.
 
 \begin{figure}
    \centering
@@ -305,7 +306,7 @@ Because \(l_\frac{\pi}{2}(\theta)\) is smooth and it approximates
 \]
 We still need to prove this VNHC will inject energy into a VLP. 
 We will do so by showing the dynamics (\ref{eqn:vlp-hamiltonian}) 
-diverge from the origin via an ``anti-Lyapunov function".
+diverge from the origin via a so-called anti-Lyapunov function.
 
 \begin{defn}\label{defn:anti-lyapunov}
    Let \(\dot{x} = f(x) \in R^n\) be an ODE with \(f(0) = 0\). 
@@ -357,7 +358,7 @@ requires the following lemma.
 \end{proof}
 
 \begin{thm}\label{thm:vlp-energy-stabilization}
-   Take the Hamiltonian VLP (\ref{eqn:vlp-hamiltonian}) with initial condition 
+   Take the VLP (\ref{eqn:vlp-hamiltonian}) with initial condition 
    \((q_0,p_0) \not \in \left\{(0,0),(\pm\pi,0)\right\}\).
    Define \(\theta := \arctan_2(p,q)\). 
    A VNHC of the form \(h(q,p) = l - l(\theta)\) injects energy if there exists 
@@ -459,8 +460,8 @@ that squatting at the lowest point of a swing and standing at the highest
 point (instead of standing and squatting resp.) produces the
 time-optimal trajectory for \textit{stopping} a standing swing. 
 
-All together, these theory in this chapter shows that VNHCs can replicate the
-time-optimal pumping strategy performed by humans. 
+All together, the theory developed in this chapter shows that VNHCs can
+replicate the time-optimal pumping strategy performed by humans. 
 Furthermore, we see that VNHCs are a powerful tool for creating simple energy
 stabilization techniques based on natural human motion.
 

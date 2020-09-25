@@ -42,10 +42,10 @@ independent generalized coordinates with no equations of constraint.
        \((x_0,y_0,\theta)\), which represent the position of the 
        center of the bar and the angle of the barbell in the \(xy\)-plane.}
    \end{subfigure}
-   \caption{A mechanical system with \(N = 2\) points at \((x_1,y_1,z_1)\)
-   and \((x_2,y_2,z_2)\) separated by a bar with \(r = 3\) EOC given by 
-   \(c = \norm{x_1 - x_2}\), \(z_1 = 0\), and \(z_2 = 0\). This system has \(n =
-   3\) degrees of freedom.}
+   \caption{A mechanical system with \(N = 2\) point masses at \(a = (x_1,y_1,z_1)\)
+       and \(b = (x_2,y_2,z_2)\), separated by a bar of length \(c\). 
+       There are \(r = 3\) EOC given by \(\norm{a - b} = c\), \(z_1 = 0\),
+       and \(z_2 = 0\). This system has \(n = 3\) degrees of freedom.}
    \label{fig:barbell}
 \end{figure}
 
@@ -527,9 +527,6 @@ we must continue with the following assumption for the rest of the chapter.
          \right)\simpleB} = k
     \]
     everywhere on the constraint manifold \(\Gamma\).
-    That is, a regular VNHC is a function 
-    \(h : \mathcal{Q} \times \mathcal{P}_u \rightarrow \R^k\) which satisfies
-    the rank condition.
 \end{thm}
 \begin{proof}
     Let \(e = h(q,p) \in \R^k\). Then 
@@ -848,7 +845,7 @@ systems with only one unactuated coordinate.
     Let \(h(q,p_u) = 0\) be a regular VNHC of order \((n-1)\) of the form
     \(h(q,p_u) = q_a - f(q_u,p_u)\)
     where \(f\) is a suitably-defined smooth function.
-    Then \(dh_q = \begin{bmatrix} -\partial f_{q_u} & \Id{(n-1)}
+    Then \(dh_q = \begin{bmatrix} -\partial_{q_u}f & \Id{(n-1)}
     \end{bmatrix}\).
     Defining \(e_1 := (1,0,\ldots,0) \in \R^n\), the actuated momentum is given
     by (\ref{eqn:g-qupu}):
