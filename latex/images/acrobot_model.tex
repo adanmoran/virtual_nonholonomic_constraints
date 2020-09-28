@@ -36,12 +36,12 @@
     \coordinate (comone) at ($0.7*(m1)$);
     \fill[black] (comone) circle (0.01); % Add this just in case COM fails
     \node[rotate=-\qu] at (comone) {\centerofmass};
-    \node[left] at ($(comone)+(0,-\len*0.05)$) {$m_1$};
+    \node[left] at ($(comone)+(0,-\len*0.05)$) {$m_u$};
     % The arrow showing l_1 and l_c1
     \draw[draw = black, ->|] (origin)++(\len*0.075,0) -- ($0.65*(m1)+(\len*0.075,0)$)
-        node[fill=white,midway,above,sloped,inner sep=1pt] {$l_{c_1}$};
+        node[fill=white,midway,above,sloped,inner sep=1pt] {$l_{c_u}$};
     \draw[draw=black, ->|] (origin)++(\len*0.25,0) -- ($0.9*(m1)+(\len*0.25,0)$)
-        node[fill=white,midway,sloped,inner sep=0pt] {$l_1$};
+        node[fill=white,midway,sloped,inner sep=0pt] {$l_u$};
     % The angle q_u
     \pic [draw, ->, "$q_u$", angle eccentricity=1.5] {angle=vert--origin--m1};
 
@@ -58,14 +58,14 @@
     \coordinate (comtwo) at ($(m1) + 0.5*(-\qac,-\qas)$);
     \fill[black] (comtwo) circle (0.01); % Add this just in case COM fails
     \node[rotate=\qa] at (comtwo) {\centerofmass};
-    \node[below] at ($(comtwo)+(0,-\len*0.05)$) {$m_2$};
+    \node[below] at ($(comtwo)+(0,-\len*0.05)$) {$m_a$};
     % The arrow showing l_2 and l_c2
     \draw[draw = black, |<->|] ($(m1)+(\len*0.05,\len*0.075)$) --
         ($(comtwo)+(0.025,\len*0.09)$)
-        node[fill=white,pos=0.7,above,sloped,inner sep=1pt] {$l_{c_2}$};
+        node[fill=white,pos=0.7,above,sloped,inner sep=1pt] {$l_{c_a}$};
     \draw[draw=black, |<->|] ($(m1)+(\len*0.15,\len*0.3)$) --
         ($(m2)+(\len*0.1,\len*0.32)$)
-        node[fill=white,midway,sloped,inner sep=0pt] {$l_2$};
+        node[fill=white,midway,sloped,inner sep=0pt] {$l_a$};
 
     % The angle q_a
     \pic [draw,->, "$q_a$", angle eccentricity=1.5] {angle=gray--m1--m2};

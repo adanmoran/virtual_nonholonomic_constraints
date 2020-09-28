@@ -50,9 +50,12 @@
     \pic [draw,->, "$q_a$", angle eccentricity=1.5] {angle=gray--m1--m2};
 
     % The first center of mass
-    \node[draw,fill=red!80,circle,minimum size = 4mm,inner sep = 0pt] at (m1) {$m$};
+    % label uses {angle:label_name}
+    \node[draw=none, rotate=-\qu, inner sep = 0pt, label={[label distance=-2pt]-\qu:$m$}] at (m1) 
+    {\centerofmass};
     % The second center of mass
-    \node[draw,fill=red!80,circle,minimum size = 4mm,inner sep = 0pt] at (m2) {$m$};
+    \node[draw=none, rotate=\qa, inner sep=0pt, label={[label distance=-1pt]110:$m$}] at (m2)
+        {\centerofmass};
 
 \end{tikzpicture}
 \end{document}

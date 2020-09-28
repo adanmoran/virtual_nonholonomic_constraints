@@ -7,6 +7,13 @@
 
 \begin{document}
 \begin{tikzpicture}
+    % Set our length and angle
+    \pgfmathsetmacro{\len}{3};
+    \pgfmathsetmacro{\q}{70};
+    \pgfmathsetmacro{\qc}{\len*cos(\q)};
+    \pgfmathsetmacro{\qs}{\len*sin(\q)};
+    % Define a coordinate for the origin
+    \coordinate (origin) at (0,0);
     % The base of the pivot
     \draw[thick] (-2,0) -- (2,0);
     % Fill a cross-hatched wall above the pivot
@@ -14,12 +21,13 @@
     % The gravity arrow
     \draw[draw=gray, ->] (-1.5,-0.5) -- (-1.5,-1) node [right,black] {$g$};
     % The label for q and the arc defining it
-    \draw[draw=gray, dashed] (0,0) -- (0,-2.5) node [pos=0.5, right] {$q$};
-    \draw (0,-1) arc (-90:-25:0.3);
+    \draw[draw=gray, dashed] (origin) -- ++(0,-2.5) node [pos=0.5, right] {$q$};
+    \draw ($(origin)+(0,-1)$) arc (-90:-25:0.3);
     % The string connecting the mass to the pivot
-    \draw (0,0) -- (1,-3) node [midway,right] {$l$};
+    \draw (origin) -- (\qc,-\qs) node [midway,right] {$l$};
     % The mass itself
-    \node[draw,fill=red!80,circle,minimum size = 4mm,inner sep = 0pt] at (1,-3) {$m$};
+    % label={angle:label_name}
+    \node[draw=none,rotate=-\q, inner sep = 0pt, label={-20:$m$}] at (\qc,-\qs) {$\centerofmass$};
 \end{tikzpicture}
 \end{document}
 % vim: set tw=80 ts=4 sw=4 sts=0 et ffs=unix :
