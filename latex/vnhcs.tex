@@ -61,6 +61,7 @@ where the \textit{configuration manifold} \(\mathcal{Q}\) of the system is a
 so-called \textit{generalized cylinder}:
 \[
     \mathcal{Q} = \Rt{T_1} \times \cdot \times \Rt{T_n}
+    .
 \] 
 The derivative \(\dot{q} = (\dot{q}_1,\ldots,\dot{q}_n)\) of a configuration
 is called a \textit{generalized velocity} of the system. For arbitrary systems,
@@ -81,17 +82,19 @@ methods for modelling robotic systems are \textit{Lagrangian} and
 Lagrangian mechanics uses the kinetic energy \(T(q,\dot{q})\) and potential
 energy \(P(q)\) of the system to define the Lagrangian 
 \(\mathcal{L} : \mathcal{Q}\times\R^n \rightarrow \R\) defined by
-(\ref{eqn:lagrangian-general}) \cite{greenwood_dynamics}.
+(\ref{eqn:lagrangian-general}) \cite{greenwood_dynamics}:
 \begin{equation}\label{eqn:lagrangian-general}
     \mathcal{L}(q,\dot{q}) = T(q,\dot{q}) - P(q)
+    .
 \end{equation}
 When the mechanical system is actuated, the EOM are described by \(n\) second-order
 ordinary differential equations (ODEs) obtained from the \textit{Euler-Lagrange
 equations} (\ref{eqn:el-eqns-general}) with \textit{generalized input forces} 
-\(\tau \in \R^k\) . 
+\(\tau \in \R^k\)
 \begin{equation}\label{eqn:el-eqns-general}
     \diff{}{t}\left\{ \pdiff{\mathcal{L}}{\dot{q}_i} \right\}
     - \pdiff{\mathcal{L}}{q_i} = B_i\tpose(q) \tau
+    .
 \end{equation}
 The vector \(B_i\tpose: \mathcal{Q} \rightarrow \R^{1\times k}\) describes how
 the input forces shape the dynamics of \(q_i\).
@@ -102,6 +105,7 @@ The matrix  \(B: \mathcal{Q} \rightarrow \R^{n \times k}\) with
           & \vdots & \\
         - & B_n\tpose(q) & - \\
     \end{bmatrix}
+    ,
 \]
 is called the \textit{input matrix} for the system.
 If \(k < n\), we say the system is \textit{underactuated} with degree of
@@ -111,6 +115,7 @@ Many actuated mechanical systems have quadratic kinetic energies, so that the
 Lagrangian can be written explicitly as
 \begin{equation}\label{eqn:lagrangian}
     \mathcal{L}(q,\dot{q}) = \frac{1}{2} \dot{q}\tpose D(q) \dot{q} - P(q)
+    ,
 \end{equation}
 where the \textit{inertia matrix} \(D: \mathcal{Q} \rightarrow \R^{n\times n}\) 
 is a symmetric, positive definite matrix for all \(q \in \mathcal{Q}\) and the
@@ -135,6 +140,7 @@ Lagrangian mechanics into an equivalent set of \(2n\) first-order ODEs.
 To do this, we first define the \textit{conjugate of momentum \(p_i\) to \(q_i\)} by
 \begin{equation}\label{eqn:p-i}
     p_i(q,\dot{q}) := \pdiff{\mathcal{L}}{\dot{q}_i}(q,\dot{q})
+    .
 \end{equation}
 To ease notation, we write \(p = (p_1, \ldots, p_n) \in \R^n\) and call
 \(p\) the \textit{conjugate of momenta to \(q\)}.
@@ -145,16 +151,18 @@ The combined vector \((q,p) \in \mathcal{Q}\times\R^n\) is called a
 
 The \textit{Hamiltonian} of the system in
 \(\{q,p\}\) coordinates is the ``Legendre transform"
-(\ref{eqn:hamiltonian-legendre}) of the Lagrangian \cite{landau_mechanics}.
+(\ref{eqn:hamiltonian-legendre}) of the Lagrangian \cite{landau_mechanics},
 \begin{equation}\label{eqn:hamiltonian-legendre}
     \mathcal{H}(q,p) := p\tpose \dot{q}(q,p) - \mathcal{L}(q,\dot{q}(q,p))
+    .
 \end{equation}
 The EOM in the Hamiltonian framework are the \(2n\)
-first-order equations called \textit{Hamilton's equations}. They are given by:
+first-order equations called \textit{Hamilton's equations}. They are given by
 \begin{equation}\label{eqn:hamiltons-eqns}
     \begin{cases}
         \dot{q} = \nabla_p\mathcal{H} \\
-        \dot{p} = -\nabla_q\mathcal{H} + B(q)\tau \\
+        \dot{p} = -\nabla_q\mathcal{H} + B(q)\tau
+        .
     \end{cases}
 \end{equation}
 Here, \(B(q) \in \R^{n\times k}\) is the same input matrix used by the
@@ -164,27 +172,111 @@ input forces.
 If the kinetic energy of the system is quadratic as in (\ref{eqn:lagrangian}), 
 the conjugate of momenta becomes \(p = D(q)\dot{q}\). Since \(D(q)\) is symmetric
 and positive definite, it is invertible at each \(q \in \mathcal{Q}\).
-The resulting Hamiltonian system reduces to (\ref{eqn:hamiltonian}).
+The Legendre transform (\ref{eqn:hamiltonian-legendre}) can be explicitly
+written as
+\[
+    \mathcal{H}(q,p) = p\tpose D\inv(q)p - \frac{1}{2}p\tpose D\inv(q) p + V(q)
+    ,
+\]
+which reduces to (\ref{eqn:hamiltonian}). 
+Finding the derivative of each conjugate of momentum yields
+\[
+    \dot{p}_i = -\frac{1}{2} p\tpose \nabla_{q_i}D\inv(q) p 
+        - \pdiff{P}{q_i}(q) + B_i\tpose(q) \tau
+    ,
+\]
+which can be collected into the vector form (\ref{eqn:hamiltonian-full-dynamics}) 
+by using the matrix Kronecker product.
+In sum, the Hamiltonian system reduces to
 \begin{align}\label{eqn:hamiltonian}
-    \mathcal{H}(q,p) &= \frac{1}{2} p\tpose D^{-1}(q) p + P(q) \\
-                     &\begin{cases}
+    \mathcal{H}(q,p) &= \frac{1}{2} p\tpose D^{-1}(q) p + P(q)
+    , \\
+     &\begin{cases}
         \dot{q} = D\inv(q)p \\
         \dot{p} = -\frac{1}{2} (\Id{n} \otimes p\tpose) \nabla_q D\inv(q) p
-        - \nabla_q P(q) + B(q) \tau \\
-    \end{cases} 
+        - \nabla_q P(q) + B(q) \tau
+        . \\
+    \end{cases} \label{eqn:hamiltonian-full-dynamics}
 \end{align}
 
-Any set of coordinates \(\{q,p\}\) which satisfy Hamilton's equations 
+Any set of coordinates \((q,p)\) which satisfy Hamilton's equations 
 under the Hamiltonian \(\mathcal{H}\) are
 said to be \textit{canonical coordinates} for the system. A change of
 coordinates \((q,p) \rightarrow (Q,P)\) is a \textit{canonical
-transformation} if \(\{Q,P\}\) preserve the Hamiltonian structure; that is, if
+transformation} if \((Q,P)\) preserve the Hamiltonian structure; that is, if
 they are canonical coordinates under the Hamiltonian
 \(\mathcal{H}\left(q(Q,P), p(Q,P)\right)\).
 
-\section{Simply Actuated Hamiltonian Systems}
-\textbf{Manfredi: What term should we use instead of ``simply actuated"?}
+\citet{landau_mechanics} provides a useful result for showing whether a given
+change of coordinates \((q,p) \to (Q,P)\) is a canonical transformation.
+\begin{defn}
+    The \textit{Poisson bracket} between the functions \(f(q,p)\) and \(g(q,p)\)
+    is defined as
+    \begin{equation}\label{eqn:poisson-bracket}
+        [f,g] := \sum \limits_{i=1}^n \pdiff{f}{p_i}\pdiff{g}{q_i} - 
+            \pdiff{f}{q_i}\pdiff{g}{p_i}
+        .
+    \end{equation}
+\end{defn}
+\begin{thm}\label{thm:canonical-transformations}
+    A change of coordinates 
+    \((q,p) \to (Q,P)\) is a canonical transformation if
+    \begin{align*}
+        [Q_i, Q_j] &= 0
+        , \\
+        [P_i, P_j] &= 0
+        , \\
+        [P_i, Q_j] &= \delta_{i,j}
+        , 
+    \end{align*}
+    for all \(i,j \in \n\).
+\end{thm}
+\begin{proof}
+    See (45.10) in \cite{landau_mechanics}.
+\end{proof}
 
+Later in this chapter we will define a particular type of coordinate change.
+The following Lemma allows us to prove it is a canonical transformation.
+
+\begin{lemma}\label{lemma:linear-is-canonical}
+    Let \(\mathcal{H}\) be a Hamiltonian system in canonical coordinates
+    \((q,p)\).
+    Let \(A \in \R^{n\times n}\) be an invertible matrix such that
+    \(A\inv = A\tpose\).
+    The change of coordinates \((q,p) \to (Q = Aq, P = Ap)\) is a canonical
+    transformation.
+\end{lemma}
+\begin{proof}
+    For any constant matrix \(A\), the transformation
+    \((Q = Aq, P = Ap)\) satisfies
+    \(\pdiff{Q_i}{p_m} = \pdiff{P_i}{q_m} = 0\) for all 
+    \(i,m \in \n\).
+    Hence, 
+    \begin{align*}
+        [Q_i,Q_j] &:= \sum\limits_{m = 1}^n \pdiff{Q_i}{p_m}\pdiff{Q_j}{q_m} - 
+        \pdiff{Q_i}{q_m}\pdiff{Q_j}{p_m} = 0
+        , \\
+        [P_i,P_j] &:= \sum\limits_{m=1}^n \pdiff{P_i}{p_m}\pdiff{P_j}{q_m} -
+        \pdiff{P_i}{q_m}\pdiff{P_j}{p_m} = 0
+        .
+    \end{align*}
+    Note that \((A_i)\tpose (A\tpose)_j = (A_i)\tpose (A\inv)_j = \delta_{i,j}\). 
+    Using this fact we see that the Poisson brackets between \(P_i\) and \(Q_j\)
+    are given by
+    \begin{align*}
+        [P_i,Q_j] &= \sum\limits_{m=1}^n\pdiff{P_i}{p_m}\pdiff{Q_j}{q_m}
+        - \pdiff{P_i}{q_m}\pdiff{Q_j}{p_m} \\
+                  &= \sum\limits_{m=1}^n A_{i,m}A_{j,m} - 0 \\
+                  &= \sum\limits_{m=1}^n A_{i,m}A\tpose_{m,j} \\
+                  &= (A_i)\tpose A\tpose_j \\
+                  &= \delta_{i,j}
+        .
+    \end{align*}
+    Therefore, by Theorem \ref{thm:canonical-transformations}, the coordinate
+    change \((Q = Aq, P = Ap)\) is a canonical transformation.
+\end{proof}
+
+\section{Simply Actuated Hamiltonian Systems}
 % Describe the change of coordinates to get into q_u/q_a mode and show
 % that the actuator directly affects pa but not pu. Use M for simply actuated
 % inertia, D for normal coordinates
@@ -200,20 +292,22 @@ thesis.
 \begin{defn}
     Let \(\mathcal{H}\) be an \(n\)-DOF Hamiltonian system 
     with \(k \leq n\) actuators. 
-    A set of canonical coordinates \(\{q,p\}\) for this system
+    A set of canonical coordinates \((q,p)\) for this system
     are said to be \textit{simply actuated coordinates} if the
     input matrix \(B(q) \in \R^{n \times k}\) is of the form
     \[
         B(q) = \simpleB    
+        .
     \]
     The first \((n-k)\) coordinates, labelled \(q_u\), are called the
     \textit{unactuated coordinates}. The remaining \(k\) coordinates, labelled
     \(q_a\), are called the \textit{actuated coordinates}. When grouping them
     together, we will always put them in the order \((q_u, q_a)\) to fit with 
     the definition. 
-    The corresponding \((p_u, p_a)\) are called the unactuated and actuated
-    momenta, respectively.
+    The corresponding \((p_u, p_a)\) are called the \textit{unactuated} and 
+    \textit{actuated momenta}, respectively.
 \end{defn}
+% TODO: delete this next definition and rephrase the text accordingly
 \begin{defn}
     A Hamiltonian system is said to be \textit{simply actuated} if there exists
     a canonical transformation from any canonical coordinates 
@@ -236,9 +330,11 @@ Hamiltonian system (\ref{eqn:hamiltonian}) is simply actuated.
     That is, \(B^\perp B = \Zmat{(n-k) \times k}\).
 \end{assm}
 
-Note that if \(k = (n-1)\), the existence of any left annihilator 
+Assumption \ref{assm:B-perp} requires the rows of \(B^\perp\) to be unit vectors
+that are mutually orthogonal. 
+In the case that \(k = (n-1)\), the existence of any left annihilator 
 \(A^0 \in \R^{1\times n}\) implies the left annihilator 
-\(B^\perp := A^0/\norm{A^0}\) satisfies Assumption \ref{assm:B-perp}.
+\(B^\perp := A^0/\norm{A^0}\) will satisfy Assumption \ref{assm:B-perp}.
 
 \begin{assm}\label{assm:B-orthogonal}
     Assume \textbf{without loss of generality} that the input matrix \(B\) is
@@ -258,6 +354,7 @@ defined by
         0 & 0 & \cdots & \sigma_k \\
         - &   & \Zmat{(n-k)\times k} & -  \\
     \end{bmatrix}
+    ,
 \]
 where \(\sigma_i \neq 0\) because \(B\) is full-rank \cite{calculating_svd}.
 Defining \(T \in \R^{k \times k}\) by
@@ -268,10 +365,19 @@ Defining \(T \in \R^{k \times k}\) by
     \vdots & & \ddots & \vdots \\
     0 & 0 & \cdots & \frac{1}{\sigma_k} \\
     \end{bmatrix}
+    ,
 \]
-and assigning the input forces to \(\tau = V T \hat{\tau}\), we get a new input
-matrix for \(\hat{\tau} \in \R^k\) given by \(\hat{B} = B V T = U \Sigma T\) 
-which is still constant and full-rank. In particular, 
+and defining the regular feedback transformation\(\tau = V T \hat{\tau}\), 
+we get a new input matrix for \(\hat{\tau} \in \R^k\) given by 
+\[
+    \hat{B} = B V T = 
+    U \begin{bmatrix}
+        \Id{k} \\ \Zmat{(n-k)\times k}
+    \end{bmatrix}
+    ,
+\]
+which is still constant and full-rank. 
+In particular, 
 \(\hat{B}\tpose \hat{B} = T\tpose \Sigma\tpose \Sigma\tpose T = \Id{k}\).
 \end{proof}
 
@@ -282,18 +388,22 @@ Let \(\mathbf{B} \in \R^{n\times n}\) be the following matrix:
         B^\perp \\
         B\tpose \\
     \end{bmatrix}
+    .
 \]
 Since \(B^\perp\) is a left annihilator of \(B\) and both \(B^\perp\) and
 \(B\tpose\) are right semi-orthogonal, it is easy to show that \(\mathbf{B}\) is
 orthogonal:
+\begin{proof}
 \[
     \mathbf{B}\mathbf{B}\tpose = 
     \begin{bmatrix}
         B^\perp (B^\perp)\tpose & B^\perp B \\
         (B^\perp B)\tpose & B\tpose B
     \end{bmatrix} = \Id{n}
+    .
 \]
 Hence, \(\mathbf{B}\) is invertible with \(\mathbf{B}\inv = \mathbf{B}\tpose\).
+\end{proof}
 
 The following theorem shows that \(\mathbf{B}\) provides a canonical
 transformation into simply actuated coordinates, so that only the actuated momenta
@@ -307,52 +417,28 @@ are affected by the input forces.
     given by (\ref{eqn:simple-hamiltonian}),
     \begin{align}\label{eqn:simple-hamiltonian}
         \mathcal{H}(Q,P) &= 
-        \frac{1}{2} P\tpose \Minv(Q) P + V(Q) \\
+        \frac{1}{2} P\tpose \Minv(Q) P + V(Q)
+        , \\
        &\begin{cases}
             \dot{Q} = \Minv(Q)P \\
             \dot{P} = -\frac{1}{2} (\Id{n} \otimes P\tpose) \nabla_Q \Minv(Q) P
                 - \nabla_Q V(Q) + \simpleB \tau
+            ,
         \end{cases} \nonumber
     \end{align}
     where
     \begin{align*}
-        \Minv(Q) &:= \mathbf{B}D^{-1}(\mathbf{B}\tpose Q)\mathbf{B}\tpose \\
-        V(Q) &:= P(\mathbf{B}\tpose Q) \\
+        \Minv(Q) &:= \mathbf{B}D^{-1}(\mathbf{B}\tpose Q)\mathbf{B}\tpose
+        , \\
+        V(Q) &:= P(\mathbf{B}\tpose Q)
+        .
     \end{align*}
 \end{thm}
 \vspace{-4.5em} % For some reason not having this puts a large space before proof
 \begin{proof}
-    The Poisson bracket between the functions \(f(q,p)\) and \(g(q,p)\) is defined by
-    \cite{landau_mechanics} as follows:
-    \[
-        [f,g] := \sum \limits_{i=1}^n \pdiff{f}{p_i}\pdiff{g}{q_i} - 
-                \pdiff{f}{q_i}\pdiff{g}{p_i}
-    \]
-    For any constant matrix \(A\), the transformation
-    \(\{Q = Aq, P = Ap\}\) satisfies
-    \(\pdiff{Q_i}{p_m} = \pdiff{P_i}{q_m} = 0\) for all 
-    \(i,m \in \n\).
-    Hence, for our new coordinates \(\{Q = \mathbf{B}q, P = \mathbf{B}p\}\),
-    \begin{align*}
-        [Q_i,Q_j] &:= \sum\limits_{m = 1}^n \pdiff{Q_i}{p_m}\pdiff{Q_j}{q_m} - 
-        \pdiff{Q_i}{q_m}\pdiff{Q_j}{p_m} = 0 \\
-        [P_i,P_j] &:= \sum\limits_{m=1}^n \pdiff{P_i}{p_m}\pdiff{P_j}{q_m} -
-        \pdiff{P_i}{q_m}\pdiff{P_j}{p_m} = 0
-    \end{align*}
-    Since the matrix \(\mathbf{B}\) is orthogonal,
-    \((\mathbf{B}_i)\tpose (\mathbf{B}\tpose)_j = (\mathbf{B}_i)\tpose (\mathbf{B}^{-1})_j = \delta_{i,j}\). Using this
-    fact we see that the Poisson brackets between \(P_i\) and \(Q_j\) are given by:
-    \begin{align*}
-        [P_i,Q_j] &= \sum\limits_{m=1}^n\pdiff{P_i}{p_m}\pdiff{Q_j}{q_m}
-        - \pdiff{P_i}{q_m}\pdiff{Q_j}{p_m} \\
-                  &= \sum\limits_{m=1}^n \mathbf{B}_{i,m}\mathbf{B}_{j,m} - 0 \\
-                  &= \sum\limits_{m=1}^n \mathbf{B}_{i,m}\mathbf{B}\tpose_{m,j} \\
-                  &= (\mathbf{B}_i)\tpose \mathbf{B}\tpose_j \\
-                  &= \delta_{i,j}
-    \end{align*}
-
-    Therefore, by (45.10) in \cite{landau_mechanics}, the coordinate change 
-    \((Q = \mathbf{B}q, P = \mathbf{B}p)\) is a canonical transformation.
+    The change of coordinates \((Q = \mathbf{B}q, P = \mathbf{B}p)\) is a
+    canonical transformation because it satisfies Lemma
+    \ref{lemma:linear-is-canonical}.
     Furthermore, since \(\dot{P} = \mathbf{B}\dot{p}\), the new input matrix is
     given by 
     \[
@@ -364,9 +450,10 @@ are affected by the input forces.
             \Zmat{(n-k)\times k} \\
             \Id{k}
         \end{bmatrix}
+        ,
     \]
-    so the coordinates \(\{Q = (q_u,q_a), P = (p_u,p_a)\}\) are simply actuated coordinates for 
-    \(\mathcal{H}\) as desired.
+    so \(\left(Q = (q_u,q_a), P = (p_u,p_a)\right)\) are simply actuated
+    coordinates for \(\mathcal{H}\) as desired.
 \end{proof}
 
 \section{Virtual Nonholonomic Constraints}
