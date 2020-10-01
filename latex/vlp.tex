@@ -394,20 +394,23 @@ average.
    For this, we will use a Krazovskii-LaSalle argument
    \cite{krazovskii_lasalle}.
    First, we define 
-   \(Z = \left{(q,p) \in \mathbb{S}^1\times \R \mid 
-      \dot{E}_\text{avg}(q,p) = 0 \right}\).
-   It is easy to show that \(Z\) is the union of the coordinate axes
    \[
-      Z= \mathbb{S}^1 \times \left{0\right} \cup 
-         \left{0} \times \R\right}
+      Z = \left\{(q,p) \in \mathbb{S}^1\times \R \mid 
+      \dot{E}_\text{avg}(q,p) = 0 \right\}
       .
    \]
-   Then, since \(f(q,p) = (0,0)\) only when \((q,p) = (0,0)\),
-   Krazovskii-LaSalle tells us that the origin is asymptotically stable on
-   \(D\) for the negative-time system.
-   Therefore, the orbit of the VNHC in the \((q,p)\) plane is
-   diverging away from the origin in positive time, which means
-   the VLP is gaining energy on average.
+   It is easy to show that \(Z\) is the union of the coordinate axes
+   \[
+      Z= \mathbb{S}^1 \times \left\{0\right\} \cup 
+         \left\{0\right\} \times \R
+      .
+   \]
+   Krazovskii-LaSalle tells us solutions to the negative-time ODE converge to
+   the largest invariant set in \(Z\).
+   Since \(f(q,p) = (0,0)\) only when \((q,p) = (0,0)\),
+   the origin is asymptotically stable on \(D\) for this negative-time system.
+   Therefore, the positive-time system is diverging away from the origin 
+   in the \((q,p)\) plane, which means the VLP is gaining energy on average.
    Flipping the inequality of (\ref{eqn:vlp-energy-gain-condition}) 
    means \(E_\text{avg}\) is a Lyapunov function for the positive time system,
    so by the same argument the VLP is losing energy while converging
