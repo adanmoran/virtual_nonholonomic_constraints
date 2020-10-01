@@ -305,39 +305,7 @@ Because \(l_\frac{\pi}{2}(\theta)\) is smooth and it approximates
    h(q,p) = l - l_\frac{\pi}{2}\left(\theta(q,p)\right)
 \]
 We still need to prove this VNHC will inject energy into a VLP. 
-We will do so by showing the dynamics (\ref{eqn:vlp-hamiltonian}) 
-diverge from the origin via a so-called anti-Lyapunov function.
-
-\begin{defn}\label{defn:anti-lyapunov}
-   Let \(\dot{x} = f(x) \in R^n\) be an ODE with \(f(0) = 0\). 
-   A positive definite function \(V(x)\) is \textbf{anti-Lyapunov} if 
-   \[
-      \dot{V}(x) = dV(x) f(x) \geq 0
-   \]
-   where the inequality is strict for almost every \(x \in \R^n\).
-\end{defn}
-\textbf{Manfredi: Does this notion already exist elsewhere? I couldn't find any
-sources on it, but it seems like it should've been done before.}
-
-By applying Lyapunov stability theory \cite{lyapunov},
-we see that an anti-Lyapunov function
-\(V\) is simply a Lyapunov function for the negative-time system 
-\(\dot{x} = -f(x)\). In other words, \(V\) proves that the orbit \(x(-t)\) 
-of the system travelling backwards in time is asymptotically converging to the
-origin; hence, the system must be diverging from the origin in forward time.
-
-From Theorem \ref{thm:zero-dynamics}, the dynamics on the constraint manifold of
-the VNHC are given by \((\dot{q},\dot{p})\) with 
-\(l = l_\frac{\pi}{2}(\theta)\).
-Supposing the initial condition is not an equilibrium, the existence of an
-anti-Lyapunov function would indicate that the curve traced out on the
-\((q,p)\)-plane is diverging from the origin.
-This implies that the momentum \(p\) is increasing in magnitude whenever the
-curve hits the \(p\)-axis, which in turn means the VLP is gaining energy on
-average.
-
-Proving the existence of an anti-Lyapunov function for the VLP
-requires the following lemma.
+Before we can do this, we require the following lemma.
 
 \begin{lemma}\label{lemma:sign-of-cube}
    For any \(x,y \in \R\):
@@ -357,6 +325,13 @@ requires the following lemma.
    which proves the lemma.
 \end{proof}
 
+Supposing the initial condition is not an equilibrium, we will show that the
+constrained dynamics trace out a curve on the \((q,p)\)-plane which is diverging
+from the origin.  
+This implies that the momentum \(p\) is increasing in magnitude whenever the
+curve hits the \(p\)-axis, which in turn means the VLP is gaining energy on
+average.
+
 \begin{thm}\label{thm:vlp-energy-stabilization}
    Take the VLP (\ref{eqn:vlp-hamiltonian}) with initial condition 
    \((q_0,p_0) \not \in \left\{(0,0),(\pm\pi,0)\right\}\).
@@ -366,41 +341,77 @@ requires the following lemma.
    \begin{equation}\label{eqn:vlp-energy-gain-condition}
       \left(l(\theta) - l_\text{avg}\right)sin(2\theta) \leq 0 \text{ }\forall \theta \in \mathbb{S}^1
    \end{equation}
-   with the property that the inequality is strict for almost every \(\theta\).
+   with the property that the inequality is strict except at the
+   coordinate axes.
    If the inequality is flipped, the VNHC dissipates energy. 
 \end{thm}
 \begin{proof}
-    Choose, as a candidate anti-Lyapunov function, the energy for the
-    average-length pendulum with zero-potential at the bottom of the swing:
-    \[
+   Let us examine the negative-time system
+   \begin{equation}\label{eqn:negative-time-vlp}
+      f(q,p) = 
+      \begin{bmatrix}
+         \dot{q} \\ \dot{p}
+      \end{bmatrix} = \begin{bmatrix}
+         -\frac{p}{ml(\theta)^2} \\
+         mgl(\theta)\sin(q)
+      \end{bmatrix}
+      ,
+   \end{equation}
+   with \(D = (\mathcal{Q}\times \mathcal{P}) \backslash \{(\pm \pi, 0)\}\)
+   the domain of interest on which we study this system.
+   Choose, as a candidate Lyapunov-like function, the energy for the
+   average-length pendulum with zero-potential at the bottom of the swing:
+   \[
        E_\text{avg}(q,p) := \frac{1}{2}\frac{p^2}{m l_\text{avg}^2} 
-                    + m g l_\text{avg} (1-\cos(q))
-    \]
-    This is positive definite at \((0,0)\) and has derivative 
-    \[
-      \dot{E}_\text{avg} = \frac{-g\sin(q)p \left(l(\theta)^3 - l_\text{avg}^3\right)}
-                 {l_\text{avg}^2l(\theta)^2}
-    \]
-    The sign of \(\sin(q)p\) is dependent only on the quadrant in the
-    \((q,p)\)-plane, so it is equal to the sign of \(\sin(2\theta)\). 
-    Furthermore, by Lemma \ref{lemma:sign-of-cube}:
-    \[ 
+           + m g l_\text{avg} (1-\cos(q))
+   \]
+   This is positive definite at \((0,0)\) and has compact sublevel
+   sets on \(D\). The derivative with respect to (\ref{eqn:negative-time-vlp})
+   is
+   \[
+      \dot{E}_\text{avg} = \frac{g\sin(q)p \left(l(\theta)^3 - l_\text{avg}^3\right)}
+              {l_\text{avg}^2l(\theta)^2}
+      .
+   \]
+   The sign of \(\sin(q)p\) is dependent only on the quadrant in the
+   \((q,p)\)-plane, so it is equal to the sign of \(\sin(2\theta)\). 
+   Furthermore, by Lemma \ref{lemma:sign-of-cube} we have
+   \[ 
        \sign{l(\theta)^3 - l_\text{avg}^3} = \sign{ l(\theta) - l_\text{avg}}
-    \]
-    Thus, the derivative of \(E_\text{avg}\) is almost always positive since
-    \begin{align*}
-       \label{eq:}
-       \sign{\dot{E}_\text{avg}} &= \sign{-\sin(q)p \left(l(\theta)^3 - l_\text{avg}^3\right)} \\
-                   &= -\sign{\sin(2\theta) \left(l(\theta) - l_\text{avg}\right)} \\
-                   &\geq 0 \text{ (by assumption)}
-    \end{align*}
-    Therefore \(E_\text{avg}\) is an anti-Lyapunov function.
-    Since the initial condition is not an equilibrium,
-    the orbit of the VNHC in the \((q,p)\) plane is diverging away from the
-    origin and the VLP is gaining energy on average.
-    Flipping the inequality of (\ref{eqn:vlp-energy-gain-condition}) 
-    means \(E_\text{avg}\) is a regular Lyapunov function, so the VLP is
-    losing energy while converging to \((0,0)\).
+       .
+   \]
+   The derivative of \(E_\text{avg}\) is nonnegative since
+   \begin{align*}
+    \sign{\dot{E}_\text{avg}} &= \sign{\sin(q)p \left(l(\theta)^3 - l_\text{avg}^3\right)} \\
+                &= \sign{\sin(2\theta) \left(l(\theta) - l_\text{avg}\right)} \\
+                &\leq 0 \text{ (by assumption)}
+      ,
+   \end{align*}
+   which means \(E_\text{avg}\) is a Lyapunov function.
+   Thus, the negative-time system is stable \cite{lyapunov}; all that remains is
+   to show that (\ref{eqn:negative-time-vlp}) asymptotically converges to
+   \((0,0)\). 
+   For this, we will use a Krazovskii-LaSalle argument
+   \cite{krazovskii_lasalle}.
+   First, we define 
+   \(Z = \left{(q,p) \in \mathbb{S}^1\times \R \mid 
+      \dot{E}_\text{avg}(q,p) = 0 \right}\).
+   It is easy to show that \(Z\) is the union of the coordinate axes
+   \[
+      Z= \mathbb{S}^1 \times \left{0\right} \cup 
+         \left{0} \times \R\right}
+      .
+   \]
+   Then, since \(f(q,p) = (0,0)\) only when \((q,p) = (0,0)\),
+   Krazovskii-LaSalle tells us that the origin is asymptotically stable on
+   \(D\) for the negative-time system.
+   Therefore, the orbit of the VNHC in the \((q,p)\) plane is
+   diverging away from the origin in positive time, which means
+   the VLP is gaining energy on average.
+   Flipping the inequality of (\ref{eqn:vlp-energy-gain-condition}) 
+   means \(E_\text{avg}\) is a Lyapunov function for the positive time system,
+   so by the same argument the VLP is losing energy while converging
+   asymptotically to \((0,0)\).
  \end{proof}
 
 \begin{cor}
