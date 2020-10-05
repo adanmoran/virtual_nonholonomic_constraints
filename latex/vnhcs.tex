@@ -2,7 +2,7 @@
 
 %/========== Virtual Nonholonomic Constraints ==========/%
 
-\chapter{Development of Virtual Nonholonomic Constraints}
+\chapter{Development of Virtual Nonholonomic Constraints}\label{ch:vnhcs}
 % TODO: Brief introduction before preliminaries
 
 \section{Preliminaries on Analytical Mechanics}
@@ -594,9 +594,10 @@ they performed their research in Lagrangian form; we will be using
 the Hamiltonian formulation from Chapter \ref{sec:simply-actuated}.
 As a reminder, our system is described in \((q,p)\) coordinates with 
 \(q = (q_u,q_a)\) and \(p = (p_u, p_a)\) and has the dynamics
-\begin{align}\label{eqn:simply-actuated-dynamics}
+\begin{align}\label{eqn:simply-actuated-hamiltonian}
     \mathcal{H}(q,p) &= p\tpose \Minv(q) p + V(q)
     , \\
+    \label{eqn:simply-actuated-dynamics}
     &\begin{cases}
        \dot{q} = \Minv p \\
        \dot{p} = -\frac{1}{2} \pdmat - \nabla_q V(q) + \simpleB \tau 
