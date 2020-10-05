@@ -16,13 +16,16 @@ The motion of the VLP has been well studied (see for instance
 to stabilize trajectories of the system. While many of these controllers 
 are time-dependent, \citet{vlp_energy_shaping}
 offer a time-independent technique to inject energy into the VLP. 
-They designed a controller through a technique called \textit{energy shaping},
-and proved that their control mechanism stabilizes any desired energy level set.
+They design a controller through a technique called \textit{energy shaping},
+and prov that their control mechanism stabilizes any desired energy level set.
 However, the energy injection mechanism is ad-hoc in the sense that it is not
-derived from natural behaviour. 
-In this chapter we will design VNHCs to stabilize energy levels of the VLP in a
-time-independent manner, while maintaining the structured motion of a human on a
-swing.
+derived from human behaviour; their technique is tailored to this specific
+problem, and cannot be generalized easily.
+In this chapter we will make use of the general VNHC framework developed in Chapter
+\ref{ch:vnhcs} to stabilize energy levels of the VLP in a
+time-independent manner. 
+These VNHCs will add and remove energy from the VLP while maintaining the
+structured motion of a human on a swing.
 
 \section{Dynamics of the Variable Length Pendulum}
 % Derive the dynamics of the VLP in Hamiltonian form
@@ -51,11 +54,13 @@ Computing the kinetic energy \(T\) yields
 \[
    T(\mathbf{q},\dot{\mathbf{q}}) = 
    \frac{1}{2}m\norm{\dot{x}}^2 = \frac{1}{2}m\left(\dot{l}^2 + l^2\dot{q}^2\right)
+   .
 \]
 The potential energy \(P\) with respect to the pivot (under a gravitational
 acceleration \(g\)) is
 \[
    P(\mathbf{q}) = -mgl\cos(q)
+   .
 \]
 Collecting the kinetic energy into a quadratic form, we get the Lagrangian
 \[
@@ -71,19 +76,17 @@ Collecting the kinetic energy into a quadratic form, we get the Lagrangian
       \dot{q} \\ \dot{l}
    \end{bmatrix}
    + mgl\cos(q)
+   .
 \]
 Computing the conjugate of momenta to \(\mathbf{q}\), we get 
 \[
    \mathbf{p} := \begin{bmatrix} p \\ p_l \end{bmatrix} 
    = \begin{bmatrix} ml^2\dot{q} \\ m\dot{l} \end{bmatrix} 
+   .
 \]
 Performing the Legendre transform on \(\mathcal{L}\) and setting
 \(M(\mathbf{q}) := D(\mathbf{q})\), \(V(\mathbf{q}) := P(\mathbf{q})\),
-we find the Hamiltonian is equal to the total mechanical energy of the system:
-\[
-   \mathcal{H} = E = \frac{1}{2}\mathbf{p}\tpose \Minv(\mathbf{q})
-   \mathbf{p}+V(\mathbf{q})
-\]
+we get the Hamiltonian (\ref{eqn:simply-actuated-hamiltonian}).
 Taking the appropriate derivatives, the dynamics of the VLP in Hamiltonian form
 are described in (\ref{eqn:vlp-hamiltonian-with-pl}). 
 \begin{align}\label{eqn:vlp-hamiltonian-with-pl}
@@ -103,34 +106,37 @@ The control input is a force \(\tau \in \mathbb{R}\) affecting the dynamics of
 \(p_l\), acting colinearly with direction of the rod.
 We assume the force does not affect the dynamics of \(p\) in any way -
 that is, the control input cannot enact any lateral force on the pendulum.
-This is extremely useful for simplifying the dynamics: since one can choose
-\(\tau\) which sets \(\dot{p}_l\) to any desired function and \(\dot{l}\)
-depends only on \(p_l\), we can assume (with abuse of notation) that \(l\) is
-tracking some known function \(l(t)\). 
-The closed loop dynamics of the system will be described exclusively by
-\((\dot{q},\dot{p})\) with \(l \equiv l(t)\).
-The fact that \(p_l\) does not appear in these closed-loop dynamics allows us to
-ignore the subdynamics \((\dot{l},\dot{p}_l)\) entirely. 
-
-What this means is we can treat \(l\) as the control input directly, rather than
-modelling it as a configuration variable. Re-deriving the Hamiltonian and the
-dynamics from this approach, we get the system 
-(\ref{eqn:vlp-hamiltonian}) with phase \((q,p) \in \mathbb{S}^1 \times \R\). 
-Note that the control input \(l(t)\) and its derivative \(\dot{l}(t)\) are both
-known variables.
-\begin{align}\label{eqn:vlp-hamiltonian}
-   \mathcal{H}(q,p) &= \frac{p^2}{ml^2} - \frac{1}{2}\dot{l}^2 - mgl\cos(q) \\
-     &\begin{cases}
-        \dot{q} = \frac{p}{ml^2} \\
-        \dot{p} = -mgl\sin(q) \\
-      \end{cases}\nonumber
-\end{align}
-In particular, the Hamiltonian of this simplified model is no longer equal to
-the total mechanical energy of the system, which is given by
-(\ref{eqn:vlp-energy}).
-\begin{equation}\label{eqn:vlp-energy}
-   E(q,p) = \frac{p^2}{ml^2} + \frac{1}{2}\dot{l}^2 - mgl\cos(q)
+This is extremely useful because it means the VLP is described in simply
+actuated coordinates, which allows us to apply the theory of VNHCs we
+developed in Chapter \ref{ch:vnhcs}.
+% TODO: Replace this with a description that the dynamics of (q,p) are the
+% constrained dynamics, and that we are using a VNHC o f the form h = l -
+% L(q,p). We will simplify notation by saying that l = L(q,p) to mean that we
+% are stabilizing h = l - L = 0
+Let us define a ``VNHC" of the form \(l = L(q,p)\) (by this we mean we are
+actually defining the VNHC \(h(q,p) = l - L(q,p) = 0\)).
+Assuming this is a regular VNHC, the constraint manifold \(\Gamma\) is
+\(\mathbb{S}^1 \times \R\), and it is parameterized by the unactuated phase
+\((q,p)\).
+The constrained dynamics are described entirely by
+\((\dot{q},\dot{p})\) with \(l\) replaced by \(L(q,p)\) (omitting the inputs to
+\(L\) for clarity):
+\begin{equation}\label{eqn:vlp-dynamics}
+   \begin{cases}
+      \dot{q} = \frac{p}{m L^2} \\
+      \dot{p} = -mgL\sin(q)
+      . \\
+   \end{cases}
 \end{equation}
+
+The total mechanical energy of the system restricted to the constraint manifold
+is given by (\ref{eqn:vlp-energy}), where \(L(q,p)\) and \(\dot{L}(q,p)\) are
+known.
+\begin{equation}\label{eqn:vlp-energy}
+   E(q,p) = \frac{p^2}{mL^2} + \frac{1}{2}\dot{L}^2 - mgL\cos(q)
+\end{equation}
+In the rest of this chapter, we will derive the function \(L(q,p)\) which
+allows the constrained dynamics to inject energy into the VLP over time.
 
 % TODO: Describe the oscillation and rotation motion of a pendulum in the
 % qp-plane, and give a figure showing the orbiting motion for each of these.
