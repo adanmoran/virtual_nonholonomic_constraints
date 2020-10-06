@@ -133,7 +133,7 @@ replaced by \(L(q,p)\):
       . \\ 
    \end{cases} \nonumber
 \end{align}
-Note that we suppress the function notation for \(L(q,p)\) and
+Note that we suppress the function notation of \(L(q,p)\) and
 \(\dot{L}(q,p)\) for clarity.
 
 The total mechanical energy of the system restricted to the constraint manifold
@@ -206,7 +206,8 @@ when the system is at the ``bottom" or ``top" of the swing.
 Since being at the ``bottom" is equivalent to having angle \(q = 0\) and being
 at the ``top" is equivalent to having momentum \(p = 0\), a controller based on
 this strategy will necessarily use the full phase \((q,p)\). 
-This is why we must use VNHCs instead of VHCs to perform this maneuver.
+This is why we must use VNHCs instead of other methods (such as VHCs) 
+to perform this maneuver.
 
 The time-optimal controller from \cite{pumping_swing_standing_squatting} is (in
 our notation)
@@ -217,10 +218,10 @@ our notation)
 which is a piecewise-continuous controller that varies between \(\pm 1\). 
 We could set our constraint to be \(l = L^\star(q,p)\), but this is not a VNHC
 because it is not \(C^2\).
-It also makes the assumption that \(l \in [-1,1]\) and can switch
-instantaneously.
-Since need to enforce the constraint using the physical input \(\tau\) (which
-ideally would emulate realistic human motion), we cannot use \(L^\star\) as our
+Additionally, it would force us to assume that \(l \in \{-1,0,1\}\) and that one
+can switch \(l\) instantaneously.
+Since we need to enforce the constraint using the physical input \(\tau\) (which
+would ideally emulate realistic human motion), we cannot use \(L^\star\) as our
 VNHC.
 We will instead find an alternate representation of \(L^\star\) which can be
 converted into a VNHC, and which allows 
@@ -228,21 +229,22 @@ converted into a VNHC, and which allows
 
 Figure \ref{fig:vlp-optimal-controller-qp-plane} displays \(L^\star(q,p)\) 
 on the \((q,p)\)-plane.
-Because the length remains constant inside each quadrant and changes only when it
-crosses one of the axes, one can use the angle \(\theta = \arctan_2(p,q)\) to
-redefine the time-optimal pumping strategy as a function of \(\theta\).
+Note that the length remains constant inside each quadrant and changes only when it
+crosses one of the axes. Using this fact, we can redefine
+the time-optimal pumping strategy as a function of 
+\(\theta := \arctan_2(p,q)\).
 Abusing notation, we denote this by \(L^\star(\theta)\), which is defined in
 (\ref{eqn:vlp-optimal-controller}).
 Figure \ref{fig:vlp-optimal-controller} shows the graph of \(L^\star(\theta)\), 
 where now the length varies between \([\underbar{l},\overbar{l}]\) rather than 
-\([-1,1]\). 
+\(\{-1,0,1\}\). 
 
 \begin{equation}\label{eqn:vlp-optimal-controller}
    L^\star(\theta):= \begin{cases}
       \overline{l} & \theta \in [-\frac{\pi}{2},0[ \cup [\frac{\pi}{2}, \pi[ \\
-      \underline{l} & \theta \in [-pi, -\frac{\pi}{2}[ \cup [0,\frac{\pi}{2}[ \\
+      \underline{l} & \theta \in [-pi, -\frac{\pi}{2}[ \cup [0,\frac{\pi}{2}[ 
+      .
    \end{cases}
-   .
 \end{equation}
 
 \begin{figure}
@@ -269,13 +271,15 @@ where now the length varies between \([\underbar{l},\overbar{l}]\) rather than
 \end{figure}
 
 We now define a continuous function which
-approximates \(L^\star(\theta)\) by attaching sinusoids at the
-discontinuities (see Figure \ref{fig:vlp-T-controller}). 
+approximates \(L^\star(\theta)\). 
 Let \(\Delta l := (\overline{l} - \underline{l})/2\) and 
 \(l_{\text{avg}} := (\overline{l} + \underline{l})/2\).
-Providing these newly attached sinusoids with a frequency \(\omega = \frac{\pi}{T}\) 
-(where \(T \in \, ]0,\frac{\pi}{2}]\) is a control parameter), we get the
-continuously-differentiable controller \(L_T(\theta)\) (\ref{eqn:vlp-T-controller}).
+Let \(T \in \, ]0,\frac{\pi}{2}]\) be a parameter of our choosing.
+By intelligently attaching sinusoids of frequency \(\omega = \frac{\pi}{T}\) to
+\(L^\star(\theta)\) (see Figure \ref{fig:vlp-T-controller}), we get a family of
+\(C^1\) constraints \(L_T(\theta)\) (\ref{eqn:vlp-T-controller}) parameterized
+by \(T\).
+
 \begin{equation}\label{eqn:vlp-T-controller}
    L_T(\theta) = \begin{cases}
       \overline{l} & \theta \in \left[-\frac{\pi}{2} + \frac{T}{2}, -\frac{T}{2}\right] 
@@ -289,9 +293,9 @@ continuously-differentiable controller \(L_T(\theta)\) (\ref{eqn:vlp-T-controlle
       \Delta l \sin(\omega(\theta - a)) + l_\text{avg} & 
       \theta \in \left[a - \frac{T}{2}, a + \frac{T}{2}\right] \text{ for } 
       a \in \left\{-\frac{\pi}{2}, \frac{\pi}{2}\right\} \\
-      -\Delta l \sin(\omega(\theta-\pi)) & \theta \in \left[\pi - \frac{T}{2},\pi\right] \\
+      -\Delta l \sin(\omega(\theta-\pi)) & \theta \in \left[\pi - \frac{T}{2},\pi\right] 
+      .
    \end{cases}
-   .
 \end{equation}
 
 \begin{figure}
