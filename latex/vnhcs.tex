@@ -859,207 +859,59 @@ systems with only one unactuated coordinate.
 \end{cor}
 
 \section{Summary of Results}
-%TODO: summarize the assumptions and results 
-\textbf{TODO: summarize the assumptions and results }
+In this chapter, we developed the framework of virtual nonholonomic constraints
+for underactuated Hamiltonian mechanical systems.
+We made the following assumptions:
+\begin{enumerate}
+    \item The input matrix \(B(q) \equiv B \in \R^{n \times k}\) is constant and
+        full rank.
+    \item The input matrix has a left-annihilator 
+        \(B^\perp \in \R^{(n-k)\times n}\). 
+    \item The annihilator matrix \(B^\perp\) is right semi-orthogonal.
+\end{enumerate}
+These assumptions allowed us to define a canonical change of coordinates
+into the simply actuated coordinates 
+\((q,p) \in \mathcal{Q} \times \mathcal{P}\),
+where \(q = (q_u,q_a)\) and \(p = (p_u,p_a)\).
 
+We defined a virtual nonholonomic
+constraint as a \(C^2\) function 
+\(h : \mathcal{Q} \times \mathcal{P} \rightarrow \R^k\) which has no singular
+points on its constraint manifold
+\[
+    \Gamma = \left\{(q,p) \mid h(q,p) = 0, dh_q \dot{q} + dh_p \dot{p} = 0\right\}
+    .
+\]
 
+We then showed that a VNHC 
+\(h : \mathcal{Q} \times \mathcal{P}_u \rightarrow \R^k\) is regular if and only
+if the square matrix
+\[
+    \left(
+    dh_q \Minv(q) - 
+    dh_{p_u} (\Id{n-k} \otimes p\tpose)\nabla_{q_u}\Minv(q) 
+    \right)
+    \simpleB
+\]
+is invertible on \(\Gamma\).
 
+To find the explicit equations for the dynamics on \(\Gamma\) of a regular VNHC, 
+we made the following assumptions:
+\begin{itemize}
+    \item The inertia matrix satisfies 
+        \(\nabla_{q_u}M(q) = \Zmat{n(n-k) \times n}\).
+    \item On \(\Gamma\), one can solve linearly for \(q_a\) as a function of
+        \((q_u,p_u)\).
+\end{itemize}
+If these assumptions hold, one can solve for \(p_a = g(q_u,p_u)\) on \(\Gamma\).
+The constrained dynamics are then given by
+\((\dot{q_u}, \dot{p_u})\) subject to \(h(q,p_u) = 0\) and \(p_a = g(q_u,p_u)\).
 
+Finally, the benefit of using VNHCs is that they reduce the
+dimensionality of the system from \(2n\) equations of motion to \(2(n-k)\) of
+them.
+This can significantly reduce the complexity of analyzing the evolution of the
+system.
 
-
-
-
-
-
-
-
-
-
-
-%\section{Virtual Nonholonomic Constraints}\label{sec:vnhcs}
-%
-%%----- Motivation -----%
-%\subsection{Motivation}
-%\textbf{TODO: Why do we bother with Hamiltonian? Why can't we do virtual nonholonomic 
-%constraints in Lagrangian? What are some use-cases where VHCs don't work?}
-%
-%%---------- Hamiltonian from Lagrangian ----------%
-%\subsection{Review: Hamiltonian Systems}
-%\textbf{TODO: What is a Hamiltonian system and why does it matter?}
-%
-%One can compute the Hamiltonian of a system by performing a Legendre transform
-%on its Lagrangian \textbf{TODO: citation for legendre transform}.
-%First, define the conjugate of momenta for \(q\) by 
-%\begin{equation*}
-%p = \frac{\partial \mathcal{L}}{\partial \dot{q}} \in \mathbb{R}^n
-%\end{equation*}
-%Then, the Legendre transform is performed by taking
-%\begin{equation*}
-%\mathcal{H}(q,p) = p^T \dot{q} - \mathcal{L}(q,\dot{q})
-%\end{equation*}
-%
-%For a mechanical system (\ref{eqn:lagrangian}), the conjugate of momenta for
-%\(q\) is given by 
-%\begin{equation*}
-%    p = M(q)\dot{q}
-%\end{equation*}
-%which means the Hamiltonian of the system is given by
-%the total mechanical energy \(E\) (\ref{eqn:hamiltonian} in 
-%\((q,p)\) coordinates.
-%\begin{equation}\label{eqn:hamiltonian}
-%\mathcal{H}(q,p) = E(q,p) = \frac{1}{2} p^T \Minv(q) p + V(q)
-%\end{equation}
-%Note that \(M(q)\) is the inertia matrix and \(V(q)\) is the potential for
-%the Hamiltonian system. This is simply a trick to distinguish them notationally
-%from the Lagrangian \(D(q)\) and \(P(q)\); they are, in fact, identical in their
-%contents.
-%
-%The equations of motion for the system in Hamiltonian coordinates is given by
-%\begin{align}\label{eqn:hamiltionian_eom}
-%\begin{split}
-%\dot{q} &= \frac{\partial \mathcal{H}}{\partial p} = \Minv(q) p \\
-%\dot{p} &= -\frac{\partial \mathcal{H}}{\partial q} + B \tau
-%\end{split}
-%\end{align}
-%
-%\textbf{Why bother looking at Hamiltonian systems? What is the intuition behind
-%these equations of motion?}
-%
-%%---------- Hamiltonian VNHCs ----------%
-%\subsection{Hamiltonian Virtual Nonholonomic Constraints}
-%While VHCs are still possible in the Hamiltonian framework, the assumptions
-%required to make this work are slightly different. Rather than deriving
-%Hamiltonian VHCs directly, we will produce results for nonholonomic constraints
-%first as VHCs are a special case of this new framework.
-%
-%Suppose the mechanical system has degree of underactuation one, so that coordinates of the system can be split into an unactuated component \(q_u \in [\mathbb{R}]_T, \, T \in \mathbb{R}_{>0}\) which is not influence by control, along with an actuated component \(q_a\); that is, suppose \(B\) is of the form \(B(q) = [0_m, B_1^T(q), \ldots, B_n^T(q)]^T, \, B_i^T(q) \in \mathbb{R}^{n-1}\) and \(\tau \in \mathbb{R}^{n-1}\). In this case, \(q = (q_u, q_a)^T\) and the equations of motion become
-%\begin{align}\label{eqn:unactuated_actuated_eom}
-%\begin{split}
-%\dot{q_u} &= e_1^T \Minv(q) p \\
-%\dot{p_u} &= -p^T\frac{\partial M}{\partial q_u} p - \partial_{q_u}V(q) \\
-%\dot{q_a} &= 
-%\begin{bmatrix}
-%0 \cdots 0 \\
-%I_{n-1} \\
-%\end{bmatrix} \Minv(q) p \\
-%\dot{p_a} &= -p^T\frac{\partial M}{\partial q_a} p - \nabla{q_a}V(q) + 
-%\begin{bmatrix}
-%B_1(q) \\
-%\vdots \\
-%B_n(q)
-%\end{bmatrix} \tau
-%\end{split}
-%\end{align}
-%
-%Now we can begin to talk about Virtual Nonholonomic Constraints. In a similar fashion to what was defined for VHCs, let us first define the goal of these new virtual constraints.
-%
-%\begin{defn}
-%A relation \(h \in C^2\left(\mathcal{Q}\times \mathbb{R}^n ; \mathbb{R}^k\right)\) with \(h(q,p) = 0\) is a \textbf{virtual nonholonomic constraint (VNHC) of order k} if there exists a feedback control \(\tau(q,p)\) which stabilizes the constraint manifold
-%\[
-%\Gamma = \left\{(q,p) | h(q,p) = 0, dh_q \dot{q} + dh_p \dot{p} = 0\right\}
-%\]
-%\end{defn}
-%Define the output of the system to be \(e = h(q,p)\). We would like to find \(\tau(q,p)\) which drives \(e\) to zero to stabilize our constraint manifold \(\Gamma\). To accomplish this, we will input-output linearize (\ref{eqn:unactuated_actuated_eom}) to find \(\ddot{e} = -k_p e - k_d \dot{e}\) with \(k_p, k_d \in \mathbb{R}_{> 0}\).
-%
-%To characterize a certain class of VNHCs, let us make the following assumption.
-%\begin{assm}\label{assm:vnhc_is_on_qu_pu}
-%We assume our relation \(h\) is of the form \(h(q,p) = q_a - f(q_u,p_u)\) for some \(f \in C^2\left([\mathbb{R}]_T \times \mathbb{R} ; \mathbb{R}^{n - 1}\right)\).
-%\end{assm}
-%
-%Now we solve for \(\tau\) by finding \(\ddot{e}\).
-%\begin{align*}
-%    e &= h(q,p) = qa - f(q_u,p_u)\\
-%    \Rightarrow \dot{e} &= \dot{q_a} - df_{q_u}\dot{q_u} -df_{p_u}\dot{p_u} \\
-%    &= [-df_{q_u} I_{n-1}]\dot{q} - df_{p_u} \dot{p_u} \\
-%    &= dh_q \Minv(q) p - df_{p_u}\left( -\frac{1}{2}p^T \frac{\partial \Minv(q)}{\partial q_u} p - \partial_{q_u}V(q) \right) \\
-%    &= dh_q \Minv(q) p + \frac{1}{2}df_{p_u} p^T \frac{\partial \Minv(q)}{\partial q_u} p + df_{p_u}\partial_{q_u}V(q)
-%\end{align*}
-%The control input \(\tau\) only appears in \(\dot{p_a}\) (see (\ref{eqn:unactuated_actuated_eom})). To simplify the analysis, terms in \(\ddot{e}\) which do not depend on \(\dot{p_a}\) explicitly are lumped together under the symbol \((*)\):
-%\begin{align*}
-%    \ddot{e} &= dh_q \Minv(q) \dot{p} + df_{p_u} p^T \frac{\partial \Minv(q)}{\partial q_u} \dot{p} + (*) \\
-%    &= (dh_q \Minv(q) + df_{p_u} p^T \frac{\partial \Minv(q)}{\partial q_u})B\tau + (*) \\
-%    &= (dh_q \Minv(q) + dh_{p_u} p^T \frac{\partial \Minv(q)}{\partial q_u})B\tau + (*)
-%\end{align*}
-%
-%From the derivations above, one can solve for \(\tau\) iff the matrix on the left of \(\tau\) is full rank. Thus, for systems with degree of underactuation one we give the following definition.
-%\begin{defn}
-%A VNHC \(h(q,p) = 0\) of order \(n - 1\) is \textbf{regular} if \(dh_{p_a} = 0\), \(dh_{q_a} = (1 \ldots 1)^T\), and 
-%\[
-%\text{rank}\left\{ (dh_q \Minv(q) + dh_{p_u} p^T \frac{\partial \Minv(q)}{\partial q_u})B\right\} = n - 1
-%\]
-%everywhere on the constraint manifold \(\Gamma\). Equivalently, a VNHC \(h\) of order \(n - 1\) is regular if it satisfies Assumption \ref{assm:vnhc_is_on_qu_pu} and system (\ref{eqn:unactuated_actuated_eom}) with output \(e = h(q,p)\) is of relative degree \(\{2,2,\ldots,2\}\) everywhere on \(\Gamma\).
-%\end{defn}
-%
-%In general, \(\dot{e}\) is a function of \(q_u\) and \(p = (p_u,p_a)^T\). Since the purpose of a regular VNHC is to fully parameterize \(\Gamma\) by \((q_u,p_u)\), it is essential that one can solve for \(p_a = p_a(q_u,p_u)\). Unfortunately this often cannot be done, since \(\dot{e}\) contains the quadratic term
-%\[
-%\frac{1}{2} df_{p_u} p^T \frac{\partial \Minv(q)}{\partial q_u} p 
-%\]
-%We can solve for \(p_a\) if this quadratic term does not exist.
-%\begin{assm}\label{assm:M_is_Mqa}
-%Assume \(\partial M(q) / \partial q_u = 0 \Leftrightarrow \partial \Minv(q) / \partial q_u = 0\)
-%\end{assm}
-%
-%Under Assumption \ref{assm:M_is_Mqa}, we get that the rank condition for \(h(q,p)\) to be a regular VNHC reduces to \(\text{rank}\left(dh_q \Minv B\right) = n - 1\). This is the same rank condition as required for Virtual Holonomic Constraints.
-%
-%Now we solve for \(p_a\) on the constraint manifold (when \(e = \dot{e} = 0\)):
-%\begin{align*}
-%    \dot{e} = dh_q \Minv(q)p + df_{p_u} \partial_{q_u}V(q) &= 0\\
-%    \Leftrightarrow dh_q \Minv(q)e_1 p_u + dh_q \Minv(q) \begin{bmatrix}
-%    0 & \cdots & 0 \\
-%    & I_{n-1} & \\
-%    \end{bmatrix} p_a &= -df_{p_u} \partial_{q_u}V(q) \\
-%\end{align*}
-%\begin{align*}
-%    \Leftrightarrow dh_q \Minv(q) \begin{bmatrix}
-%    0 & \cdots & 0 \\
-%    & I_{n-1} & \\
-%    \end{bmatrix} p_a = -\left(df_{p_u}\partial_{q_u}V(q) + dh_q \Minv(q)e_1 p_u\right)
-%\end{align*}
-%One can linearly solve for \(p_a\) if and only if the matrix in front of it is invertible.
-%
-%This leads us to a natural definition.
-%\begin{defn}\label{defn:solvability}
-%A VNHC \(h(q,p)\) is \textbf{solvable} (NOTE: actionable? what's a good name?) if
-%\[
-%\text{rank}\left(dh_q \Minv(q) \begin{bmatrix}
-%    0 & \cdots & 0 \\
-%    & I_{n-1} & \\
-%    \end{bmatrix}\right) = n - 1
-%\]
-%\end{defn}
-%
-%With this analysis and our new definition in hand, we can solve for the dynamics on the constraint manifold.
-%
-%\begin{thm}\label{thm:equation_for_pa}
-%Suppose assumptions \ref{assm:vnhc_is_on_qu_pu} and \ref{assm:M_is_Mqa} hold.
-%If a regular VNHC \(h(q,p) = q_a - f(q_u,p_u)\) is solvable, then the
-%parameterization for \(p_a\) on the constraint manifold is given by
-%\begin{align*}
-%p_a &= -\left(dh_q \Minv(q) \begin{bmatrix}
-%    0 & \cdots & 0 \\
-%    & I_{n-1} & \\
-%    \end{bmatrix}\right)^{-1}\left( df_{p_u}\partial_{q_u}V(q) + dh_q \Minv(q)e_1 p_u\right) \\
-%    &=: g(q_u,p_u)
-%\end{align*}
-%and the constrained dynamics on \(\Gamma\) are given by
-%\begin{align*}
-%    \dot{q_u} &= e_1^T \Minv(q_a) \begin{bmatrix}
-%    p_u \\
-%    p_a
-%    \end{bmatrix}\mid_{q_a = f(q_u,p_u), p_a = g(q_u,p_u)} \\
-%    \dot{p_u} &= -\partial_{q_u} V(q_u,q_a) \mid_{q_a = f(q_u,p_u)}
-%\end{align*}
-%\end{thm}
-%
-%Theorem \ref{thm:equation_for_pa} guarantees that, on \(\Gamma\), \(q_a\) is a
-%parameterized completely by \((q_u,p_u)\). Hence, the zero-dynamics on
-%\(\Gamma\) are always two-dimensional regardless of the original dimension
-%\(n\).
-%
-%%---------- Hamiltonian VHCS ---------%
-%\subsection{Restriction to Hamiltonian VHCs}
-%\textbf{TODO: Why can we not do the standard VHC approach for Hamiltonian? 
-%Show how to use the above to make it work}
-%
 %%/========== /Virtual Nonholonomic Constraints ==========/% 
 % vim: set tw=80 ts=4 sw=4 sts=0 et ffs=unix :
