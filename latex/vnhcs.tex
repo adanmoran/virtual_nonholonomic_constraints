@@ -150,7 +150,7 @@ The combined vector \((q,p) \in \mathcal{Q}\times\R^n\) is called a
 \textit{phase} of the system. 
 
 The \textit{Hamiltonian} of the system in
-\(\{q,p\}\) coordinates is the ``Legendre transform"
+\((q,p)\) coordinates is the ``Legendre transform"
 (\ref{eqn:hamiltonian-legendre}) of the Lagrangian \cite{landau_mechanics},
 \begin{equation}\label{eqn:hamiltonian-legendre}
     \mathcal{H}(q,p) := p\tpose \dot{q}(q,p) - \mathcal{L}(q,\dot{q}(q,p))
@@ -172,20 +172,20 @@ input forces.
 If the kinetic energy of the system is quadratic as in (\ref{eqn:lagrangian}), 
 the conjugate of momenta becomes \(p = D(q)\dot{q}\). Since \(D(q)\) is symmetric
 and positive definite, it is invertible at each \(q \in \mathcal{Q}\).
-The Legendre transform (\ref{eqn:hamiltonian-legendre}) can be explicitly
-written as
-\[
-    \mathcal{H}(q,p) = p\tpose D\inv(q)p - \frac{1}{2}p\tpose D\inv(q) p + V(q)
-    ,
-\]
-which reduces to (\ref{eqn:hamiltonian}). 
-Finding the derivative of each conjugate of momentum yields
+The Legendre transform (\ref{eqn:hamiltonian-legendre}) becomes
+\begin{align*}
+    \mathcal{H}(q,p) &= p\tpose D\inv(q)p - \frac{1}{2}p\tpose D\inv(q) p +
+    P(q) \\
+         &= \frac{1}{2} p\tpose D^{-1}(q) p + P(q)
+    .
+\end{align*}
+Finding the derivative of each momentum coordinate yields
 \[
     \dot{p}_i = -\frac{1}{2} p\tpose \nabla_{q_i}D\inv(q) p 
         - \pdiff{P}{q_i}(q) + B_i\tpose(q) \tau
     ,
 \]
-which can be collected into the vector form (\ref{eqn:hamiltonian-full-dynamics}) 
+which can be collected into vector form
 % TODO: Update Appendix info?
 by using the matrix Kronecker product (see Appendix ???).
 In sum, when the kinetic energy is quadratic the Hamiltonian system reduces to
@@ -208,7 +208,7 @@ transformation} if \((Q,P)\) preserve the Hamiltonian structure; that is, if
 they are canonical coordinates under the Hamiltonian
 \(\mathcal{H}\left(q(Q,P), p(Q,P)\right)\).
 
-\citet{landau_mechanics} provides a useful result for showing whether a given
+\citet{landau_mechanics} provide a useful result for showing whether a given
 change of coordinates \((q,p) \to (Q,P)\) is a canonical transformation.
 \begin{defn}
     The \textit{Poisson bracket} between the functions \(f(q,p)\) and \(g(q,p)\)
@@ -236,7 +236,7 @@ change of coordinates \((q,p) \to (Q,P)\) is a canonical transformation.
     See (45.10) in \cite{landau_mechanics}.
 \end{proof}
 
-Later in this chapter we will define a particular type of coordinate change.
+Later in this chapter we will define a particular change of coordinates.
 The following Lemma allows us to prove it is a canonical transformation.
 
 \begin{lemma}\label{lemma:linear-is-canonical}
@@ -268,7 +268,7 @@ The following Lemma allows us to prove it is a canonical transformation.
         [P_i,Q_j] &= \sum\limits_{m=1}^n\pdiff{P_i}{p_m}\pdiff{Q_j}{q_m}
         - \pdiff{P_i}{q_m}\pdiff{Q_j}{p_m} \\
                   &= \sum\limits_{m=1}^n A_{i,m}A_{j,m} - 0 \\
-                  &= \sum\limits_{m=1}^n A_{i,m}A\tpose_{m,j} \\
+                  &= \sum\limits_{m=1}^n A_{i,m}(A\tpose)_{m,j} \\
                   &= (A_i)\tpose (A\tpose)_j \\
                   &= \delta_{i,j}
         .
@@ -402,7 +402,7 @@ Let now \(\mathbf{B} \in \R^{n\times n}\) be the following matrix:
 \]
 Since \(B^\perp\) is a left annihilator of \(B\) and both \(B^\perp\) and
 \(B\tpose\) are right semi-orthogonal, it is easy to show that \(\mathbf{B}\) is
-orthogonal:
+orthogonal.
 \begin{proof}
 \[
     \mathbf{B}\mathbf{B}\tpose = 
@@ -444,7 +444,6 @@ are affected by the input forces.
         .
     \end{align*}
 \end{thm}
-\vspace{-4.5em} % For some reason not having this puts a large space before proof
 \begin{proof}
     The change of coordinates \((Q = \mathbf{B}q, P = \mathbf{B}p)\)
     satisfies Lemma \ref{lemma:linear-is-canonical}, making it a canonical
@@ -565,19 +564,21 @@ stabilizing \(\Gamma\) exist?
 
 One approach to answering this question is to
 define the error term \(e = h(q,p)\). 
-Finding \(\tau(q,p)\) driving \(e \to 0\) and \(\dot{e} \to 0\)
-is sufficient for stabilizing \(\Gamma\). 
-If \(\tau\) appears after only \(r_i \geq 0\) derivatives of \(e_i\), 
-then that \(e_i\) is said to have \textit{relative degree} \(r_i\).
-We would then say \(e\) has relative degree \(\{r_1,\ldots,r_k\}\).
+If there exists some \(\tau(q,p)\) driving \(e \to 0\) and \(\dot{e} \to 0\),
+then \(\tau\) stabilizes \(\Gamma\). 
+If \(\tau\) first appears after \(r_i > 0\) derivatives of \(e_i\), 
+then \(e_i\) is said to have \textit{relative degree} \(r_i\).
+We then say \(e\) has relative degree \(\{r_1,\ldots,r_k\}\).
 
-One important note is that having relative degree \(1\) for any \(e_i\) means we
-may not be able to stabilize \(\Gamma\); we can guarantee \(h(q,p) \to 0\) 
-but not \(\dot{h}(q,p) = 0\). 
-Requiring that \(e\) have relative degree \(\{2,\ldots,2\}\) is much more
+With no further structure on \(h(q,p)\), the control input \(\tau\) usually
+appears after one derivative. 
+Unfortunately, if any \(e_i\) has relative degree \(1\) we may not in general
+be able to stabilize \(\Gamma\); we could guarantee \(h(q,p) \to 0\), but not
+necessarily \(\dot{h}(q,p) \to 0\). 
+Requiring \(e\) to have relative degree \(\{2,\ldots,2\}\) is much more
 useful, since it allows us to easily solve for a \(\tau\) which stabilizes
 \(\Gamma\). 
-This is a common requirementa in the VHC literature, so we will make use of it
+This is a common requirement in the VHC literature, so we will make use of it
 here by defining a special type of VNHC that satisfies this property.
 
 \begin{defn}
