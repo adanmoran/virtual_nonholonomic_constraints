@@ -3,7 +3,6 @@
 %/========== Virtual Nonholonomic Constraints ==========/%
 
 \chapter{Development of Virtual Nonholonomic Constraints}\label{ch:vnhcs}
-% TODO: Brief introduction before preliminaries
 
 \section{Preliminaries on Analytical Mechanics}
 A mechanical system can be represented by \(N\) point masses where each point
@@ -58,7 +57,7 @@ represents an angle.
 It is convention to collect the coordinates into a \textit{configuration} 
 \(q = (q_1,\ldots,q_n) \in \mathcal{Q}\) 
 where the \textit{configuration manifold} \(\mathcal{Q}\) of the system is a
-so-called \textit{generalized cylinder}:
+so-called \textit{generalized cylinder}
 \[
     \mathcal{Q} = \Rt{T_1} \times \cdot \times \Rt{T_n}
     .
@@ -82,7 +81,7 @@ methods for modelling robotic systems are \textit{Lagrangian} and
 Lagrangian mechanics uses the kinetic energy \(T(q,\dot{q})\) and potential
 energy \(P(q)\) of the system to define the Lagrangian 
 \(\mathcal{L} : \mathcal{Q}\times\R^n \rightarrow \R\) defined by
-(\ref{eqn:lagrangian-general}) \cite{greenwood_dynamics}:
+(\ref{eqn:lagrangian-general}) \cite{greenwood_dynamics},
 \begin{equation}\label{eqn:lagrangian-general}
     \mathcal{L}(q,\dot{q}) = T(q,\dot{q}) - P(q)
     .
@@ -174,8 +173,8 @@ the conjugate of momenta becomes \(p = D(q)\dot{q}\). Since \(D(q)\) is symmetri
 and positive definite, it is invertible at each \(q \in \mathcal{Q}\).
 The Legendre transform (\ref{eqn:hamiltonian-legendre}) becomes
 \begin{align*}
-    \mathcal{H}(q,p) &= p\tpose D\inv(q)p - \frac{1}{2}p\tpose D\inv(q) p +
-    P(q) \\
+    \mathcal{H}(q,p) &= p\tpose D\inv(q)p - \left( \frac{1}{2}p\tpose D\inv(q) p -
+    P(q) \right) \\
          &= \frac{1}{2} p\tpose D^{-1}(q) p + P(q)
     .
 \end{align*}
@@ -186,8 +185,7 @@ Finding the derivative of each momentum coordinate yields
     ,
 \]
 which can be collected into vector form
-% TODO: Update Appendix info?
-by using the matrix Kronecker product (see Appendix ???).
+by using the matrix Kronecker product (see Appendix \ref{apx:kron-prod}).
 In sum, when the kinetic energy is quadratic the Hamiltonian system reduces to
 \begin{align}\label{eqn:hamiltonian}
     \mathcal{H}(q,p) &= \frac{1}{2} p\tpose D^{-1}(q) p + P(q)
@@ -212,7 +210,7 @@ they are canonical coordinates under the Hamiltonian
 change of coordinates \((q,p) \to (Q,P)\) is a canonical transformation.
 \begin{defn}
     The \textit{Poisson bracket} between the functions \(f(q,p)\) and \(g(q,p)\)
-    is defined as
+    is
     \begin{equation}\label{eqn:poisson-bracket}
         [f,g] := \sum \limits_{i=1}^n \pdiff{f}{p_i}\pdiff{g}{q_i} - 
             \pdiff{f}{q_i}\pdiff{g}{p_i}
@@ -221,7 +219,7 @@ change of coordinates \((q,p) \to (Q,P)\) is a canonical transformation.
 \end{defn}
 \begin{thm}\label{thm:canonical-transformations}
     A change of coordinates 
-    \((q,p) \to (Q,P)\) is a canonical transformation if
+    \((q,p) \to (Q,P)\) is a canonical transformation if and only if
     \begin{align*}
         [Q_i, Q_j] &= 0
         , \\
@@ -254,10 +252,10 @@ The following Lemma allows us to prove it is a canonical transformation.
     \(i,m \in \n\).
     Hence, 
     \begin{align*}
-        [Q_i,Q_j] &:= \sum\limits_{m = 1}^n \pdiff{Q_i}{p_m}\pdiff{Q_j}{q_m} - 
+        [Q_i,Q_j] &= \sum\limits_{m = 1}^n \pdiff{Q_i}{p_m}\pdiff{Q_j}{q_m} - 
         \pdiff{Q_i}{q_m}\pdiff{Q_j}{p_m} = 0
         , \\
-        [P_i,P_j] &:= \sum\limits_{m=1}^n \pdiff{P_i}{p_m}\pdiff{P_j}{q_m} -
+        [P_i,P_j] &= \sum\limits_{m=1}^n \pdiff{P_i}{p_m}\pdiff{P_j}{q_m} -
         \pdiff{P_i}{q_m}\pdiff{P_j}{p_m} = 0
         .
     \end{align*}
@@ -330,7 +328,7 @@ Assumption \ref{assm:B-perp} requires the rows of \(B^\perp\) to be unit vectors
 that are mutually orthogonal. 
 In the case that \(k = (n-1)\), the existence of any left annihilator 
 \(A^0 \in \R^{1\times n}\) implies the left annihilator 
-\(B^\perp := A^0/\norm{A^0}\) will satisfy Assumption \ref{assm:B-perp}.
+\(B^\perp := A^0/\norm{A^0}\) will be a unit vector satisfying Assumption \ref{assm:B-perp}.
 
 \begin{lemma}\label{lemma:B-orthogonal}
     Suppose Assumption \ref{assm:B-const} holds. Then
@@ -370,7 +368,7 @@ Defining \(T \in \R^{k \times k}\) by
     \end{bmatrix}
     ,
 \]
-and defining the regular feedback transformation\(\tau = V T \hat{\tau}\), 
+and assigning the regular feedback transformation\(\tau = V T \hat{\tau}\), 
 we get a new input matrix for \(\hat{\tau} \in \R^k\) given by 
 \[
     \hat{B} = B V T = 
@@ -381,11 +379,11 @@ we get a new input matrix for \(\hat{\tau} \in \R^k\) given by
 \]
 which is still constant and full-rank. 
 In particular, 
-\(\hat{B}\tpose \hat{B} = T\tpose \Sigma\tpose \Sigma\tpose T = \Id{k}\).
+\(\hat{B}\tpose \hat{B} = T\tpose \Sigma\tpose \Sigma T = \Id{k}\).
 \end{proof}
 
 In light of Lemma \ref{lemma:B-orthogonal}, there is no loss of generality
-making the following assumption.
+by making the following assumption.
 \begin{assm}\label{assm:B-orthogonal}
     Assume that the input matrix \(B\) is
     left semi-orthogonal. 
@@ -564,22 +562,26 @@ stabilizing \(\Gamma\) exist?
 
 One approach to answering this question is to
 define the error term \(e = h(q,p)\). 
-If there exists some \(\tau(q,p)\) driving \(e \to 0\) and \(\dot{e} \to 0\),
-then \(\tau\) stabilizes \(\Gamma\). 
+If there exists some controller \(\tau(q,p)\) driving \(e \to 0\) and 
+\(\dot{e} \to 0\), then the same \(\tau\) will necessarily stabilize \(\Gamma\). 
+
 If \(\tau\) first appears after \(r_i > 0\) derivatives of \(e_i\), 
 then \(e_i\) is said to have \textit{relative degree} \(r_i\).
-We then say \(e\) has relative degree \(\{r_1,\ldots,r_k\}\).
-
+Collecting the \(e_i\) together, we say that \(e\) is of relative degree
+\(\{r_1,\ldots,r_k\}\).
 With no further structure on \(h(q,p)\), the control input \(\tau\) usually
-appears after one derivative. 
-Unfortunately, if any \(e_i\) has relative degree \(1\) we may not in general
-be able to stabilize \(\Gamma\); we could guarantee \(h(q,p) \to 0\), but not
-necessarily \(\dot{h}(q,p) \to 0\). 
+appears after one derivative of \(e\); 
+unfortunately, if any \(e_i\) has relative degree \(r_i = 1\) we may not
+be able to stabilize \(\Gamma\). 
+We could guarantee \(h(q,p) \to 0\), but we could not in general guarantee 
+\(\dot{h}(q,p) \to 0\). 
+
 Requiring \(e\) to have relative degree \(\{2,\ldots,2\}\) is much more
-useful, since it allows us to easily solve for a \(\tau\) which stabilizes
-\(\Gamma\). 
-This is a common requirement in the VHC literature, so we will make use of it
-here by defining a special type of VNHC that satisfies this property.
+useful, since it allows us to easily solve for a controller stabilizing \(\Gamma\).
+This kind of relative degree requirement is already common in the VHC
+literature.
+Taking advantage of that precedent, we define a special type of VNHC that
+satisfies this property.
 
 \begin{defn}
     A VNHC \(h(q,p) = 0\) of order \(k\) is \textit{regular} if the output 
@@ -656,29 +658,29 @@ As a reminder, our system is described in \((q,p)\) coordinates with
     \]
     Taking one further derivative provides
     \begin{align*}
-        \ddot{e} &= \diff{}{t}\left[dh_q\right]\Minv(q) p + 
+        \ddot{e} &= \left(\diff{}{t}dh_q\right)\Minv(q) p + 
         dh_q \left(\sum\limits_{i=1}^n \pdiff{\Minv}{q_i}(q)\dot{q_i}\right)p + 
         dh_q \Minv(q) \dot{p} - \\
-         & \diff{}{t}\left[dh_{p_u}\right]
+         & \left(\diff{}{t}dh_{p_u}\right)
          \left(\frac{1}{2}\pudmat + \nabla_{q_u}V(q)\right) - \\
-         & dh_{p_u}\left(\frac{1}{2}\diff{}{t}\left[\pudmat\right] + 
-         \diff{}{t}\left[\nabla_{q_u}V(q)\right] \right)
+         & dh_{p_u}\left(\frac{1}{2}\diff{}{t}\left(\pudmat\right) + 
+         \left(\diff{}{t}\nabla_{q_u}V(q)\right) \right)
          .
     \end{align*}
     Most of these terms do not involve \(\dot{p}\) and hence do not contain 
     \(\tau\), so we shorten this to 
     \[
         \ddot{e} = (\star) - 
-        dh_{p_u}\left(\frac{1}{2}\diff{}{t}\left[\pudmat\right] +
-        dh_q \Minv(q) \dot{p}\right)
+        dh_{p_u}\left(\frac{1}{2}\diff{}{t}\left(\pudmat\right)\right) +
+        dh_q \Minv(q) \simpleB \tau
         .
     \]
 % d/dt(1/2 * pudmat)
     Observe that the \(i^\text{th}\) row of
-    \(\frac{1}{2} \diff{}{t} \left[ \pudmat \right]\)
+    \(\frac{1}{2} \diff{}{t} \left( \pudmat \right)\)
     is given by
     \begin{align*}
-        \frac{1}{2} \diff{}{t}\left[p\tpose \pdiff{\Minv}{q_{u_i}}(q)p\right]
+        \frac{1}{2} \diff{}{t}\left(p\tpose \pdiff{\Minv}{q_{u_i}}(q)p\right)
         = p\tpose \pdiff{\Minv}{q_{u_i}}(q) \dot{p} + 
         \frac{1}{2} p\tpose \left( \sum_{j=1}^n \ppdiff{\Minv}{q_{u_i}}{q_j}
         \dot{q}_j \right) p
@@ -686,7 +688,7 @@ As a reminder, our system is described in \((q,p)\) coordinates with
     \end{align*}
     Highlighting only the term containing \(\tau\), we get the vector form
     \begin{align*}
-        \frac{1}{2} \diff{}{t} \left[ \pudmat \right] =
+        \frac{1}{2} \diff{}{t} \left( \pudmat \right) =
         (\star) +
         (\Id{n-k} \otimes p\tpose)\nabla_{q_u}\Minv(q)\simpleB \tau
         .
@@ -699,14 +701,18 @@ As a reminder, our system is described in \((q,p)\) coordinates with
      p\tpose)\nabla_{q_u}\Minv(q) \right) \simpleB \tau
      ,
     \end{align*}
-    where \((\star)\) is a function of \(q\) and \(p\).
+    where \((\star)\) is a continuous function of \(q\) and \(p\).
 % End of Proof
-    For shorthand, we'll write \(\ddot{e} = E(q,p) + H(q,p)\tau\) where \(E\)
-    and \(H\) are defined appropriately.
+    For shorthand, we'll write 
+    \[
+        \ddot{e} = E(q,p) + H(q,p)\tau
+        ,
+    \] 
+    where \(E\) and \(H\) are defined appropriately.
     From the definition of regularity, the VNHC \(h\) is regular 
     when \(e\) is of relative degree \(\{2,\ldots,2\}\), which is true 
     if and only if the matrix premultiplying \(\tau\) is nonsingular, and hence
-    that \(H\) be invertible, proving the theorem.
+    that \(H\) is invertible. This proves the theorem.
 \end{proof}
 
 Using the expression \(\ddot{e} = E(q,p) + H(q,p)\tau\) from the proof of 
@@ -753,7 +759,7 @@ dynamics.
     Let \(\mathcal{H}\) be a mechanical system in simply actuated
     coordinates satisfying Assumption \ref{assm:inertially-actuated}. 
     Let \(h(q,p_u) = 0\) be a regular VNHC of order \(k\) with constraint
-    manifold \(\Gamma\). Suppose that on \(\Gamma\) one can solve linearly for
+    manifold \(\Gamma\). Suppose that on \(\Gamma\) one can solve for
     \(q_a\) as a function of \((q_u,p_u)\).
     Then the constrained dynamics are given by
     \begin{equation}\label{eqn:qpu-dynamics}
@@ -771,7 +777,7 @@ dynamics.
     where
     \begin{equation}\label{eqn:g-qpu}
     \begin{aligned}
-        g(q_u,p_u) &:= \\
+        &g(q_u,p_u) := \\
            &\left.\left(dh_q \Minv(q) \simpleB \right)\inv 
         \left(dh_{p_u} \nabla_{q_u}V(q) - dh_q \Minv(q)
         \begin{bmatrix}
@@ -836,15 +842,15 @@ The following corollay applies Theorem \ref{thm:zero-dynamics} to
 systems with only one unactuated coordinate.
 
 \begin{cor}\label{cor:2d-zero-dynamics}
-    Suppose \(\mathcal{H}\) is a ---- mechanical system in simply actuated
-    coordinates which has degree of underactuation one.
+    Suppose \(\mathcal{H}\) is a mechanical system in simply actuated
+    coordinates satisfying Assumption \ref{assm:inertially-actuated} 
+    which has degree of underactuation one.
     Let \(h(q,p_u) = 0\) be a regular VNHC of order \((n-1)\) of the form
-    \(h(q,p_u) = q_a - f(q_u,p_u)\)
-    where \(f\) is a suitably-defined smooth function.
+    \(h(q,p_u) = q_a - f(q_u,p_u)\),
+    where \(f\) is a suitably defined \(C^2\) function.
     Then \(dh_q = \begin{bmatrix} -\partial_{q_u}f & \Id{(n-1)}
     \end{bmatrix}\).
-    Defining \(e_1 := (1,0,\ldots,0) \in \R^n\), the actuated momentum is given
-    by (\ref{eqn:g-qupu}):
+    Defining \(e_1 := (1,0,\ldots,0) \in \R^n\), the actuated momentum is
     \begin{equation}\label{eqn:g-qupu}
         p_a = -\left.\left(dh_q \Minv(q)
         \begin{bmatrix}
@@ -853,10 +859,11 @@ systems with only one unactuated coordinate.
         \end{bmatrix}\right)\inv 
         \left(\partial_{p_u}f \partial_{q_u}V + dh_q \Minv(q)e_1 p_u\right) 
             \right|_{q_a =f(q_u,p_u)}
+        .
     \end{equation}
-    Since \(q_u \in \Rt{T}\) for some \(T \in ]0,\infty]\) and \(p_u \in \R\),
+    Since \(q_u \in \Rt{T_u}\) for some \(T_u \in ]0,\infty]\) and \(p_u \in \R\),
     the orbit \((q_u(t),p_u(t))\) traces out
-    a curve on the 2D-plane \(\Rt{T} \times \R\) which we call the \((q,p)\)-plane.
+    a curve on the 2D-plane \(\Rt{T_u} \times \R\) which we call the \((q,p)\)-plane.
 \end{cor}
 
 \section{Summary of Results}
@@ -876,9 +883,9 @@ into the simply actuated coordinates
 where \(q = (q_u,q_a)\) and \(p = (p_u,p_a)\).
 
 We defined a virtual nonholonomic
-constraint as a \(C^2\) function 
-\(h : \mathcal{Q} \times \mathcal{P} \rightarrow \R^k\) which has no singular
-points on its constraint manifold
+constraint as a function 
+\(h \in C^2(\mathcal{Q}\times\mathcal{P}; \R^k)\) 
+which has no singular points on its constraint manifold
 \[
     \Gamma = \left\{(q,p) \mid h(q,p) = 0, dh_q \dot{q} + dh_p \dot{p} = 0\right\}
     .
@@ -896,23 +903,23 @@ if the square matrix
 \]
 is invertible on \(\Gamma\).
 
-To find the explicit equations for the dynamics on \(\Gamma\) of a regular VNHC, 
+To find the explicit equations for constrained dynamics of a regular VNHC, 
 we made the following assumptions:
 \begin{itemize}
     \item The inertia matrix satisfies 
         \(\nabla_{q_u}M(q) = \Zmat{n(n-k) \times n}\).
-    \item On \(\Gamma\), one can solve linearly for \(q_a\) as a function of
+    \item On \(\Gamma\), one can solve for \(q_a\) as a function of
         \((q_u,p_u)\).
 \end{itemize}
 If these assumptions hold, one can solve for \(p_a = g(q_u,p_u)\) on \(\Gamma\).
 The constrained dynamics are then given by
 \((\dot{q_u}, \dot{p_u})\) subject to \(h(q,p_u) = 0\) and \(p_a = g(q_u,p_u)\).
 
-Finally, the benefit of using VNHCs is that they reduce the
-dimensionality of the system from \(2n\) equations of motion to \(2(n-k)\) of
-them.
-This can significantly reduce the complexity of analyzing the evolution of the
-system.
+Finally, we saw the benefit of using VNHCs is that they reduce the
+dimensionality of the system from \(2n\) equations of motion to \(2(n-k)\)
+equations significantly reduces the complexity of analyzing large systems.
+In particular, if the system has degree of underactuation one, the dynamics
+reduce to a \(2\)D system on the ``\((q,p)\)-plane" \(\Rt{T}\times\R\).
 
 %%/========== /Virtual Nonholonomic Constraints ==========/% 
 % vim: set tw=80 ts=4 sw=4 sts=0 et ffs=unix :
