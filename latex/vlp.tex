@@ -112,17 +112,18 @@ The control input is a force \(\tau \in \mathbb{R}\) affecting the dynamics of
 We assume the force does not affect the dynamics of \(p\) in any way -
 that is, the control input cannot enact any lateral force on the pendulum.
 This makes the VLP into an underactuated mechanical system with degree of
-underactuation 1. 
+underactuation one. 
 It is also a useful assumption because it means \((\mathbf{q},\mathbf{p})\) 
 are simply actuated coordinates, which allows us to apply the theory of VNHCs we
 developed in Chapter \ref{ch:vnhcs}.
 
-Let us define the VNHC \(l = L(q,p)\) -- by which we mean we are
+Let us define the VNHC \(l = L(q,p)\), by which we mean we are
 actually defining the VNHC \(h(\mathbf{q},\mathbf{p}) = l - L(q,p) = 0\) of
 order 1.
 The VLP satisfies
-\(\nabla_q \Minv(\mathbf{q}) = \Zmat{2 \times 2}\);
-therefore, \(h(\mathbf{q},\mathbf{p})\) is a regular VNHC whenever 
+\(\nabla_q \Minv(\mathbf{q}) = \Zmat{2 \times 2}\).
+By Theorem \ref{thm:vnhc-regularity},
+\(h(\mathbf{q},\mathbf{p})\) is a regular VNHC whenever 
 \(L(q,p)\) is \(C^2\) because
 \[
    dh_{\mathbf{q}} \Minv(\mathbf{q})B = 
@@ -145,7 +146,7 @@ The constraint manifold is
 phase \((q,p)\).
 The constrained dynamics are Hamiltonian, and Theorem \ref{thm:zero-dynamics}
 tells us they are described entirely by \((\dot{q},\dot{p})\) with \(l\)
-replaced by \(L(q,p)\),
+replaced by \(L(q,p)\):
 \begin{align}\label{eqn:vlp-hamiltonian}
    \mathcal{H}(q,p) &= \frac{1}{2} \frac{p^2}{mL^2} - \frac{1}{2}\dot{L}^2 -
       mgL\cos(q)
@@ -368,6 +369,7 @@ As part of the proof, we will require the following lemma.
    For any \(x,y \in \R\),
    \[
       \sign{x^3 - y^3} = \sign{x-y}
+      .
    \]
 \end{lemma}
 \begin{proof}
@@ -426,6 +428,7 @@ average.
    \[
        E_\text{avg}(q,p) := \frac{1}{2}\frac{p^2}{m l_\text{avg}^2} 
            + m g l_\text{avg} (1-\cos(q))
+      .
    \]
    This is positive definite at \((0,0)\) and has compact sublevel
    sets on \(D\). 
@@ -435,12 +438,15 @@ average.
               {l_\text{avg}^2L(\theta)^2}
       .
    \]
-   The sign of \(\sin(q)p\) is dependent only on the quadrant in the
-   \((q,p)\)-plane, so one can show it is equal to the sign of
-   \(\sin(2\theta)\). 
+   The sign of \(\sin(q)p\) depends only on the quadrant in the
+   \((q,p)\)-plane. In fact, it is easy to show that
+   \[
+      \sign{sin(q)p} = \sign{\sin(2\theta)}
+      .
+   \]
    Furthermore, by Lemma \ref{lemma:sign-of-cube} we have
    \[ 
-       \sign{l_\text{avg}^3 - L(\theta)^3} = \sign{l_\text{avg} - L(\theta)}
+       \sign{L(\theta)^3 - l_\text{avg}^3} = \sign{L(\theta) - l_\text{avg}}
        .
    \]
    The derivative of \(E_\text{avg}\) is nonnegative since
@@ -451,7 +457,7 @@ average.
                 &\leq 0 \text{ (by assumption)}
       .
    \end{align*}
-   Thus, \(E_\text{avg}\) is a Lyapunov function and the negative-time system is
+   Thus, \(E_\text{avg}\) is a Lyapunov function, which means the negative-time system is
    stable \cite{lyapunov}. 
    The last step of the proof is to show that (\ref{eqn:negative-time-vlp})
    asymptotically converges to \((0,0)\). 
@@ -550,7 +556,7 @@ the restriction \(l \in [\underline{l},\overline{l}]\), one might predict that
 \((L^\star)^{-}(\theta)\) is the optimal energy dissipation strategy for the VLP.
 This is, in fact, true. \citet{pumping_swing_standing_squatting} showed 
 that squatting at the lowest point of a swing and standing at the highest
-(instead of standing and squatting, resp.) produces the
+(instead of standing and squatting, respectively) produces the
 time-optimal trajectory for \textit{stopping} a standing swing. 
 
 All together, the theory developed in this chapter shows that VNHCs can
