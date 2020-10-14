@@ -164,6 +164,108 @@ where the inverse inertia matrix is
 % TODO: Describe Xingbo's results and observe that his results were similar to a VNHC
 % except they used VHC tools. We will modify his approach to use VNHCs and prove
 % rigorously that we can stabilize any energy level set on the acrobot.
+As we saw at the beginning of this chapter, there are some existing approaches
+to generating giant motion for the acrobot.
+We will examine a few of these approaches and examine whether they are viable
+candidates on which to base a VNHC, akin to how we designed the VLP constraint
+in Chapter \ref{ch:vlp}.
+
+An instinctive approach to controlling the acrobot is to model it as a
+variable-length pendulum as in Figure \ref{fig:acrobot-ecm}, 
+since the length of its equivalent center of mass (ECM) changes with the leg motion. 
+For instance, \citet{swingup_giant_acrobot} design a desired trajectory for the
+ECM, then determine which leg angles \(q_a(t)\) are required to generate that
+trajectory.
+
+\begin{figure}
+    \centering
+    \includestandalone[width=0.5\textwidth]{images/acrobot_ecm}
+    \caption{A simple acrobot modelled as a VLP with equivalent center of mass \(2m\). 
+        The length of the VLP changes according to \(q_a\).}
+    \label{fig:acrobot-ecm}
+\end{figure}
+
+Unfortunately, the VLP is not a true representation of the acrobot.
+The effective length of the ECM is 
+\[
+    l_e(q_a) := l\sqrt{\frac{5}{4} + cos(q_a)}
+    ,
+\]
+and its effective angle is
+\[
+    q_e := \arctan_2(s_u + \frac{1}{2}s_{ua}, -c_u - \frac{1}{2}c_{ua})
+    .
+\]
+There are two things of note here. 
+First, Figure \ref{fig:acrobot-vlp-symmetry} shows there are two configurations
+of the acrobot which give the same effective angle and length.
+This means the acrobot and the VLP are not equivalent representations;
+designing a VNHC that injects energy using the ECM may not produce human-like
+leg motion on the acrobot.
+Second, the torque input \(\tau\) applied to \(q_a\) affects both
+\(l_e\) and \(q_e\). 
+In the VLP model from Chapter \ref{ch:vlp}, the control input only
+affects the dynamics of the length variable.
+If we wanted to design a VNHC to provably inject energy into the acrobot, we
+would need to fully redesign the VLP constraint with a model where the control
+input has a direct effect on the angle.
+
+\begin{figure}
+    \centering
+    % TODO: Generate a figure with the ECM at one position, and two mirrored
+    % acrobots (dashed) around it to show how the VLP and acrobot are not
+    % equivalent.
+%    \includestandalone[width=0.5\textwidth]{}
+    \caption{The equivalent center of mass of the acrobot generally has two configurations
+        which correspond to the same effective length and angle. These
+        configurations are symmetric about the line connecting the pivot to the
+        ECM.}
+    \label{fig:acrobot-vlp-symmetry}
+\end{figure}
+
+Since the VLP representation of the acrobot requires redesigning a VLP
+controller, and the resulting motion may not even be realistic giant motion,
+this model is clearly ineffective for our purposes.
+
+We turn to the thesis of \citet{xingbo_thesis}, who designs a VHC to enforce a
+so-called ``tap" motion, with the purpose of injecting energy into the acrobot. 
+First, he defines a compensator variable \(s\) which tracks \(\dot{q}_u\), so
+that he can use the theory of VHCs with the extended configuration 
+\((q_u,q_a,s)\).
+He then finds \(h_1, h_2 \in \R_{>0}\) to define the
+normalized radius \(\rho\) and normalized angle \(\xi\) in the
+\((q_u, s)\)-plane.
+These normalized variables are given by
+\begin{align*}
+    \rho &:= \sqrt{h_1 q_u^2 + h_2 s^2}
+    , \\
+    \xi &:= \arctan_2(h_2 s, h_1 q_u)
+    . 
+\end{align*}
+He then sets the VHC to be \(h(q) = q_a - f_\text{rad}(\rho)f_\text{ang}(\xi)\)
+with the control parameters \(\bar{q}_u\) and \(\rho_0\), where
+\begin{align*}
+    f_\text{rad}(\rho) &:= \tanh^2(\rho/\rho_0)
+    , \\
+    f_\text{ang}(\xi) &:= 
+    \begin{cases}
+        0 & -\pi < \xi \leq 0 \\
+        \bar{q}_u \exp\left(1 - \frac{1}{1-(\frac{4\xi}{\pi} - 1)^2}\right) 
+          & 0 < \xi \leq \frac{\pi}{2} \\
+        0 & \frac{\pi}{2} < \xi \leq \pi
+        .
+    \end{cases}
+\end{align*}
+
+While his VHC shows promising experimental results, \citeauthor{xingbo_thesis}
+does not provide an analytical proof that the acrobot gains energy.
+His lack of analysis is tied to the fact that the constrained
+(Lagrangian) dynamics are incredibly complicated.
+In fact, it is even challenging to show that the constraint is regular.
+While we could very easily convert his VHC into a VNHC by replacing \(s\) with
+\(p_u\), we would run into the same problem. 
+Since we want our constraint to \textit{provably} inject energy, we choose to
+forgo this type of constraint.
 
 \section{The Acrobot Constraint}
 % TODO: Give the constraint, state the theorem, and show the outline of the
