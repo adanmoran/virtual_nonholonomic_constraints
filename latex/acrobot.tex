@@ -161,11 +161,24 @@ where the inverse inertia matrix is
 \end{equation}
 The control input is a force \(\tau \in \R\) affecting only the dynamics of
 \(p_a\), representing a torque acting on the hip joint.
-This means \((q,p)\) are simply actuated coordinates, allowing us once again to
+This means \((q,p)\) are simply actuated coordinates inside the phase space
+\(\mathcal{Q} \times \mathcal{P}\) where
+\[
+    \mathcal{Q} = \mathcal{Q}_u \times \mathcal{Q}_a = 
+    \mathbb{S}^ \times \mathbb{S}^1
+    ,
+\]
+and
+\[
+    \mathcal{P} = \mathcal{P}_u \times \mathcal{P}_a
+    = \R \times \R
+    .
+\]
+This allowg us once again to
 apply the theory of VNHCs from Chapter \ref{ch:vnhcs}.
 
 Let us define the VNHC \(h(q,p) = q_a - f(q_u,p_u)\) of order 1, where
-\(f \in C^2\left(\mathbb{S}^1 \times \R; \R\right)\).
+\(f \in C^2\left(\mathcal{Q}_u \times \mathcal{P}_u; \mathcal{Q}_a\right)\).
 To enforce regularity of \(h(q,p)\), we note that 
 \(\nabla_{q_u}\Minv(q) = \Zmat{2\times 2}\).
 Examining Theorem \ref{thm:vnhc-regularity}, our VNHC will be regular
@@ -183,21 +196,22 @@ Since
     ,
 \]
 the regularity matrix evaluates to the scalar equation
-\[
+\begin{equation}\label{eqn:regularity-matrix-acrobot}
     \frac{(1+c_a)\partial_{q_u}f(q_u,p_u) + (3+2c_a)}{ml^2(2-c_a^2)}
-\]
+    ,
+\end{equation}
 which is full rank if and only if the numerator does not
 change sign.
-A sufficient condition for this is when \(f\) is a function solely of \(p_u\),
-so that \(\partial_{q_u}f = 0\).
-If this is the case, the regularity matrix is always positive and the VNHC 
-\(h(q,p)\) is regular.
 
-The acrobot is a noticeably more complex system than the VLP, as
-the dynamics are coupled because \(\Minv(q)\) is not diagonal.
+A sufficient condition for regularity is when \(f\) is a function solely of \(p_u\),
+because \(\partial_{q_u}f = 0\)
+and (\ref{eqn:regularity-matrix-acrobot}) becomes strictly positive for all
+values of \(q_a\).
+
+The acrobot is noticeably more complex than the VLP, as
+the dynamics of \((q_u,p_u)\) and \((q_a,p_a)\) are coupled through \(\Minv(q)\).
 Because of this, the constrained dynamics of an arbitrary VNHC may not be easy
-to determine analytically, which will impact our ability to prove energy
-injection analytically.
+to write out.
 In the rest of this chapter, our goal is to design the function \(f(q_u,p_u)\)
 based on the natural human motion of a gymnast, with the caveat that the
 resulting VNHC be regular and that we can prove the constrained dynamics will
