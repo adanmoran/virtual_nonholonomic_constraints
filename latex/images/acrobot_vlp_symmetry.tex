@@ -21,7 +21,7 @@
     \pgfmathsetmacro{\xe}{\len*(sin(\qu)+0.5*sin(\qu+\qa))};
     \pgfmathsetmacro{\ye}{-\len*(cos(\qu)+0.5*cos(\qu+\qa))};
     % The base of the pivot
-    \draw[thick] (-2,0) coordinate (leftwall) -- (2+\len,0) coordinate (rightwall);
+    \draw[thick] (-2,0) coordinate (leftwall) -- (2,0) coordinate (rightwall);
     \fill[black] (origin) circle (0.05);
     % Fill a cross-hatched wall above the pivot
     \fill[pattern=north east lines] (leftwall) rectangle ($(rightwall) + (0,0.1)$);
