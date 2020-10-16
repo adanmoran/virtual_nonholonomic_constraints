@@ -34,14 +34,13 @@ its equilibrium point above the bar using partial feedback linearization
 human motion \cite{swingup_giant_acrobot, motion_control_gymnastic_skill}.
 
 In gymnastics terminology, a ``giant" is the motion a gymnast performs to
-achieve full rotations around the bar with their body almost fully extended
-\cite{usagym_giant}. 
-We are interested in studying the energy stabilization problem for the acrobot
-by using VNHCs to generate giant motion. 
-The control of giant motion for the acrobot has been studied thoroughly
-\cite{energy_pumping_robotic_swinging, swingup_giant_acrobot,
-control_giant_two_link_gymnastic_robot}, including several studies which use
-virtual (holonomic) constraints to achieve this behaviour
+achieve full rotations around the bar \cite{usagym_giant}. 
+We are interested in using VNHCs to generate giant motion, with the aim of
+stabilizing desired energy levels.
+The control of giant motion for the acrobot has been studied in
+\cite{energy_pumping_robotic_swinging, swingup_giant_acrobot}, 
+and some authors have used virtual holonomic constraints to achieve this
+behaviour
 \cite{dynamical_servo_acrobot_vc, control_giant_two_link_gymnastic_robot,
 xingbo_thesis}. 
 However, these controllers are neither intuitive nor easy to
@@ -51,13 +50,14 @@ a trajectory in time onto the state space;
 \cite{dynamical_servo_acrobot_vc} requires a cascade controller to stabilize
 both a constraint and a desired limit cycle in the state space; 
 and \cite{xingbo_thesis} enforces the giant by adding an extra state to estimate
-the velocity, which increases the dimensionality of the problem in a crude
+velocity, which increases the dimensionality of the problem in a crude
 approach to using VNHCs.
 
 In this chapter we will design a physically-intuitive VNHC which generates giant
-motion. We will prove that this VNHC injects energy into the acrobot;
-in the process of completing this proof, we will arrive at a promising method
-which might be useful for generating desirable VNHCs in the future.
+motion and prove the acrobot gains energy. 
+In the process of completing this proof, we will arrive at a promising method
+which might one day be useful for generating energy-injecting VNHCs on arbitrary
+mechanical systems.
 
 \section{Dynamics of the Acrobot}
 Suppose we are given an acrobot as in Figure \ref{fig:acrobot-model} modelling a
@@ -87,19 +87,18 @@ follows \cite{xingbo_thesis}:
     .
 \end{align}
 
-While this is the most general representation of an acrobot, the Hamiltonian
-dynamics become too unwieldy for analytically proving results in this chapter.
-To make the analysis tractable, we begin by assuming the acrobot is comprised of
-two massless rods of equal length \(l\), with equal point masses \(m\) at the
-tips (as in Figure \ref{fig:simple-acrobot-model}).
-We call this type of acrobot a \textbf{simple} acrobot. 
-We will also ignore any frictional forces at both the hips and shoulder. 
+While this is the most general representation of an acrobot, the dynamics
+become unwieldy.
+To make rigorous analysis of these dynamics more tractable, we begin by assuming
+the acrobot is comprised of two massless rods of equal length \(l\), with equal
+point masses \(m\) at the tips.
+We call this a \textit{simple} acrobot, which is displayed in Figure
+\ref{fig:simple-acrobot-model}.
+We will also ignore any frictional forces at both the hip and shoulder joints. 
 Finally, it is important to note that a real gymnast cannot swing their legs in
 full circles; 
 for this reason, we assume that \(q_a \in [-\bar{q}_a, \bar{q}_a]\) where 
 \(\bar{q}_a \in ]-\pi, \pi[\). 
-If the acrobot is a robot as opposed to the model of a gymnast, 
-\(\bar{q}_a\) can be used as a control parameter when designing VNHCs.
 
 \begin{figure}
     \centering
@@ -109,10 +108,10 @@ If the acrobot is a robot as opposed to the model of a gymnast,
     \label{fig:simple-acrobot-model}
 \end{figure}
 
-Taking these assumptions on the model of a simple acrobot, 
-the moments of inertia \(J_u\) and \(J_a\) of the rods vanish. 
-Furthermore, \(l_{c_u} = l_{c_a} = l_u = l_a = l\) and
+Since we are now working with a simple acrobot, 
+we have \(l_{c_u} = l_{c_a} = l_u = l_a = l\) and
 \(m_u = m_a = m\). 
+On top of this, the moments of inertia \(J_u\) and \(J_a\) of the rods vanish.
 Reducing
 (\ref{eqn:general-acrobot-inertia}-\ref{eqn:general-acrobot-potential})
 yields the simplified inertia matrix \(D_s\) and potential function \(P_s\),
@@ -164,31 +163,30 @@ The control input is a force \(\tau \in \R\) affecting only the dynamics of
 This means \((q,p)\) are simply actuated coordinates inside the phase space
 \(\mathcal{Q} \times \mathcal{P}\) where
 \[
-    \mathcal{Q} = \mathcal{Q}_u \times \mathcal{Q}_a = 
-    \mathbb{S}^ \times \mathbb{S}^1
+    \mathcal{Q} = \mathcal{Q}_u \times \mathcal{Q}_a := 
+    \mathbb{S}^1 \times \mathbb{S}^1
     ,
 \]
 and
 \[
     \mathcal{P} = \mathcal{P}_u \times \mathcal{P}_a
-    = \R \times \R
+    := \R \times \R
     .
 \]
-This allowg us once again to
-apply the theory of VNHCs from Chapter \ref{ch:vnhcs}.
+This allows us once again to apply the theory of VNHCs from Chapter
+\ref{ch:vnhcs}.
 
 Let us define the VNHC \(h(q,p) = q_a - f(q_u,p_u)\) of order 1, where
 \(f \in C^2\left(\mathcal{Q}_u \times \mathcal{P}_u; \mathcal{Q}_a\right)\).
-To enforce regularity of \(h(q,p)\), we note that 
-\(\nabla_{q_u}\Minv(q) = \Zmat{2\times 2}\).
-Examining Theorem \ref{thm:vnhc-regularity}, our VNHC will be regular
+Since \(\nabla_{q_u}\Minv(q) = \Zmat{2\times 2}\),
+Theorem \ref{thm:vnhc-regularity} tells us that this VNHC will be regular
 if the regularity matrix
 \[
     dh_q \Minv(q) \begin{bmatrix}0 \\ 1 \end{bmatrix}
     ,
 \]
 is of full rank on the constraint manifold \(\Gamma\).
-Since 
+Then, since 
 \[
     dh_q = \begin{bmatrix}
         -\partial_{q_u} f & 1
@@ -198,24 +196,25 @@ Since
 the regularity matrix evaluates to the scalar equation
 \begin{equation}\label{eqn:regularity-matrix-acrobot}
     \frac{(1+c_a)\partial_{q_u}f(q_u,p_u) + (3+2c_a)}{ml^2(2-c_a^2)}
-    ,
+    .
 \end{equation}
-which is full rank if and only if the numerator does not
+This is full rank on \(\Gamma\) if and only if the numerator does not
 change sign.
 
 A sufficient condition for regularity is when \(f\) is a function solely of \(p_u\),
-because \(\partial_{q_u}f = 0\)
-and (\ref{eqn:regularity-matrix-acrobot}) becomes strictly positive for all
-values of \(q_a\).
+because then \(\partial_{q_u}f = 0\) and (\ref{eqn:regularity-matrix-acrobot})
+is strictly positive for all values of \(q_a\). 
+This will be useful later, as we will not need to check regularity if we design
+a function of the unactuated momentum. 
 
 The acrobot is noticeably more complex than the VLP, as
 the dynamics of \((q_u,p_u)\) and \((q_a,p_a)\) are coupled through \(\Minv(q)\).
 Because of this, the constrained dynamics of an arbitrary VNHC may not be easy
 to write out.
 In the rest of this chapter, our goal is to design the function \(f(q_u,p_u)\)
-based on the natural human motion of a gymnast, with the caveat that the
-resulting VNHC be regular and that we can prove the constrained dynamics will
-inject energy into the acrobot.
+based on the natural human motion of a gymnast, with one caveat: 
+we must be able to prove the constrained dynamics will inject energy into the
+acrobot.
 
 \section{Previous Constraint Approaches}
 % TODO: Give Xingbo's intuition, abstract away to qa = sin(theta) constraint
@@ -223,11 +222,10 @@ inject energy into the acrobot.
 % TODO: Describe Xingbo's results and observe that his results were similar to a VNHC
 % except they used VHC tools. We will modify his approach to use VNHCs and prove
 % rigorously that we can stabilize any energy level set on the acrobot.
-There are a few existing approaches to generating giant motion for the acrobot
-which may be viable candidates on which to base a VNHC, akin to how we designed
-the VLP constraint in Chapter \ref{ch:vlp}.
+Let us examine some of the existing approaches to generating giant motion for
+the acrobot, since these may be viable candidates on which to base a VNHC.
 
-An initial approach to controlling the acrobot is to model it as a
+One initial approach to controlling the acrobot is to model it as a
 variable-length pendulum by collapsing the two rods and masses into one
 equivalent center of mass (ECM), as in Figure \ref{fig:acrobot-ecm}.
 This seems a reasonable model reduction, since the length from the pivot to the
@@ -235,7 +233,11 @@ ECM changes depending on the angle \(q_a\) of the leg.
 Indeed, \citet{swingup_giant_acrobot} use this approach to design a trajectory
 for the ECM, then determine which leg angles \(q_a(t)\) are required to generate
 that trajectory.
-
+Following in their footsteps, we might consider using the results
+from Chapter \ref{ch:vlp} to find the leg angles that allow the ECM to gain
+energy. 
+Then we could apply Theorem \ref{thm:vlp-energy-stabilization} to prove
+the acrobot is gaining energy too.
 \begin{figure}
     \centering
     \includestandalone[width=0.5\textwidth]{images/acrobot_ecm}
@@ -247,18 +249,18 @@ that trajectory.
 Unfortunately, the VLP is not a true representation of the acrobot.
 The effective length of the ECM is 
 \[
-    l_e(q_a) := l\sqrt{\frac{5}{4} + cos(q_a)}
+    l_e(q_a) := l\sqrt{\frac{5}{4} + c_a}
     ,
 \]
 and its effective angle is
 \[
-    q_e := \arctan_2(s_u + \frac{1}{2}s_{ua}, -c_u - \frac{1}{2}c_{ua})
+    q_e := \arctan_2\left(s_u + \frac{1}{2}s_{ua}, -c_u - \frac{1}{2}c_{ua}\right)
     .
 \]
-There are two important thing to note here. 
+There are two important notes to consider based on these equations. 
 First, Figure \ref{fig:acrobot-vlp-symmetry} shows that for each pose of the
 VLP representation, there are two configurations
-of the acrobot which give the same effective angle and length.
+of the acrobot which give the same effective length and angle.
 This means the acrobot and the VLP are not equivalent representations;
 designing a VNHC that injects energy using the ECM may not produce human-like
 leg motion on the acrobot.
@@ -273,10 +275,7 @@ from Chapter \ref{ch:vlp} because the VLP models don't match.
 
 \begin{figure}
     \centering
-    % TODO: Generate a figure with the ECM at one position, and two mirrored
-    % acrobots (dashed) around it to show how the VLP and acrobot are not
-    % equivalent.
-%    \includestandalone[width=0.5\textwidth]{}
+    \includestandalone[width=0.3\textwidth]{images/acrobot_vlp_symmetry}
     \caption{The equivalent center of mass of the acrobot generally has two configurations
         which correspond to the same effective length and angle. These
         configurations are symmetric about the line connecting the pivot to the
@@ -284,11 +283,11 @@ from Chapter \ref{ch:vlp} because the VLP models don't match.
     \label{fig:acrobot-vlp-symmetry}
 \end{figure}
 
-Since the VLP representation of the acrobot requires redesigning a VLP
-VNHC, and the resulting ECM motion may not produce realistic leg motion,
-this model is clearly ineffective for our purposes. 
+Since we cannot apply the results of Chapter \ref{ch:vlp} to simplify the proof
+of energy injection, and the resulting ECM motion may not even produce
+realistic leg motion, this model reduction is ineffective for our purposes. 
 
-Let us turn to the thesis of \citet{xingbo_thesis}, who designs a VHC to enforce a
+Let us turn next to the thesis of \citet{xingbo_thesis}, who designs a VHC to enforce a
 so-called ``tap" motion with the purpose of injecting energy into the acrobot. 
 First, he defines a compensator variable \(s\) which tracks \(\dot{q}_u\), so
 that he can use the theory of VHCs with the extended configuration 
