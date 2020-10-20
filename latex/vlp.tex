@@ -382,6 +382,30 @@ As part of the proof, we will require the following lemma.
    which proves the lemma.
 \end{proof}
 
+Before stating our theorem, we must rigorously what we mean by ``energy
+injection" for the VLP. 
+First, we want the phase of the VLP to move away from the origin; 
+second, we want the system to reach any desired momentum in finite time.
+These are captured mathematically by the following definitions.
+
+\begin{defn}\label{defn:energy-injection}
+   Let \(\dot{x} = f(x)\) be a planar ODE defined on \(D \subset \R^2\) and that
+   \(f(0) = (0,0)\).
+   The ODE experiences \textit{energy injection on \(D\)} if
+   \begin{enumerate}
+      \item The origin is a repeller 
+         (or equivalently, it is asymptotically stable in negative time).
+      \item For all compact sets \(K \subset D\), there exists \(T > 0\) where,
+         for all \(t > T\), \(x(t) \not \in K\).
+   \end{enumerate}
+\end{defn}
+
+\begin{defn}
+   We say that a regular VNHC \(h\) \textit{injects energy into the VLP} if the
+   constrained dynamics experience energy injection everywhere on the
+   constraint manifold, except for possibly a set of measure zero.
+\end{defn}
+
 Supposing the initial condition of the VLP is not an equilibrium, we will show that the
 constrained dynamics trace out a curve on the \((q,p)\)-plane which is diverging
 from the origin.  
@@ -393,9 +417,7 @@ average.
    Define \(\theta := \arctan_2(p,q)\).
    Let \(L : \mathbb{S}^1 \rightarrow [\underline{l},\overline{l}]\) be a
    \(C^2\) function of \(\theta\).
-   Suppose the initial condition of the VLP's unactuated variables is
-   \((q_0,p_0) \not \in \left\{(0,0),(\pm\pi,0)\right\}\).
-   A VNHC of the form 
+   A regular VNHC of the form 
    \(h(\mathbf{q},\mathbf{p}) = l - L(\theta)\) injects energy into the VLP
    if there exists 
    \(l_\text{avg} \in [\underline{l},\overline{l}]\) such that 
@@ -409,7 +431,7 @@ average.
    If the inequality is flipped, the VNHC dissipates energy. 
 \end{thm}
 \begin{proof}
-   Let \(\Gamma\) be the constraint manifold for \(h\).
+   Let \(\Gamma = \mathbb{S}^1 \times \R \) be the constraint manifold for \(h\).
    In negative-time, the dynamics on \(\Gamma\) are
    \begin{equation}\label{eqn:negative-time-vlp}
       f(q,p) = 
@@ -421,8 +443,32 @@ average.
       \end{bmatrix}
       .
    \end{equation}
-   Let \(D = \Gamma \backslash \{(\pm \pi, 0)\}\)
-   be the domain of interest on which we study this negative-time system.
+   We will first study the upright equilibrium \((\pm \pi, 0)\). 
+   The linearization of (\ref{eqn:negative-time-vlp}) at this
+   equilibrium is given by
+   \[
+      df_{(\pm \pi,0)} = \begin{bmatrix}
+         0 & -\frac{1}{mL(\pi)^2} \\
+         -m g L(\pi) & 0 \\
+      \end{bmatrix}
+      ,
+   \]
+   which has eigenvalues at \(\lambda = \pm \frac{g}{L(\pi)}\).
+   Since this equilibrium has only one negative eigenvalue, the stable manifold
+   theorem tells us that the set of initial conditions on \(\Gamma\) which
+   converge to \((\pm \pi,0)\) is one-dimensional \textbf{SOURCE?}.
+   Label this set of initial conditions
+   \[
+      \Pi_0 := \left\{ (q_0,p_0) \mid \lim_{t \to \infty} (q(t),p(t)) = (\pm pi, 0) \right\}
+      .
+   \]
+   Since \(\Gamma\) is 2D, \(\Pi_0\) is a set of measure zero.
+   We therefore assume the system is not initialized on \(\Pi_0\), and will show
+   that the origin is almost everywherethat globally asymptotically stable.
+   % TODO: show (0,0) is a repeller and that all compact sets are left, forever,
+   % in finite time
+%   Let \(D = \Gamma \backslash \{(\pm \pi, 0)\}\)
+%   be the domain of interest on which we study this negative-time system.
    Choose, as a candidate Lyapunov-like function, the energy for the
    average-length pendulum with zero-potential at the bottom of the swing:
    \[
@@ -431,7 +477,7 @@ average.
       .
    \]
    This is positive definite at \((0,0)\) and has compact sublevel
-   sets on \(D\). 
+   sets on \(\Gamma\). 
    The derivative of \(E_\text{avg}\) along (\ref{eqn:negative-time-vlp}) is
    \[
       \dot{E}_\text{avg} = \frac{g\sin(q)p \left(L(\theta)^3 - l_\text{avg}^3\right)}
@@ -450,19 +496,20 @@ average.
        .
    \]
    The derivative of \(E_\text{avg}\) is nonnegative since
-   \begin{align*}
+   \begin{align}\label{eqn:vlp-proof-neg-inv}
     \sign{\dot{E}_\text{avg}} &= \sign{\sin(q)p \left(L(\theta)^3 - l_\text{avg}^3\right)} \\
                 &= \sign{\sin(2\theta) \left(L(\theta) - l_\text{avg}\right)} \\
                 &= -\sign{(l_\text{avg} - L(\theta))\sin(2\theta)} \\
                 &\leq 0 \text{ (by assumption)}
       .
-   \end{align*}
+   \end{align}
    Thus, \(E_\text{avg}\) is a Lyapunov function, which means the negative-time system is
    stable \cite{lyapunov}. 
-   The last step of the proof is to show that (\ref{eqn:negative-time-vlp})
-   asymptotically converges to \((0,0)\). 
-   For this, we will use a Krasovskii-LaSalle argument
-   \cite{krasovskii_lasalle}.
+   Define \(D := \Gamma \backslash \Pi_0\) to be the domain of viable initial
+   conditions.
+   Using a Krasovskii-LaSalle argument \cite{krasovskii_lasalle}, 
+   we will prove that (\ref{eqn:negative-time-vlp}) asymptotically converges to
+   \((0,0)\) if it is initialized on \(D\).
    First, we define the zero-set
    \[
       Z = \left\{(q,p) \in \Gamma \mid 
@@ -480,7 +527,49 @@ average.
    Since \(f(q,p) = (0,0)\) only when \((q,p) = (0,0)\),
    the origin is asymptotically stable on \(D\) for the negative-time system.
    Hence, the positive-time system is diverging away from the origin 
-   in the \((q,p)\) plane, which means the VLP is gaining energy on average.
+   in the \((q,p)\) plane, which means the origin is a repeller.
+   This proves the first property of Definition \ref{defn:energy-injection}
+   holds for the positive-time system; we need only show the second property
+   also holds to complete the proof.
+   We will prove the second property by contradiction.
+   Let \(x(t)\) be the orbit for the positive-time system and assume
+   \(x(0) \in K\backslash \Pi_0\).
+   Suppose there exists a compact set \(K \subset \Gamma\) so that, for all
+   \(T > 0\), there exists \(t > T\) where \(x(t) \in K\).
+   Let 
+   \[
+      k := \sup\left\{E_\text{avg}(q,p) \mid (q,p) \in K \right\}
+      ,
+   \] 
+   be the largest energy value of \(K\), and let
+   \[
+      E_k := \left\{ (q,p) \in \Gamma \mid E_\text{avg}(q,p) \leq k \right\}
+      ,
+   \]
+   be the largest energy sublevel set surrounding \(K\).
+   Note that \(E_k\) is compact and negatively invariant (it is positively
+   invariant for the negative-time system).
+   Because \(K \subset E_k\), it follows that \(x(t) \in E_k\). 
+   Then, since \(E_k\) is negatively invariant, the half orbit
+   \(x([0,t])\) is contained fully within \(E_k\).
+   In particular, \(x(T) \in E_k\); 
+   but \(T\) was chosen arbitrarily, which implies \(x(t) \in E_k\) for all
+   \(t \in [0,\infty[\).
+   Since \(E_k\) is compact, \(x(t)\) has a positive limit set in
+   \(E_k\) which (by Poincar\'{e}-Bendixson) is either an equilibrium or a
+   closed orbit \textbf{SOURCE?}.
+   The system cannot have closed orbits, since this would violate asymptotic
+   stability of \((0,0)\) in negative time. 
+   Hence, the positive limit set must be one of the equilibria. 
+   The origin is a repeller, which means \(x(t)\) must be converging to 
+   \((\pm \pi,0)\).
+   This is a contradiction, since we assumed \(x(0) \not \in \Pi_0\).
+   \[
+      \Rightarrow \Leftarrow
+   \]
+   We have shown that orbits of the constrained dynamics will leave compact sets in
+   finite time, including sublevel sets of \(E_\text{avg}\).
+   Thus, the VLP must be gaining energy because its momentum is increasing.
    Flipping the inequality of (\ref{eqn:vlp-energy-gain-condition}) 
    means \(E_\text{avg}\) is a Lyapunov function for the positive time system;
    by the same arguments presented here, the VLP loses energy while converging
