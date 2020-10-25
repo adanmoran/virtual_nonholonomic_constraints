@@ -182,10 +182,28 @@ Finding the derivative of each momentum coordinate yields
 \[
     \dot{p}_i = -\frac{1}{2} p\tpose \nabla_{q_i}D\inv(q) p 
         - \pdiff{P}{q_i}(q) + B_i\tpose(q) \tau
-    ,
+    .
 \]
-which can be collected into vector form
-by using the matrix Kronecker product (see Appendix \ref{apx:kron-prod}).
+Recall the Kronecker product of matrices \cite{kronprod}, defined as follows.
+\begin{defn}
+    Let \(A \in \R^{n \times m}\) and \(B \in \R^{r \times s}\).
+    The Kronecker product \(A \otimes B \in \R^{nr \times ms}\) is the  matrix
+    \[
+        A \otimes B = \begin{bmatrix}
+            a_{1,1}B & \cdots & a_{1,m} B \\
+            \vdots & \ddots & \vdots \\
+            a_{n,1} B & \cdots & a_{n,m} B
+        \end{bmatrix} 
+        .
+    \]
+\end{defn}
+Using the kronecker product, one can collect the derivative of momentum into
+the vector form
+\[
+    \dot{p} = -\frac{1}{2} (\Id{n} \otimes p\tpose) \nabla_q D\inv(q) p
+    - \nabla_q P(q) + B(q) \tau
+    .
+\]
 In sum, when the kinetic energy is quadratic the Hamiltonian system reduces to
 \begin{align}\label{eqn:hamiltonian}
     \mathcal{H}(q,p) &= \frac{1}{2} p\tpose D^{-1}(q) p + P(q)
@@ -240,8 +258,7 @@ The following Lemma allows us to prove it is a canonical transformation.
 \begin{lemma}\label{lemma:linear-is-canonical}
     Let \(\mathcal{H}\) be a Hamiltonian system in canonical coordinates
     \((q,p)\).
-    Let \(A \in \R^{n\times n}\) be an invertible matrix such that
-    \(A\inv = A\tpose\).
+    Let \(A \in \R^{n\times n}\) be an orthogonal matrix.
     The change of coordinates \((q,p) \to (Q = Aq, P = Ap)\) is a canonical
     transformation.
 \end{lemma}
@@ -332,10 +349,10 @@ In the case that \(k = (n-1)\), the existence of any left annihilator
 
 \begin{lemma}\label{lemma:B-orthogonal}
     Suppose Assumption \ref{assm:B-const} holds. Then
-    there exist nonsingular matrices \(V,T \in \R^{k \times k}\) 
+    there exists a nonsingular matrix \(\hat{T} \in \R^{k \times k}\) 
     so that the regular feedback transformation 
     \[
-        \tau = V T \hat{\tau}
+        \tau = \hat{T} \hat{\tau}
     \] 
     has a new input matrix \(\hat{B}\) for \(\hat{\tau}\) which is left
     semi-orthogonal.  
@@ -358,7 +375,7 @@ defined by
     ,
 \]
 where \(\sigma_i \neq 0\) because \(B\) is full-rank \cite{calculating_svd}.
-Defining \(T \in \R^{k \times k}\) by
+Define \(T \in \R^{k \times k}\) by
 \[
     T = \begin{bmatrix}
         \frac{1}{\sigma_1} & 0 & \cdots & 0 \\
@@ -366,12 +383,13 @@ Defining \(T \in \R^{k \times k}\) by
     \vdots & & \ddots & \vdots \\
     0 & 0 & \cdots & \frac{1}{\sigma_k} \\
     \end{bmatrix}
-    ,
+    .
 \]
-and assigning the regular feedback transformation\(\tau = V T \hat{\tau}\), 
+Letting \(\hat{T} = V T\) and assigning the regular feedback
+transformation \(\tau = \hat{T} \hat{\tau}\), 
 we get a new input matrix for \(\hat{\tau} \in \R^k\) given by 
 \[
-    \hat{B} = B V T = 
+    \hat{B} = B \hat{T} = B V T = 
     U \begin{bmatrix}
         \Id{k} \\ \Zmat{(n-k)\times k}
     \end{bmatrix}
@@ -386,7 +404,7 @@ In light of Lemma \ref{lemma:B-orthogonal}, there is no loss of generality
 by making the following assumption.
 \begin{assm}\label{assm:B-orthogonal}
     Assume that the input matrix \(B\) is
-    left semi-orthogonal. 
+    left semi-orthogonal, \ie, \(B\tpose B = I_k\). 
 \end{assm}
 
 Let now \(\mathbf{B} \in \R^{n\times n}\) be the following matrix:
@@ -421,7 +439,7 @@ are affected by the input forces.
     Under Assumptions \ref{assm:B-const},\ref{assm:B-perp}, and
     \ref{assm:B-orthogonal}, the Hamiltonian system (\ref{eqn:hamiltonian})
     has simply actuated canonical coordinates 
-    \(\{Q = \mathbf{B}q, P = \mathbf{B}p\}\). The resulting dynamics are 
+    \(\left(Q = \mathbf{B}q, P = \mathbf{B}p\right)\). The resulting dynamics are 
     given by (\ref{eqn:simple-hamiltonian}),
     \begin{align}\label{eqn:simple-hamiltonian}
         \mathcal{H}(Q,P) &= 
@@ -548,7 +566,8 @@ constraints on a general class of systems.
     relation \(h(q,p) = 0\) where \(h : \mathcal{Q}\times\R^n \rightarrow \R^k\) is
     \(C^2\), \(\rank{\left[ dh_q,\, dh_p \right]} = k\) for all 
     \((q,p) \in h\inv(0)\), and there exists a feedback controller \(\tau(q,p)\)
-    stabilizing the \textit{constraint manifold}
+    rendering the \textit{constraint manifold} \(\Gamma\) invariant
+    where
     \[
         \Gamma = \left\{(q,p) \mid h(q,p) = 0, dh_q \dot{q} + dh_p \dot{p} = 0\right\}
         .
@@ -556,25 +575,32 @@ constraints on a general class of systems.
 \end{defn}
 
 From the definition of VNHCs, one finds that the constraint manifold \(\Gamma\)
-is a \(2(n-k)\)-dimensional surface inside \(\mathcal{Q} \times \R^n\). 
+is a \(2(n-k)\)-dimensional closed embedded submanifold of \(\mathcal{Q} \times \R^n\). 
 The next obvious question is the following: when does a feedback controller
 stabilizing \(\Gamma\) exist?
 
 One approach to answering this question is to
 define the error term \(e = h(q,p)\). 
 If there exists some controller \(\tau(q,p)\) driving \(e \to 0\) and 
-\(\dot{e} \to 0\), then the same \(\tau\) will necessarily stabilize \(\Gamma\). 
+\(\dot{e} \to 0\), then the same \(\tau\) will necessarily stabilize \(\Gamma\)
+(under additional mild conditions, see \cite{vhcs_for_el_systems})
+\footnote{The type of constraints we consider in this thesis are graphs of
+functions, and so meet these mild assumptions.}.
 
-If \(\tau\) first appears after \(r_i > 0\) derivatives of \(e_i\), 
-then \(e_i\) is said to have \textit{relative degree} \(r_i\).
-Collecting the \(e_i\) together, we say that \(e\) is of relative degree
-\(\{r_1,\ldots,r_k\}\).
+We say that \(e\) is of \textit{relative degree} \(\{r_1,\ldots,r_k\}\) if
+\begin{enumerate}
+    \item Some component of \(\tau\) appears at the \(r_i^\text{th}\) derivative
+        of \(e_i\) for \(i \in \{1,\ldots,k\}\).
+    \item In the vector of time-derivatives
+        \((e_1^{(r_1)}, \ldots, e_k^{(r_k)})\), the vector \(\tau\) is
+        premultiplied by a nonsingular matrix.
+\end{enumerate}
 With no further structure on \(h(q,p)\), the control input \(\tau\) usually
 appears after one derivative of \(e\); 
 unfortunately, if any \(e_i\) has relative degree \(r_i = 1\) we may not
 be able to stabilize \(\Gamma\). 
-We could guarantee \(h(q,p) \to 0\), but we could not in general guarantee 
-\(\dot{h}(q,p) \to 0\). 
+We could guarantee \(e_i(t) \to 0\), but we could not in general guarantee 
+\(\dot{e}_i(t) \to 0\). 
 
 Requiring \(e\) to have relative degree \(\{2,\ldots,2\}\) is much more
 useful, since it allows us to easily solve for a controller stabilizing \(\Gamma\).
@@ -620,7 +646,8 @@ As a reminder, our system is described in \((q,p)\) coordinates with
 \end{notation}
 
 \begin{thm}\label{thm:vnhc-regularity}
-    A VNHC \(h(q,p) = 0\) of order \(k\) is regular if and only if \(dh_{p_a} = 0\) 
+    A relation \(h(q,p) = 0\) for system (\ref{eqn:simply-actuated-hamiltonian})
+    is a regular VNHC of order \(k\) if and only if \(dh_{p_a} = 0\) 
     and
     \[
         \rank{\left(dh_q \Minv(q) - 
@@ -717,7 +744,8 @@ As a reminder, our system is described in \((q,p)\) coordinates with
 
 Using the expression \(\ddot{e} = E(q,p) + H(q,p)\tau\) from the proof of 
 Theorem \ref{thm:vnhc-regularity}, a regular VNHC of order \(k\) can be
-stabilized by the output-linearizing phase-feedback controller
+stabilized by\footnote{Under additional mild conditions
+\cite{vhcs_for_el_systems}} the output-linearizing phase-feedback controller
 \begin{equation}\label{eqn:vnhc-torque-controller}
     \tau(q,p) = -H\inv(q,p)\left(E(q,p) + k_p e + k_d \dot{e}\right)
     ,
@@ -760,7 +788,7 @@ dynamics.
     coordinates satisfying Assumption \ref{assm:inertially-actuated}. 
     Let \(h(q,p_u) = 0\) be a regular VNHC of order \(k\) with constraint
     manifold \(\Gamma\). Suppose that on \(\Gamma\) one can solve for
-    \(q_a\) as a function of \((q_u,p_u)\).
+    \(q_a\) as a function \(q_a = f(q_u,p_u)\).
     Then the constrained dynamics are given by
     \begin{equation}\label{eqn:qpu-dynamics}
         \left.\begin{aligned}
@@ -769,7 +797,7 @@ dynamics.
                 \end{bmatrix}\Minv(q)p \\
             \dot{p}_u &= -\nabla_{q_u}V(q) \\
             \end{aligned}{}\right|_{\begin{array}{c}
-                h(q,p_u) = 0 \\ 
+                q_a = f(q_u,p_u) \\ 
                 p_a = g(q_u,p_u) \\
             \end{array}}
             ,
@@ -783,7 +811,7 @@ dynamics.
         \begin{bmatrix}
             I_{n-k} \\
             \Zmat{k \times (n-k)} \\
-        \end{bmatrix} p_u\right)\right|_{h(q,p_u) = 0}
+        \end{bmatrix} p_u\right)\right|_{q_a = f(q_u,p_u)}
         .
     \end{aligned}
     \end{equation}
@@ -827,10 +855,9 @@ dynamics.
         .
     \]
     This yields a function \(p_a(q,p_u)\). However, on \(\Gamma\) we have 
-    \(h(q,p_u) = 0\) and can solve for \(q_a\) in terms of \((q_u,p_u)\);
-    hence, we can solve for \(p_a = g(q_u,p_u)\). Since \(q_a\) and
-    \(p_a\) can be computed directly from \((q_u,p_u)\), the dynamics on
-    \(\Gamma\) are parameterized only by \((\dot{q}_u,\dot{p}_u)\).
+    \(q_a = f(q_u,p_u)\), which we use to solve for \(p_a = g(q_u,p_u)\). 
+    Since \(q_a\) and \(p_a\) can be computed directly from \((q_u,p_u)\), the
+    dynamics on \(\Gamma\) are parameterized only by \((\dot{q}_u,\dot{p}_u)\).
 \end{proof}
 
 Theorem \ref{thm:zero-dynamics} shows that, for a particular class of systems
@@ -842,9 +869,9 @@ The following corollay applies Theorem \ref{thm:zero-dynamics} to
 systems with only one unactuated coordinate.
 
 \begin{cor}\label{cor:2d-zero-dynamics}
-    Suppose \(\mathcal{H}\) is a mechanical system in simply actuated
-    coordinates satisfying Assumption \ref{assm:inertially-actuated} 
-    which has degree of underactuation one.
+    Let \(\mathcal{H}\) be the system (\ref{eqn:simple-hamiltonian}) with degree
+    of underactuation one.
+    Suppose \(\mathcal{H}\) satisfies Assumption \ref{assm:inertially-actuated}.
     Let \(h(q,p_u) = 0\) be a regular VNHC of order \((n-1)\) of the form
     \(h(q,p_u) = q_a - f(q_u,p_u)\),
     where \(f\) is a suitably defined \(C^2\) function.
