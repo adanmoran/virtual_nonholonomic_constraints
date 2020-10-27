@@ -1,0 +1,43 @@
+
+%! TEX program = lualatex
+
+% Use :VimtexToggleMain to compile this file alone with Vimtex
+\documentclass[tikz]{standalone}
+
+\usepackage{sty/adantikz}
+
+\begin{document}
+\begin{tikzpicture}
+% Set the control variables
+\pgfmathsetmacro{\qb}{1};
+\pgfmathsetmacro{\pmax}{10};
+
+% Define the figure
+\begin{axis}[ 
+ axis line style = thick,
+ % Set the axes to be centered nicely
+ axis lines = center,
+ xlabel = $p_u$, 
+% x label style={at={(axis description cs:1.08,0)},anchor = east},
+ xmin = -10, xmax = 10,
+ ylabel = $q_a$,
+ y label style={at={(axis description cs:0.5,1.1)},anchor = north}, 
+ ymin = -2, ymax = 2,
+ % Custom tick labels at specified positions
+ xticklabels = {},
+ yticklabels = {$-\bar{q}_a\frac{\pi}{2}$,$\bar{q}_a\frac{\pi}{2}$},
+ ytick = {-\qb,\qb},
+ % Move the label so it looks good
+ yticklabel style={yshift={(\ticknum == 0)*(-0.25cm) + (\ticknum == 1)*(0.25cm)}}
+]
+    % Draw the arctan function
+    \addplot[black,domain=(-\pmax:\pmax),smooth]{2/pi*\qb*rad(atan(x))};
+
+    % Draw the dashed lines at qb and -qb
+    \draw[dashed, color=gray!40] (-\pmax,\qb) -- (\pmax,\qb);
+    \draw[dashed, color=gray!40] (-\pmax,-\qb) -- (\pmax,-\qb);
+\end{axis}
+
+\end{tikzpicture}
+\end{document}
+% vim: set tw=80 ts=4 sw=4 sts=0 et ffs=unix :
