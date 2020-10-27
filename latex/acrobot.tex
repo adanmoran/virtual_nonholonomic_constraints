@@ -97,8 +97,8 @@ We call this a \textit{simple} acrobot, which is displayed in Figure
 We will also ignore any frictional forces at both the hip and shoulder joints. 
 Finally, it is important to note that a real gymnast cannot swing their legs in
 full circles; 
-for this reason, we assume that \(q_a \in [-\bar{q}_a, \bar{q}_a]\) where 
-\(\bar{q}_a \in ]-\pi, \pi[\). 
+for this reason, we assume that \(q_a \in [-Q_a, Q_a]\) where 
+\(Q_a \in ]-\pi, \pi[\). 
 
 \begin{figure}
     \centering
@@ -304,9 +304,11 @@ These normalized variables are given by
 \end{align*}
 He then sets the VHC to be \(h(q) = q_a - f_\text{rad}(\rho)f_\text{ang}(\xi)\)
 with the control parameters \(\bar{q}_u\) and \(\rho_0\), where
-\begin{align*}
+\begin{align}
+    \label{eqn:xingbo-frad}
     f_\text{rad}(\rho) &:= \tanh^2(\rho/\rho_0)
     , \\
+    \label{eqn:xingbo-fang}
     f_\text{ang}(\xi) &:= 
     \begin{cases}
         0 & -\pi < \xi \leq 0 \\
@@ -315,7 +317,7 @@ with the control parameters \(\bar{q}_u\) and \(\rho_0\), where
         0 & \frac{\pi}{2} < \xi \leq \pi
         .
     \end{cases}
-\end{align*}
+\end{align}
 
 While this constraint shows promising experimental results and it accurately
 emulates true human motion, \citeauthor{xingbo_thesis}
@@ -331,6 +333,73 @@ this type of constraint in favour of something less complex.
 \section{The Acrobot Constraint}
 % TODO: Give the constraint, state the theorem, and show the outline of the
 % proof (both as a sketch and in a figure)
+One may be tempted to design a constraint \(q_a = f(\theta)\) 
+with \(\theta := \arctan_2(p_u,q_u)\), since it was so effective for the VLP in
+Chapter \ref{ch:vlp}.
+It can be challenging to show this type of constraint is regular.
+Recall that all constraints of the form \(h(q,p) = q_a - f(p_u)\)
+are regular, since the regularity equation (\ref{eqn:regularity-matrix-acrobot})
+becomes strictly positive.
+A momentum-based constraint approximates human motion may still be likely to
+inject energy into the acrobot.
+ 
+To design the acrobot constraint, let us imagine what a human does on
+a seated swing.
+When they are moving forward they extend their legs, and when they are moving
+backward they retract them. 
+In reality, the motion is slightly more complicated than that.:
+as the swing gains speed, the person leans their body back while
+extending their legs.
+This allows them to bring their legs higher, shortening the distance
+from their center of mass to the pivot and adding more energy to the swing.
+When the swing moves backward, they sit up and fully retract their legs
+underneath them.
+
+Now imagine we have affixed the torso of the acrobot to the swing's rope, so 
+that the legs can pivot both forwards and backwards.  
+In this case, the legs would pivot in the direction of motion
+proportionally to the swing's speed.
+One VNHC which emulates this process is \(q_a = \bar{q}_a\arctan_2( I p_u)\), as
+in Figure \ref{fig:qa-arctan}.
+Here, \(\bar{q}_a \in ]0,\frac{2 Q_a}{\pi}]\) so that 
+\(q_a \in [-Q_a, Q_a]\) and \(I > 0 \in \R\) is a fixed control parameter.
+
+This constraint is not a perfect emulation of a gymnast's movement -- during
+a giant the gymnast's legs are almost completely extended, while the constraint
+retracts the legs partially during rotations.
+However, the motion looks similar enough that this constraint should provide a
+decent foundation for injecting energy into the acrobot.
+It is for this reason that we choose our acrobot's constraint to be
+\begin{equation}\label{eqn:acrobot-constraint}
+    h(q,p) = q_a - \bar{q}_a \arctan_2(I p_u)
+    .
+\end{equation}
+
+\begin{figure}
+    \centering
+    \includestandalone[width=0.5\textwidth]{images/qa_arctan}
+    \caption{The acrobot constraint \(q_a = \bar{q}_a \arctan_2(I p_u)\).}
+    \label{fig:qa-arctan}
+\end{figure}
+
+Let us now compute the constrained dynamics for this
+(\ref{eqn:acrobot-constraint}).
+% TODO: should I do this for a generic h(q_a,p_u)? That's how I did it in my
+% notes...
+Note that \(dh_q = \begin{bmatrix}0 & 1\end{bmatrix}\tpose\), while
+\[
+    dh_{p_u} = \frac{-\bar{q}_a I}{1 + I^2 p_u^2}
+    .
+\]
+Applying these to (\ref{eqn:g-qupu}), we get the solution for \(p_a\) on the
+constraint manifold as
+\[
+    p_a(q_u,p_u) = \frac{
+        (1+c_a)(1+I^2 p_u^2)p_u - m^2gl^3\bar{q}_a I (2-c_a^2)(2s_u + s_{ua})
+    }{ml^2(3+2c_a)(1+I^2 p_u^2)}
+    .
+\]
+
 \section{Proving the Acrobot Gains Energy}
 % TODO: Prove this in sections
 
