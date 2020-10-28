@@ -96,9 +96,10 @@ We call this a \textit{simple} acrobot, which is displayed in Figure
 \ref{fig:simple-acrobot-model}.
 We will also ignore any frictional forces at both the hip and shoulder joints. 
 Finally, it is important to note that a real gymnast cannot swing their legs in
-full circles; 
+full circles, though they are usually flexible enough to raise them parallel to
+the floor; 
 for this reason, we assume that \(q_a \in [-Q_a, Q_a]\) where 
-\(Q_a \in ]-\pi, \pi[\). 
+\(Q_a \in [\frac{\pi}{2}, \pi[\). 
 
 \begin{figure}
     \centering
@@ -333,21 +334,20 @@ this type of constraint in favour of something less complex.
 \section{The Acrobot Constraint}
 % TODO: Give the constraint, state the theorem, and show the outline of the
 % proof (both as a sketch and in a figure)
-One may be tempted to design a constraint \(q_a = f(\theta)\) 
-with \(\theta := \arctan_2(p_u,q_u)\), since it was so effective for the VLP in
-Chapter \ref{ch:vlp}.
-It can be challenging to show this type of constraint is regular.
-Recall that all constraints of the form \(h(q,p) = q_a - f(p_u)\)
-are regular, since the regularity equation (\ref{eqn:regularity-matrix-acrobot})
-becomes strictly positive.
-A momentum-based constraint approximates human motion may still be likely to
-inject energy into the acrobot.
+One may be tempted to design a constraint of the form \(q_a = \bar{q}_a\sin(\theta)\) 
+with \(\theta := \arctan_2(p_u,q_u)\), since a similar approach 
+was so effective for the VLP in Chapter \ref{ch:vlp}.
+Unfortunately, this constraint is not regular, and it is difficult to find any
+VNHC of the form \(q_a = f(\theta)\) where it is easy to prove regularity
+analytically.
+Instead, we will develop a constraint \(h(q,p) = q_a - f(p_u)\) which,
+as we saw earlier, is always regular and may still be likely to inject energy.
  
-To design the acrobot constraint, let us imagine what a human does on
+To design this constraint, let us imagine what a human does on
 a seated swing.
 When they are moving forward they extend their legs, and when they are moving
 backward they retract them. 
-In reality, the motion is slightly more complicated than that.:
+In reality, the motion is slightly more complicated than that:
 as the swing gains speed, the person leans their body back while
 extending their legs.
 This allows them to bring their legs higher, shortening the distance
@@ -356,16 +356,16 @@ When the swing moves backward, they sit up and fully retract their legs
 underneath them.
 
 Now imagine we have affixed the torso of the acrobot to the swing's rope, so 
-that the legs can pivot both forwards and backwards.  
-In this case, the legs would pivot in the direction of motion
-proportionally to the swing's speed.
+that the legs can pivot both forwards and backwards.
+The legs cannot bend, so in an attempt to emulate motion the legs should pivot
+in the direction of motion proportionally to the swing's speed.
 One VNHC which emulates this process is \(q_a = \bar{q}_a\arctan_2( I p_u)\), as
 in Figure \ref{fig:qa-arctan}.
 Here, \(\bar{q}_a \in ]0,\frac{2 Q_a}{\pi}]\) so that 
-\(q_a \in [-Q_a, Q_a]\) and \(I > 0 \in \R\) is a fixed control parameter.
+\(q_a \in [-Q_a, Q_a]\) and \(I \in \R_{>0}\) is a fixed control parameter.
 
 This constraint is not a perfect emulation of a gymnast's movement -- during
-a giant the gymnast's legs are almost completely extended, while the constraint
+a giant the gymnast's legs are almost completely extended, while our constraint
 retracts the legs partially during rotations.
 However, the motion looks similar enough that this constraint should provide a
 decent foundation for injecting energy into the acrobot.
@@ -382,7 +382,7 @@ It is for this reason that we choose our acrobot's constraint to be
     \label{fig:qa-arctan}
 \end{figure}
 
-Let us now compute the constrained dynamics for this
+Let us now compute the constrained dynamics under
 (\ref{eqn:acrobot-constraint}).
 % TODO: should I do this for a generic h(q_a,p_u)? That's how I did it in my
 % notes...
@@ -399,8 +399,81 @@ constraint manifold as
     }{ml^2(3+2c_a)(1+I^2 p_u^2)}
     .
 \]
+The dynamics for \(p_u\) do not contain \(p_a\), so they remain unchanged.
+The constrained dynamics for \(q_u\) are given by 
+\begin{equation*}
+    \dot{q}_u = e_1\tpose \Minv(q) \begin{bmatrix}
+                    p_u \\ p_a(q_u,p_u)
+                \end{bmatrix} %\\
+\end{equation*}
+%        &= \frac{1}{ml^2(2-c_a^2)} 
+%            \left( p_u - 
+%                (1+c_a)\frac{(1+c_a)(1+I^2 p_u^2)p_u - m^2gl^3\bar{q}_a I (2-c_a^2)(2s_u + s_{ua})
+%                }{ml^2(3+2c_a)(1+I^2 p_u^2)}
+%            \right) 
+%        ,
+%\end{align*}
+which one can simplify into 
+\begin{equation*}
+    \dot{q_u} = \frac{(1+I^2 p_u^2)p_u - m^2gl^3\bar{q}_a I(2s_u + s_{ua})(1+c_a) }{ml^2(1+I^2 p_u^2)(3+2c_a)}
+    .
+\end{equation*}
+Hence, the constrained dynamics for the acrobot under
+(\ref{eqn:acrobot-constraint}) are
+\begin{equation}\label{eqn:acrobot-constrained-dynamics}
+    \begin{cases}
+        \dot{q}_u = \frac{(1+I^2 p_u^2)p_u - m^2gl^3\bar{q}_a I(2s_u + s_{ua})(1+c_a) }
+            {ml^2(1+I^2 p_u^2)(3+2c_a)}
+        , \\
+        \dot{p}_u = - m g l (2s_u + s_{ua})
+        .
+    \end{cases}
+\end{equation}
 
-\section{Proving the Acrobot Gains Energy}
+These dynamics do not always gain energy -- we need some additional conditions
+on the control parameters to guarantee this is true. 
+With these conditions, (\ref{eqn:acrobot-constraint}) injects energy into the
+acrobot, as is explained by the following Theorem.
+
+\begin{thm}\label{thm:acrobot-energy-stabilization}
+    Consider the simple acrobot (\ref{eqn:acrobot-hamiltonian}) constrained by
+    the regular VNHC \(h(q,p_u) = q_a - \bar{q}_a \arctan(I p_u)\).
+    Suppose \(\bar{q}_a \in ]0,1]\).
+    Then there exists a small enough\footnotemark \(I \in \R_{>0}\)
+    such that the VNHC injects energy. 
+    Setting \(I \in \R_{<0}\) allows the VNHC to dissipate energy.
+\end{thm}
+\footnotetext{In fact, we can be more precise than this. 
+    Letting \(\epsilon > 0\), we need 
+    \(I \leq \min\left\{I_1(\epsilon),I_2\right\}\) where
+    \(I_1(\epsilon) = \frac{\tan(\epsilon)}{(\pi-\epsilon)}
+    \left(\frac{m^2gl^3(\cos(\epsilon)-2\sin(\epsilon))}{\pi-\epsilon}
+    \left(\frac{2\bar{q}_a\tan(\epsilon)}{(1+\tan(\epsilon)^2)(\pi-\epsilon)}+5\right) 
+    \right)^{-1/2}\)
+    and \(I_2 = \sqrt{\frac{3}{10 m^2gl^3\bar{q}_a^2}}\).
+    See Apendix \ref{apx:I-bounds} for details.
+}
+
+Proving Theorem \ref{thm:acrobot-energy-stabilization} requires a change of
+coordinates and the use of perturbation theory.
+The full proof is given in Chapter \ref{sec:acrobot-proof}. 
+We will conclude this section with a high level sketch of the proof.
+
+The energy-based proof used in Chapter \ref{ch:vlp} does not work for the
+acrobot, since no ``average energy" function has positive derivative everywhere
+for these dynamics.
+We instead use a perturbation analysis. 
+When \(I = 0\), the acrobot behaves like a simple pendulum with two masses. 
+There is a suitable change of coordinates into a pseudo-radius 
+\(\mu \in \R_{>0}\) and pseudo-angle \(\alpha \in \mathbb{S}^1\) where \(\mu\)
+is constant along orbits of the pendulum and \(\alpha\) is strictly increasing.
+We can show there exists \(I > 0\) small enough such that
+the orbit of the acrobot in \((\mu,\alpha)\) coordinates
+tracks the pendulum motion to order \(I\).
+What's more, we can show that \(\mu\) is increasing on average, which means the
+acrobot is gaining energy.
+ 
+\section{Proving the Acrobot Gains Energy}\label{sec:acrobot-proof}
 % TODO: Prove this in sections
 % TODO: You don't have to use the proof of theta_dot being positive. Stick to
 % Manfredi's proof, and when you say "for I small enough" put in a footnote that

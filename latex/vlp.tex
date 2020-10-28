@@ -373,7 +373,7 @@ Finally, we want the VLP's momentum to increase on average, regardless of
 its initial value.
 This intuition is captured mathematically by the following definition.
 
-\begin{defn}\label{defn:energy-injection}
+\begin{defn}\label{defn:energy-gain}
    Let \(D \subset \R^2\) be open with \(0 \in D\).
    Let \(f : D \rightarrow \R^2\) be locally Lipschitz with \(f(0) = 0\).
    The system described by \(\dot{x} = f(x)\) 
@@ -389,11 +389,11 @@ This intuition is captured mathematically by the following definition.
    negative-time.
 \end{defn}
 
-The second property of Definition \ref{defn:energy-injection} allows the system
+The second property of Definition \ref{defn:energy-gain} allows the system
 to have unstable equilibria, but not limit cycles nor closed orbits.
 The next definition ties this notion of energy gain to VNHCs.
 
-\begin{defn}
+\begin{defn}\label{defn:energy-injection}
    A regular VNHC \(h(\mathbf{q},\mathbf{p}) = 0\) 
    \textit{injects (dissipates) energy} if the constrained dynamics gain (lose)
    energy everywhere on the constraint manifold, except possibly on a set of
