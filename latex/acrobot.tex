@@ -341,32 +341,37 @@ Unfortunately, this constraint is not regular, and it is difficult to find any
 VNHC of the form \(q_a = f(\theta)\) where it is easy to prove regularity
 analytically.
 Instead, we will develop a constraint \(h(q,p) = q_a - f(p_u)\) which,
-as we saw earlier, is always regular and may still be likely to inject energy.
+as we saw earlier, is always regular and is likely to inject energy.
  
-To design this constraint, let us imagine what a human does on
-a seated swing.
-When they are moving forward they extend their legs, and when they are moving
-backward they retract them. 
-In reality, the motion is slightly more complicated than that:
-as the swing gains speed, the person leans their body back while
+To design this constraint, let us begin by examining a person on a seated swing.
+The person extends their legs when the swing moves forwards, and retracts their
+legs when the swing is moving backwards.
+As the swing gains speed, the person leans their body back while
 extending their legs.
 This allows them to bring their legs higher, shortening the distance
 from their center of mass to the pivot and adding more energy to the swing.
 When the swing moves backward, they sit up and fully retract their legs
-underneath them.
+underneath them \cite{how_to_pump_a_swing}.
 
-Now imagine we have affixed the torso of the acrobot to the swing's rope, so 
-that the legs can pivot both forwards and backwards.
-The legs cannot bend, so in an attempt to emulate motion the legs should pivot
-in the direction of motion proportionally to the swing's speed.
+Now imagine the person's torso is affixed to the swing's rope so that they are
+always upright. 
+Imagine further that the swing has no seat at all, allowing the person to extend
+their legs beneath them. 
+This position is identical to that of a gymnast on a bar, which is why we can
+use the leg motion from seated swinging to design a controller for the acrobot.
+
+The acrobot's legs are rigid rods which cannot retract, so we emulate the person
+on a swing by pivoting the legs in the direction of motion. 
+To account for how a person leans back at higher speeds, the legs should pivot to an
+angle proportional to the swing's speed.
 One VNHC which emulates this process is \(q_a = \bar{q}_a\arctan_2( I p_u)\), as
 in Figure \ref{fig:qa-arctan}.
-Here, \(\bar{q}_a \in ]0,\frac{2 Q_a}{\pi}]\) so that 
-\(q_a \in [-Q_a, Q_a]\) and \(I \in \R_{>0}\) is a fixed control parameter.
+Here, \(\bar{q}_a \in ]0,\frac{2 Q_a}{\pi}]\)
+and \(I \in \R_{>0}\) is a fixed control parameter.
 
-This constraint is not a perfect emulation of a gymnast's movement -- during
-a giant the gymnast's legs are almost completely extended, while our constraint
-retracts the legs partially during rotations.
+This constraint does not perfectly recreate a gymnast's motion -- during
+a giant the gymnast's legs are almost completely extended, while this constraint
+pivots the legs partially during rotations.
 However, the motion looks similar enough that this constraint should provide a
 decent foundation for injecting energy into the acrobot.
 It is for this reason that we choose our acrobot's constraint to be
@@ -384,15 +389,13 @@ It is for this reason that we choose our acrobot's constraint to be
 
 Let us now compute the constrained dynamics under
 (\ref{eqn:acrobot-constraint}).
-% TODO: should I do this for a generic h(q_a,p_u)? That's how I did it in my
-% notes...
-Note that \(dh_q = \begin{bmatrix}0 & 1\end{bmatrix}\tpose\), while
+Note that \(dh_q = \begin{bmatrix}0 & 1\end{bmatrix}\), while
 \[
     dh_{p_u} = \frac{-\bar{q}_a I}{1 + I^2 p_u^2}
     .
 \]
-Applying these to (\ref{eqn:g-qupu}), we get the solution for \(p_a\) on the
-constraint manifold as
+Inserting these to (\ref{eqn:g-qupu}), we get the solution for \(p_a\) on the
+constraint manifold:
 \[
     p_a(q_u,p_u) = \frac{
         (1+c_a)(1+I^2 p_u^2)p_u - m^2gl^3\bar{q}_a I (2-c_a^2)(2s_u + s_{ua})
@@ -405,6 +408,7 @@ The constrained dynamics for \(q_u\) are given by
     \dot{q}_u = e_1\tpose \Minv(q) \begin{bmatrix}
                     p_u \\ p_a(q_u,p_u)
                 \end{bmatrix} %\\
+    ,
 \end{equation*}
 %        &= \frac{1}{ml^2(2-c_a^2)} 
 %            \left( p_u - 
@@ -413,7 +417,7 @@ The constrained dynamics for \(q_u\) are given by
 %            \right) 
 %        ,
 %\end{align*}
-which one can simplify into 
+which can be simplified to 
 \begin{equation*}
     \dot{q_u} = \frac{(1+I^2 p_u^2)p_u - m^2gl^3\bar{q}_a I(2s_u + s_{ua})(1+c_a) }{ml^2(1+I^2 p_u^2)(3+2c_a)}
     .
@@ -430,18 +434,21 @@ Hence, the constrained dynamics for the acrobot under
     \end{cases}
 \end{equation}
 
-These dynamics do not always gain energy -- we need some additional conditions
-on the control parameters to guarantee this is true. 
-With these conditions, (\ref{eqn:acrobot-constraint}) injects energy into the
-acrobot, as is explained by the following Theorem.
+These dynamics do not always gain energy -- we need additional conditions
+on the control parameters to guarantee this is true.
 
+% TODO: This needs modification. The energy injection is provable for any system
+% only during oscillations. For rotations, we need to do a numerical check of an
+% integral that depends on m,g,l. If this integral is positive, then the system
+% is gaining energy up to a point - it sems the integral decays to 0 so that you
+% can reach a limiting speed, which means you don't get full energy injection
+% everywhere on Gamma.
 \begin{thm}\label{thm:acrobot-energy-stabilization}
     Consider the simple acrobot (\ref{eqn:acrobot-hamiltonian}) constrained by
-    the regular VNHC \(h(q,p_u) = q_a - \bar{q}_a \arctan(I p_u)\).
-    Suppose \(\bar{q}_a \in ]0,1]\).
-    Then there exists a small enough\footnotemark \(I \in \R_{>0}\)
-    such that the VNHC injects energy. 
-    Setting \(I \in \R_{<0}\) allows the VNHC to dissipate energy.
+    (\ref{eqn:acrobot-constraint}) with \(\bar{q}_a \in ]0,1]\).
+    There exists a small enough\footnotemark \(I^\star \in \R_{>0}\)
+    such that the VNHC injects energy whenever \( I \in ]0,I^\star[\). 
+    If \(I \in ]-I^\star,0[\), the VNHC dissipates energy.
 \end{thm}
 \footnotetext{In fact, we can be more precise than this. 
     Letting \(\epsilon > 0\), we need 
@@ -454,24 +461,23 @@ acrobot, as is explained by the following Theorem.
     See Apendix \ref{apx:I-bounds} for details.
 }
 
-Proving Theorem \ref{thm:acrobot-energy-stabilization} requires a change of
-coordinates and the use of perturbation theory.
-The full proof is given in Chapter \ref{sec:acrobot-proof}. 
-We will conclude this section with a high level sketch of the proof.
+Unfortunately, the energy-based proof used in Chapter \ref{ch:vlp} does not
+readily transfer to the acrobot -- there is no obvious Lyapunov function for
+this constrained system.
+Proving Theorem \ref{thm:acrobot-energy-stabilization} requires an intelligent
+change of coordinates and the use of perturbation theory from
+\cite{khalil_nonlinear}.
+The full proof is given in Chapter \ref{sec:acrobot-proof}, so 
+we conclude this section with a high level sketch of the proof.
 
-The energy-based proof used in Chapter \ref{ch:vlp} does not work for the
-acrobot, since no ``average energy" function has positive derivative everywhere
-for these dynamics.
-We instead use a perturbation analysis. 
-When \(I = 0\), the acrobot behaves like a simple pendulum with two masses. 
 There is a suitable change of coordinates into a pseudo-radius 
-\(\mu \in \R_{>0}\) and pseudo-angle \(\alpha \in \mathbb{S}^1\) where \(\mu\)
-is constant along orbits of the pendulum and \(\alpha\) is strictly increasing.
-We can show there exists \(I > 0\) small enough such that
-the orbit of the acrobot in \((\mu,\alpha)\) coordinates
-tracks the pendulum motion to order \(I\).
-What's more, we can show that \(\mu\) is increasing on average, which means the
-acrobot is gaining energy.
+\(\mu \in \R_{>0}\) and pseudo-angle \(\alpha \in \mathbb{S}^1\) on the
+\((q_u,p_u)\)-plane where \(\dot{\mu} = 0\) and \(\dot{\alpha} > 0\) when 
+we set \(I = 0\).
+Perturbation theory shows that, for small enough \(I\), the radius \(\mu\)
+increases on average along \(\alpha\).
+Hence, the acrobot is gaining energy since orbits in the \((q_u,p_u)\)-plane
+spiral away from the origin, and the acrobot always begins performing rotations.
  
 \section{Proving the Acrobot Gains Energy}\label{sec:acrobot-proof}
 % TODO: Prove this in sections
@@ -482,6 +488,182 @@ acrobot is gaining energy.
 % Then, we can have an appendix where we derive the bounds on I so that
 % theta_dot is always positive. This will help the reader keep track and not
 % bother them too much.
+Proving Theorem \ref{thm:acrobot-energy-stabilization} is not a simple task.
+In an effort to make the proof as clear as possible, we will break it down into
+the following segments:
+\begin{enumerate}
+    \item Background on perturbation theory and averaging.
+    \item Perturbation analysis for oscillations.
+    \item Perturbation analysis for rotations.
+\end{enumerate}
+
+When \(I = 0\), the constrained acrobot behaves like a single
+pendulum with masses at a distance \(l\) and \(2l\) from the pivot 
+(Figure \ref{fig:acrobot-I0}) whose energy
+\[
+    E(q_u,p_u) = \frac{p_u^2}{10ml^2} + 3(1 - \cos(q_u))
+    ,
+\]
+is conserved.
+Level sets of \(E\) are ellipses when \(E \leq E(\pi,0)\), which we call
+``oscillations"; and they are open curves when \(E > E(\pi,0)\), which we call
+``rotations". 
+Examples of these can be seen in Figure \ref{fig:pendulum-level-sets}.
+
+\begin{figure}
+    \centering
+    \begin{subfigure}[t]{0.45\textwidth}
+        % TODO: figure of acrobot with I = 0
+        %\includestandalone[]{images/acrobot_I0}
+        \caption{The simple pendulum with two masses.}
+        \label{fig:acrobot-I0}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[t]{0.45\textwidth}
+        % TODO: figure showing oscillations and rotations as level curves of E
+        %\includestandalone[]{images/pendulum_level_sets}
+        \caption{Level sets of the pendulum energy function.
+            The red ellipse represents oscillations while the purple curve
+            represents rotations.}
+        \label{fig:pendulum-level-sets}
+    \end{subfigure}
+    \caption{Our constrained acrobot is a simple pendulum when \(I = 0\).}
+\end{figure}
+
+Drawing inspiration from \citet{dynamic_vhcs_stabilize_closed_orbits}, we want
+to find a change of coordinates \((q_u,p_u) \to (\alpha, \mu)\) with the
+following properties:
+\begin{itemize}
+    \item All oscillations in \((\alpha,\mu)\) coordinates are represented by
+        \(\mu = \text{const}\).
+    \item \(\alpha\) is a pseudo-angle living in \(\mathbb{S}^1\) which is
+        always increasing.
+\end{itemize}
+We also want to find a second set of coordinates where the same properties hold for
+rotations.
+Once we have these coordinates in hand, we can use perturbation theory to prove
+that \(\mu\) increases on average. 
+If this is true, the acrobot must be gaining energy since the momentum is
+increasing over time.
+
+\subsection*{Background on Perturbation Theory}
+Perturbation theory allows one to understand how solutions of nonlinear systems
+behave by studying a nominal system which can be analyzed analytically.
+The solutions of nonlinear systems are approximated by a Taylor-like expansion
+around this nominal system.
+
+\citet{khalil_nonlinear} considers a system of the form
+\begin{equation}\label{eqn:khalil-setup}
+    \begin{cases}
+        \dot{x} = f(t,x,\epsilon), \\
+        x(t_0) = \eta(\epsilon),
+    \end{cases}
+\end{equation}
+where 
+\(f : [t_0,t_1] \times D \times [-\epsilon_0,\epsilon_0] \rightarrow \R^n\) is
+sufficiently smooth.
+In the context of the acrobot, \(x\) is the phase in whichever coordinates make
+our analysis convenient;
+\(\epsilon\) is our control parameter \(I\);
+the function \(f\) is the constrained dynamics in \(x\)-coordinates;
+and \(\eta(\epsilon) \equiv \eta_0\) is a constant initial condition.
+To keep a notational reminder that we are applying perturbation theory to
+the acrobot, we will henceforth use \(I\) in place of \(\epsilon\).
+
+Letting \(I = 0\) we get the nominal system
+\begin{equation}\label{eqn:khalil-perturbation-nominal}
+    \begin{cases}
+        \dot{x}_0 = f(t,x,0) ,\\
+        x_0(t_0) = \eta_0 ,
+    \end{cases}
+\end{equation}
+which we need to solve for the explicit solution \(x_0(t)\) on \([t_0,t_1]\).
+One can use \(x_0(t)\) to compute a first-order approximation of
+the nonlinear system
+\begin{equation}\label{eqn:khalil-perturbation-firstorder}
+    \begin{cases}
+        \dot{x}_1 = \pdiff{f}{x}(t,x_0(t),0)x_1 + \pdiff{f}{I}(t,x_0(t),0)
+        , \\
+        x_1(t_0) = 0, \\
+    \end{cases}
+\end{equation}
+which is a linear time-varying system with solution \(x_1(t)\).
+
+We now paraphrase Khalil's Theorem 10.1 \cite{khalil_nonlinear} on the
+accuracy of perturbation analysis.
+\begin{thm}
+    Suppose \(f : [t_0,t_1] \times D \times [-I_0,I_0] \rightarrow \R^2\) is
+    \(C^1\), and that the nominal problem (\ref{eqn:khalil-perturbation-nominal}) has a
+    unique solution \(x_0(t) \in D\) on \([t_0,t_1]\).
+    Then there exists \(I^\star > 0\) such that for all \(|I| < I^\star\), the
+    solution \(x(t,I)\) to (\ref{eqn:khalil-setup}) satisfies
+    \[
+        \norm{x(t,I) - \left(x_0(t) + I x_1(t)\right)} \leq k |I^2|
+    \]
+    for some \(k > 0\).
+\end{thm}
+
+The above Theorem tells us that we can approximate the solution of the nonlinear
+system by the Taylor approximation \(x_0(t) + I x_1(t)\).
+In other words, when \(I\) is small enough solutions of the nonlinear system and
+the Taylor approximation are the same up to order \(I^2\) along compact time
+intervals.
+Since we know that the acrobot behaves like a pendulum at \(I = 0\), we can
+use this theory to more easily study the behaviour of orbits and prove energy
+injection properties of our VNHC.
+ 
+\subsection*{Perturbation Analysis for Oscillations}
+An oscillation of the nominal pendulum (when \(I = 0\)) is uniquely determined
+by its intersection \(\mu\) with the \(q_u\)-axis, as in Figure
+\ref{fig:mu-intersection}. Since \(\mu\) is to be a pseudo-radius and
+\(q_u \in ]-\pi,\pi]\), we have \(\mu \in ]0,\pi]\). 
+The corresponding energy level set is \(E(q_u,p_u) = 3mgl(1- \cos(\mu))\), which
+gives the relationship
+\begin{equation}\label{eqn:oscillation-pu2}
+    p_u^2 = 30m^2gl^3(\cos(q_u) - \cos(\mu))
+    .
+\end{equation}
+
+\begin{figure}
+    \centering
+    % TODO: Add a figure with one oscillation whose we mark the distance mu from
+    % the origin to the intersection on the q-axis
+    %\includestandalone[]{images/mu_intersection}
+    \caption{The pseudo-radius \(\mu\) for oscillations is within \(]0,\pi]\).}
+    \label{fig:mu-intersection}
+\end{figure}
+
+On this level set, \(q_u\) ranges between \([-\mu,\mu]\) and can be uniquely
+parameterized by \(q_u = \mu \cos(\alpha)\), where \(\alpha\) is our
+pseudo-angle.
+Substituting this into (\ref{eqn:oscillation-pu2}), we get
+\[
+    p_u^2 = 30m^2gl^3(\cos(\mu \cos(\alpha)) - \cos(\mu))
+    .
+\]
+We want to find \(p_u\) as a function of \((\alpha,\mu)\); noting that we can
+determine the sign of \(p_u\) from the sign of \(\sin(\alpha)\), we get the
+(clockwise) parameterization
+\begin{equation}\label{eqn:oscillation-pu}
+    p_u = -\sign{\sin(\alpha)} \sqrt{30m^2gl^3 \left(\cos(\mu c_\alpha) - c_\mu\right)}
+    ,
+\end{equation}
+which is, in fact, continuously differentiable.
+
+We have thus found a mapping \((\alpha,\mu) \mapsto (q_u,p_u)\) for which we
+need the inverse mapping.
+Notice from (\ref{eqn:oscillation-pu2}) that
+\[
+    \cos(\mu) = -\frac{p_u^2}{30m^2gl^3} + \cos(q_u) =: C_\mu(q_u,p_u)
+    .
+\]
+Since \(\mu \in ]0,\pi]\), we can uniquely express \(\mu\) by
+\begin{equation}\label{eqn:mu-qupu}
+    \mu = \arccos\left(C_\mu(q_u,p_u)\right)
+    .
+\end{equation}
+
+\subsection*{Perturbation Analysis for Rotations}
 
 \section{Experimental Results}
 % TODO: This might be a separate chapter
