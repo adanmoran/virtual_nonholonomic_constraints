@@ -505,9 +505,11 @@ average.
           &\geq 0 \text{ (by assumption)}
       .
    \end{align}
-   Likewise, the negative-time derivative (\ref{eqn:eavg-dot-neg}) is never
-   positive, so \(E_\text{avg}\) is a Lyapunov function and the negative-time system is
-   stable \cite{lyapunov}. 
+   Using (\ref{eqn:eavg-dot-neg}) and (\ref{eqn:vlp-proof-neg-inv}) 
+   we can determine that \(\sign{\dot{E}_\text{avg}^-} \leq 0\). 
+   Thus, \(E_\text{avg}\) is a Lyapunov function for
+   (\ref{eqn:negative-time-vlp}), which means the negative-time system is stable
+   \cite{lyapunov}. 
 
    Let us briefly analyze the upright equilibrium.
    Label the set of initial conditions converging to \((\pi, 0)\) in
@@ -525,14 +527,15 @@ average.
       .
    \] 
    From (\ref{eqn:vlp-proof-neg-inv}), all sublevel sets of \(E_\text{avg}\) are
-   negatively invariant in positive-time. 
-   Hence, the complement \(\left(E_{(\pi,0)}\right)^C = \Gamma \backslash E_{(\pi,0)}\) is
-   positively invariant.
-   If the system is initialized on \(\left(E_{(\pi,0)}\right)^C\), it cannot
-   posibly converge to \((\pi,0)\);
-   hence, \(\Pi_0^+ \subset E_{(\pi,0)}\).
-   Similarly, positive invariance of \(E_{(\pi,0)}\) in negative-time allows us
-   to show that \(\Pi_0^- \subset \left(E_{(\pi,0)}\right)^C \cup (\pi,0)\).
+   negatively invariant in positive-time, which means
+   complements of sublevel sets are positively invariant.
+   Hence, the system cannot possibly converge to \((\pi,0)\) if it is
+   initialized on 
+   \(\left(E_{(\pi,0)}\right)^C = \Gamma \backslash E_{(\pi,0)}\).
+   This implies that \(\Pi_0^+ \subset E_{(\pi,0)}\).
+   Similarly, the interior of \(E_{(\pi,0)}\) is positively
+   invariant for (\ref{eqn:negative-time-vlp}), 
+   which implies \(\Pi_0^- \subset \left(E_{(\pi,0)}\right)^C \cup (\pi,0)\).
 
    The linearization of (\ref{eqn:vlp-hamiltonian}) at \((\pi, 0)\) is given by
    \begin{equation}\label{eqn:linearized-vlp}
@@ -553,8 +556,8 @@ average.
    for almost every initial condition because \(\Pi_0^+\) and \(\Pi_0^-\) are of
    measure zero within \(\Gamma\).
 
-   We cannot linearize the dynamics at the origin to prove it is a repeller,
-   because \(\theta\) is not defined there.
+   We cannot linearize (\ref{eqn:vlp-hamiltonian}) at \((0,0)\) to prove 
+   the origin is a repeller, because \(\theta(0,0)\) is not well-defined. 
    Instead, let \(D := \Gamma \backslash \Pi_0^-\).
    We will prove that (\ref{eqn:negative-time-vlp}) asymptotically converges to
    \((0,0)\) if it is initialized on \(D\).
@@ -583,7 +586,7 @@ average.
    We now prove the system escapes compact sets in finite time.
    Let \(x(t) = (q(t),p(t))\) be the orbit for the positive-time system.
    Let \(K \subset \Gamma\) be compact and assume 
-   \(x(0) \in K\backslash \Pi_0^+\) and \(x(0) \neq (0,0)\).
+   \(x(0) \in K\backslash \left(\Pi_0^+ \cup \left\{(0,0)\right\}\right)\).
    For a proof by contradiction, suppose that for all \(T > 0\) there exists
    \(t' > T\) where \(x(t') \in K\).
    Let 
@@ -593,28 +596,31 @@ average.
    \] 
    be the largest energy value attained in \(K\), and let \(E_k\) be its
    sublevel set.
-   All sublevel sets of \(E_\text{avg}\) are compact, negatively
-   invariant, and \(E_k\) contains \(K\).
-   We assumed \(x(t') \in K\), so it follows that \(x(t') \in E_k\). 
-   Then, since \(E_k\) is negatively invariant, the half orbit
+
+   Since \(E_k\) contains \(K\) and \(x(t') \in K\), it follows that 
+   \(x(t') \in E_k\). 
+   Furthermore, negative invariance of \(E_k\) means the half orbit
    \(x([0,t'])\) is contained fully within \(E_k\).
-   In particular, \(x(T) \in E_k\);
-   but \(T\) was chosen arbitrarily, which implies \(x(t) \in E_k\) for all
+   In particular, \(x(T) \in E_k\).
+   However, \(T\) was chosen arbitrarily, which implies \(x(t) \in E_k\) for all
    \(t \in [0,\infty[\).
    Since \(E_k\) is compact, \(x(t)\) has a positive limit set in
    \(E_k\) which, by Poincar\'{e}-Bendixson, is either an equilibrium or a
    closed orbit \cite{poincare_bendixson}.
+   We will show this positive limit set must be an equilibrium and thereby
+   reach our contradiction.
 
-   Suppose the system has a closed orbit. It would necessarily be contained in a
-   level set of \(E_\text{avg}\) (since this is a non-decreasing function and
-   closed orbits are periodic).
+   Suppose the system had a closed orbit. 
+   The orbit would necessarily be contained in a
+   level set of \(E_\text{avg}\), since this is a non-decreasing function and
+   closed orbits are periodic.
    Thus, \(E_\text{avg}\) is constant along the orbit, which means the
-   orbit is contained in one of the axes because that is the only region where
-   \(\dot{E}_\text{avg}^+ = 0\).
-   Since the only invariant subsets of the axes are equilibria, the system cannot
-   contain closed orbits.
+   orbit is an invariant subset of the set \(Z\) consisting of the two axes.
+   However, the only invariant subsets of \(Z\) are equilibria, so 
+   the system cannot contain closed orbits.
 
-   Hence, the positive limit set of \(x(t)\) must be one of the equilibria. 
+   The lack of closed orbits means the positive limit set of \(x(t)\) must 
+   be one of the equilibria. 
    The origin is a repeller and \(x(0) \neq (0,0)\), which means \(x(t)\) is
    converging to \((\pi,0)\).
    This is a contradiction, since we assumed \(x(0) \not \in \Pi_0^+\).
