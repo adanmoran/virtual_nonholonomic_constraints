@@ -500,12 +500,12 @@ the following segments:
 When \(I = 0\), the constrained acrobot behaves like a single
 pendulum with masses at a distance \(l\) and \(2l\) from the pivot 
 (Figure \ref{fig:acrobot-I0}) whose energy
-\[
+\begin{equation}\label{eqn:acrobot-nominal-E}
     E(q_u,p_u) = \frac{p_u^2}{10ml^2} + 3(1 - \cos(q_u))
     ,
-\]
+\end{equation}
 is conserved.
-Level sets of \(E\) are ellipses when \(E \leq E(\pi,0)\), which we call
+Level sets of \(E\) are ellipses when \(E < E(\pi,0)\), which we call
 ``oscillations"; and they are open curves when \(E > E(\pi,0)\), which we call
 ``rotations". 
 Examples of these can be seen in Figure \ref{fig:pendulum-level-sets}.
@@ -613,26 +613,49 @@ use this theory to more easily study the behaviour of orbits and prove energy
 injection properties of our VNHC.
  
 \subsection*{Perturbation Analysis for Oscillations}
-An oscillation of the nominal pendulum (when \(I = 0\)) is uniquely determined
-by its intersection \(\mu\) with the \(q_u\)-axis, as in Figure
-\ref{fig:mu-intersection}. Since \(\mu\) is to be a pseudo-radius and
-\(q_u \in ]-\pi,\pi]\), we have \(\mu \in ]0,\pi]\). 
-The corresponding energy level set is \(E(q_u,p_u) = 3mgl(1- \cos(\mu))\), which
-gives the relationship
+The nominal pendulum (\ie when \(I = 0\)) oscillates whenever the
+nominal energy (\ref{eqn:acrobot-nominal-E}) is less than \(E(\pi,0)\).
+Hence, the domain of oscillations on \(\Gamma\) is given by
+\[
+    D := \left\{ (q_u,p_u) \in \Gamma | E(q_u,p_u) < E(\pi,0)\right\}
+    .
+\]
+We wish to find a transformation \(T(q_u,p_u)\) on \(D\) into
+\((\alpha,\mu)\)-coordinates where \(\alpha \in \mathbb{S}^1\) is a pseudo-angle
+and \(\mu > 0\) is a pseudo-radius.
+Since the energy of oscillation can be determined by the orbit's intersection
+with the \(q_u\)-axis and \(q_u \in ]-\pi,\pi[\) on \(D\), 
+we set \(\mu \in ]0,\pi[\) as in Figure \ref{fig:mu-intersection}.
+The transformation we want is therefore a diffeomorphism of the form
+\begin{align*}
+    T : D\backslash \{(0,0)\} &\rightarrow \mathbb{S}^1 \times \, ]0,\pi], \\
+    (q_u, p_u) &\mapsto (\alpha,\mu)
+    .
+\end{align*}
+
+\begin{figure}
+    \centering
+    % TODO: Add a figure with one oscillation mark at a distance mu from
+    % the origin to the intersection on the q-axis. We also draw the boundary of
+    % D and shade the interior
+    %\includestandalone[]{images/mu_intersection}
+    \caption{The domain \(D\) where a pendulum oscillates.
+    The pseudo-radius coordinate \(\mu\) corresponds to the
+    intersection of an orbit of oscillation with the \(q_u\)-axis.}
+    \label{fig:mu-intersection}
+\end{figure}
+
+The energy level set corresponding to the intersection \((q_u,p_u) = (\mu,0)\)
+is 
+\[
+    \left\{(q_u,p_u) \in \Gamma \mid E(q_u,p_u) = 3mgl(1- \cos(\mu))\right\}
+    ,
+\]
+which gives the relationship
 \begin{equation}\label{eqn:oscillation-pu2}
     p_u^2 = 30m^2gl^3(\cos(q_u) - \cos(\mu))
     .
 \end{equation}
-
-\begin{figure}
-    \centering
-    % TODO: Add a figure with one oscillation whose we mark the distance mu from
-    % the origin to the intersection on the q-axis
-    %\includestandalone[]{images/mu_intersection}
-    \caption{The pseudo-radius \(\mu\) for oscillations is within \(]0,\pi]\).}
-    \label{fig:mu-intersection}
-\end{figure}
-
 On this level set, \(q_u\) ranges between \([-\mu,\mu]\) and can be uniquely
 parameterized by \(q_u = \mu \cos(\alpha)\), where \(\alpha\) is our
 pseudo-angle.
@@ -648,10 +671,10 @@ determine the sign of \(p_u\) from the sign of \(\sin(\alpha)\), we get the
     p_u = -\sign{\sin(\alpha)} \sqrt{30m^2gl^3 \left(\cos(\mu c_\alpha) - c_\mu\right)}
     ,
 \end{equation}
-which is, in fact, continuously differentiable.
+which is, in fact, smooth.
 
-We have thus found a mapping \((\alpha,\mu) \mapsto (q_u,p_u)\) for which we
-need the inverse mapping.
+We have thus found a transformation \(T\inv(\alpha,\mu) = (q_u,p_u)\).
+We need the inverse of this map to get our diffeomorphism \(T(q_u,p_u)\).
 Notice from (\ref{eqn:oscillation-pu2}) that
 \[
     \cos(\mu) = -\frac{p_u^2}{30m^2gl^3} + \cos(q_u) =: C_\mu(q_u,p_u)
@@ -661,6 +684,64 @@ Since \(\mu \in ]0,\pi]\), we can uniquely express \(\mu\) by
 \begin{equation}\label{eqn:mu-qupu}
     \mu = \arccos\left(C_\mu(q_u,p_u)\right)
     .
+\end{equation}
+Next we need to find \(\alpha\). 
+Recall that 
+\[
+    \cos(\alpha) = \frac{q_u}{\mu}
+    ,
+\] 
+which means 
+\[
+    \sin(\alpha) = \pm \sqrt{1 - \frac{q_u^2}{\mu^2}}
+    .
+\]
+Notice from (\ref{eqn:oscillation-pu}) that 
+\(\sign{\sin(\alpha)} = -\sign{p_u}\).
+We use these facts to deduce that
+\begin{equation}\label{eqn:alpha-qupu}
+    \alpha = \left.
+        \arctan_2\left( -\sign{p_u}\sqrt{1 - \frac{q_u^2}{\mu^2}}, \frac{q_u}{\mu}\right)
+        \right|_{\mu = \arccos(C_\mu(q_u,p_u))}
+    ,
+\end{equation}
+and thus have our transformation \(T(q_u,p_u)\) into
+\((\alpha,\mu)\)-coordinates on \(D\).
+
+The acrobot's constrained dynamics in
+\((\alpha,\mu)\)-coordinates can be computed by evaluating
+\[
+    \left.\begin{cases}
+        \dot{\mu} = 
+        \begin{bmatrix} \pdiff{\mu}{q_u} & \pdiff{\mu}{p_u} \end{bmatrix}
+        \begin{bmatrix} \dot{q}_u \\ \dot{p}_u \end{bmatrix}
+        , \\
+        \dot{\alpha} = \begin{bmatrix} \pdiff{\alpha}{q_u} & \pdiff{\alpha}{p_u} \end{bmatrix}
+        \begin{bmatrix} \dot{q}_u \\ \dot{p}_u \end{bmatrix}
+        .
+    \end{cases} \right|_{(q_u,p_u) = T\inv(\mu,\alpha)}
+\]
+These dynamics are incredibly complicated and difficult to express, so we will
+write them simply as
+\[
+    \begin{cases}
+        \dot{\mu} = f_\mu(\alpha,\mu,I)
+        ,\\
+        \dot{\alpha} = f_\alpha(\alpha,\mu,I)
+        .
+    \end{cases}
+\]
+
+To find the nominal system we set \(I = 0\); 
+MATLAB's symbolic toolbox operations tell us that
+\begin{equation}\label{eqn:acrobot-nominal-ma-dynamics}
+    \begin{cases}
+        \dot{\mu} = 0
+        , \\
+        \dot{alpha} = \sqrt{\frac{6g}{5l}} 
+        \sqrt{\frac{\cos(\mu\cos(\alpha)) - \cos(\mu)}{\mu^2 \sin(\alpha)^2}}
+        .
+    \end{cases}
 \end{equation}
 
 \subsection*{Perturbation Analysis for Rotations}
