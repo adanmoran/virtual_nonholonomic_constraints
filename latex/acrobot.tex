@@ -419,20 +419,18 @@ The constrained dynamics for \(q_u\) are given by
 %\end{align*}
 which can be simplified to 
 \begin{equation*}
-    \dot{q_u} = \frac{(1+I^2 p_u^2)p_u - m^2gl^3\bar{q}_a I(2s_u + s_{ua})(1+c_a) }{ml^2(1+I^2 p_u^2)(3+2c_a)}
+    \dot{q_u} = \frac{(1+I^2 p_u^2)p_u + m^2gl^3\bar{q}_a I(2s_u + s_{ua})(1+c_a) }{ml^2(1+I^2 p_u^2)(3+2c_a)}
     .
 \end{equation*}
 Hence, the constrained dynamics for the acrobot under
 (\ref{eqn:acrobot-constraint}) are
-\begin{equation}\label{eqn:acrobot-constrained-dynamics}
-    \begin{cases}
-        \dot{q}_u = \frac{(1+I^2 p_u^2)p_u - m^2gl^3\bar{q}_a I(2s_u + s_{ua})(1+c_a) }
+\begin{align}\label{eqn:acrobot-constrained-dynamics}
+    \dot{q}_u &= \frac{(1+I^2 p_u^2)p_u + m^2gl^3\bar{q}_a I(2s_u + s_{ua})(1+c_a) }
             {ml^2(1+I^2 p_u^2)(3+2c_a)}
         , \\
-        \dot{p}_u = - m g l (2s_u + s_{ua})
-        .
-    \end{cases}
-\end{equation}
+    \dot{p}_u &= - m g l (2s_u + s_{ua})
+    . \nonumber
+\end{align}
 
 These dynamics do not always gain energy -- we need additional conditions
 on the control parameters to guarantee this is true.
@@ -577,34 +575,41 @@ Letting \(I = 0\) we get the nominal system
         x_0(t_0) = \eta_0 ,
     \end{cases}
 \end{equation}
-which we need to solve for the explicit solution \(x_0(t)\) on \([t_0,t_1]\).
-One can use \(x_0(t)\) to compute a first-order approximation of
-the nonlinear system
+which we need to solve for the explicit solution \(x_0(t,\eta_0)\) on \([t_0,t_1]\).
+One can use \(x_0(t,\eta_0)\) to compute the first-order approximation of
+the nonlinear system 
+\(x(t,\eta_0) = x_0(t,\eta_0) + I x_1(t,\eta_0) + R(t,I)\), where the remainder
+term \(R(t,I)\) satisfies
+\[
+    \lim \limits_{I \to 0} \frac{R(t,I)}{I} = 0
+    ,
+\]
+and \(x_1(t,\eta_0)\) is the solution to
 \begin{equation}\label{eqn:khalil-perturbation-firstorder}
     \begin{cases}
-        \dot{x}_1 = \pdiff{f}{x}(t,x_0(t),0)x_1 + \pdiff{f}{I}(t,x_0(t),0)
+        \dot{x}_1 = \pdiff{f}{x}(t,x_0(t,\eta_0),0)x_1 + \pdiff{f}{I}(t,x_0(t,\eta_0),0)
         , \\
-        x_1(t_0) = 0, \\
+        x_1(t_0,\eta_0) = 0. \\
     \end{cases}
 \end{equation}
-which is a linear time-varying system with solution \(x_1(t)\).
 
 We now paraphrase Khalil's Theorem 10.1 \cite{khalil_nonlinear} on the
 accuracy of perturbation analysis.
 \begin{thm}
     Suppose \(f : [t_0,t_1] \times D \times [-I_0,I_0] \rightarrow \R^2\) is
     \(C^1\), and that the nominal problem (\ref{eqn:khalil-perturbation-nominal}) has a
-    unique solution \(x_0(t) \in D\) on \([t_0,t_1]\).
+    unique solution \(x_0(t,\eta_0) \in D\) on \([t_0,t_1]\).
     Then there exists \(I^\star > 0\) such that for all \(|I| < I^\star\), the
-    solution \(x(t,I)\) to (\ref{eqn:khalil-setup}) satisfies
+    solution \(x(t,I,\eta_0)\) to (\ref{eqn:khalil-setup}) satisfies
     \[
-        \norm{x(t,I) - \left(x_0(t) + I x_1(t)\right)} \leq k |I^2|
+        \norm{x(t,I,\eta_0) - \left(x_0(t,\eta_0) + I x_1(t,\eta_))\right)} \leq k |I^2|
     \]
     for some \(k > 0\).
 \end{thm}
 
 The above Theorem tells us that we can approximate the solution of the nonlinear
-system by the Taylor approximation \(x_0(t) + I x_1(t)\).
+system by the Taylor approximation 
+\(x(t,\eta_0) \approx x_0(t,\eta_0) + I x_1(t,\eta_0)\).
 In other words, when \(I\) is small enough solutions of the nonlinear system and
 the Taylor approximation are the same up to order \(I^2\) along compact time
 intervals.
@@ -710,39 +715,169 @@ and thus have our transformation \(T(q_u,p_u)\) into
 
 The acrobot's constrained dynamics in
 \((\alpha,\mu)\)-coordinates can be computed by evaluating
-\[
-    \left.\begin{cases}
-        \dot{\mu} = 
-        \begin{bmatrix} \pdiff{\mu}{q_u} & \pdiff{\mu}{p_u} \end{bmatrix}
-        \begin{bmatrix} \dot{q}_u \\ \dot{p}_u \end{bmatrix}
-        , \\
-        \dot{\alpha} = \begin{bmatrix} \pdiff{\alpha}{q_u} & \pdiff{\alpha}{p_u} \end{bmatrix}
-        \begin{bmatrix} \dot{q}_u \\ \dot{p}_u \end{bmatrix}
-        .
-    \end{cases} \right|_{(q_u,p_u) = T\inv(\mu,\alpha)}
-\]
-These dynamics are incredibly complicated and difficult to express, so we will
-write them simply as
-\[
-    \begin{cases}
-        \dot{\mu} = f_\mu(\alpha,\mu,I)
-        ,\\
-        \dot{\alpha} = f_\alpha(\alpha,\mu,I)
-        .
-    \end{cases}
-\]
+\begin{align*}
+    \dot{\mu} &= \left.\pdiff{\mu(q_u,p_u)}{q}_u\dot{q_u} +
+         \pdiff{\mu(q_u,p_u)}{p_u}\dot{p}_u
+         \right|_{(q_u,p_u) = T\inv(\mu,\alpha)}
+    , \\
+    \dot{\alpha} &= \left.\pdiff{\alpha(q_u,p_u)}{q_u}\dot{q}_u + 
+        \pdiff{\alpha(q_u,p_u)}{p_u}\dot{p}_u
+        \right|_{(q_u,p_u) = T\inv(\mu,\alpha)}
+    .
+\end{align*}
+with \((\dot{q}_u,\dot{p}_u)\) the given by 
+ (\ref{eqn:acrobot-constrained-dynamics}).
 
-To find the nominal system we set \(I = 0\); 
-MATLAB's symbolic toolbox operations tell us that
-\begin{equation}\label{eqn:acrobot-nominal-ma-dynamics}
-    \begin{cases}
-        \dot{\mu} = 0
-        , \\
-        \dot{alpha} = \sqrt{\frac{6g}{5l}} 
+These dynamics are much too large to write out, so we simply denote them by
+\begin{align}\label{eqn:acrobot-mu-dot}
+    \dot{\mu} &= f_\mu(\alpha,\mu,I)
+    ,\\
+    \label{eqn:acrobot-alpha-dot}
+    \dot{\alpha} &= f_\alpha(\alpha,\mu,I)
+    .
+\end{align}
+To find the nominal system we set \(I = 0\);
+MATLAB's symbolic toolbox evaluates these expressions as
+\begin{align}\label{eqn:acrobot-mu-dot-nom}
+    \dot{\mu} &= 0
+    , \\
+    \label{eqn:acrobot-alpha-dot-nom}
+    \dot{\alpha} &= \sqrt{\frac{6g}{5l}} 
         \sqrt{\frac{\cos(\mu\cos(\alpha)) - \cos(\mu)}{\mu^2 \sin(\alpha)^2}}
+    .
+\end{align}
+One can confirm that \(\dot{\alpha} > 0\) for every \(\mu \in ]0,\pi[\) -- this
+is expected, since the nominal system is a single pendulum.
+By continuity of (\ref{eqn:acrobot-mu-dot}) with respect to \(I\), 
+\(\dot{\alpha}\) remains positive for \(I\) small enough on the domain \(D\).
+
+Suppose at time \(t = 0\) we have initialized the system at 
+\((q_u,p_u) = (\mu_0,0)\), which corresponds to \((\alpha,\mu) = (0,\mu_0)\).
+Since \(\alpha\) is continuously increasing, we know that the orbit will do one
+of two things: it will either leave \(D\) so that the acrobot is now rotating,
+or it will remain in \(D\) and hit the \(q_u\)-axis at some point 
+\((\alpha,\mu) = (\pi,m)\) as is illustrated in Figure
+\ref{fig:acrobot-possible-orbits}.
+From there, the acrobot could escape \(D\) along the second half of the orbit or
+return to some point \((\alpha,\mu) = (0,\tilde{m})\).
+If \(\tilde{m} < \mu_0\) then the acrobot has lost energy; 
+if \(\tilde{m} > \mu_0\) the acrobot has gained energy; 
+and if \(\tilde{m} = \mu_0\), the acrobot is on a closed orbit.
+Which situation occurs might depend entirely on the choice of
+\(\mu_0\).
+
+\begin{figure}
+    \centering 
+    % TODO: Draw the domain D, an initial point (q0,p0) = (mu0,0), and show the
+    % 4 clockwise half orbits: when the orbit exits D on the bottom left corner;
+    % when the orbit hits the left q-axis at (-mu0-x,0); when it hits (-mu0,0);
+    % and when it hits (-mu0+x,0) for some x > 0.
+    %includestandalone[width=0.5\textwdith]{images/acrobot_possible_orbits}
+    \caption{If the acrobot is initialized at \((q_u,p_u) = (\mu_0,0)\), then
+        either the orbit escapes \(D\) into the rotation
+        zone (purple), or the orbit hits the other half of the \(q_u\)-axis 
+        with a higher (red), equal (black), or lower (blue) angle than when it
+        started.}
+    \label{fig:acrobot-possible-orbits}
+\end{figure}
+
+Since \(\dot{\alpha} > 0\), we could theoretically find some time scaling 
+\(t = \tau(\alpha)\) and use \(\alpha\) as a new ``time" variable.
+Setting \(\hat{\mu}(\alpha) := \mu(\tau(\alpha))\) allows us to ignore the
+dynamics of \(\alpha\) and study the evolution of \(\mu\) as a 
+function of \(\alpha\) rather than as a function of \(t\) (assuming the acrobot
+does not leave \(D\)).
+The dynamics of \(\hat{\mu}\) are
+\[
+    \diff{\hat{\mu}}{\alpha} = 
+    \left.\diff{\mu}{t} \diff{t}{\alpha} \right|_{t =\tau(\alpha)}
+    ,
+\] 
+yielding the ``time"-varying scalar ODE
+\begin{equation}\label{eqn:muhat-dot}
+    \begin{cases}
+        \diff{\hat{\mu}}{\alpha} 
+        = \frac{f_\mu(\tau(\alpha),\mu,I)}{f_\alpha(\tau(\alpha),\mu,I)}
+        =: g(\alpha,\mu,I)
+        , \\
+        \hat{\mu}(0) = \mu_0
         .
     \end{cases}
 \end{equation}
+
+In the remainder of this section we will find a first-order
+approximation of \(\hat{\mu}\). 
+We will show the dynamics of this approximation are \(\pi\)-periodic in
+\(\alpha\), so that we only need to study whether \(\hat{\mu}\) increases or
+decreases along a half-orbit \(\alpha \in [0,\pi]\).
+To complete the proof of energy gain for oscillations, we will demonstrate that
+\(\hat{\mu}(\pi) > \hat{\mu}(0)\).
+This will imply that the the radius of orbits increases
+until all orbits within \(D\) eventually leave \(D\) in finite time.
+
+In the spirit of perturbation analysis, we expand our solution of
+(\ref{eqn:muhat-dot}) into
+\[
+    \hat{\mu}(\alpha) = \hat{\mu}_0(\alpha) + I \hat{\mu}_1(\alpha)
+    + R(\alpha,I)
+    ,
+\]
+where (\ref{eqn:khalil-perturbation-nominal}) tells us that
+\(\hat{\mu}_0\) is the solution to the nominal system
+\[
+\begin{cases}
+    \dot{\hat{\mu}}_0 = g(\alpha,\mu,0)
+    , \\
+    \hat{\mu}_0(0) = \mu_0
+    .
+\end{cases}
+\]
+Since \(g(\alpha,\mu,0) = 0\) by 
+(\ref{eqn:acrobot-mu-dot-nom})-(\ref{eqn:acrobot-alpha-dot-nom}), we find that
+\(\hat{\mu}_0(\alpha) = \mu_0\) for all \(\alpha\).
+Likewise, (\ref{eqn:khalil-perturbation-firstorder}) tells us that 
+\(\hat{\mu}_1\) is the solution to
+\begin{equation}\label{eqn:acrobot-mu1-dot}
+    \begin{cases}
+        \dot{\hat{\mu}}_1 = a(\alpha,\mu_0)\hat{\mu}_1 + b(\alpha,\mu_0)
+        , \\
+        \hat{\mu}_1(0) = 0
+        .
+    \end{cases}
+\end{equation}
+where
+\begin{align*}
+    a(\alpha,\mu_0) &= \pdiff{g}{\hat{\mu}}(\alpha,\mu_0,0)
+    , \\
+    b(\alpha, \mu_0) &= \pdiff{g}{I}(\alpha, \mu_0, 0)
+    .
+\end{align*}
+These are difficult to compute by hand, so we resort to MATLAB symbolic
+computation to reveal that
+\begin{align*}
+    a(\alpha,\mu_0) &= 0
+    , \\
+    b(\alpha,\mu_0) &= K \hat{b}(\alpha,\mu_0)
+\end{align*}
+where we define
+\begin{align*}
+    K &= \frac{\bar{q}_a \sqrt{30m^2g l^3}}{15}
+    , \\
+    \hat{b}(\alpha,\mu_0) &= \frac{
+        \mu_0 |\sin(\alpha)| \left(
+        5 c_{\mu_0} \cos(\mu_0 c_\alpha) - 8 \cos(\mu_0c_\alpha)^2 + 3
+    \right)
+    }{
+    \sin(\mu_0)\sqrt{\cos(\mu_0c_\alpha) - c_{\mu_0}}
+    }
+    .
+\end{align*}
+Hence, the solution to (\ref{eqn:acrobot-mu1-dot}) is given by
+\[
+    \hat{\mu}_1(\alpha,\mu_0) =
+    K \int \limits_0^\alpha \hat{b}(\sigma,\mu_0)d\sigma
+    .
+\]
 
 \subsection*{Perturbation Analysis for Rotations}
 
