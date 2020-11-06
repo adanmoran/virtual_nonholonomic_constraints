@@ -576,23 +576,23 @@ Letting \(I = 0\) we get the nominal system
     \end{cases}
 \end{equation}
 which we need to solve for the explicit solution \(x_0(t,\eta_0)\) on \([t_0,t_1]\).
-One can use \(x_0(t,\eta_0)\) to compute the first-order approximation of
-the nonlinear system 
-\(x(t,\eta_0) = x_0(t,\eta_0) + I x_1(t,\eta_0) + R(t,I)\), where the remainder
-term \(R(t,I)\) satisfies
-\[
-    \lim \limits_{I \to 0} \frac{R(t,I)}{I} = 0
-    ,
-\]
-and \(x_1(t,\eta_0)\) is the solution to
+One can use this to compute the solution \(x_1(t,\eta_0)\) of
 \begin{equation}\label{eqn:khalil-perturbation-firstorder}
     \begin{cases}
         \dot{x}_1 = \pdiff{f}{x}(t,x_0(t,\eta_0),0)x_1 + \pdiff{f}{I}(t,x_0(t,\eta_0),0)
         , \\
-        x_1(t_0,\eta_0) = 0. \\
+        x_1(t_0,\eta_0) = 0
+        .
     \end{cases}
 \end{equation}
-
+Finally, one can compute the first-order approximation
+\(x(t,\eta_0) = x_0(t,\eta_0) + I x_1(t,\eta_0) + R(t,I)\), where the remainder
+term \(R(t,I)\) is \(O(I^2)\);
+that is,
+\[
+    \lim \limits_{I \to 0} \frac{R(t,I)}{I} = 0
+    .
+\]
 We now paraphrase Khalil's Theorem 10.1 \cite{khalil_nonlinear} on the
 accuracy of perturbation analysis.
 \begin{thm}
@@ -618,7 +618,7 @@ use this theory to more easily study the behaviour of orbits and prove energy
 injection properties of our VNHC.
  
 \subsection*{Perturbation Analysis for Oscillations}
-The nominal pendulum (\ie when \(I = 0\)) oscillates whenever the
+When \(I = 0\), the acrobot becomes a nominal pendulum that oscillates whenever the
 nominal energy (\ref{eqn:acrobot-nominal-E}) is less than \(E(\pi,0)\).
 Hence, the domain of oscillations on \(\Gamma\) is given by
 \[
@@ -736,17 +736,18 @@ These dynamics are much too large to write out, so we simply denote them by
     \dot{\alpha} &= f_\alpha(\alpha,\mu,I)
     .
 \end{align}
-To find the nominal system we set \(I = 0\);
-MATLAB's symbolic toolbox evaluates these expressions as
+The nominal system \((\alpha_n,\mu_n)\) comes from setting \(I = 0\).
+MATLAB's symbolic toolbox evaluates the nominal dynamics as
 \begin{align}\label{eqn:acrobot-mu-dot-nom}
-    \dot{\mu} &= 0
+    \dot{\mu}_n &= 0
     , \\
     \label{eqn:acrobot-alpha-dot-nom}
-    \dot{\alpha} &= \sqrt{\frac{6g}{5l}} 
-        \sqrt{\frac{\cos(\mu\cos(\alpha)) - \cos(\mu)}{\mu^2 \sin(\alpha)^2}}
+    \dot{\alpha}_n &= \sqrt{\frac{6g}{5l}} 
+        \sqrt{\frac{\cos(\mu_n\cos(\alpha_n)) - \cos(\mu_n)}
+            {\mu_n^2 \sin(\alpha_n)^2}}
     .
 \end{align}
-One can confirm that \(\dot{\alpha} > 0\) for every \(\mu \in ]0,\pi[\) -- this
+One can confirm that \(\dot{\alpha}_n > 0\) for every \(\mu_n \in ]0,\pi[\) -- this
 is expected, since the nominal system is a single pendulum.
 By continuity of (\ref{eqn:acrobot-mu-dot}) with respect to \(I\), 
 \(\dot{\alpha}\) remains positive for \(I\) small enough on the domain \(D\).
@@ -817,24 +818,26 @@ until all orbits within \(D\) eventually leave \(D\) in finite time.
 
 In the spirit of perturbation analysis, we expand our solution of
 (\ref{eqn:muhat-dot}) into
-\[
+\begin{equation}\label{eqn:acrobot-muhat-approx}
     \hat{\mu}(\alpha) = \hat{\mu}_0(\alpha) + I \hat{\mu}_1(\alpha)
     + R(\alpha,I)
     ,
-\]
-where (\ref{eqn:khalil-perturbation-nominal}) tells us that
+\end{equation}
+where \(R(\alpha,I)\) is \(O(I^2)\).
+From (\ref{eqn:khalil-perturbation-nominal}) we know that 
 \(\hat{\mu}_0\) is the solution to the nominal system
 \[
 \begin{cases}
     \dot{\hat{\mu}}_0 = g(\alpha,\mu,0)
     , \\
     \hat{\mu}_0(0) = \mu_0
-    .
+    ,
 \end{cases}
 \]
 Since \(g(\alpha,\mu,0) = 0\) by 
 (\ref{eqn:acrobot-mu-dot-nom})-(\ref{eqn:acrobot-alpha-dot-nom}), we find that
 \(\hat{\mu}_0(\alpha) = \mu_0\) for all \(\alpha\).
+
 Likewise, (\ref{eqn:khalil-perturbation-firstorder}) tells us that 
 \(\hat{\mu}_1\) is the solution to
 \begin{equation}\label{eqn:acrobot-mu1-dot}
@@ -858,12 +861,13 @@ computation to reveal that
     a(\alpha,\mu_0) &= 0
     , \\
     b(\alpha,\mu_0) &= K \hat{b}(\alpha,\mu_0)
+    ,
 \end{align*}
 where we define
 \begin{align*}
-    K &= \frac{\bar{q}_a \sqrt{30m^2g l^3}}{15}
+    K &:= \frac{\bar{q}_a \sqrt{30m^2g l^3}}{15}
     , \\
-    \hat{b}(\alpha,\mu_0) &= \frac{
+    \hat{b}(\alpha,\mu_0) &:= \frac{
         \mu_0 |\sin(\alpha)| \left(
         5 c_{\mu_0} \cos(\mu_0 c_\alpha) - 8 \cos(\mu_0c_\alpha)^2 + 3
     \right)
@@ -879,7 +883,138 @@ Hence, the solution to (\ref{eqn:acrobot-mu1-dot}) is given by
     .
 \]
 
+To show that the first-order approximation (\ref{eqn:acrobot-muhat-approx}) is
+gaining energy, we define the Poincar\'{e} section 
+\(P(\mu_0) := \hat{\mu}(\pi,\mu_0)\), which expands into
+\[
+    P(\mu_0) = \mu_0 + I \hat{\mu}_1(\pi,\mu_0) + R(\pi,I)
+    .
+\]
+Let us define
+\[
+    Q(\mu_0) := \int \limits_0^\pi \hat{b}(\sigma,\mu_0)d\sigma
+    ,
+\]
+so that \(\hat{\mu}_1(\pi,\mu_0) = K Q(\mu_0)\).
+Note that \(K\) is a positive constant that takes into account the acrobot's
+mass and length, while \(\hat{b}(\alpha,\mu)\) is adimensional;
+that is, it is the same for every possible choice of acrobot.
+Hence, \(Q(\mu_0)\) is the same for every acrobot.
+
+We numerically compute \(Q(\mu_0)\) for \(\mu_0 \in [10^{-5}, \pi - 10^{-5}]\)
+in Figure \ref{fig:acrobot-Q} and we see that \(Q(\mu_0)\) is strictly positive,
+with an asymptote at \(\mu_0 = \pi\). 
+Simulations with smaller \(\mu_0\) vanish in MATLAB, so we believe that 
+\(Q(\mu_0)\) is in fact positive for all \(\mu_0\).
+
+\begin{figure}
+    \centering
+    % TODO: The plot of Q(mu) from MATLAB
+    %\includegraphics[width=0.5\textwidth]{images/Qmu.png}
+    \caption{The plot of \(Q(\mu_0)\).}
+    \label{fig:acrobot-Q}
+\end{figure}
+
+We conclude that, for all \(m\), \(g\), \(l\), \(\bar{q}_a\), and for small
+enough \(I\), the Poincar\'{e} section \(P(\mu_0)\) is positive, monotonically
+increasing, and \(\lim \limits_{\mu_0 \to \pi} P(\mu_0) = \infty\).
+Thus, there are no closed orbits and the origin must be a repeller.
+Furthermore, for any non-zero initial condition of the acrobot and for small
+enough \(I\), the \((q_u,p_u)\) phase of the acrobot will eventually exit \(D\)
+and the acrobot will begin rotating.
+The acrobot's orbit must leave all compact sets in \(D\) in finite time, which
+means the acrobot is gaining energy on \(D\).
+
+If we have \(I < 0\), it is equivalent to using the constraint 
+\(q_a = -\bar{q}_a \arctan(I p_u)\). 
+By the same analysis, this injects energy on \(D\) in negative-time, so the
+constraint dissipates energy on \(D\).
+
+A hybrid supervisor that flips the sign of \(I\) based on the current
+value of \(\mu\) will stabilize any energy level of oscillation.
+As was the case in the VLP, this supervisor should implement some kind of
+hysteresis to avoid infinite switching.
+% Empty proof environment to put QED square on the right of the page
+\begin{proof}[\unskip\nopunct]
+\end{proof}
+
 \subsection*{Perturbation Analysis for Rotations}
+Recall that the domain of oscillations for the nominal pendulum of the acrobot
+is 
+\[
+    D := \left\{ (q_u,p_u) \in \Gamma | E(q_u,p_u) < E(\pi,0)\right\}
+    .
+\]
+Outside of \(D\), the acrobot is experiencing rotations.
+We wish to find a new set of coordinates \((\alpha,\mu)\) and perform a similar
+analysis.
+During oscillations we showed that the energy of oscillations is determined by
+the intersection with the \(q_u\)-axis; 
+when the acrobot is rotating, the energy is instead determined by the
+intersection on the \(p_u\)-axis.
+Hence, we choose \(\mu\) to be this intersection point.
+Note that \(D\) intersects the \(p_u\) axis when 
+\(\mu^2 = 60m^2 g l^3\), so we must have 
+\(\mu > \sqrt{60 m^2 g l^3}\) if the rotation intersects at \(p_u > 0\) 
+or \(\mu < -\sqrt{60 m^2 g l^3}\) if the rotation intersects at \(p_u < 0\).
+The energy level set associated with \(\mu\) is
+\[
+    \left\{(q_u,p_u) \in \Gamma \mid E(q_u,p_u) = \frac{\mu^2}{10ml^2}\right\}
+    ,
+\]
+which gives the relationship
+\begin{equation}\label{eqn:rotation-pu2}
+    \frac{p_u^2}{10m l^2} + 30mgl(1 - c_u) = \frac{\mu^2}{10 ml^2}
+    .
+\end{equation}
+On this level set, \(q_u\) ranges fully between \(]-pi,\pi]\), so our angle of
+rotation is uniquely parameterized by \(\alpha = q_u\).
+Since \(\mu\) does not change sign along the rotation, we have the smooth
+relationship
+\begin{align}\label{eqn:rotation-Tinv}
+    q_u &= \alpha
+    , \\
+    p_u &= \sign{\mu}\sqrt{\mu^2 - 30 m^2 g l^3\left(1 - c_\alpha \right)}
+    .
+\end{align}
+
+We have thus found a transformation \(T\inv(\alpha,\mu) = (q_u,p_u)\), with
+inverse 
+\begin{align}\label{eqn:rotation-T}
+    \alpha &= q_u
+    , \\
+    \mu &= \sign{p_u}\sqrt{p_u^2 + 30 m^2 g l^3 \left(1 - c_u \right)}
+    .
+\end{align}
+
+From this point on, we do the exact same procedure as with oscillations.
+MATLAB symbolic operations evaluate the nominal system's dynamics as
+\begin{align}\label{eqn:acrobot-rot-mu-dot-nom}
+    \dot{\mu}_n &= 0
+    , \\
+    \label{eqn:acrobot-rot-alpha-dot-nom}
+    \dot{\alpha}_n &=  what
+    .
+\end{align}
+Once again, \(\dot{\alpha}_n > 0\) so for small enough \(I\) we must also have
+\(\dot{\alpha} > 0\).
+We take the time-scaled system \(\hat{\mu}(\alpha,I)\) with dynamics 
+\(\dot{\hat{\mu}}(\alpha) = \frac{\dot{\mu}}{\dot{\alpha}}\) with initial
+\(\mu_0\).
+We expand the solution of this into the same form as
+(\ref{eqn:acrobot-muhat-approx}) where once again we have
+\(\hat{\mu}_0(\alpha) \equiv \mu_0\).
+The dynamics for \(\hat{\mu}_1\) are
+\begin{equation}\label{eqn:acrobot-rot-mu1-dot}
+    \dot{\hat{\mu}}_1 =
+    \sign{\mu_0}\frac{5m^2 g l^3 \bar{q}_a \left(
+        m^2gl^3\left(18s_\alpha^2 + 30c_\alpha(1 - c_\alpha)\right)
+        - c_\alpha\mu_0^2
+    \right)}{
+    |\mu_0|\sqrt{\mu_0^2 - 30m^2gl^3(1 - c_\alpha)}
+    }
+    .
+\end{equation}
 
 \section{Experimental Results}
 % TODO: This might be a separate chapter
