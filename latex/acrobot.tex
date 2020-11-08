@@ -882,6 +882,35 @@ Hence, the solution to (\ref{eqn:acrobot-mu1-dot}) is given by
     K \int \limits_0^\alpha \hat{b}(\sigma,\mu_0)d\sigma
     .
 \]
+Notice that \(\hat{b}(\alpha,\mu_0)\) is both even and 
+\(\pi\)-periodic in \(\alpha\), so that the following properties hold:
+\begin{equation}\label{eqn:bhat-integral-properties}
+    \begin{split}
+    \int \limits_0 ^ {N \pi} \hat{b}(\sigma,\mu_0) d\sigma
+    &= N \int \limits_0^\pi \hat{b}(\sigma,\mu_0) d\sigma \, 
+    \left(\forall N \in \mathbb{Z}_{> 0}\right)
+    , \\
+    \int \limits_{-\pi}^0 \hat{b}(\sigma,\mu_0) d\sigma
+    &= \int \limits_0^\pi \hat{b}(\sigma,\mu_0)d\sigma
+    .
+    \end{split}
+\end{equation}
+Suppose we start the system at \((\alpha,\mu) = (0,\mu_0)\). 
+Then the new pseudo-radius after a half orbit where \(\alpha\) goes from \(0\)
+to \(\pi\) (that is, when the orbit hits the negative \(q_u\)-axis)
+is \(\rho = \hat{\mu}(\pi,\mu_0)\).
+Hence, the change in pseudo-radius is \(\rho - \mu_0 = I\hat{\mu}_1(\pi,\mu_0)\).
+Now look at the full orbit where \(\alpha\) goes from \(0\) to \(2\pi\). 
+This lands on the positive \(q_u\)-axis with pseudo-radius
+\(\tilde{\rho} = \mu_0 + I\hat{\mu}_1(2\pi,\mu_0)\).
+As we know from (\ref{eqn:bhat-integral-properties}), we have
+\(\hat{\mu}_1(2\pi,\mu_0) = 2 \hat{\mu}_1(\pi,\mu_0)\). 
+This means the change in pseudo-radius after one entire oscillation is 
+\(\tilde{\rho} - \mu_0 = 2I\hat{\mu}1(\pi,\mu_0) = 2 (\rho - \mu_0)\).
+Hence, if we can show that \(\hat{\mu}_1(\pi,\cdot)\) is always positive, we
+will guarantee that the pseudo-radius increases after every half oscillation.
+This in turn guarantees \(q_u\) is increasing after every half oscillation, so
+that eventually we will reach a rotation.
 
 To show that the first-order approximation (\ref{eqn:acrobot-muhat-approx}) is
 gaining energy, we define the Poincar\'{e} section 
@@ -900,10 +929,13 @@ Note that \(K\) is a positive constant that takes into account the acrobot's
 mass and length, while \(\hat{b}(\alpha,\mu)\) is adimensional;
 that is, it is the same for every possible choice of acrobot.
 Hence, \(Q(\mu_0)\) is the same for every acrobot.
+If \(Q(\mu_0)\) is strictly positive, then \(\hat{\mu}_1(\pi,\mu_0)\) will be
+positive no matter the values of \(m\), \(g\), \(l\), or \(\bar{q}_a\).
 
 We numerically compute \(Q(\mu_0)\) for \(\mu_0 \in [10^{-5}, \pi - 10^{-5}]\)
-in Figure \ref{fig:acrobot-Q} and we see that \(Q(\mu_0)\) is strictly positive,
-with an asymptote at \(\mu_0 = \pi\). 
+in Figure \ref{fig:acrobot-Q}. 
+We see that \(Q(\mu_0)\) is strictly positive and monotonically increasing, with
+an asymptote at \(\mu_0 = \pi\). 
 Simulations with smaller \(\mu_0\) vanish in MATLAB, so we believe that 
 \(Q(\mu_0)\) is in fact positive for all \(\mu_0\).
 
@@ -993,13 +1025,20 @@ MATLAB symbolic operations evaluate the nominal system's dynamics as
     \dot{\mu}_n &= 0
     , \\
     \label{eqn:acrobot-rot-alpha-dot-nom}
-    \dot{\alpha}_n &=  what
+    \dot{\alpha}_n &=  \sign(\mu_0) 
+    \frac{\sqrt{\mu^2 - 30m^2gl^3(1 - c_\alpha)}}{5ml^2}
     .
 \end{align}
-Once again, \(\dot{\alpha}_n > 0\) so for small enough \(I\) we must also have
-\(\dot{\alpha} > 0\).
-We take the time-scaled system \(\hat{\mu}(\alpha,I)\) with dynamics 
-\(\dot{\hat{\mu}}(\alpha) = \frac{\dot{\mu}}{\dot{\alpha}}\) with initial
+As is expected, \(\dot{\alpha}_n\) does not change sign because the acrobot is
+rotating;
+if \(\mu_0 > 0\), the orbit traces a curve going from \(\alpha = -\pi\) to 
+\(\alpha = \pi\), and if \(\mu_0 < 0\) the curve goes in the reverse direction.
+For small enough \(I > 0\) we must also have 
+\(\dot{\alpha} = \sign{\mu_0}\) and can hence use \(\alpha\) as a new time
+variable.
+
+Take the time-scaled system \(\hat{\mu}(\alpha,I)\) with dynamics 
+\(\dot{\hat{\mu}}(\alpha) = \frac{\dot{\mu}}{\dot{\alpha}}\) and initial
 \(\mu_0\).
 We expand the solution of this into the same form as
 (\ref{eqn:acrobot-muhat-approx}) where once again we have
@@ -1007,7 +1046,7 @@ We expand the solution of this into the same form as
 The dynamics for \(\hat{\mu}_1\) are
 \begin{equation}\label{eqn:acrobot-rot-mu1-dot}
     \dot{\hat{\mu}}_1 =
-    \sign{\mu_0}\frac{5m^2 g l^3 \bar{q}_a \left(
+    \frac{5m^2 g l^3 \bar{q}_a \left(
         m^2gl^3\left(18s_\alpha^2 + 30c_\alpha(1 - c_\alpha)\right)
         - c_\alpha\mu_0^2
     \right)}{
@@ -1015,6 +1054,7 @@ The dynamics for \(\hat{\mu}_1\) are
     }
     .
 \end{equation}
+This is an even, \(2\pi\)-periodic function in \(\alpha\).
 
 \section{Experimental Results}
 % TODO: This might be a separate chapter
