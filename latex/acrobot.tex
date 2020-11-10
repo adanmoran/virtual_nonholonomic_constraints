@@ -913,7 +913,7 @@ This in turn guarantees \(q_u\) is increasing after every half oscillation, so
 that eventually we will reach a rotation.
 
 To show that the first-order approximation (\ref{eqn:acrobot-muhat-approx}) is
-gaining energy, we define the Poincar\'{e} section 
+gaining energy, we define the Poincar\'{e} section
 \(P(\mu_0) := \hat{\mu}(\pi,\mu_0)\), which expands into
 \[
     P(\mu_0) = \mu_0 + I \hat{\mu}_1(\pi,\mu_0) + R(\pi,I)
@@ -952,10 +952,9 @@ enough \(I\), the Poincar\'{e} section \(P(\mu_0)\) is positive, monotonically
 increasing, and \(\lim \limits_{\mu_0 \to \pi} P(\mu_0) = \infty\).
 Thus, there are no closed orbits and the origin must be a repeller.
 Furthermore, for any non-zero initial condition of the acrobot and for small
-enough \(I\), the \((q_u,p_u)\) phase of the acrobot will eventually exit \(D\)
-and the acrobot will begin rotating.
-The acrobot's orbit must leave all compact sets in \(D\) in finite time, which
-means the acrobot is gaining energy on \(D\).
+enough \(I\), \((q_u,p_u)\) will eventually exit \(D\).
+This implies the orbit will escape any compact set in \(D\) in finite time. 
+By Definition \ref{defn:energy-gain}, the acrobot is gaining energy on \(D\).
 
 If we have \(I < 0\), it is equivalent to using the constraint 
 \(q_a = -\bar{q}_a \arctan(I p_u)\). 
@@ -1039,7 +1038,7 @@ variable.
 
 Take the time-scaled system \(\hat{\mu}(\alpha,I)\) with dynamics 
 \(\dot{\hat{\mu}}(\alpha) = \frac{\dot{\mu}}{\dot{\alpha}}\) and initial
-\(\mu_0\).
+state \(\mu_0\).
 We expand the solution of this into the same form as
 (\ref{eqn:acrobot-muhat-approx}) where once again we have
 \(\hat{\mu}_0(\alpha) \equiv \mu_0\).
@@ -1052,9 +1051,108 @@ The dynamics for \(\hat{\mu}_1\) are
     \right)}{
     |\mu_0|\sqrt{\mu_0^2 - 30m^2gl^3(1 - c_\alpha)}
     }
+    =: b(\alpha,\mu_0)
     .
 \end{equation}
-This is an even, \(2\pi\)-periodic function in \(\alpha\).
+The solution to (\ref{eqn:acrobot-rot-mu1-dot}) is given by
+\[
+    \hat{\mu}_1(\alpha,\mu_0) = \int \limits_0^\alpha b(\sigma,\mu_0)d\sigma
+    .
+\]
+Since one full rotation amounts to \(\alpha\) traversing \(2\pi\)rad in a clockwise
+direction (\ie \(\alpha\) going from \(0\) to \(\sign{\mu_0}2\pi\)), 
+we define a Poincar\'{e} section as the point reached on the \(p_u\) axis after
+every rotation:
+\[
+    P(\mu_0) = \mu_0 + I \hat{\mu}_1(\sign{\mu_0}2\pi, \mu_0)
+    .
+\]
+If \(|P(\mu_0)| > |\mu_0|\), then the rotation has
+driven the orbit further from the origin.
+In other words, \(|p_u|\) has increased across the rotation.
+If this is true for any \(\mu_0\), the acrobot is gaining energy.
+
+The function \(b(\alpha,\mu_0)\) is even in both its inputs, and is 
+\(2\pi\)-periodic in \(\alpha\).
+Hence, we have 
+\begin{align*}
+    \hat{\mu}_1(\sign{\mu_0}2\pi, \mu_0) &=
+    \int \limits_0^{\sign{\mu_0}2\pi} b(\sigma,\mu_0)d\sigma
+    , \\
+     &=\sign{\mu_0}\int\limits_0^{2\pi}b(\sigma,\mu_0)d\sigma
+     , \\
+     &= \sign{\mu_0} \hat{\mu}_1(2\pi,\mu_0)
+     .
+\end{align*}
+Furthermore, \(\hat{\mu}_1(2\pi,\mu_0) = \hat{\mu}_1(2\pi,|\mu_0|)\).
+This implies that
+\[
+    |P(\mu_0)| = \left|\sign{\mu_0}\left(
+        |\mu_0| + I \hat{\mu}_1(2\pi,|\mu_0|)\right)
+    \right|
+    = P(|\mu_0|)
+    .
+\]
+Therefore, if \(P(|\mu_0|) > |\mu_0|\), then the acrobot is gaining energy.
+Showing that \(\hat{\mu}_1(2\pi,\mu_0) > 0\) for \(\mu_0 > \sqrt{60m^2gl^3}\) is
+sufficient for this condition to hold.
+
+Unlike in the case of oscillations, we cannot adimensionalize
+\(b(\alpha,\mu_0)\) and prove that this condition will be true for all acrobots. 
+Let \(U = ]\sqrt{60m^2gl^3},\bar{\mu}[\), and assume that 
+\(\hat{\mu}_1(2\pi,\mu_0) > 0 \) for all \(\mu_0 \in U\).
+If this is true, then by perturbation analysis we can claim that there exists a
+small enough \(I\) such that the Poincar\'{e} section \(P(\mu_0)\) is monotonic
+on \(U\).
+
+Define the set of points in \(\Gamma\) which have pseudo-radius in \(U\) by
+\[
+    W := \left\{(q_u,p_u) \in \Gamma \mid |\mu(q_u,p_u)| \in U \right\}
+    ,
+\]
+as in Figure \ref{fig:acrobot-rot-W}.
+Monotonicity of \(P(\mu_0)\) means there are no closed orbits of 
+\((q_u,p_u)\) on \(W\). 
+Furthermore, \(|p_u|\) is increasing every time the orbit hits the
+\(p_u\)-axis. 
+
+\begin{figure}
+    \centering
+    % TODO: Display the set W, which is the two rotation bands at the top and
+    % bottom with outer limit +- \bar{mu}  and inner limit +- sqrt{60m^2gl^3}.
+    % Show also that the inner limit connects to D
+    %\includestandalone[width=0.5\textwidth]{images/acrobot_rot_W}
+    \caption{The set \(W\) of points which have pseudo-radius 
+        \(|\mu| \in ]\sqrt{60m^2gl^3}, \bar{\mu}[\). The inner boundary of \(W\)
+        is \((q_u,p_u) = (\pi,0)\), which is also the boundary of the
+        oscillation domain \(D\).}
+    \label{fig:acrobot-rot-W}
+\end{figure}
+
+We conclude that \(|\mu(q_u,p_u)|\) will eventually reach \(\bar{\mu}\). 
+We cannot claim this fits the definition  of energy injection 
+(since \((0,0) \not \in W\)), but we can still say that \((q_u,p_u)\) will
+eventually depart \(W\) through the outer boundary in finite time.
+The acrobot is thereby gaining energy in the literal sense that its momentum
+is increasing on \(W\).
+
+If we set \(I < 0\), we have \(P(|\mu_0|) < |\mu_0|\).
+Hence, \(|p_u|\) is decreasing every time the orbit hits the \(p_u\)-axis, so
+the acrobot will eventually depart \(W\) through the inner boundary. 
+The acrobot is losing momentum, and therefore it is losing energy on \(W\).
+
+
+\subsection*{Connecting Oscillations and Rotations}
+To complete this proof, we will prove the acrobot gains energy on the set 
+\[
+    E_\bar{\mu} := 
+    \left\{ (q_u,p_u) \in \Gamma \mid E(q_u,p_u) < E(0,\bar{\mu}) \right\}
+    .
+\]
+% TODO: W and D's boundary is two elements: the point (pi,0) and the curve of the
+% homoclinic orbit connecting (pi,0) to (-pi,0). We need to show that almost
+% every initial condition starting in \(D\) will NOT converge to (pi,0), and
+% therefore exit D and enter W.
 
 \section{Experimental Results}
 % TODO: This might be a separate chapter
