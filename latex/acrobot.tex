@@ -114,7 +114,7 @@ we have \(l_{c_u} = l_{c_a} = l_u = l_a = l\) and
 \(m_u = m_a = m\). 
 On top of this, the moments of inertia \(J_u\) and \(J_a\) of the rods vanish.
 Reducing
-(\ref{eqn:general-acrobot-inertia}-\ref{eqn:general-acrobot-potential})
+~\eqref{eqn:general-acrobot-inertia}-\ref{eqn:general-acrobot-potential}
 yields the simplified inertia matrix \(D_s\) and potential function \(P_s\),
 where
 \begin{align}
@@ -203,7 +203,7 @@ This is full rank on \(\Gamma\) if and only if the numerator does not
 change sign.
 
 A sufficient condition for regularity is when \(f\) is a function solely of \(p_u\),
-because then \(\partial_{q_u}f = 0\) and (\ref{eqn:regularity-matrix-acrobot})
+because then \(\partial_{q_u}f = 0\) and ~\eqref{eqn:regularity-matrix-acrobot}
 is strictly positive for all values of \(q_a\). 
 This will be useful later, as we will not need to check regularity if we design
 a function of the unactuated momentum. 
@@ -388,13 +388,13 @@ It is for this reason that we choose our acrobot's constraint to be
 \end{figure}
 
 Let us now compute the constrained dynamics under
-(\ref{eqn:acrobot-constraint}).
+~\eqref{eqn:acrobot-constraint}.
 Note that \(dh_q = \begin{bmatrix}0 & 1\end{bmatrix}\), while
 \[
     dh_{p_u} = \frac{-\bar{q}_a I}{1 + I^2 p_u^2}
     .
 \]
-Inserting these to (\ref{eqn:g-qupu}), we get the solution for \(p_a\) on the
+Inserting these to ~\eqref{eqn:g-qupu}, we get the solution for \(p_a\) on the
 constraint manifold:
 \[
     p_a(q_u,p_u) = \frac{
@@ -423,7 +423,7 @@ which can be simplified to
     .
 \end{equation*}
 Hence, the constrained dynamics for the acrobot under
-(\ref{eqn:acrobot-constraint}) are
+~\eqref{eqn:acrobot-constraint} are
 \begin{align}\label{eqn:acrobot-constrained-dynamics}
     \dot{q}_u &= \frac{(1+I^2 p_u^2)p_u + m^2gl^3\bar{q}_a I(2s_u + s_{ua})(1+c_a) }
             {ml^2(1+I^2 p_u^2)(3+2c_a)}
@@ -442,8 +442,8 @@ on the control parameters to guarantee this is true.
 % can reach a limiting speed, which means you don't get full energy injection
 % everywhere on Gamma.
 \begin{thm}\label{thm:acrobot-energy-stabilization}
-    Consider the simple acrobot (\ref{eqn:acrobot-hamiltonian}) constrained by
-    (\ref{eqn:acrobot-constraint}) with \(\bar{q}_a \in ]0,1]\).
+    Consider the simple acrobot ~\eqref{eqn:acrobot-hamiltonian} constrained by
+    ~\eqref{eqn:acrobot-constraint} with \(\bar{q}_a \in ]0,1]\).
     There exists a small enough\footnotemark \(I^\star \in \R_{>0}\)
     such that the VNHC injects energy whenever \( I \in ]0,I^\star[\). 
     If \(I \in ]-I^\star,0[\), the VNHC dissipates energy.
@@ -597,10 +597,10 @@ We now paraphrase Khalil's Theorem 10.1 \cite{khalil_nonlinear} on the
 accuracy of perturbation analysis.
 \begin{thm}
     Suppose \(f : [t_0,t_1] \times D \times [-I_0,I_0] \rightarrow \R^2\) is
-    \(C^1\), and that the nominal problem (\ref{eqn:khalil-perturbation-nominal}) has a
+    \(C^1\), and that the nominal problem ~\eqref{eqn:khalil-perturbation-nominal} has a
     unique solution \(x_0(t,\eta_0) \in D\) on \([t_0,t_1]\).
     Then there exists \(I^\star > 0\) such that for all \(|I| < I^\star\), the
-    solution \(x(t,I,\eta_0)\) to (\ref{eqn:khalil-setup}) satisfies
+    solution \(x(t,I,\eta_0)\) to ~\eqref{eqn:khalil-setup} satisfies
     \[
         \norm{x(t,I,\eta_0) - \left(x_0(t,\eta_0) + I x_1(t,\eta_))\right)} \leq k |I^2|
     \]
@@ -619,7 +619,7 @@ injection properties of our VNHC.
  
 \subsection*{Perturbation Analysis for Oscillations}
 When \(I = 0\), the acrobot becomes a nominal pendulum that oscillates whenever the
-nominal energy (\ref{eqn:acrobot-nominal-E}) is less than \(E(\pi,0)\).
+nominal energy ~\eqref{eqn:acrobot-nominal-E} is less than \(E(\pi,0)\).
 Hence, the domain of oscillations on \(\Gamma\) is given by
 \[
     D := \left\{ (q_u,p_u) \in \Gamma | E(q_u,p_u) < E(\pi,0)\right\}
@@ -664,7 +664,7 @@ which gives the relationship
 On this level set, \(q_u\) ranges between \([-\mu,\mu]\) and can be uniquely
 parameterized by \(q_u = \mu \cos(\alpha)\), where \(\alpha\) is our
 pseudo-angle.
-Substituting this into (\ref{eqn:oscillation-pu2}), we get
+Substituting this into ~\eqref{eqn:oscillation-pu2}, we get
 \[
     p_u^2 = 30m^2gl^3(\cos(\mu \cos(\alpha)) - \cos(\mu))
     .
@@ -680,7 +680,7 @@ which is, in fact, smooth.
 
 We have thus found a transformation \(T\inv(\alpha,\mu) = (q_u,p_u)\).
 We need the inverse of this map to get our diffeomorphism \(T(q_u,p_u)\).
-Notice from (\ref{eqn:oscillation-pu2}) that
+Notice from ~\eqref{eqn:oscillation-pu2} that
 \[
     \cos(\mu) = -\frac{p_u^2}{30m^2gl^3} + \cos(q_u) =: C_\mu(q_u,p_u)
     .
@@ -701,7 +701,7 @@ which means
     \sin(\alpha) = \pm \sqrt{1 - \frac{q_u^2}{\mu^2}}
     .
 \]
-Notice from (\ref{eqn:oscillation-pu}) that 
+Notice from ~\eqref{eqn:oscillation-pu} that 
 \(\sign{\sin(\alpha)} = -\sign{p_u}\).
 We use these facts to deduce that
 \begin{equation}\label{eqn:alpha-qupu}
@@ -726,7 +726,7 @@ The acrobot's constrained dynamics in
     .
 \end{align*}
 with \((\dot{q}_u,\dot{p}_u)\) the given by 
- (\ref{eqn:acrobot-constrained-dynamics}).
+ ~\eqref{eqn:acrobot-constrained-dynamics}.
 
 These dynamics are much too large to write out, so we simply denote them by
 \begin{align}\label{eqn:acrobot-mu-dot}
@@ -749,7 +749,7 @@ MATLAB's symbolic toolbox evaluates the nominal dynamics as
 \end{align}
 One can confirm that \(\dot{\alpha}_n > 0\) for every \(\mu_n \in ]0,\pi[\) -- this
 is expected, since the nominal system is a single pendulum.
-By continuity of (\ref{eqn:acrobot-mu-dot}) with respect to \(I\), 
+By continuity of ~\eqref{eqn:acrobot-mu-dot} with respect to \(I\), 
 \(\dot{\alpha}\) remains positive for \(I\) small enough on the domain \(D\).
 
 Suppose at time \(t = 0\) we have initialized the system at 
@@ -817,14 +817,14 @@ This will imply that the the radius of orbits increases
 until all orbits within \(D\) eventually leave \(D\) in finite time.
 
 In the spirit of perturbation analysis, we expand our solution of
-(\ref{eqn:muhat-dot}) into
+~\eqref{eqn:muhat-dot} into
 \begin{equation}\label{eqn:acrobot-muhat-approx}
     \hat{\mu}(\alpha) = \hat{\mu}_0(\alpha) + I \hat{\mu}_1(\alpha)
     + R(\alpha,I)
     ,
 \end{equation}
 where \(R(\alpha,I)\) is \(O(I^2)\).
-From (\ref{eqn:khalil-perturbation-nominal}) we know that 
+From ~\eqref{eqn:khalil-perturbation-nominal} we know that 
 \(\hat{\mu}_0\) is the solution to the nominal system
 \[
 \begin{cases}
@@ -835,10 +835,10 @@ From (\ref{eqn:khalil-perturbation-nominal}) we know that
 \end{cases}
 \]
 Since \(g(\alpha,\mu,0) = 0\) by 
-(\ref{eqn:acrobot-mu-dot-nom})-(\ref{eqn:acrobot-alpha-dot-nom}), we find that
+~\eqref{eqn:acrobot-mu-dot-nom})-(\ref{eqn:acrobot-alpha-dot-nom}, we find that
 \(\hat{\mu}_0(\alpha) = \mu_0\) for all \(\alpha\).
 
-Likewise, (\ref{eqn:khalil-perturbation-firstorder}) tells us that 
+Likewise, ~\eqref{eqn:khalil-perturbation-firstorder} tells us that 
 \(\hat{\mu}_1\) is the solution to
 \begin{equation}\label{eqn:acrobot-mu1-dot}
     \begin{cases}
@@ -876,7 +876,7 @@ where we define
     }
     .
 \end{align*}
-Hence, the solution to (\ref{eqn:acrobot-mu1-dot}) is given by
+Hence, the solution to ~\eqref{eqn:acrobot-mu1-dot} is given by
 \[
     \hat{\mu}_1(\alpha,\mu_0) =
     K \int \limits_0^\alpha \hat{b}(\sigma,\mu_0)d\sigma
@@ -903,7 +903,7 @@ Hence, the change in pseudo-radius is \(\rho - \mu_0 = I\hat{\mu}_1(\pi,\mu_0)\)
 Now look at the full orbit where \(\alpha\) goes from \(0\) to \(2\pi\). 
 This lands on the positive \(q_u\)-axis with pseudo-radius
 \(\tilde{\rho} = \mu_0 + I\hat{\mu}_1(2\pi,\mu_0)\).
-As we know from (\ref{eqn:bhat-integral-properties}), we have
+As we know from ~\eqref{eqn:bhat-integral-properties}, we have
 \(\hat{\mu}_1(2\pi,\mu_0) = 2 \hat{\mu}_1(\pi,\mu_0)\). 
 This means the change in pseudo-radius after one entire oscillation is 
 \(\tilde{\rho} - \mu_0 = 2I\hat{\mu}1(\pi,\mu_0) = 2 (\rho - \mu_0)\).
@@ -912,7 +912,7 @@ will guarantee that the pseudo-radius increases after every half oscillation.
 This in turn guarantees \(q_u\) is increasing after every half oscillation, so
 that eventually we will reach a rotation.
 
-To show that the first-order approximation (\ref{eqn:acrobot-muhat-approx}) is
+To show that the first-order approximation ~\eqref{eqn:acrobot-muhat-approx} is
 gaining energy, we define the Poincar\'{e} section
 \(P(\mu_0) := \hat{\mu}(\pi,\mu_0)\), which expands into
 \[
@@ -1040,7 +1040,7 @@ Take the time-scaled system \(\hat{\mu}(\alpha,I)\) with dynamics
 \(\dot{\hat{\mu}}(\alpha) = \frac{\dot{\mu}}{\dot{\alpha}}\) and initial
 state \(\mu_0\).
 We expand the solution of this into the same form as
-(\ref{eqn:acrobot-muhat-approx}) where once again we have
+~\eqref{eqn:acrobot-muhat-approx} where once again we have
 \(\hat{\mu}_0(\alpha) \equiv \mu_0\).
 The dynamics for \(\hat{\mu}_1\) are
 \begin{equation}\label{eqn:acrobot-rot-mu1-dot}
@@ -1054,7 +1054,7 @@ The dynamics for \(\hat{\mu}_1\) are
     =: b(\alpha,\mu_0)
     .
 \end{equation}
-The solution to (\ref{eqn:acrobot-rot-mu1-dot}) is given by
+The solution to ~\eqref{eqn:acrobot-rot-mu1-dot} is given by
 \[
     \hat{\mu}_1(\alpha,\mu_0) = \int \limits_0^\alpha b(\sigma,\mu_0)d\sigma
     .
@@ -1131,7 +1131,7 @@ Furthermore, \(|p_u|\) is increasing every time the orbit hits the
 
 We conclude that \(|\mu(q_u,p_u)|\) will eventually reach \(\bar{\mu}\). 
 We cannot claim this fits the definition  of energy injection 
-(since \((0,0) \not \in W\)), but we can still say that \((q_u,p_u)\) will
+(since \((0,0) \notin W\)), but we can still say that \((q_u,p_u)\) will
 eventually depart \(W\) through the outer boundary in finite time.
 The acrobot is thereby gaining energy in the literal sense that its momentum
 is increasing on \(W\).
@@ -1145,7 +1145,7 @@ The acrobot is losing momentum, and therefore it is losing energy on \(W\).
 \subsection*{Connecting Oscillations and Rotations}
 To complete this proof, we will prove the acrobot gains energy on the set 
 \[
-    E_\bar{\mu} := 
+    E_{\bar{\mu}} := 
     \left\{ (q_u,p_u) \in \Gamma \mid E(q_u,p_u) < E(0,\bar{\mu}) \right\}
     .
 \]

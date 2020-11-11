@@ -81,14 +81,14 @@ methods for modelling robotic systems are \textit{Lagrangian} and
 Lagrangian mechanics uses the kinetic energy \(T(q,\dot{q})\) and potential
 energy \(P(q)\) of the system to define the Lagrangian 
 \(\mathcal{L} : \mathcal{Q}\times\R^n \rightarrow \R\) defined by
-(\ref{eqn:lagrangian-general}) \cite{greenwood_dynamics},
+~\eqref{eqn:lagrangian-general} \cite{greenwood_dynamics},
 \begin{equation}\label{eqn:lagrangian-general}
     \mathcal{L}(q,\dot{q}) = T(q,\dot{q}) - P(q)
     .
 \end{equation}
 When the mechanical system is actuated, the EOM are described by \(n\) second-order
 ordinary differential equations (ODEs) obtained from the \textit{Euler-Lagrange
-equations} (\ref{eqn:el-eqns-general}) with \textit{generalized input forces} 
+equations} ~\eqref{eqn:el-eqns-general} with \textit{generalized input forces} 
 \(\tau \in \R^k\)
 \begin{equation}\label{eqn:el-eqns-general}
     \diff{}{t}\left\{ \pdiff{\mathcal{L}}{\dot{q}_i} \right\}
@@ -119,7 +119,7 @@ Lagrangian can be written explicitly as
 where the \textit{inertia matrix} \(D: \mathcal{Q} \rightarrow \R^{n\times n}\) 
 is a symmetric, positive definite matrix for all \(q \in \mathcal{Q}\) and the
 potential function \(P : \mathcal{Q} \rightarrow \R\) is smooth. 
-%If this is the case, the Euler-Lagrange equations reduce to (\ref{eqn:el-eqns}),
+%If this is the case, the Euler-Lagrange equations reduce to ~\eqref{eqn:el-eqns},
 %\begin{equation}\label{eqn:el-eqns}
 %    D(q)\ddot{q} + C(q,\dot{q})\dot{q} + \nabla P(q) = B(q)\tau
 %\end{equation}
@@ -144,13 +144,13 @@ To do this, we first define the \textit{conjugate of momentum \(p_i\) to \(q_i\)
 To ease notation, we write \(p = (p_1, \ldots, p_n) \in \R^n\) and call
 \(p\) the \textit{conjugate of momenta to \(q\)}.
 Note that each \(p_i\) is a linear function of \(\dot{q}\), and one can typically
-solve for \(\dot{q}(q,p)\) by inverting all the expressions from (\ref{eqn:p-i}).
+solve for \(\dot{q}(q,p)\) by inverting all the expressions from ~\eqref{eqn:p-i}.
 The combined vector \((q,p) \in \mathcal{Q}\times\R^n\) is called a 
 \textit{phase} of the system. 
 
 The \textit{Hamiltonian} of the system in
 \((q,p)\) coordinates is the ``Legendre transform"
-(\ref{eqn:hamiltonian-legendre}) of the Lagrangian \cite{landau_mechanics},
+~\eqref{eqn:hamiltonian-legendre} of the Lagrangian \cite{landau_mechanics},
 \begin{equation}\label{eqn:hamiltonian-legendre}
     \mathcal{H}(q,p) := p\tpose \dot{q}(q,p) - \mathcal{L}(q,\dot{q}(q,p))
     .
@@ -168,10 +168,10 @@ Here, \(B(q) \in \R^{n\times k}\) is the same input matrix used by the
 Lagrangian framework, with \(\tau \in \R^k\) the same vector of generalized
 input forces.
 
-If the kinetic energy of the system is quadratic as in (\ref{eqn:lagrangian}), 
+If the kinetic energy of the system is quadratic as in ~\eqref{eqn:lagrangian}, 
 the conjugate of momenta becomes \(p = D(q)\dot{q}\). Since \(D(q)\) is symmetric
 and positive definite, it is invertible at each \(q \in \mathcal{Q}\).
-The Legendre transform (\ref{eqn:hamiltonian-legendre}) becomes
+The Legendre transform ~\eqref{eqn:hamiltonian-legendre} becomes
 \begin{align*}
     \mathcal{H}(q,p) &= p\tpose D\inv(q)p - \left( \frac{1}{2}p\tpose D\inv(q) p -
     P(q) \right) \\
@@ -296,7 +296,7 @@ The following Lemma allows us to prove it is a canonical transformation.
 % Describe the change of coordinates to get into q_u/q_a mode and show
 % that the actuator directly affects pa but not pu. Use M for simply actuated
 % inertia, D for normal coordinates
-Suppose we are given a Hamiltonian mechanical system (\ref{eqn:hamiltonian}).
+Suppose we are given a Hamiltonian mechanical system ~\eqref{eqn:hamiltonian}.
 Because \(\tau\) is transformed by the input matrix \(B(q)\) before
 entering the EOM, it is not in general clear how any particular input force \(\tau_i\)
 will affect the dynamics of the system. 
@@ -325,7 +325,7 @@ thesis.
 \end{defn}
 
 Under the following assumptions on the input matrix, we will show that there is
-a canonical transformation of (\ref{eqn:hamiltonian}) into simply actuated
+a canonical transformation of ~\eqref{eqn:hamiltonian} into simply actuated
 coordinates.
 
 \begin{assm}\label{assm:B-const}
@@ -437,10 +437,10 @@ are affected by the input forces.
 
 \begin{thm}\label{thm:simply-actuated}
     Under Assumptions \ref{assm:B-const},\ref{assm:B-perp}, and
-    \ref{assm:B-orthogonal}, the Hamiltonian system (\ref{eqn:hamiltonian})
+    \ref{assm:B-orthogonal}, the Hamiltonian system ~\eqref{eqn:hamiltonian}
     has simply actuated canonical coordinates 
     \(\left(Q = \mathbf{B}q, P = \mathbf{B}p\right)\). The resulting dynamics are 
-    given by (\ref{eqn:simple-hamiltonian}),
+    given by ~\eqref{eqn:simple-hamiltonian},
     \begin{align}\label{eqn:simple-hamiltonian}
         \mathcal{H}(Q,P) &= 
         \frac{1}{2} P\tpose \Minv(Q) P + V(Q)
@@ -646,7 +646,7 @@ As a reminder, our system is described in \((q,p)\) coordinates with
 \end{notation}
 
 \begin{thm}\label{thm:vnhc-regularity}
-    A relation \(h(q,p) = 0\) for system (\ref{eqn:simply-actuated-hamiltonian})
+    A relation \(h(q,p) = 0\) for system ~\eqref{eqn:simply-actuated-hamiltonian}
     is a regular VNHC of order \(k\) if and only if \(dh_{p_a} = 0\) 
     and
     \[
@@ -869,7 +869,7 @@ The following corollay applies Theorem \ref{thm:zero-dynamics} to
 systems with only one unactuated coordinate.
 
 \begin{cor}\label{cor:2d-zero-dynamics}
-    Let \(\mathcal{H}\) be the system (\ref{eqn:simple-hamiltonian}) with degree
+    Let \(\mathcal{H}\) be the system ~\eqref{eqn:simple-hamiltonian} with degree
     of underactuation one.
     Suppose \(\mathcal{H}\) satisfies Assumption \ref{assm:inertially-actuated}.
     Let \(h(q,p_u) = 0\) be a regular VNHC of order \((n-1)\) of the form
@@ -890,8 +890,54 @@ systems with only one unactuated coordinate.
     \end{equation}
     Since \(q_u \in \Rt{T_u}\) for some \(T_u \in ]0,\infty]\) and \(p_u \in \R\),
     the orbit \((q_u(t),p_u(t))\) traces out
-    a curve on the 2D-plane \(\Rt{T_u} \times \R\) which we call the \((q,p)\)-plane.
+    a curve on the 2D constraint manifold 
+    \(\Gamma = \Rt{T_u} \times \R\) which we call the \((q_u,p_u)\)-plane.
 \end{cor}
+
+We conclude this chapter by formalizing the notion of energy injection for
+VNHCs.
+To glean some intuition for this idea, suppose our mechanical system satisfies
+the above corollary so that the constraint manifold \(\Gamma\) is the
+\((q_u,p_u)\)-plane.
+If any initial condition of the constrained dynamics converges to the origin, 
+the system must be losing energy because the unactuated momentum
+\(p_u\) is decreasing.
+Any notion of energy injection must therefore require that the origin of 
+\(\Gamma\) repels all solutions.
+Furthermore, periodic solutions prevent the system from attaining higher speeds,
+so the constrained dynamics should not have closed orbits or limit cycles.
+Finally, we want the unactuated momentum to increase on average, regardless of
+its initial value. 
+This intuition is generalized to ODEs on manifolds by the following definition.
+
+% TODO: Change this, 0 is not an element of the manifold. Do we need other
+% notions, like a riemannian metric? Should we just use Gamma?
+\begin{defn}\label{defn:energy-gain}
+    Let \(M\) be an \(n\)-dimensional manifold and \(D \subset M\) be open.
+    Let \(f : D \rightarrow \R^n\) be smooth with \(f(0) = 0\).
+    The system described by \(\dot{x} = f(x)\) 
+    \textit{gains energy on \(D\)} if 
+    \begin{enumerate}
+        \item If \(0 \in D\), then \(0\) is a repeller 
+         (or equivalently, it is asymptotically stable in negative time).
+      \item For all compact sets \(K \subset D\) and for almost every initial
+         condition \(x(0) \in K\), there exists \(T > 0\) such
+         that \(x(t) \notin K \, (\forall t > T)\).
+    \end{enumerate}
+    The system \textit{loses energy on \(D\)} if it gains energy in
+    negative-time.
+\end{defn}
+
+The second property of Definition \ref{defn:energy-gain} allows the system
+to have unstable equilibria, but not limit cycles nor closed orbits.
+The next definition ties this notion of energy gain to VNHCs.
+
+\begin{defn}\label{defn:energy-injection}
+    A regular VNHC \(h(q, p) = 0\) with constraint manifold \(\Gamma\)
+    \textit{injects (dissipates) energy} on \(D \subset \Gamma\) if the
+    constrained dynamics gain (lose) energy everywhere on \(D\), except possibly
+    on a set of measure zero.
+\end{defn}
 
 \section{Summary of Results}
 In this chapter, we developed the framework of virtual nonholonomic constraints
