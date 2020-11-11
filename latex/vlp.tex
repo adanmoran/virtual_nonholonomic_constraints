@@ -51,7 +51,7 @@ length \(\underline{l} \geq 0\) and some maximum length
 \end{figure}
 
 Using this configuration, we will compute the Hamiltonian dynamics of the system.
-The cartesian position of the mass at the tip of the pendulum
+The Cartesian position of the mass at the tip of the pendulum
 is given by \(x = (l\sin(q),-l\cos(q))\), while its velocity is
 \(\dot{x} = (\dot{l}\sin(q) + l\cos(q)\dot{q}, -\dot{l}\cos(q) + l\sin(q)\dot{q})\).
 Computing the kinetic energy \(T\) yields
@@ -108,7 +108,7 @@ dynamics (\ref{eqn:simply-actuated-dynamics}) resolve to
    \end{cases} \nonumber
 \end{align}
 The control input is a force \(\tau \in \mathbb{R}\) affecting the dynamics of
-\(p_l\), acting colinearly with the rod.
+\(p_l\), acting collinearly with the rod.
 We assume the force does not affect the dynamics of \(p\) in any way -
 that is, the control input cannot enact any lateral force on the pendulum.
 This makes the VLP into an underactuated mechanical system with degree of
@@ -394,10 +394,10 @@ to have unstable equilibria, but not limit cycles nor closed orbits.
 The next definition ties this notion of energy gain to VNHCs.
 
 \begin{defn}\label{defn:energy-injection}
-   A regular VNHC \(h(\mathbf{q},\mathbf{p}) = 0\) 
-   \textit{injects (dissipates) energy} if the constrained dynamics gain (lose)
-   energy everywhere on the constraint manifold, except possibly on a set of
-   measure zero.
+   A regular VNHC \(h(\mathbf{q},\mathbf{p}) = 0\) \textit{injects (dissipates)
+     energy} if the constrained dynamics in~\eqref{eqn:vlp-hamiltonian} gain
+   (lose) energy everywhere on the constraint manifold, except possibly on a set
+   of measure zero.
 \end{defn}
 
 We can now prove our VNHC injects energy into the VLP. 
@@ -439,52 +439,55 @@ average.
       \text{ }\forall \theta \in \mathbb{S}^1
       ,
    \end{equation}
-   with the property that the inequality is strict except at the
-   coordinate axes.
-   If the inequality is flipped, the VNHC dissipates energy. 
+   with the property that the inequality is strict except at $\theta \in
+   \{0,\pi/2,\pi,3 \pi/2\}$.  If instead 
+\[
+ \left(l_\text{avg} - L(\theta)\right)sin(2\theta) \leq 0 
+      \text{ }\forall \theta \in \mathbb{S}^1
+      ,
+\]
+the VNHC dissipates energy.
 \end{thm}
 \begin{proof}
-   The constraint manifold for \(h\) is the cylinder \(\Gamma = \mathbb{S}^1 \times \R \). 
-   In negative-time, the dynamics on \(\Gamma\) are
-   \begin{equation}\label{eqn:negative-time-vlp}
-      f(q,p) = 
-      -\begin{bmatrix}
-         \dot{q} \\ \dot{p}
-      \end{bmatrix} = \begin{bmatrix}
-         -\frac{p}{mL(\theta)^2} \\
-         mgL(\theta)\sin(q)
-      \end{bmatrix}
-      .
-   \end{equation}
-   Because \(q \in \mathbb{S}^1\), the only equilibria of these dynamics are 
-   at \((q,p) = (0,0)\) and \((q,p) = (\pi,0)\).
-   To prove the origin of the positive-time system (\ref{eqn:vlp-hamiltonian})
-   is a repeller, we will show the origin of the negative-time system 
-   (\ref{eqn:negative-time-vlp}) is almost everywhere globally asymptotically
-   stable. 
+   We will first show that, under the given assumptions, the origin of the
+   constrained dynamics~\eqref{eqn:vlp-hamiltonian} is a repeller, and for that
+   we consider the negative time system obtained
+   from~\eqref{eqn:vlp-hamiltonian} by reversing the sign of the vector field:
+\begin{equation}\label{eqn:negative-time-vlp}
+   \begin{cases}
+      \dot{q} = -\frac{p}{m L^2} \\
+      \dot{p} = mgL\sin(q)
+      . \\ 
+   \end{cases}
+\end{equation}
+The state space of~\eqref{eqn:negative-time-vlp} is \(\mathbb{S}^1
+\times \R\), and the system has two equilibria, \((q,p)=(0,0)\) and
+\((q,p)=(\pi,0)\). We need to show that the equilibrium
+\((q,p)=(0,0)\) is asymptotically stable
+for~\eqref{eqn:negative-time-vlp}. 
 
-   Choose, as a candidate Lyapunov function, the energy for the
-   average-length pendulum with zero-potential at the bottom of the swing:
+Consider the Lyapunov function candidate
    \[
        E_\text{avg}(q,p) := \frac{1}{2}\frac{p^2}{m l_\text{avg}^2} 
            + m g l_\text{avg} (1-\cos(q))
-      .
-   \]
-   This is positive definite at \((0,0)\) and has compact sublevel
-   sets on \(\Gamma\). 
-   The derivative of \(E_\text{avg}\) along (\ref{eqn:vlp-hamiltonian}) is
-   \begin{equation}\label{eqn:eavg-dot-pos}
-      \dot{E}_\text{avg}^+ = -\frac{g\sin(q)p \left(L(\theta)^3 - l_\text{avg}^3\right)}
-              {l_\text{avg}^2L(\theta)^2}
       ,
-   \end{equation}
-   and the derivative of \(E_\text{avg}\) along (\ref{eqn:negative-time-vlp}) is
+   \]
+which corresponds to the energy of VLP when the pendulum length is fixed at
+\(l_\text{avg}\).  The function \(E_\text{avg}\) is positive definite at
+\((0,0)\), and has compact sublevel sets on \(\mathbb{S}^1 \times \R\).  The
+derivative of \(E_\text{avg}\) along~\eqref{eqn:negative-time-vlp} is
+   %% \begin{equation}\label{eqn:eavg-dot-pos}
+   %%    \dot{E}_\text{avg}^+ = -\frac{g\sin(q)p \left(L(\theta)^3 - l_\text{avg}^3\right)}
+   %%            {l_\text{avg}^2L(\theta)^2}
+   %%    ,
+   %% \end{equation}
+   %% and the derivative of \(E_\text{avg}\) along (\ref{eqn:negative-time-vlp}) is
    \begin{equation}\label{eqn:eavg-dot-neg}
-      \dot{E}_\text{avg}^- = - \dot{E}_\text{avg}^+
+      \dot{E}_\text{avg} = \frac{g\sin(q)p \left(L(\theta)^3 -
+        l_\text{avg}^3\right)} {l_\text{avg}^2L(\theta)^2}
       .
    \end{equation}
-   The sign of \(\sin(q)p\) depends only on the quadrant in the
-   \((q,p)\)-plane. In fact, it is easy to show that
+It is easy to show that
    \[
       \sign{\sin(q)p} = \sign{\sin(2\theta)}
       .
@@ -492,140 +495,130 @@ average.
    Furthermore, by Lemma \ref{lemma:sign-of-cube} we have
    \[ 
        \sign{L(\theta)^3 - l_\text{avg}^3} = \sign{L(\theta) - l_\text{avg}}
-       .
+       ,
    \]
-   The positive-time derivative (\ref{eqn:eavg-dot-pos}) is nonnegative since
+and therefore,
    \begin{align}\label{eqn:vlp-proof-neg-inv}
-    \sign{\dot{E}_\text{avg}^+} &= \sign{-\sin(q)p \left(L(\theta)^3 - l_\text{avg}^3\right)}
+    \sign{\dot{E}_\text{avg}} &= \sign{\sin(q)p \left(L(\theta)^3 - l_\text{avg}^3\right)}
           \nonumber \\
-          &= \sign{-\sin(2\theta) \left(L(\theta) - l_\text{avg}\right)}
+          &= \sign{\sin(2\theta) \left(L(\theta) - l_\text{avg}\right)}
           \nonumber \\
-          &= \sign{(l_\text{avg} - L(\theta))\sin(2\theta)} 
+          &= -\sign{(l_\text{avg} - L(\theta))\sin(2\theta)} 
           \nonumber \\
-          &\geq 0 \text{ (by assumption)}
+          &\leq 0 \text{ (by assumption)}
       .
    \end{align}
-   Using (\ref{eqn:eavg-dot-neg}) and (\ref{eqn:vlp-proof-neg-inv}) 
-   we can determine that \(\sign{\dot{E}_\text{avg}^-} \leq 0\). 
-   Thus, \(E_\text{avg}\) is a Lyapunov function for
-   (\ref{eqn:negative-time-vlp}), which means the negative-time system is stable
-   \cite{lyapunov}. 
-
-   Let us briefly analyze the upright equilibrium.
-   Label the set of initial conditions converging to \((\pi, 0)\) in
-   positive time by
+We have thus shown that \(\dot{E}_\text{avg} \leq 0\), and therefore
+the equilibrium \((q,p)=(0,0)\) is stable for~\eqref{eqn:negative-time-vlp}. We
+now apply the Krasovskii-LaSalle invariance principle, and consider the largest
+subset of \( Z = \left\{(q,p) \in \mathbb{S}^1 \times \R \mid
+\dot{E}_\text{avg}(q,p) = 0 \right\} \). We see from~\eqref{eqn:eavg-dot-neg}
+that \(\dot{E}_\text{avg}(q,p)\) is zero when $p=0$, \(\sin(q)=0\), or
+$L(\theta) = l_\text{avg}$. This latter condition by assumption is met when
+\(\theta \in \{0,\pi/2,\pi, 3\pi/2\}\), or equivalently when either $q=0$ or
+$p=0$. All in all, we have that
    \[
-      \Pi_0^+ := \left\{ (q_0,p_0) \in \Gamma \mid \lim_{t \to \infty} (q(t),p(t)) = (\pi, 0) \right\}
-      ,
-   \]
-   and the set of initial conditions converging to \((\pi,0)\)
-   in negative time by \(\Pi_0^-\).
-   Take now the sublevel set
-   \[
-      E_{(\pi,0)} := \left\{ (q,p) \in \Gamma \mid E_\text{avg}(q,p) \leq
-         E_\text{avg}(\pi,0) \right\}
+      Z= \left\{(q,p) \in \mathbb{S}^1 \times \R \mid q =0\right\} \cup \left\{(q,p) \in \mathbb{S}^1 \times \R \mid p =0\right\} 
       .
-   \] 
-   From (\ref{eqn:vlp-proof-neg-inv}), all sublevel sets of \(E_\text{avg}\) are
-   negatively invariant in positive-time, which means
-   complements of sublevel sets are positively invariant.
-   Hence, the system cannot possibly converge to \((\pi,0)\) if it is
-   initialized on 
-   \(\left(E_{(\pi,0)}\right)^C = \Gamma \backslash E_{(\pi,0)}\).
-   This implies that \(\Pi_0^+ \subset E_{(\pi,0)}\).
-   Similarly, the interior of \(E_{(\pi,0)}\) is positively
-   invariant for (\ref{eqn:negative-time-vlp}), 
-   which implies \(\Pi_0^- \subset \left(E_{(\pi,0)}\right)^C \cup (\pi,0)\).
+   \]
+It is easily seen that the largest invariant subset of \(Z\) is the union of the two equilibria
+\[
+\Omega =  \{(0,0)\}\cup \{(\pi,0)\}
+.
+\]  
+Since all sublevel sets of \(E_\text{avg}\) are compact, the
+Krasovskii-LaSalle invariance principle implies that the set
+\(\Omega\) is globally attractive. Since the two equilibria are
+isolated, and since \((q,p)=(0,0)\) is stable, we deduce that the
+equilibrium \((q,p)=(0,0)\) is asymptotically stable for the negative
+time system~\eqref{eqn:negative-time-vlp}, and thus it is a repeller
+for the constrained dynamics in~\eqref{eqn:vlp-hamiltonian}.
 
-   The linearization of (\ref{eqn:vlp-hamiltonian}) at \((\pi, 0)\) is given by
-   \begin{equation}\label{eqn:linearized-vlp}
+
+
+We now prove that almost all solutions of the reduced
+dynamics~\eqref{eqn:vlp-hamiltonian} escape compact sets in finite
+time, i.e., that for each compact subset \(K\) of \(\mathbb{S}^1
+\times \R\), and for almost every condition \( (q_0,p_0) \in K \),
+there exists \( T > 0\) such that \( (q(t),p(t)) \not \in K \) for all
+\( t > T \), where \( (q(t),p(t)) \) denotes the solution
+of~\eqref{eqn:vlp-hamiltonian} with \( (q(0),p(0)) = (q_0,p_0)\). In
+what follows, we denote by \( x = (q,p) \) the state of the reduced
+dynamics~\eqref{eqn:vlp-hamiltonian}. Also, we denote by \(\Pi^-\) the
+stable manifold of the equilibrium \((\pi,0)\) for
+system~\eqref{eqn:vlp-hamiltonian}, defined as
+ \[
+      \Pi^- := \left\{ x(0) \in \mathbb{S}^1 \times \R \mid
+      \lim_{t \to \infty} x(t) = (\pi, 0) \right\}.
+   \]
+The linearization of system~\eqref{eqn:vlp-hamiltonian} at the
+equilibrium \((\pi,0)\) has a system matrix given by
+  \begin{equation}\label{eqn:linearized-vlp}
       \begin{bmatrix}
-         0 & \frac{1}{mL(0)^2} \\
-         m g L(0) & 0 \\
+         0 & -\frac{1}{mL(0)^2} \\
+         -m g L(0) & 0 \\
       \end{bmatrix}
       ,
    \end{equation}
-   which has eigenvalues at \(\lambda = \pm \sqrt{\frac{g}{L(0)}}\).
-   Linearizing (\ref{eqn:negative-time-vlp}) at this point yields the same eigenvalues.
-   Since one eigenvalue of (\ref{eqn:linearized-vlp})
-   is positive and one is negative, the stable manifold theorem tells
-   us that both \(\Pi_0^+\) and \(\Pi_0^-\) are one-dimensional
-   \cite{stable_manifold}.
-   This implies the origin cannot be globally asymptotically stable for
-   (\ref{eqn:negative-time-vlp}); however, we can still show it is asymptotically stable
-   for almost every initial condition because \(\Pi_0^+\) and \(\Pi_0^-\) are of
-   measure zero within \(\Gamma\).
+whose spectrum is \(\{\pm \sqrt{{g}/{L(0)}}\}\).  Since one eigenvalue
+of (\ref{eqn:linearized-vlp}) is positive and one is negative, the
+stable manifold theorem implies that the stable manifold \( \Pi^- \)
+is a one-dimensional immersed submanifold of \(\mathbb{S}^1 \times
+\R\), and thus a set of zero measure.
 
-   We cannot linearize (\ref{eqn:vlp-hamiltonian}) at \((0,0)\) to prove 
-   the origin is a repeller, because \(\theta(0,0)\) is not well-defined. 
-   Instead, let \(D := \Gamma \backslash \Pi_0^-\).
-   We will prove that (\ref{eqn:negative-time-vlp}) asymptotically converges to
-   \((0,0)\) if it is initialized on \(D\).
-   First, define the zero-set
+Let \( K \subset \mathbb{S}^1 \times \R\) be an arbitrary compact set
+and let \( x(0) \in K \backslash \left(\Pi^- \cup
+\left\{(0,0)\right\}\right)\). Since \( x(0) \not \in \Pi^- \), we have that
+\begin{equation}\label{eqn:vlp-x-does-not-converge}
+x(t) \not \to_{t \to \infty} (\pi,0).
+\end{equation}
+Suppose, by way of contradiction, that for each \(T
+> 0\) there exists \(t' > T\) such that \(x(t') \in K\).  Letting
    \[
-      Z = \left\{(q,p) \in \Gamma \mid 
-      \dot{E}_\text{avg}(q,p) = 0 \right\}
-      .
-   \]
-   It is easy to show that \(Z\) is the union of the coordinate axes
-   \[
-      Z= \mathbb{S}^1 \times \left\{0\right\} \cup 
-         \left\{0\right\} \times \R
-      .
-   \]
-   Krasovskii-LaSalle tells us that solutions to (\ref{eqn:negative-time-vlp})
-   converge to the largest invariant set in \(Z \cap D\)
-   \cite{krasovskii_lasalle}.
-   Since \(f(q,p) = (0,0)\) on \(D\) only when \((q,p) = (0,0)\),
-   the origin is asymptotically stable on \(D\) for the negative-time system.
-   In particular, the origin is asymptotically stable for every initial
-   condition in the interior of \(E_{(\pi,0)}\).
-   Hence, the positive-time system is diverging away from the origin 
-   in the \((q,p)\) plane, which means the origin is a repeller.
-
-   We now prove the system escapes compact sets in finite time.
-   Let \(x(t) = (q(t),p(t))\) be the orbit for the positive-time system.
-   Let \(K \subset \Gamma\) be compact and assume 
-   \(x(0) \in K\backslash \left(\Pi_0^+ \cup \left\{(0,0)\right\}\right)\).
-   For a proof by contradiction, suppose that for all \(T > 0\) there exists
-   \(t' > T\) where \(x(t') \in K\).
-   Let 
-   \[
-      k := \max\limits_{(q,p) \in K} E_\text{avg}(q,p)
+      k := \max\limits_{x \in K} E_\text{avg}(x)
       ,
    \] 
-   be the largest energy value attained in \(K\), and let \(E_k\) be its
-   sublevel set.
+and \(E_k =\{ x \mid E_\text{avg}(x) \leq k\} \), we have that \( K
+\subset E_k \), and thus \(x(t') \in E_k\). We have shown earlier that
+the function \( E_\text{avg} \) is nonincreasing along solutions
+of~\eqref{eqn:negative-time-vlp}, which implies that \(
+E_\text{avg}(x(t)) \) is nondecreasing for solutions of the reduced
+dynamics~\eqref{eqn:vlp-hamiltonian}, and therefore the half orbit
+\(x([0,t'])\) is contained fully within \(E_k\).  In particular,
+\(x(T) \in E_k\). Since this is true for each \( T >0 \), we deduce
+that \(x(t) \in E_k\) for all \(t \in [0,\infty[\).  Since \(E_k\) is
+    compact, \(x(t)\) has a positive limit set in \(E_k\) which, by
+    the Poincar\'{e}-Bendixson theorem, is either an equilibrium or a
+    closed orbit \cite{poincare_bendixson}.  We will show this
+    positive limit set must be an equilibrium and thereby reach a
+    contradiction.
 
-   Since \(E_k\) contains \(K\) and \(x(t') \in K\), it follows that 
-   \(x(t') \in E_k\). 
-   Furthermore, negative invariance of \(E_k\) means the half orbit
-   \(x([0,t'])\) is contained fully within \(E_k\).
-   In particular, \(x(T) \in E_k\).
-   However, \(T\) was chosen arbitrarily, which implies \(x(t) \in E_k\) for all
-   \(t \in [0,\infty[\).
-   Since \(E_k\) is compact, \(x(t)\) has a positive limit set in
-   \(E_k\) which, by Poincar\'{e}-Bendixson, is either an equilibrium or a
-   closed orbit \cite{poincare_bendixson}.
-   We will show this positive limit set must be an equilibrium and thereby
-   reach our contradiction.
+In order to rule out closed orbits, suppose that the reduced
+dynamics~\eqref{eqn:vlp-hamiltonian} have a periodic solution \(
+z(t)\). Since \( E_\text{avg}(z(t)) \) is nondecreasing and \(z(t)\)
+is periodic, it must be that \( E_\text{avg}(z(t)) \) is constant, or
+\(\dot E_\text{avg}(z(t)) \equiv 0\). We have shown earlier
+that\footnote{We have shown it for the negative time
+  system~\eqref{eqn:negative-time-vlp}, but changing the sign of the
+  vector field does not change the set where \(\dot E_\text{avg}
+  =0\) nor the invariant sets.}
+\[
+\{x \mid \dot E_\text{avg}(x)=0\} = \left\{(q,p) \mid q =0\right\}
+\cup \left\{(q,p) \mid p =0\right\},
+\]
+and the only invariant subset of this set is the union of two disjoint
+equilibria. Since the orbit \(z(\R)\) is an invariant set which is
+connected, \(z(\R)\) must be an equilibrium and cannot be a nontrivial
+closed orbit.
 
-   Suppose the system had a closed orbit. 
-   The orbit would necessarily be contained in a
-   level set of \(E_\text{avg}\), since this is a non-decreasing function and
-   closed orbits are periodic.
-   Thus, \(E_\text{avg}\) is constant along the orbit, which means the
-   orbit is an invariant subset of the set \(Z\) consisting of the two axes.
-   However, the only invariant subsets of \(Z\) are equilibria, so 
-   the system cannot contain closed orbits.
+Returning to the Poincar\`e-Bendixson theorem, the positive limit set
+of \( x(t)\) must be an equilibrium and,
+by~\eqref{eqn:vlp-x-does-not-converge}, this equilibrium must be \(
+(0,0)\). Since we have chosen \(x(0) \neq (0,0)\), and since \( (q,p) = (0,0) \) is a
+repeller, \( x(t) \) cannot converge to \( (0,0)\), which gives a
+contradiction.
 
-   The lack of closed orbits means the positive limit set of \(x(t)\) must 
-   be one of the equilibria. 
-   The origin is a repeller and \(x(0) \neq (0,0)\), which means \(x(t)\) is
-   converging to \((\pi,0)\).
-   This is a contradiction, since we assumed \(x(0) \not \in \Pi_0^+\).
-
-   We conclude that the VNHC is injecting energy into the VLP.
+We conclude that the VNHC injects energy into the VLP.
    By flipping the inequality of (\ref{eqn:vlp-energy-gain-condition})
    we find the VLP is gaining energy in negative-time, so the VNHC is
    dissipating energy.
