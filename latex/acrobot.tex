@@ -68,7 +68,7 @@ Let \(q_u \in \mathbb{S}^1\) be the shoulder angle and \(q_a \in \mathbb{S}^1\)
 be the hip angle, where only \(q_a\) is actuated. 
 Collecting them together provides the configuration
 \(q = (q_u,q_a) \in \mathbb{S}^1 \times \mathbb{S}^1\). 
-The acrobot has inertia matrix \(D\), potential function \(P\) (with respect to
+The acrobot has inertia matrix \(mathcal{O}\), potential function \(P\) (with respect to
 the horizontal bar), and input matrix \(B\)  given as
 follows \cite{xingbo_thesis}:
 \begin{align}\label{eqn:general-acrobot-inertia}
@@ -537,8 +537,8 @@ pendulum with masses at a distance \(l\) and \(2l\) from the pivot
     ,
 \end{equation}
 is conserved.
-Level sets of \(E\) are ellipses when \(E < E(\pi,0)\), which we call
-``oscillations"; and they are open curves when \(E > E(\pi,0)\), which we call
+Level sets of \(E\) are ellipses when \(E(q_u,p_u) < E(\pi,0)\), which we call
+``oscillations"; and they are open curves when \(E(q_u,p_u) > E(\pi,0)\), which we call
 ``rotations". 
 Examples of these can be seen in Figure \ref{fig:pendulum-level-sets}.
 
@@ -562,27 +562,31 @@ Examples of these can be seen in Figure \ref{fig:pendulum-level-sets}.
     \caption{Our constrained acrobot is a simple pendulum when \(I = 0\).}
 \end{figure}
 
-Drawing inspiration from \citet{dynamic_vhcs_stabilize_closed_orbits}, we want
-to find a change of coordinates \((q_u,p_u) \to (\alpha, \mu)\) with the
+Using a method developed by \citet{dynamic_vhcs_stabilize_closed_orbits},
+we can find a change of coordinates \((q_u,p_u) \to (\alpha, \mu)\) with the
 following properties:
 \begin{itemize}
-    \item All oscillations in \((\alpha,\mu)\) coordinates are represented by
-        \(\mu = \text{const}\).
+    \item The energy of oscillation in \((\alpha,\mu)\) coordinates is 
+        uniquely defined by \(\mu\), which remains constant along oscillations
+        of the simple pendulum.
     \item \(\alpha\) is a pseudo-angle living in \(\mathbb{S}^1\) which is
         always increasing.
 \end{itemize}
-We also want to find a second set of coordinates where the same properties hold for
-rotations.
 Once we have these coordinates in hand, we can use perturbation theory to prove
-that \(\mu\) increases on average. 
-If this is true, the acrobot must be gaining energy since the momentum is
-increasing over time.
+that \(\mu\) increases on average for the acrobot when \(I\) is small enough.
+Likewise, we will find a second set of coordinates \((\beta, \rho)\) where
+\(\beta \in \mathbb{S}^1\) is always increasing, \(\rho\) is constant along
+rotations of the simple pendulum, and \(\rho\) increases for the acrobot when
+\(I\) is small enough.
+Putting these together, we will show the acrobot is gaining energy.
 
 \subsection*{Background on Perturbation Theory}
-Perturbation theory allows one to understand how solutions of nonlinear systems
-behave by studying a nominal system which can be analyzed analytically.
-The solutions of nonlinear systems are approximated by a Taylor-like expansion
-around this nominal system.
+Nonlinear systems like the acrobot are difficult (or impossible) to solve
+analytically.
+Perturbation theory allows one to understand the behaviour of the nonlinear system
+by studying a simpler nominal system. 
+Solutions of the nonlinear system can often be approximated by taking a Taylor
+expansion around this nominal system.
 
 \citet{khalil_nonlinear} considers a system of the form
 \begin{equation}\label{eqn:khalil-setup}
@@ -594,7 +598,7 @@ around this nominal system.
 where 
 \(f : [t_0,t_1] \times D \times [-\epsilon_0,\epsilon_0] \rightarrow \R^n\) is
 sufficiently smooth.
-In the context of the acrobot, \(x\) is the phase in whichever coordinates make
+In the context of the acrobot, \(x\) is the set of coordinates which make
 our analysis convenient;
 \(\epsilon\) is our control parameter \(I\);
 the function \(f\) is the constrained dynamics in \(x\)-coordinates;
@@ -602,7 +606,7 @@ and \(\eta(\epsilon) \equiv \eta_0\) is a constant initial condition.
 To keep a notational reminder that we are applying perturbation theory to
 the acrobot, we will henceforth use \(I\) in place of \(\epsilon\).
 
-Letting \(I = 0\) we get the nominal system
+Setting \(I = 0\) we get the nominal system
 \begin{equation}\label{eqn:khalil-perturbation-nominal}
     \begin{cases}
         \dot{x}_0 = f(t,x,0) ,\\
@@ -619,55 +623,56 @@ One can use this to compute the solution \(x_1(t,\eta_0)\) of
         .
     \end{cases}
 \end{equation}
-Finally, one can compute the first-order approximation
+Finally, one can compute the first-order Taylor approximation
 \(x(t,\eta_0) = x_0(t,\eta_0) + I x_1(t,\eta_0) + R(t,I)\), where the remainder
-term \(R(t,I)\) is \(O(I^2)\);
-that is,
+term \(R(t,I)\) is \(O(I^2)\), \ie,
 \[
     \lim \limits_{I \to 0} \frac{R(t,I)}{I} = 0
     .
 \]
 We now paraphrase Khalil's Theorem 10.1 \cite{khalil_nonlinear} on the
 accuracy of perturbation analysis.
-\begin{thm}
+\begin{thm}\label{thm:khalil-perturbation}
     Suppose \(f : [t_0,t_1] \times D \times [-I_0,I_0] \rightarrow \R^2\) is
     \(C^1\), and that the nominal problem ~\eqref{eqn:khalil-perturbation-nominal} has a
     unique solution \(x_0(t,\eta_0) \in D\) on \([t_0,t_1]\).
-    Then there exists \(I^\star > 0\) such that for all \(|I| < I^\star\), the
+    Then there exists \(I^\star > 0\) such that for all \(I,\, |I| < I^\star\), the
     solution \(x(t,I,\eta_0)\) to ~\eqref{eqn:khalil-setup} satisfies
     \[
-        \norm{x(t,I,\eta_0) - \left(x_0(t,\eta_0) + I x_1(t,\eta_))\right)} \leq k |I^2|
+        \norm{x(t,I,\eta_0) - \left(x_0(t,\eta_0) + I x_1(t,\eta_0)\right)} \leq k |I^2|
     \]
     for some \(k > 0\).
 \end{thm}
 
-The above Theorem tells us that we can approximate the solution of the nonlinear
-system by the Taylor approximation 
+Theorem \ref{thm:khalil-perturbation} tells us that we can approximate the
+solution of the nonlinear system by the Taylor approximation 
 \(x(t,\eta_0) \approx x_0(t,\eta_0) + I x_1(t,\eta_0)\).
-In other words, when \(I\) is small enough solutions of the nonlinear system and
+When \(I\) is small enough, solutions of the nonlinear system and
 the Taylor approximation are the same up to order \(I^2\) along compact time
 intervals.
 Since we know that the acrobot behaves like a pendulum at \(I = 0\), we can
-use this theory to more easily study the behaviour of orbits and prove energy
-injection properties of our VNHC.
+use this theory to prove energy injection properties on the acrobot by studying
+the simple pendulum.
  
 \subsection*{Perturbation Analysis for Oscillations}
-When \(I = 0\), the acrobot becomes a nominal pendulum that oscillates whenever the
+As we have seen, the acrobot becomes a nominal pendulum that oscillates whenever the
 nominal energy ~\eqref{eqn:acrobot-nominal-E} is less than \(E(\pi,0)\).
-Hence, the domain of oscillations on \(\Gamma\) is given by
+Hence, the domain of oscillations for the nominal pendulum is given by
 \[
-    D := \left\{ (q_u,p_u) \in \Gamma | E(q_u,p_u) < E(\pi,0)\right\}
-    .
+    \mathcal{O} := \left\{ (q_u,p_u) \in \Gamma \mid E(q_u,p_u) < E(\pi,0)\right\}
+    ,
 \]
-We wish to find a transformation \(T(q_u,p_u)\) on \(D\) into
+where \(\Gamma = \mathbb{S}^1\times\R\) is the consraint manifold of the
+acrobot.
+We wish to find a transformation \(T(q_u,p_u)\) on \(\mathcal{O}\) into
 \((\alpha,\mu)\)-coordinates where \(\alpha \in \mathbb{S}^1\) is a pseudo-angle
 and \(\mu > 0\) is a pseudo-radius.
 Since the energy of oscillation can be determined by the orbit's intersection
-with the \(q_u\)-axis and \(q_u \in ]-\pi,\pi[\) on \(D\), 
-we set \(\mu \in ]0,\pi[\) as in Figure \ref{fig:mu-intersection}.
+with the \(q_u\)-axis (as in Figure \ref{fig:mu-intersection}) 
+and \(q_u \in ]-\pi,\pi[\) on \(\mathcal{O}\), we set \(\mu \in ]0,\pi[\).
 The transformation we want is therefore a diffeomorphism of the form
 \begin{align*}
-    T : D\backslash \{(0,0)\} &\rightarrow \mathbb{S}^1 \times \, ]0,\pi], \\
+    T : D\backslash \{(0,0)\} &\rightarrow \mathbb{S}^1 \times \, ]0,\pi[, \\
     (q_u, p_u) &\mapsto (\alpha,\mu)
     .
 \end{align*}
@@ -678,7 +683,7 @@ The transformation we want is therefore a diffeomorphism of the form
     % the origin to the intersection on the q-axis. We also draw the boundary of
     % D and shade the interior
     %\includestandalone[]{images/mu_intersection}
-    \caption{The domain \(D\) where a pendulum oscillates.
+    \caption{The domain \(\mathcal{O}\) where a pendulum oscillates.
     The pseudo-radius coordinate \(\mu\) corresponds to the
     intersection of an orbit of oscillation with the \(q_u\)-axis.}
     \label{fig:mu-intersection}
@@ -697,7 +702,7 @@ which gives the relationship
 \end{equation}
 On this level set, \(q_u\) ranges between \([-\mu,\mu]\) and can be uniquely
 parameterized by \(q_u = \mu \cos(\alpha)\), where \(\alpha\) is our
-pseudo-angle.
+desired pseudo-angle.
 Substituting this into ~\eqref{eqn:oscillation-pu2}, we get
 \[
     p_u^2 = 30m^2gl^3(\cos(\mu \cos(\alpha)) - \cos(\mu))
@@ -710,7 +715,7 @@ determine the sign of \(p_u\) from the sign of \(\sin(\alpha)\), we get the
     p_u = -\sign{\sin(\alpha)} \sqrt{30m^2gl^3 \left(\cos(\mu c_\alpha) - c_\mu\right)}
     ,
 \end{equation}
-which is, in fact, smooth.
+which is smooth for all \(\mu \in ]0,\pi[\).
 
 We have thus found a transformation \(T\inv(\alpha,\mu) = (q_u,p_u)\).
 We need the inverse of this map to get our diffeomorphism \(T(q_u,p_u)\).
@@ -719,33 +724,34 @@ Notice from ~\eqref{eqn:oscillation-pu2} that
     \cos(\mu) = -\frac{p_u^2}{30m^2gl^3} + \cos(q_u) =: C_\mu(q_u,p_u)
     .
 \]
-Since \(\mu \in ]0,\pi]\), we can uniquely express \(\mu\) by
+Since \(\mu \in ]0,\pi[\), we can uniquely express \(\mu\) by
 \begin{equation}\label{eqn:mu-qupu}
     \mu = \arccos\left(C_\mu(q_u,p_u)\right)
     .
 \end{equation}
 Next we need to find \(\alpha\). 
 Recall that 
-\[
+\begin{equation}\label{eqn:acrobot-cosalpha-qu}
     \cos(\alpha) = \frac{q_u}{\mu}
     ,
-\] 
+\end{equation}
 which means 
-\[
+\begin{equation}\label{eqn:acrobot-sinalpha-qu}
     \sin(\alpha) = \pm \sqrt{1 - \frac{q_u^2}{\mu^2}}
     .
-\]
-Notice from ~\eqref{eqn:oscillation-pu} that 
+\end{equation}
+Using ~\eqref{eqn:oscillation-pu}, we determine that
 \(\sign{\sin(\alpha)} = -\sign{p_u}\).
-We use these facts to deduce that
+Putting together ~\eqref{eqn:acrobot-cosalpha-qu} and
+~\eqref{eqn:acrobot-sinalpha-qu}, we deduce that
 \begin{equation}\label{eqn:alpha-qupu}
     \alpha = \left.
         \arctan_2\left( -\sign{p_u}\sqrt{1 - \frac{q_u^2}{\mu^2}}, \frac{q_u}{\mu}\right)
         \right|_{\mu = \arccos(C_\mu(q_u,p_u))}
-    ,
+    .
 \end{equation}
-and thus have our transformation \(T(q_u,p_u)\) into
-\((\alpha,\mu)\)-coordinates on \(D\).
+Thus, ~\eqref{eqn:mu-qupu} and ~\eqref{eqn:alpha-qupu} define 
+our transformation into \((\alpha,\mu)\)-coordinates on \(\mathcal{O}\).
 
 The acrobot's constrained dynamics in
 \((\alpha,\mu)\)-coordinates can be computed by evaluating
@@ -759,7 +765,7 @@ The acrobot's constrained dynamics in
         \right|_{(q_u,p_u) = T\inv(\mu,\alpha)}
     .
 \end{align*}
-with \((\dot{q}_u,\dot{p}_u)\) the given by 
+with \((\dot{q}_u,\dot{p}_u)\) given by 
  ~\eqref{eqn:acrobot-constrained-dynamics}.
 
 These dynamics are much too large to write out, so we simply denote them by
@@ -770,7 +776,8 @@ These dynamics are much too large to write out, so we simply denote them by
     \dot{\alpha} &= f_\alpha(\alpha,\mu,I)
     .
 \end{align}
-The nominal system \((\alpha_n,\mu_n)\) comes from setting \(I = 0\).
+The dynamics of the nominal pendulum arise from evaluating
+\(f_\mu\) and \(f_\alpha\) at \(I = 0\).
 MATLAB's symbolic toolbox evaluates the nominal dynamics as
 \begin{align}\label{eqn:acrobot-mu-dot-nom}
     \dot{\mu}_n &= 0
@@ -781,19 +788,21 @@ MATLAB's symbolic toolbox evaluates the nominal dynamics as
             {\mu_n^2 \sin(\alpha_n)^2}}
     .
 \end{align}
-One can confirm that \(\dot{\alpha}_n > 0\) for every \(\mu_n \in ]0,\pi[\) -- this
-is expected, since the nominal system is a single pendulum.
-By continuity of ~\eqref{eqn:acrobot-mu-dot} with respect to \(I\), 
-\(\dot{\alpha}\) remains positive for \(I\) small enough on the domain \(D\).
+Note that we write the nominal coordinates as \((\alpha_n,\mu_n)\) to
+distinguish them from the acrobot's coordinates.
+One can confirm that \(\dot{\alpha}_n > 0\) for every \(\mu_n \in ]0,\pi[\).
+This is expected of an oscillating single pendulum.
+By continuity of ~\eqref{eqn:acrobot-mu-dot}, 
+\(\dot{\alpha}\) remains positive on \(\mathcal{O}\) for \(I\) small enough.
 
-Suppose at time \(t = 0\) we have initialized the system at 
+Suppose at time \(t = 0\) we have initialized the acrobot at 
 \((q_u,p_u) = (\mu_0,0)\), which corresponds to \((\alpha,\mu) = (0,\mu_0)\).
 Since \(\alpha\) is continuously increasing, we know that the orbit will do one
-of two things: it will either leave \(D\) so that the acrobot is now rotating,
-or it will remain in \(D\) and hit the \(q_u\)-axis at some point 
-\((\alpha,\mu) = (\pi,m)\) as is illustrated in Figure
-\ref{fig:acrobot-possible-orbits}.
-From there, the acrobot could escape \(D\) along the second half of the orbit or
+of two things: it will either leave \(\mathcal{O}\) so that the acrobot is now rotating,
+or it will remain in \(\mathcal{O}\) and hit the \(q_u\)-axis at some point 
+\((\alpha,\mu) = (\pi,m)\) (as illustrated in Figure
+\ref{fig:acrobot-possible-orbits}).
+From there, the acrobot could escape \(\mathcal{O}\) along the second half of the orbit or
 return to some point \((\alpha,\mu) = (0,\tilde{m})\).
 If \(\tilde{m} < \mu_0\) then the acrobot has lost energy; 
 if \(\tilde{m} > \mu_0\) the acrobot has gained energy; 
@@ -809,7 +818,7 @@ Which situation occurs might depend entirely on the choice of
     % and when it hits (-mu0+x,0) for some x > 0.
     %includestandalone[width=0.5\textwdith]{images/acrobot_possible_orbits}
     \caption{If the acrobot is initialized at \((q_u,p_u) = (\mu_0,0)\), then
-        either the orbit escapes \(D\) into the rotation
+        either the orbit escapes \(\mathcal{O}\) into the rotation
         zone (purple), or the orbit hits the other half of the \(q_u\)-axis 
         with a higher (red), equal (black), or lower (blue) angle than when it
         started.}
@@ -821,7 +830,7 @@ Since \(\dot{\alpha} > 0\), we could theoretically find some time scaling
 Setting \(\hat{\mu}(\alpha) := \mu(\tau(\alpha))\) allows us to ignore the
 dynamics of \(\alpha\) and study the evolution of \(\mu\) as a 
 function of \(\alpha\) rather than as a function of \(t\) (assuming the acrobot
-does not leave \(D\)).
+does not leave \(\mathcal{O}\)).
 The dynamics of \(\hat{\mu}\) are
 \[
     \diff{\hat{\mu}}{\alpha} = 
@@ -839,25 +848,27 @@ yielding the ``time"-varying scalar ODE
         .
     \end{cases}
 \end{equation}
+with solution \(\hat{\mu}(\alpha,\mu_0,I)\).
 
-In the remainder of this section we will find a first-order
-approximation of \(\hat{\mu}\). 
-We will show the dynamics of this approximation are \(\pi\)-periodic in
-\(\alpha\), so that we only need to study whether \(\hat{\mu}\) increases or
-decreases along a half-orbit \(\alpha \in [0,\pi]\).
-To complete the proof of energy gain for oscillations, we will demonstrate that
-\(\hat{\mu}(\pi) > \hat{\mu}(0)\).
-This will imply that the the radius of orbits increases
-until all orbits within \(D\) eventually leave \(D\) in finite time.
+%Using perturbation theory, we will find a first-order
+%approximation of \(\hat{\mu}\). 
+%We will show the dynamics of this approximation are \(\pi\)-periodic in
+%\(\alpha\), so that we only need to study whether \(\hat{\mu}\) increases or
+%decreases along a half-orbit \(\alpha \in [0,\pi]\).
+%To complete the proof of energy gain for oscillations, we will demonstrate that
+%\(\hat{\mu}(\pi) > \hat{\mu}(0)\).
+%This will imply that the the radius of orbits increases
+%until all orbits within \(\mathcal{O}\) eventually leave \(\mathcal{O}\) in finite time.
 
-In the spirit of perturbation analysis, we expand our solution of
+In the spirit of perturbation analysis, we expand the solution of
 ~\eqref{eqn:muhat-dot} into
 \begin{equation}\label{eqn:acrobot-muhat-approx}
-    \hat{\mu}(\alpha) = \hat{\mu}_0(\alpha) + I \hat{\mu}_1(\alpha)
-    + R(\alpha,I)
+    \hat{\mu}(\alpha,\mu_0,I) = \hat{\mu}_0(\alpha,\mu_0) + I
+    \hat{\mu}_1(\alpha,\mu_0)
+    + R(\alpha,\mu_0,I)
     ,
 \end{equation}
-where \(R(\alpha,I)\) is \(O(I^2)\).
+where \(R(\alpha,\mu_0,I)\) is \(O(I^2)\).
 From ~\eqref{eqn:khalil-perturbation-nominal} we know that 
 \(\hat{\mu}_0\) is the solution to the nominal system
 \[
@@ -869,8 +880,8 @@ From ~\eqref{eqn:khalil-perturbation-nominal} we know that
 \end{cases}
 \]
 Since \(g(\alpha,\mu,0) = 0\) by 
-~\eqref{eqn:acrobot-mu-dot-nom})-(\ref{eqn:acrobot-alpha-dot-nom}, we find that
-\(\hat{\mu}_0(\alpha) = \mu_0\) for all \(\alpha\).
+~\eqref{eqn:acrobot-mu-dot-nom}-\eqref{eqn:acrobot-alpha-dot-nom}, we find that
+\(\hat{\mu}_0(\alpha,\mu_0) \equiv \mu_0\) for all \(\alpha\).
 
 Likewise, ~\eqref{eqn:khalil-perturbation-firstorder} tells us that 
 \(\hat{\mu}_1\) is the solution to
@@ -929,25 +940,24 @@ Notice that \(\hat{b}(\alpha,\mu_0)\) is both even and
     .
     \end{split}
 \end{equation}
-Suppose we start the system at \((\alpha,\mu) = (0,\mu_0)\). 
-Then the new pseudo-radius after a half orbit where \(\alpha\) goes from \(0\)
-to \(\pi\) (that is, when the orbit hits the negative \(q_u\)-axis)
-is \(\rho = \hat{\mu}(\pi,\mu_0)\).
-Hence, the change in pseudo-radius is \(\rho - \mu_0 = I\hat{\mu}_1(\pi,\mu_0)\).
-Now look at the full orbit where \(\alpha\) goes from \(0\) to \(2\pi\). 
-This lands on the positive \(q_u\)-axis with pseudo-radius
-\(\tilde{\rho} = \mu_0 + I\hat{\mu}_1(2\pi,\mu_0)\).
-As we know from ~\eqref{eqn:bhat-integral-properties}, we have
+Suppose we initialize the acrobot at \((\alpha,\mu) = (0,\mu_0)\). 
+After half an orbit, when \(\alpha = \pi\), the acrobot will have a new
+pseudo-radius \(m = \hat{\mu}(\pi,\mu_0)\).
+Hence, the change in pseudo-radius is 
+\(m - \mu_0 \approx I\hat{\mu}_1(\pi,\mu_0)\).
+After an additional half orbit, the acrobot lands on the positive \(q_u\)-axis
+with pseudo-radius
+\(\tilde{m} \approx \mu_0 + I\hat{\mu}_1(2\pi,\mu_0)\).
+The properties outlined in ~\eqref{eqn:bhat-integral-properties} imply that
 \(\hat{\mu}_1(2\pi,\mu_0) = 2 \hat{\mu}_1(\pi,\mu_0)\). 
 This means the change in pseudo-radius after one entire oscillation is 
-\(\tilde{\rho} - \mu_0 = 2I\hat{\mu}1(\pi,\mu_0) = 2 (\rho - \mu_0)\).
-Hence, if we can show that \(\hat{\mu}_1(\pi,\cdot)\) is always positive, we
-will guarantee that the pseudo-radius increases after every half oscillation.
-This in turn guarantees \(q_u\) is increasing after every half oscillation, so
-that eventually we will reach a rotation.
+\(\tilde{m} - \mu_0 \approx 2I\hat{\mu}_1(\pi,\mu_0) \approx 2 (m - \mu_0)\).
+Hence, if \(\hat{\mu}_1(\pi,\cdot)\) is always positive,
+\(\hat{\mu}\) must be increasing every half oscillation.
+This in turn would guarantee \(q_u\) is increasing, which means the acrobot
+will eventually reach a rotation.
 
-To show that the first-order approximation ~\eqref{eqn:acrobot-muhat-approx} is
-gaining energy, we define the Poincar\'{e} section
+To prove this intuitive argument rigorously, we define the Poincar\'{e} section
 \(P(\mu_0) := \hat{\mu}(\pi,\mu_0)\), which expands into
 \[
     P(\mu_0) = \mu_0 + I \hat{\mu}_1(\pi,\mu_0) + R(\pi,I)
@@ -984,16 +994,24 @@ Simulations with smaller \(\mu_0\) vanish in MATLAB, so we believe that
 We conclude that, for all \(m\), \(g\), \(l\), \(\bar{q}_a\), and for small
 enough \(I\), the Poincar\'{e} section \(P(\mu_0)\) is positive, monotonically
 increasing, and \(\lim \limits_{\mu_0 \to \pi} P(\mu_0) = \infty\).
-Thus, there are no closed orbits and the origin must be a repeller.
-Furthermore, for any non-zero initial condition of the acrobot and for small
-enough \(I\), \((q_u,p_u)\) will eventually exit \(D\).
-This implies the orbit will escape any compact set in \(D\) in finite time. 
-By Definition \ref{defn:energy-gain}, the acrobot is gaining energy on \(D\).
+
+Because \(\dot{\alpha} > 0\), any orbit which begins and remains in \(\mathcal{O}\)
+must spiral clockwise around the origin until it intersect the \(q_u\) axis.
+Once it does, the Poincar\'{e} argument demonstrates it must spiral away
+from the origin; hence, there are no closed orbits and the origin is a repeller.
+
+Once the orbit reaches an intersection point \(\mu_0\) on the \(q_u\)-axis such
+that \(P(\mu_0) > \pi\), the orbit will no longer return to the \(q_u\)-axis; it
+will escape \(\mathcal{O}\) entirely.
+This must always happen in finite time, which implies the orbit must also escape
+any compact set in \(mathcal{O}\) in finite time. 
+By Definition \ref{defn:energy-gain}, the VNHC is injecting energy into the
+acrobot on \(\mathcal{O}\).
 
 If we have \(I < 0\), it is equivalent to using the constraint 
 \(q_a = -\bar{q}_a \arctan(I p_u)\). 
-By the same analysis, this injects energy on \(D\) in negative-time, so the
-constraint dissipates energy on \(D\).
+By the same analysis, this injects energy on \(mathcal{O}\) in negative-time, so the
+constraint dissipates energy on \(mathcal{O}\).
 
 A hybrid supervisor that flips the sign of \(I\) based on the current
 value of \(\mu\) will stabilize any energy level of oscillation.
@@ -1010,7 +1028,7 @@ is
     D := \left\{ (q_u,p_u) \in \Gamma | E(q_u,p_u) < E(\pi,0)\right\}
     .
 \]
-Outside of \(D\), the acrobot is experiencing rotations.
+Outside of \(mathcal{O}\), the acrobot is experiencing rotations.
 We wish to find a new set of coordinates \((\alpha,\mu)\) and perform a similar
 analysis.
 During oscillations we showed that the energy of oscillations is determined by
@@ -1018,7 +1036,7 @@ the intersection with the \(q_u\)-axis;
 when the acrobot is rotating, the energy is instead determined by the
 intersection on the \(p_u\)-axis.
 Hence, we choose \(\mu\) to be this intersection point.
-Note that \(D\) intersects the \(p_u\) axis when 
+Note that \(mathcal{O}\) intersects the \(p_u\) axis when 
 \(\mu^2 = 60m^2 g l^3\), so we must have 
 \(\mu > \sqrt{60 m^2 g l^3}\) if the rotation intersects at \(p_u > 0\) 
 or \(\mu < -\sqrt{60 m^2 g l^3}\) if the rotation intersects at \(p_u < 0\).
@@ -1159,7 +1177,7 @@ Furthermore, \(|p_u|\) is increasing every time the orbit hits the
     \caption{The set \(W\) of points which have pseudo-radius 
         \(|\mu| \in ]\sqrt{60m^2gl^3}, \bar{\mu}[\). The inner boundary of \(W\)
         is \((q_u,p_u) = (\pi,0)\), which is also the boundary of the
-        oscillation domain \(D\).}
+        oscillation domain \(mathcal{O}\).}
     \label{fig:acrobot-rot-W}
 \end{figure}
 
@@ -1185,7 +1203,7 @@ To complete this proof, we will prove the acrobot gains energy on the set
 \]
 % TODO: W and D's boundary is two elements: the point (pi,0) and the curve of the
 % homoclinic orbit connecting (pi,0) to (-pi,0). We need to show that almost
-% every initial condition starting in \(D\) will NOT converge to (pi,0), and
+% every initial condition starting in \(mathcal{O}\) will NOT converge to (pi,0), and
 % therefore exit D and enter W.
 
 \section{Experimental Results}
