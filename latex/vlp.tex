@@ -391,9 +391,9 @@ average.
    Let \(L : \mathbb{S}^1 \rightarrow [\underline{l},\overline{l}]\) be a
    \(C^2\) function of \(\theta\).
    A regular VNHC of the form 
-   \(h(\mathbf{q},\mathbf{p}) = l - L(\theta)\) injects energy into the VLP
-   if there exists 
-   \(l_\text{avg} \in [\underline{l},\overline{l}]\) such that 
+   \(h(\mathbf{q},\mathbf{p}) = l - L(\theta)\) for the VLP injects energy 
+   on the constraint manifold \(\Gamma = \mathbb{S}^1 \times \R\) if there
+   exists \(l_\text{avg} \in [\underline{l},\overline{l}]\) such that 
    \begin{equation}\label{eqn:vlp-energy-gain-condition}
       \left(l_\text{avg} - L(\theta)\right)sin(2\theta) \geq 0 
       \text{ }\forall \theta \in \mathbb{S}^1
@@ -407,7 +407,7 @@ average.
          \text{ }\forall \theta \in \mathbb{S}^1
          ,
    \]
-   the VNHC dissipates energy.
+   the VNHC dissipates energy on \(\Gamma\).
 \end{thm}
 \begin{proof}
 We will first show that, under the given assumptions, the origin of the
@@ -500,7 +500,7 @@ for the constrained dynamics in~\eqref{eqn:vlp-hamiltonian}.
 
 We now prove that almost all solutions of the reduced
 dynamics~\eqref{eqn:vlp-hamiltonian} escape compact sets in finite
-time, i.e., that for each compact subset \(K\) of 
+time, \ie, that for each compact subset \(K\) of 
 \(\mathbb{S}^1 \times \R\), and for almost every condition 
 \( (q_0,p_0) \in K \), there exists \( T > 0\) such that
 \( (q(t),p(t)) \notin K \) for all \( t > T \), where \( (q(t),p(t)) \)
@@ -585,7 +585,8 @@ by~\eqref{eqn:vlp-x-does-not-converge}, this equilibrium must be
 Since we have chosen \(x(0) \neq (0,0)\), and since \( (q,p) = (0,0) \) is a
 repeller, \( x(t) \) cannot converge to \( (0,0)\), which gives a contradiction.
 
-We conclude that the VNHC injects energy into the VLP.
+We conclude that the VNHC injects energy into the VLP on 
+\(\mathbb{S}^1 \times \R\).
 By flipping the inequality of ~\eqref{eqn:vlp-energy-gain-condition}
 we find the VLP is gaining energy in negative-time, so the VNHC is
 dissipating energy.

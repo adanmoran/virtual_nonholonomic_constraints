@@ -913,10 +913,13 @@ This intuition is generalized to ODEs on manifolds by the following definition.
 % TODO: Change this, 0 is not an element of the manifold. Do we need other
 % notions, like a riemannian metric? Should we just use Gamma?
 \begin{defn}\label{defn:energy-gain}
-    Let \(M\) be an \(n\)-dimensional manifold and \(D \subset M\) be open.
-    Let \(f : D \rightarrow \R^n\) be smooth with \(f(0) = 0\).
+    Let \(M = \Rt{T_1} \times \cdots \times \Rt{T_n}\) 
+    (where \(T_1, \ldots, T_n \in \{2\pi, \infty\}\)) be an
+    \(n\)-dimensional generalized cylinder.
+    Let \(f : M \rightarrow \R^n\) be smooth with \(f(0) = 0\)
+    and let \(D \subset M\) be open.
     The system described by \(\dot{x} = f(x)\) 
-    \textit{gains energy on \(D\)} if 
+    \textit{gains energy on \(D\)} if these conditions are satisfied:
     \begin{enumerate}
         \item If \(0 \in D\), then \(0\) is a repeller 
          (or equivalently, it is asymptotically stable in negative time).
@@ -934,7 +937,7 @@ The next definition ties this notion of energy gain to VNHCs.
 
 \begin{defn}\label{defn:energy-injection}
     A regular VNHC \(h(q, p) = 0\) with constraint manifold \(\Gamma\)
-    \textit{injects (dissipates) energy} on \(D \subset \Gamma\) if the
+    \textit{injects (dissipates) energy on \(D \subset \Gamma\)} if the
     constrained dynamics gain (lose) energy everywhere on \(D\), except possibly
     on a set of measure zero.
 \end{defn}
