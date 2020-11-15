@@ -958,9 +958,9 @@ This in turn would guarantee \(q_u\) is increasing, which means the acrobot
 will eventually reach a rotation.
 
 To prove this intuitive argument rigorously, we define the Poincar\'{e} section
-\(P(\mu_0) := \hat{\mu}(\pi,\mu_0)\), which expands into
+\(P_\mathcal{O}(\mu_0) := \hat{\mu}(\pi,\mu_0)\), which expands into
 \[
-    P(\mu_0) = \mu_0 + I \hat{\mu}_1(\pi,\mu_0) + R(\pi,I)
+    P_\mathcal{O}(\mu_0) = \mu_0 + I \hat{\mu}_1(\pi,\mu_0) + R(\pi,I)
     .
 \]
 Let us define
@@ -992,178 +992,239 @@ Simulations with smaller \(\mu_0\) vanish in MATLAB, so we believe that
 \end{figure}
 
 We conclude that, for all \(m\), \(g\), \(l\), \(\bar{q}_a\), and for small
-enough \(I\), the Poincar\'{e} section \(P(\mu_0)\) is positive, monotonically
-increasing, and \(\lim \limits_{\mu_0 \to \pi} P(\mu_0) = \infty\).
+enough \(I\), the Poincar\'{e} section \(P_\mathcal{O}(\mu_0)\) is positive,
+monotonically increasing, and 
+\(\lim \limits_{\mu_0 \to \pi} P_\mathcal{O}(\mu_0) = \infty\).
 
-Because \(\dot{\alpha} > 0\), any orbit which begins and remains in \(\mathcal{O}\)
-must spiral clockwise around the origin until it intersect the \(q_u\) axis.
-Once it does, the Poincar\'{e} argument demonstrates it must spiral away
-from the origin; hence, there are no closed orbits and the origin is a repeller.
-
-Once the orbit reaches an intersection point \(\mu_0\) on the \(q_u\)-axis such
-that \(P(\mu_0) > \pi\), the orbit will no longer return to the \(q_u\)-axis; it
-will escape \(\mathcal{O}\) entirely.
-This must always happen in finite time, which implies the orbit must also escape
-any compact set in \(mathcal{O}\) in finite time. 
-By Definition \ref{defn:energy-gain}, the VNHC is injecting energy into the
-acrobot on \(\mathcal{O}\).
-
-If we have \(I < 0\), it is equivalent to using the constraint 
-\(q_a = -\bar{q}_a \arctan(I p_u)\). 
-By the same analysis, this injects energy on \(mathcal{O}\) in negative-time, so the
-constraint dissipates energy on \(mathcal{O}\).
-
-A hybrid supervisor that flips the sign of \(I\) based on the current
-value of \(\mu\) will stabilize any energy level of oscillation.
-As was the case in the VLP, this supervisor should implement some kind of
-hysteresis to avoid infinite switching.
 % Empty proof environment to put QED square on the right of the page
 \begin{proof}[\unskip\nopunct]
 \end{proof}
 
 \subsection*{Perturbation Analysis for Rotations}
-Recall that the domain of oscillations for the nominal pendulum of the acrobot
-is 
+The rotation region for the nominal pendulum is the set
 \[
-    D := \left\{ (q_u,p_u) \in \Gamma | E(q_u,p_u) < E(\pi,0)\right\}
+    \mathcal{R} := \left\{ (q_u,p_u) \in \Gamma \mid E(q_u,p_u) > E(\pi,0)\right\}
     .
 \]
-Outside of \(mathcal{O}\), the acrobot is experiencing rotations.
-We wish to find a new set of coordinates \((\alpha,\mu)\) and perform a similar
-analysis.
-During oscillations we showed that the energy of oscillations is determined by
-the intersection with the \(q_u\)-axis; 
-when the acrobot is rotating, the energy is instead determined by the
-intersection on the \(p_u\)-axis.
-Hence, we choose \(\mu\) to be this intersection point.
-Note that \(mathcal{O}\) intersects the \(p_u\) axis when 
-\(\mu^2 = 60m^2 g l^3\), so we must have 
-\(\mu > \sqrt{60 m^2 g l^3}\) if the rotation intersects at \(p_u > 0\) 
-or \(\mu < -\sqrt{60 m^2 g l^3}\) if the rotation intersects at \(p_u < 0\).
-The energy level set associated with \(\mu\) is
+We wish to find a new set of coordinates \((\beta,\rho)\) for the acrobot
+and perform a similar analysis to what we did for oscillations.
+In the oscillation region \(\mathcal{O}\) we showed that the nominal pendulum's
+energy (and hence, its orbit) is uniquely determined by the intersection point
+\(\mu\) with the \(q_u\)-axis; 
+when the nominal pendulum is rotating, the energy is instead determined by the
+intersection \(\rho\) on the \(p_u\)-axis.
+Note that the boundary of \(\mathcal{O}\) intersects the \(p_u\) axis when 
+\(p_u^2 = 60m^2 g l^3\); 
+hence, for a rotation we must have \(\rho > \sqrt{60 m^2 g l^3}\) if the
+orbit has momentum \(p_u > 0\) 
+or \(\rho < -\sqrt{60 m^2 g l^3}\) if the orbit has momentum \(p_u < 0\).
+The energy level set associated with \(\rho\) is
 \[
-    \left\{(q_u,p_u) \in \Gamma \mid E(q_u,p_u) = \frac{\mu^2}{10ml^2}\right\}
+    \left\{(q_u,p_u) \in \Gamma \mid E(q_u,p_u) = \frac{\rho^2}{10ml^2}\right\}
     ,
 \]
 which gives the relationship
 \begin{equation}\label{eqn:rotation-pu2}
-    \frac{p_u^2}{10m l^2} + 30mgl(1 - c_u) = \frac{\mu^2}{10 ml^2}
+    \frac{p_u^2}{10m l^2} + 30mgl(1 - c_u) = \frac{\rho^2}{10 ml^2}
     .
 \end{equation}
-On this level set, \(q_u\) ranges fully between \(]-pi,\pi]\), so our angle of
-rotation is uniquely parameterized by \(\alpha = q_u\).
-Since \(\mu\) does not change sign along the rotation, we have the smooth
+On this level set, \(q_u\) takes all values on \(\mathbb{S}^1\), so our angle of
+rotation is uniquely parameterized by \(\beta = q_u\).
+Since \(\rho\) does not change sign along the rotation, we have the smooth
 relationship
 \begin{align}\label{eqn:rotation-Tinv}
-    q_u &= \alpha
+    q_u &= \beta
     , \\
-    p_u &= \sign{\mu}\sqrt{\mu^2 - 30 m^2 g l^3\left(1 - c_\alpha \right)}
+    p_u &= \sign{\rho}\sqrt{\rho^2 - 30 m^2 g l^3\left(1 - c_\beta \right)}
     .
 \end{align}
 
-We have thus found a transformation \(T\inv(\alpha,\mu) = (q_u,p_u)\), with
-inverse 
+Inverting this relationship gives our (smooth) transformation
+\begin{equation*}
+    T : \mathbb{S}^1 \times \R \rightarrow 
+    \mathbb{S}^1 \times ]-\infty,-60m^2gl^3[\, \cup \, ]60m^2gl^3,\infty[ 
+    ,
+\end{equation*}
+where \(T(q_u,p_u) = (\beta,\rho)\) is defined by
 \begin{align}\label{eqn:rotation-T}
-    \alpha &= q_u
+    \beta &= q_u
     , \\
-    \mu &= \sign{p_u}\sqrt{p_u^2 + 30 m^2 g l^3 \left(1 - c_u \right)}
+    \rho &= \sign{p_u}\sqrt{p_u^2 + 30 m^2 g l^3 \left(1 - c_u \right)}
     .
 \end{align}
 
-From this point on, we do the exact same procedure as with oscillations.
-MATLAB symbolic operations evaluate the nominal system's dynamics as
+Computing the acrobot's constrained dynamics in \((\beta,\rho)\)-coordinates and
+setting \(I = 0\) yields the dynamics of the nominal pendulum.
+MATLAB evaluates those dynamics as
 \begin{align}\label{eqn:acrobot-rot-mu-dot-nom}
-    \dot{\mu}_n &= 0
+    \dot{\rho}_n &= 0
     , \\
     \label{eqn:acrobot-rot-alpha-dot-nom}
-    \dot{\alpha}_n &=  \sign(\mu_0) 
-    \frac{\sqrt{\mu^2 - 30m^2gl^3(1 - c_\alpha)}}{5ml^2}
+    \dot{\beta}_n &=  \sign{\rho} 
+    \frac{\sqrt{\rho^2 - 30m^2gl^3(1 - c_\beta)}}{5ml^2}
     .
 \end{align}
-As is expected, \(\dot{\alpha}_n\) does not change sign because the acrobot is
-rotating;
-if \(\mu_0 > 0\), the orbit traces a curve going from \(\alpha = -\pi\) to 
-\(\alpha = \pi\), and if \(\mu_0 < 0\) the curve goes in the reverse direction.
-For small enough \(I > 0\) we must also have 
-\(\dot{\alpha} = \sign{\mu_0}\) and can hence use \(\alpha\) as a new time
-variable.
-
-Take the time-scaled system \(\hat{\mu}(\alpha,I)\) with dynamics 
-\(\dot{\hat{\mu}}(\alpha) = \frac{\dot{\mu}}{\dot{\alpha}}\) and initial
-state \(\mu_0\).
-We expand the solution of this into the same form as
-~\eqref{eqn:acrobot-muhat-approx} where once again we have
-\(\hat{\mu}_0(\alpha) \equiv \mu_0\).
-The dynamics for \(\hat{\mu}_1\) are
-\begin{equation}\label{eqn:acrobot-rot-mu1-dot}
-    \dot{\hat{\mu}}_1 =
-    \frac{5m^2 g l^3 \bar{q}_a \left(
-        m^2gl^3\left(18s_\alpha^2 + 30c_\alpha(1 - c_\alpha)\right)
-        - c_\alpha\mu_0^2
-    \right)}{
-    |\mu_0|\sqrt{\mu_0^2 - 30m^2gl^3(1 - c_\alpha)}
-    }
-    =: b(\alpha,\mu_0)
-    .
-\end{equation}
-The solution to ~\eqref{eqn:acrobot-rot-mu1-dot} is given by
+As expected, \(\dot{\beta}_n\) does not change sign on \(\mathcal{R}\) because
+a rotating pendulum does not change direction:
+if \(\rho_n > 0\), the orbit traces a curve going from \(\beta_n = -\pi\) to 
+\(\beta_n = \pi\); if \(\rho_n < 0\) the curve goes in the reverse direction.
+By continuity of the acrobot's constrained dynamics 
+\((\dot{\beta},\dot{\rho})\), we must also have 
+\(\sign{\dot{\beta}} = \sign{\rho_0}\) for small enough \(I\).
+Hence, we can use \(\beta\) as a new ``time" variable on \(\mathcal{R}\) 
+by performing a time transformation \(t = \tau(\beta)\).
+This produces the time-scaled system \(\hat{\rho}(\beta) = \rho(\tau(\beta))\)
+with dynamics
 \[
-    \hat{\mu}_1(\alpha,\mu_0) = \int \limits_0^\alpha b(\sigma,\mu_0)d\sigma
+    \begin{cases}
+        \dot{\hat{\rho}} = \frac{\dot{\rho}}{\dot{\beta}}
+        , \\
+        \hat{\rho}(0) = \rho_0
+        .
+    \end{cases}
+\]
+For a perturbation approach, be expand the solution of these dynamics into
+\begin{equation}\label{eqn:acrobot-rhohat-approx}
+    \hat{\rho}(\beta,\rho_0,I) = \hat{\rho}_0(\beta,\rho_0) + I
+    \hat{\rho}_1(\beta,\rho_0) + R(\beta,\rho_0,I)
+    ,
+\end{equation}
+where \(R(\beta,\rho_0,I)\) is \(O(I^2)\).
+
+From ~\eqref{eqn:khalil-perturbation-nominal} we know
+\(\hat{\rho}_0\) is the solution to the nominal system
+\[
+    \begin{cases} 
+        \dot{\hat{\rho}}_0 = 0
+        , \\
+        \hat{\mu}_0(0) = \rho_0
+        ,
+    \end{cases}
+\]
+which means \(\hat{\mu}_0(\beta,\rho_0) \equiv \rho_0\) for all \(\beta\).
+Likewise, ~\eqref{eqn:khalil-perturbation-firstorder} 
+gives us the following dynamics for \(\hat{\rho}_1\):
+\begin{equation}\label{eqn:acrobot-rho1-dot}
+  \begin{cases}
+    \dot{\hat{\rho}}_1 =
+    \frac{5m^2 g l^3 \bar{q}_a \left(
+        m^2gl^3\left(18s_\beta^2 + 30c_\beta(1 - c_\beta)\right)
+        - c_\beta\rho_0^2
+    \right)}{
+    |\rho_0|\sqrt{\rho_0^2 - 30m^2gl^3(1 - c_\beta)}
+    }
+    =: b(\beta,\rho_0)
+     , \\
+     \hat{\rho}_1(0) = 0
+     .
+ \end{cases}
+\end{equation}
+The solution to ~\eqref{eqn:acrobot-rho1-dot} is given by
+\[
+    \hat{\rho}_1(\beta,\rho_0) = \int \limits_0^\beta b(\sigma,\rho_0)d\sigma
     .
 \]
-Since one full rotation amounts to \(\alpha\) traversing \(2\pi\)rad in a clockwise
-direction (\ie \(\alpha\) going from \(0\) to \(\sign{\mu_0}2\pi\)), 
-we define a Poincar\'{e} section as the point reached on the \(p_u\) axis after
+
+Supposing we initialize the acrobot at \((\beta,\rho) = (0,\rho_0)\),
+then one full rotation amounts to \(\beta\) traversing \(2\pi\)rad in a clockwise
+direction (\ie \(\beta\) going from \(0\) to \(\sign{\rho_0}2\pi\)).
+We define a Poincar\'{e} section as the point reached on the \(p_u\) axis after
 every rotation:
 \[
-    P(\mu_0) = \mu_0 + I \hat{\mu}_1(\sign{\mu_0}2\pi, \mu_0)
+    P(\rho_0) = \rho_0 + I \hat{\rho}_1(\sign{\rho_0}2\pi, \rho_0)
+      + R(2\pi,I)
     .
 \]
-If \(|P(\mu_0)| > |\mu_0|\), then the rotation has
+If \(|P(\rho_0)| > |\rho_0|\), then the rotation has
 driven the orbit further from the origin.
 In other words, \(|p_u|\) has increased across the rotation.
-If this is true for any \(\mu_0\), the acrobot is gaining energy.
+If this is true for any \(\rho_0\), the acrobot is gaining momentum, which in
+turn means it is gaining energy.
 
-The function \(b(\alpha,\mu_0)\) is even in both its inputs, and is 
-\(2\pi\)-periodic in \(\alpha\).
+The function \(b(\beta,\rho_0)\) is even in both its inputs, and is 
+\(2\pi\)-periodic in \(\beta\).
 Hence, we have 
 \begin{align*}
-    \hat{\mu}_1(\sign{\mu_0}2\pi, \mu_0) &=
-    \int \limits_0^{\sign{\mu_0}2\pi} b(\sigma,\mu_0)d\sigma
+    \hat{\rho}_1(\sign{\rho_0}2\pi, \rho_0) &=
+    \int \limits_0^{\sign{\rho_0}2\pi} b(\sigma,\rho_0)d\sigma
     , \\
-     &=\sign{\mu_0}\int\limits_0^{2\pi}b(\sigma,\mu_0)d\sigma
+     &=\sign{\rho_0}\int\limits_0^{2\pi}b(\sigma,\rho_0)d\sigma
      , \\
-     &= \sign{\mu_0} \hat{\mu}_1(2\pi,\mu_0)
+     &= \sign{\rho_0} \hat{\rho}_1(2\pi,\rho_0)
      .
 \end{align*}
-Furthermore, \(\hat{\mu}_1(2\pi,\mu_0) = \hat{\mu}_1(2\pi,|\mu_0|)\).
+Furthermore, \(\hat{\rho}_1(2\pi,\rho_0) = \hat{\rho}_1(2\pi,|\rho_0|)\).
 This implies that
 \[
-    |P(\mu_0)| = \left|\sign{\mu_0}\left(
-        |\mu_0| + I \hat{\mu}_1(2\pi,|\mu_0|)\right)
+    |P(\rho_0)| = \left|\sign{\rho_0}\left(
+        |\rho_0| + I \hat{\rho}_1(2\pi,|\rho_0|)\right)
     \right|
-    = P(|\mu_0|)
+    = P(|\rho_0|)
     .
 \]
-Therefore, if \(P(|\mu_0|) > |\mu_0|\), then the acrobot is gaining energy.
-Showing that \(\hat{\mu}_1(2\pi,\mu_0) > 0\) for \(\mu_0 > \sqrt{60m^2gl^3}\) is
-sufficient for this condition to hold.
+Hence, if \(P(|\rho_0|) > |\rho_0|\), then a single rotation starting at \(\rho_0\)
+will drive the acrobot's orbit further from the origin.
+Equivalently, one need simply guarantee that \(\hat{\rho}_1(2\pi,\rho_0) > 0\)
+for all \(\rho_0 > \sqrt{60m^2gl^3}\).
 
-Unlike in the case of oscillations, we cannot adimensionalize
-\(b(\alpha,\mu_0)\) and prove that this condition will be true for all acrobots. 
-Let \(U = ]\sqrt{60m^2gl^3},\bar{\mu}[\), and assume that 
-\(\hat{\mu}_1(2\pi,\mu_0) > 0 \) for all \(\mu_0 \in U\).
-If this is true, then by perturbation analysis we can claim that there exists a
-small enough \(I\) such that the Poincar\'{e} section \(P(\mu_0)\) is monotonic
-on \(U\).
+Unfortunately, we cannot adimensionalize
+\(b(\beta,\rho_0)\) like we did for oscillations. 
+Hence, we let \(U = ]\sqrt{60m^2gl^3},\bar{\rho}[\) and assume that 
+\(\hat{\rho}_1(2\pi,\rho_0) > 0 \) for all \(\rho_0 \in U\).
+We conclude that, for small enough \(I\), the Poincar\'{e} section 
+\(P(\rho_0)\) is monotonically diverging from 0 on \(U\)
+and the acrobot is gaining momentum.
+
+\subsection*{Energy Gain}
+We will prove the acrobot gains energy on the set 
+\[
+    E_{\bar{\mu}} := 
+    \left\{ (q_u,p_u) \in \Gamma \mid E(q_u,p_u) < E(0,\bar{\rho}) \right\}
+    .
+\]
+% Can we use the jacobian? The spectrum is hard to find.
+
+Recall that on \(\mathcal{O}\) we have \(\dot{\alpha} > 0\). 
+Hence, any orbit which begins and remains in \(\mathcal{O}\)
+must spiral clockwise around the origin until it intersect the \(q_u\) axis.
+Once it does, the Poincar\'{e} section \(P_\mathcal{O}(\cdot)\) 
+demonstrates the orbit must spiral away from the origin; 
+this implies there cannot be any closed orbits on \(\mathcal{O}\), and that the
+origin is a repeller.
+
+Once the orbit reaches an intersection point \(\mu_0\) on the \(q_u\)-axis such
+that \(P_\mathcal{O}(\mu_0) > \pi\), the orbit will no longer return to the
+\(q_u\)-axis. 
+Instead, it will escape \(\mathcal{O}\) entirely.
+This must always happen in a finite number of iterations of the 
+Poincar\'{e} section, which means the orbit escapes \(\mathcal{O}\) in finite
+time., which implies the orbit must also escape
+any compact set in \(\mathcal{O}\) in finite time. 
+By Definition \ref{defn:energy-gain}, the VNHC is injecting energy into the
+acrobot on \(\mathcal{O}\).
+
+If we have \(I < 0\), it is equivalent to using the constraint 
+\(q_a = -\bar{q}_a \arctan(I p_u)\). 
+By the same analysis, this injects energy on \(\mathcal{O}\) in negative-time, so the
+constraint dissipates energy on \(\mathcal{O}\).
+
+A hybrid supervisor that flips the sign of \(I\) based on the current
+value of \(\mu\) will stabilize any energy level of oscillation.
+As was the case in the VLP, this supervisor should implement some kind of
+hysteresis to avoid infinite switching.
+
+% TODO: W and D's boundary is two elements: the point (pi,0) and the curve of the
+% homoclinic orbit connecting (pi,0) to (-pi,0). We need to show that almost
+% every initial condition starting in \(mathcal{O}\) will NOT converge to (pi,0), and
+% therefore exit D and enter W.
 
 Define the set of points in \(\Gamma\) which have pseudo-radius in \(U\) by
 \[
-    W := \left\{(q_u,p_u) \in \Gamma \mid |\mu(q_u,p_u)| \in U \right\}
+    W := \left\{(q_u,p_u) \in \Gamma \mid |\rho(q_u,p_u)| \in U \right\}
     ,
 \]
 as in Figure \ref{fig:acrobot-rot-W}.
-Monotonicity of \(P(\mu_0)\) means there are no closed orbits of 
+Monotonicity of \(P(\rho_0)\) means there are no closed orbits of 
 \((q_u,p_u)\) on \(W\). 
 Furthermore, \(|p_u|\) is increasing every time the orbit hits the
 \(p_u\)-axis. 
@@ -1175,36 +1236,24 @@ Furthermore, \(|p_u|\) is increasing every time the orbit hits the
     % Show also that the inner limit connects to D
     %\includestandalone[width=0.5\textwidth]{images/acrobot_rot_W}
     \caption{The set \(W\) of points which have pseudo-radius 
-        \(|\mu| \in ]\sqrt{60m^2gl^3}, \bar{\mu}[\). The inner boundary of \(W\)
+        \(|\rho| \in ]\sqrt{60m^2gl^3}, \bar{\rho}[\). The inner boundary of \(W\)
         is \((q_u,p_u) = (\pi,0)\), which is also the boundary of the
         oscillation domain \(mathcal{O}\).}
     \label{fig:acrobot-rot-W}
 \end{figure}
 
-We conclude that \(|\mu(q_u,p_u)|\) will eventually reach \(\bar{\mu}\). 
+We conclude that \(|\rho(q_u,p_u)|\) will eventually reach \(\bar{\rho}\). 
 We cannot claim this fits the definition  of energy injection 
 (since \((0,0) \notin W\)), but we can still say that \((q_u,p_u)\) will
 eventually depart \(W\) through the outer boundary in finite time.
 The acrobot is thereby gaining energy in the literal sense that its momentum
 is increasing on \(W\).
 
-If we set \(I < 0\), we have \(P(|\mu_0|) < |\mu_0|\).
+If we set \(I < 0\), we have \(P(|\rho_0|) < |\rho_0|\).
 Hence, \(|p_u|\) is decreasing every time the orbit hits the \(p_u\)-axis, so
 the acrobot will eventually depart \(W\) through the inner boundary. 
 The acrobot is losing momentum, and therefore it is losing energy on \(W\).
 
-
-\subsection*{Connecting Oscillations and Rotations}
-To complete this proof, we will prove the acrobot gains energy on the set 
-\[
-    E_{\bar{\mu}} := 
-    \left\{ (q_u,p_u) \in \Gamma \mid E(q_u,p_u) < E(0,\bar{\mu}) \right\}
-    .
-\]
-% TODO: W and D's boundary is two elements: the point (pi,0) and the curve of the
-% homoclinic orbit connecting (pi,0) to (-pi,0). We need to show that almost
-% every initial condition starting in \(mathcal{O}\) will NOT converge to (pi,0), and
-% therefore exit D and enter W.
 
 \section{Experimental Results}
 % TODO: This might be a separate chapter
