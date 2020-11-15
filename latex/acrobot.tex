@@ -406,14 +406,7 @@ The constrained dynamics for \(q_u\) are given by
                 \end{bmatrix} %\\
     ,
 \end{equation*}
-%        &= \frac{1}{ml^2(2-c_a^2)} 
-%            \left( p_u - 
-%                (1+c_a)\frac{(1+c_a)(1+I^2 p_u^2)p_u - m^2gl^3\bar{q}_a I (2-c_a^2)(2s_u + s_{ua})
-%                }{ml^2(3+2c_a)(1+I^2 p_u^2)}
-%            \right) 
-%        ,
-%\end{align*}
-which can be simplified to 
+which can be simplified into 
 \begin{equation*}
     \dot{q_u} = \frac{(1+I^2 p_u^2)p_u + m^2gl^3\bar{q}_a I(2s_u + s_{ua})(1+c_a) }{ml^2(1+I^2 p_u^2)(3+2c_a)}
     .
@@ -435,42 +428,43 @@ to guarantee this is true.
     Consider the simple acrobot ~\eqref{eqn:acrobot-hamiltonian} constrained by
     the VNHC ~\eqref{eqn:acrobot-constraint}, whose
     constraint manifold is \(\Gamma = \mathbb{S}^1 \times \R\).
-    Let \(E\) be the nominal energy when \(I = 0\):
+    Let 
     \[
         E(q_u,p_u) := \frac{p_u^2}{10ml^2} + 3(1 - \cos(q_u))
-        .
+        ,
     \]
+    be the energy of the simple pendulum obtained by setting \(I = 0\).
 \begin{enumerate}
-    \item There always exists \(I \in \R_{>0}\) small enough that 
+    \item There always exists \(I > 0\) small enough that 
     ~\eqref{eqn:acrobot-constraint} injects energy into the acrobot on the set
     \[
         \mathcal{O} := \left\{(q_u,p_u) \in \Gamma 
             \mid E(q_u,p_u) < E(\pi,0) \right\}
         .
     \]
-    If instead \(I \in \R_{<0}\), the VNHC dissipates energy on \(\mathcal{O}\).
+    If instead \(I < 0\), the VNHC dissipates energy on \(\mathcal{O}\).
 \item Define \(b : \mathbb{S}^1 \times \R_{> 0} \rightarrow \R\) by
     \[
-        b(\alpha,\mu_0) := 
+        b(\alpha,\rho_0) := 
         \frac{5m^2 g l^3 \bar{q}_a \left(
             m^2gl^3\left(18s_\alpha^2 + 30c_\alpha(1 - c_\alpha)\right)
-            - c_\alpha\mu_0^2
+            - c_\alpha\rho_0^2
         \right)}{
-        |\mu_0|\sqrt{\mu_0^2 - 30m^2gl^3(1 - c_\alpha)}
+        |\rho_0|\sqrt{\rho_0^2 - 30m^2gl^3(1 - c_\alpha)}
         }
         ,
     \]
-    and fix \(\bar{\mu} > 60m^2gl^3\).
+    and fix \(\bar{\rho} > \sqrt{60m^2gl^3}\).
     Suppose \(\int \limits_{0}^{2\pi} b(\sigma,\mu_0)d\sigma > 0\) for all 
-    \(\mu_0 \in ]60m^2gl^3, \bar{\mu}[\).
-    Then there exists \(I \in \R_{> 0}\) small enough that
+    \(\rho_0 \in ]\sqrt{60m^2gl^3}, \bar{\rho}[\).
+    Then there exists \(I > 0\) small enough that
     ~\eqref{eqn:acrobot-constraint} injects energy into the acrobot on
     \[
         \Omega := \left\{(q_u,p_u) \in \Gamma 
-            \mid E(q_u,p_u) < E(0,\bar{\mu})\right\}
+            \mid E(q_u,p_u) < E(0,\bar{\rho})\right\}
         .
     \]
-    If instead \(I \in \R_{<0}\), the VNHC dissipates energy on \(\Omega\).
+    If instead \(I < 0\), the VNHC dissipates energy on \(\Omega\).
 \end{enumerate}
 \end{thm}
 %\footnotetext{In fact, we can be more precise than this. 
@@ -996,6 +990,28 @@ enough \(I\), the Poincar\'{e} section \(P_\mathcal{O}(\mu_0)\) is positive,
 monotonically increasing, and 
 \(\lim \limits_{\mu_0 \to \pi} P_\mathcal{O}(\mu_0) = \infty\).
 
+Suppose we initialize the acrobot at \((q_0,p_0) \in \mathcal{O}\).
+Since on \(\mathcal{O}\) we have \(\dot{\alpha} > 0\), the orbit of the acrobot
+in \(\Gamma\) spirals clockwise around the origin; 
+if the spiral does not exit \(\mathcal{O}\), it must intersect the \(q_u\) axis.
+Once it does, the Poincar\'{e} section \(P_\mathcal{O}(\cdot)\) tells us 
+the orbit must spiral away from the origin. 
+This implies there cannot be any closed orbits in \(\mathcal{O}\) and that the
+origin is a repeller.
+
+Once the orbit reaches an intersection point \((\mu_0,0)\) on the \(q_u\)-axis such
+that \(P_\mathcal{O}(\mu_0) > \pi\), the orbit will no longer return to the
+\(q_u\)-axis. 
+Instead, it will escape \(\mathcal{O}\) entirely, which means it must 
+escape any compact subset of \(\mathcal{O}\) in
+finite time. 
+We conclude that the acrobot is gaining energy on \(\mathcal{O}\).
+
+Setting \(I < 0\), the Poincar\'{e} section \(P_\mathcal{O}(\mu_0)\) is now
+decreasing.
+Hence, the orbit in \(\mathcal{O}\) spirals towards the origin, which means the
+constraint is dissipating energy on \(\mathcal{O}\).
+
 % Empty proof environment to put QED square on the right of the page
 \begin{proof}[\unskip\nopunct]
 \end{proof}
@@ -1131,11 +1147,11 @@ direction (\ie \(\beta\) going from \(0\) to \(\sign{\rho_0}2\pi\)).
 We define a Poincar\'{e} section as the point reached on the \(p_u\) axis after
 every rotation:
 \[
-    P(\rho_0) = \rho_0 + I \hat{\rho}_1(\sign{\rho_0}2\pi, \rho_0)
+    P_\mathcal{R}(\rho_0) = \rho_0 + I \hat{\rho}_1(\sign{\rho_0}2\pi, \rho_0)
       + R(2\pi,I)
     .
 \]
-If \(|P(\rho_0)| > |\rho_0|\), then the rotation has
+If \(|P_\mathcal{R}(\rho_0)| > |\rho_0|\), then the rotation has
 driven the orbit further from the origin.
 In other words, \(|p_u|\) has increased across the rotation.
 If this is true for any \(\rho_0\), the acrobot is gaining momentum, which in
@@ -1156,69 +1172,44 @@ Hence, we have
 Furthermore, \(\hat{\rho}_1(2\pi,\rho_0) = \hat{\rho}_1(2\pi,|\rho_0|)\).
 This implies that
 \[
-    |P(\rho_0)| = \left|\sign{\rho_0}\left(
+    |P_\mathcal{R}(\rho_0)| = \left|\sign{\rho_0}\left(
         |\rho_0| + I \hat{\rho}_1(2\pi,|\rho_0|)\right)
     \right|
-    = P(|\rho_0|)
+    = P_\mathcal{R}(|\rho_0|)
     .
 \]
-Hence, if \(P(|\rho_0|) > |\rho_0|\), then a single rotation starting at \(\rho_0\)
-will drive the acrobot's orbit further from the origin.
-Equivalently, one need simply guarantee that \(\hat{\rho}_1(2\pi,\rho_0) > 0\)
-for all \(\rho_0 > \sqrt{60m^2gl^3}\).
+Hence, if \(P_\mathcal{R}(|\rho_0|) > |\rho_0|\) (or equivalently if
+\(\hat{\rho}_1(2\pi,|\rho_0|) > 0\))
+the phase \((q_u(t),p_u(t))\) initialized at \((0,\rho_0)\) 
+will intersect the \(p_u\) axis at a point \(p > \rho_0\).
+If we could guarantee that \(\hat{\rho}_1(2\pi,\rho_0) > 0\)
+for all \(\rho_0 > \sqrt{60m^2gl^3}\), then the acrobot would be spiraling away
+from the origin on \(\mathcal{R}\).
 
 Unfortunately, we cannot adimensionalize
 \(b(\beta,\rho_0)\) like we did for oscillations. 
-Hence, we let \(U = ]\sqrt{60m^2gl^3},\bar{\rho}[\) and assume that 
-\(\hat{\rho}_1(2\pi,\rho_0) > 0 \) for all \(\rho_0 \in U\).
+Using the assumption , we have that 
+\(\hat{\rho}_1(2\pi,\rho_0) > 0 \) for all 
+\(\rho_0 \in ]\sqrt{60m^2gl^3},\rho_0[\).
 We conclude that, for small enough \(I\), the Poincar\'{e} section 
-\(P(\rho_0)\) is monotonically diverging from 0 on \(U\)
-and the acrobot is gaining momentum.
+\(P_\mathcal{R}(\rho_0)\) is monotonically increasing when 
+\(0 < \rho_0 < \bar{\rho}\) and
+monotonically decreasing when \(-\bar{\rho} < \rho_0 < 0\).  
 
-\subsection*{Energy Gain}
+\subsection*{Proving Energy Gain}
 We will prove the acrobot gains energy on the set 
 \[
-    E_{\bar{\mu}} := 
-    \left\{ (q_u,p_u) \in \Gamma \mid E(q_u,p_u) < E(0,\bar{\rho}) \right\}
+    \Omega := \left\{ (q_u,p_u) \in \Gamma 
+     \mid E(q_u,p_u) < E(0,\bar{\rho}) \right\}
     .
 \]
 % Can we use the jacobian? The spectrum is hard to find.
-
-Recall that on \(\mathcal{O}\) we have \(\dot{\alpha} > 0\). 
-Hence, any orbit which begins and remains in \(\mathcal{O}\)
-must spiral clockwise around the origin until it intersect the \(q_u\) axis.
-Once it does, the Poincar\'{e} section \(P_\mathcal{O}(\cdot)\) 
-demonstrates the orbit must spiral away from the origin; 
-this implies there cannot be any closed orbits on \(\mathcal{O}\), and that the
-origin is a repeller.
-
-Once the orbit reaches an intersection point \(\mu_0\) on the \(q_u\)-axis such
-that \(P_\mathcal{O}(\mu_0) > \pi\), the orbit will no longer return to the
-\(q_u\)-axis. 
-Instead, it will escape \(\mathcal{O}\) entirely.
-This must always happen in a finite number of iterations of the 
-Poincar\'{e} section, which means the orbit escapes \(\mathcal{O}\) in finite
-time., which implies the orbit must also escape
-any compact set in \(\mathcal{O}\) in finite time. 
-By Definition \ref{defn:energy-gain}, the VNHC is injecting energy into the
-acrobot on \(\mathcal{O}\).
-
-If we have \(I < 0\), it is equivalent to using the constraint 
-\(q_a = -\bar{q}_a \arctan(I p_u)\). 
-By the same analysis, this injects energy on \(\mathcal{O}\) in negative-time, so the
-constraint dissipates energy on \(\mathcal{O}\).
-
-A hybrid supervisor that flips the sign of \(I\) based on the current
-value of \(\mu\) will stabilize any energy level of oscillation.
-As was the case in the VLP, this supervisor should implement some kind of
-hysteresis to avoid infinite switching.
-
 % TODO: W and D's boundary is two elements: the point (pi,0) and the curve of the
 % homoclinic orbit connecting (pi,0) to (-pi,0). We need to show that almost
 % every initial condition starting in \(mathcal{O}\) will NOT converge to (pi,0), and
 % therefore exit D and enter W.
 
-Define the set of points in \(\Gamma\) which have pseudo-radius in \(U\) by
+Define the set of points in \(\mathcal{R}\) which have pseudo-radius in \(U\) by
 \[
     W := \left\{(q_u,p_u) \in \Gamma \mid |\rho(q_u,p_u)| \in U \right\}
     ,
@@ -1253,6 +1244,11 @@ If we set \(I < 0\), we have \(P(|\rho_0|) < |\rho_0|\).
 Hence, \(|p_u|\) is decreasing every time the orbit hits the \(p_u\)-axis, so
 the acrobot will eventually depart \(W\) through the inner boundary. 
 The acrobot is losing momentum, and therefore it is losing energy on \(W\).
+
+A hybrid supervisor that flips the sign of \(I\) based on the current
+value of \(\mu\) will stabilize any energy level of oscillation.
+As was the case in the VLP, this supervisor should implement some kind of
+hysteresis to avoid infinite switching.
 
 
 \section{Experimental Results}
