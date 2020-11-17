@@ -25,7 +25,7 @@ It is also one of the simplest models for a biped walking robot
     \label{fig:acrobot-model}
 \end{figure}
 
-Controlling the acrobot is a nontrivial task, since it is not feedback
+Controlling the acrobot is a nontrivial task because it is not feedback
 linearizable \cite{nonlinear_controllers_nonintegrable_acrobot}. 
 Several researchers have studied the swing-up problem of driving the acrobot to
 its equilibrium point above the bar using partial feedback linearization
@@ -68,7 +68,7 @@ Let \(q_u \in \mathbb{S}^1\) be the shoulder angle and \(q_a \in \mathbb{S}^1\)
 be the hip angle, where only \(q_a\) is actuated. 
 Collecting them together provides the configuration
 \(q = (q_u,q_a) \in \mathbb{S}^1 \times \mathbb{S}^1\). 
-The acrobot has inertia matrix \(mathcal{O}\), potential function \(P\) (with respect to
+The acrobot has inertia matrix \(D\), potential function \(P\) (with respect to
 the horizontal bar), and input matrix \(B\)  given as
 follows \cite{xingbo_thesis}:
 \begin{align}\label{eqn:general-acrobot-inertia}
@@ -88,7 +88,7 @@ follows \cite{xingbo_thesis}:
 \end{align}
 
 While this is the most general representation of an acrobot, the dynamics
-become unwieldy.
+are unwieldy.
 To make rigorous analysis of these dynamics more tractable, we begin by assuming
 the acrobot is comprised of two massless rods of equal length \(l\), with equal
 point masses \(m\) at the tips.
@@ -179,7 +179,7 @@ when the regularity matrix
     dh_q \Minv(q) \begin{bmatrix}0 \\ 1 \end{bmatrix}
     ,
 \]
-is of full rank 1 on the constraint manifold \(\Gamma\).
+is of full rank \(1\) on the constraint manifold \(\Gamma\).
 Given that
 \(dh_q = \begin{bmatrix} -\partial_{q_u} f & 1 \end{bmatrix}\),
 the regularity matrix evaluates to the scalar equation
@@ -187,9 +187,9 @@ the regularity matrix evaluates to the scalar equation
     \frac{(1+c_a)\partial_{q_u}f(q_u,p_u) + (3+2c_a)}{ml^2(2-c_a^2)}
     .
 \end{equation}
-This is full rank on \(\Gamma\) if and only if the numerator does not
+This is full rank if and only if the numerator does not
 change sign.
-The following proposition provides a sufficient condition for this to happen.
+The following proposition provides a sufficient condition for regularity.
 
 \begin{prop}\label{prop:acrobot-fpu-regular}
     A relation \(h(q,p) = q_a - f(p_u) = 0\) for ~\eqref{eqn:acrobot-hamiltonian} 
@@ -199,7 +199,7 @@ The following proposition provides a sufficient condition for this to happen.
 \begin{proof}
     Since \(\partial_{q_u} f = 0\), the regularity equation
     ~\eqref{eqn:regularity-matrix-acrobot} is strictly positive for all values
-    of \(q_a\), and hence is of full rank 1.
+    of \(q_a\), and hence is full rank everywhere on the constraint manifold.
     By Theorem \ref{thm:vnhc-regularity}, \(h\) is a regular VNHC of order 1.
 \end{proof}
 Proposition \ref{prop:acrobot-fpu-regular} will be useful later, as we will not
@@ -319,7 +319,7 @@ with the control parameters \(\bar{q}_u\) and \(\rho_0\), where
 
 While this constraint shows promising experimental results and it accurately
 emulates true human motion, \citeauthor{xingbo_thesis}
-does not provide an analytical proof that the acrobot will gain energy.
+does not provide analytical proof that the acrobot will gain energy.
 His lack of analysis is tied to the fact that the constrained
 dynamics are incredibly complicated.
 In fact, just showing the constraint is regular is a challenging task.
@@ -339,9 +339,10 @@ VNHC of the form \(q_a = f(\theta)\) where regularity can be proven easily.
 Instead, we will develop a constraint \(h(q,p) = q_a - f(p_u)\) because these
 constraints are always regular (as per Proposition \ref{prop:acrobot-fpu-regular}). 
  
-To design this constraint, let us begin by examining a person on a seated swing.
+To design this constraint, let us begin (perhaps unexpectedly) by examining a person on
+a seated swing.
 The person extends their legs when the swing moves forwards, and retracts their
-legs when the swing is moving backwards.
+legs when the swing moves backwards.
 As the swing gains speed, the person leans their body back while
 extending their legs.
 This allows them to bring their legs higher, shortening the distance
@@ -356,19 +357,20 @@ their legs beneath them.
 This position is identical to that of a gymnast on a bar, which is why we can
 use leg motion from the seated swing to design a controller for the acrobot.
 
-The acrobot's legs are rigid rods which cannot retract, so we emulate the person
-on a swing by pivoting the legs in the direction of motion. 
+The acrobot's legs are rigid rods which cannot retract; so we emulate the person
+on a swing by pivoting the legs toward the direction of motion. 
 To account for how a person leans back at higher speeds, the legs should pivot to an
 angle proportional to the swing's speed.
-One VNHC which emulates this process is \(q_a = \bar{q}_a\arctan( I p_u)\), as
-in Figure \ref{fig:qa-arctan}.
-Here, \(\bar{q}_a \in ]0,\frac{2 Q_a}{\pi}]\)
-and \(I \in \R_{>0}\) is a fixed control parameter.
+Since the direction of motion is entirely determined by \(p_u\), 
+one such VNHC which emulates this process is \(q_a = \bar{q}_a\arctan( I p_u)\),
+displayed in Figure \ref{fig:qa-arctan}.
+Here, \(\bar{q}_a \in ]0,\frac{2 Q_a}{\pi}]\) and \(I \in \R_{>0}\) is a fixed
+control parameter.
 
-This constraint does not perfectly recreate a gymnast's motion -- during
-a giant the gymnast's legs are almost completely extended, while this constraint
-pivots the legs partially during rotations.
-However, the motion looks similar enough that this constraint should provide a
+This constraint does not perfectly recreate giant motion, during which
+the gymnast's legs are almost completely extended -- it instead pivots the legs
+partially during rotations.
+However, the behaviour looks similar enough that the constraint should provide a
 decent foundation for injecting energy into the acrobot.
 It is for this reason that we choose our acrobot's constraint to be
 \begin{equation}\label{eqn:acrobot-constraint}
@@ -413,16 +415,18 @@ which can be simplified into
 \end{equation*}
 Hence, the constrained dynamics for the acrobot under
 ~\eqref{eqn:acrobot-constraint} are
-\begin{align}\label{eqn:acrobot-constrained-dynamics}
+\begin{equation}\label{eqn:acrobot-constrained-dynamics}
+\left.\begin{cases}
     \dot{q}_u &= \frac{(1+I^2 p_u^2)p_u + m^2gl^3\bar{q}_a I(2s_u + s_{ua})(1+c_a) }
             {ml^2(1+I^2 p_u^2)(3+2c_a)}
-        , \\
+        \\
     \dot{p}_u &= - m g l (2s_u + s_{ua})
-    . \nonumber
-\end{align}
+    .
+    \end{cases} \right|_{q_a = \bar{q}_a\arctan(Ip_u)}
+\end{equation}
 
-These dynamics do not always gain energy -- we need \(|I|\) to be small enough
-to guarantee this is true.
+These dynamics do not always gain energy -- we need certain conditions on our
+control parameter \(I\) to guarantee this is true.
 
 \begin{thm}\label{thm:acrobot-energy-stabilization}
     Consider the simple acrobot ~\eqref{eqn:acrobot-hamiltonian} constrained by
@@ -445,18 +449,18 @@ to guarantee this is true.
     If instead \(I < 0\), the VNHC dissipates energy on \(\mathcal{O}\).
 \item Define \(b : \mathbb{S}^1 \times \R_{> 0} \rightarrow \R\) by
     \[
-        b(\alpha,\rho_0) := 
+        b(\beta,\rho_0) := 
         \frac{5m^2 g l^3 \bar{q}_a \left(
-            m^2gl^3\left(18s_\alpha^2 + 30c_\alpha(1 - c_\alpha)\right)
-            - c_\alpha\rho_0^2
+            m^2gl^3\left(18s_\beta^2 + 30c_\beta(1 - c_\beta)\right)
+            - c_\beta\rho_0^2
         \right)}{
-        |\rho_0|\sqrt{\rho_0^2 - 30m^2gl^3(1 - c_\alpha)}
+        |\rho_0|\sqrt{\rho_0^2 - 30m^2gl^3(1 - c_\beta)}
         }
         ,
     \]
     and fix \(\bar{\rho} > \sqrt{60m^2gl^3}\).
     Suppose \(\int \limits_{0}^{2\pi} b(\sigma,\mu_0)d\sigma > 0\) for all 
-    \(\rho_0 \in ]\sqrt{60m^2gl^3}, \bar{\rho}[\).
+    \(\rho_0 \in \, \left]\sqrt{60m^2gl^3}, \bar{\rho}\right[\).
     Then there exists \(I > 0\) small enough that
     ~\eqref{eqn:acrobot-constraint} injects energy into the acrobot on
     \[
@@ -469,7 +473,7 @@ to guarantee this is true.
 \end{thm}
 %\footnotetext{In fact, we can be more precise than this. 
 %    Letting \(\epsilon > 0\), we need 
-%    \(I \leq \min\left\{I_1(\epsilon),I_2\right\}\) where
+%    \(I \leq \min\left\{I_1(\epsilon),I_2\}\) where
 %    \(I_1(\epsilon) = \frac{\tan(\epsilon)}{(\pi-\epsilon)}
 %    \left(\frac{m^2gl^3(\cos(\epsilon)-2\sin(\epsilon))}{\pi-\epsilon}
 %    \left(\frac{2\bar{q}_a\tan(\epsilon)}{(1+\tan(\epsilon)^2)(\pi-\epsilon)}+5\right) 
