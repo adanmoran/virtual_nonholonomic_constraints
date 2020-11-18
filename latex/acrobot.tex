@@ -439,14 +439,14 @@ control parameter \(I\) to guarantee this is true.
     \]
     be the energy of the simple pendulum obtained by setting \(I = 0\).
 \begin{enumerate}
-    \item There always exists \(I > 0\) small enough that 
+    \item For all \(\epsilon > 0\), there exists \(I > 0\) small enough that 
     ~\eqref{eqn:acrobot-constraint} injects energy into the acrobot on the set
     \[
-        \mathcal{O} := \left\{(q_u,p_u) \in \Gamma 
-            \mid E(q_u,p_u) < E(\pi,0) \right\}
+        \mathcal{O}_\epsilon := \left\{(q_u,p_u) \in \Gamma 
+        \mid E(\epsilon,0) < E(q_u,p_u) < E(\pi,0) \right\}
         .
     \]
-    If instead \(I < 0\), the VNHC dissipates energy on \(\mathcal{O}\).
+    If instead \(I < 0\), the VNHC dissipates energy on \(\mathcal{O}_\epsilon\).
 \item Define \(b : \SxR_{> 0} \rightarrow \R\) by
     \[
         b(\beta,\rho_0) := 
@@ -459,7 +459,7 @@ control parameter \(I\) to guarantee this is true.
         ,
     \]
     and fix \(\bar{\rho} > \sqrt{60m^2gl^3}\).
-    Suppose \(\int \limits_{0}^{2\pi} b(\sigma,\mu_0)d\sigma > 0\) for all 
+    Suppose \(\int \limits_{0}^{2\pi} b(\sigma,\rho_0)d\sigma > 0\) for all 
     \(\rho_0 \in \, \left]\sqrt{60m^2gl^3}, \bar{\rho}\right[\).
     Then there exists \(I > 0\) small enough that
     ~\eqref{eqn:acrobot-constraint} injects energy into the acrobot on
@@ -522,9 +522,11 @@ Proving Theorem \ref{thm:acrobot-energy-stabilization} is not a simple task.
 In an effort to make the proof as clear as possible, we will break it down into
 the following segments:
 \begin{enumerate}
-    \item Background on perturbation theory and averaging.
+    \item Background on perturbation theory.
     \item Perturbation analysis for oscillations.
+    \item Energy gain for oscillations.
     \item Perturbation analysis for rotations.
+    \item Energy gain for rotations.
 \end{enumerate}
 
 When \(I = 0\), the constrained acrobot behaves like a single
@@ -587,22 +589,23 @@ Solutions of the nonlinear system can often be approximated by taking a Taylor
 expansion around this nominal system.
 
 \citet{khalil_nonlinear} considers a system of the form
+
 \begin{equation}\label{eqn:khalil-setup}
     \begin{cases}
-        \dot{x} = f(t,x,\epsilon), \\
-        x(t_0) = \eta(\epsilon),
+        \dot{x} = f(t,x,I), \\
+        x(t_0) = \eta(I),
     \end{cases}
 \end{equation}
 where 
-\(f : [t_0,t_1] \times D \times [-\epsilon_0,\epsilon_0] \rightarrow \R^n\) is
-sufficiently smooth.
+\(f : [t_0,t_1] \times D \times [-I_0,I_0] \rightarrow \R^n\) is smooth
+\footnote{Khalil actually considers \(f(t,x,\epsilon)\) which is ``sufficiently
+    smooth". We replace \(\epsilon\) with \(I\) and assume smoothness to
+    more easily connect his theory to the acrobot constraint.}.
 In the context of the acrobot, \(x\) is the set of coordinates which make
 our analysis convenient;
-\(\epsilon\) is our control parameter \(I\);
+\(I\) is a parameter of the system;
 the function \(f\) is the constrained dynamics in \(x\)-coordinates;
-and \(\eta(\epsilon) \equiv \eta_0\) is a constant initial condition.
-To keep a notational reminder that we are applying perturbation theory to
-the acrobot, we will henceforth use \(I\) in place of \(\epsilon\).
+and \(\eta(I) \equiv \eta_0\) is a constant initial condition.
 
 Setting \(I = 0\) we get the nominal system
 \begin{equation}\label{eqn:khalil-perturbation-nominal}
@@ -622,8 +625,8 @@ One can use this to compute the solution \(x_1(t,\eta_0)\) of
     \end{cases}
 \end{equation}
 Finally, one can compute the first-order Taylor approximation
-\(x(t,\eta_0) = x_0(t,\eta_0) + I x_1(t,\eta_0) + R(t,I)\), where the remainder
-term \(R(t,I)\) is \(O(I^2)\), \ie,
+\(x(t,\eta_0) = x_0(t,\eta_0) + I x_1(t,\eta_0) + R(t,\eta_0,I)\), where the remainder
+term \(R(t,\eta_0,I)\) is smooth and \(O(I^2)\), \ie,
 \[
     \lim \limits_{I \to 0} \frac{R(t,I)}{I} = 0
     .
@@ -653,24 +656,31 @@ use this theory to prove energy injection properties on the acrobot by studying
 the simple pendulum.
  
 \subsection*{Perturbation Analysis for Oscillations}
-As we have seen, the acrobot becomes a nominal pendulum that oscillates whenever the
-nominal energy ~\eqref{eqn:acrobot-nominal-E} is less than \(E(\pi,0)\).
+As we have seen, setting \(I = 0\) turns the acrobot into a nominal pendulum. 
+This pendulum oscillates whenever the nominal energy
+~\eqref{eqn:acrobot-nominal-E} is less than \(E(\pi,0)\). 
 Hence, the domain of oscillations for the nominal pendulum is given by
 \[
     \mathcal{O} := \left\{ (q_u,p_u) \in \Gamma \mid E(q_u,p_u) < E(\pi,0)\right\}
     ,
 \]
-where \(\Gamma \simeq \Sone\times\R\) is the constraint manifold of the
+where \(\Gamma \simeq \SxR\) is the constraint manifold of the
 acrobot.
-We wish to find a transformation \(T(q_u,p_u)\) on \(\mathcal{O}\) into
-\((\alpha,\mu)\)-coordinates where \(\alpha \in \Sone\) is a pseudo-angle
-and \(\mu > 0\) is a pseudo-radius.
-Since the energy of oscillation can be determined by the orbit's intersection
+Recall from Figure \ref{fig:pendulum-level-sets} that orbits of a pendulum 
+are level sets of \(E\). 
+Oscillations of a pendulum look like ellipses contained in \(\mathcal{O}\).
+Since perturbation theory requires us to analyze the nominal pendulum, we will
+make our analysis convenient by changing coordinates into an
+``action" \(\mu > 0\) which remains constant on level sets of \(E\), 
+along with an ``angle" \(\alpha \in \Sone\) satisfying \(\dot{\alpha} > 0\) on
+\(\mathcal{O}\).
+
+The energy of oscillation can be determined by the orbit's intersection
 with the \(q_u\)-axis (as in Figure \ref{fig:mu-intersection}) 
-and \(q_u \in ]-\pi,\pi[\) on \(\mathcal{O}\), we set \(\mu \in ]0,\pi[\).
+and \(q_u \in ]-\pi,\pi[\) on \(\mathcal{O}\), so we set \(\mu \in ]0,\pi[\).
 The transformation we want is therefore a diffeomorphism of the form
 \begin{align*}
-    T : D\backslash \{(0,0)\} &\rightarrow \Sone \times \, ]0,\pi[, \\
+    T : \mathcal{O} \backslash \{(0,0)\} &\rightarrow \Sone \times \, ]0,\pi[, \\
     (q_u, p_u) &\mapsto (\alpha,\mu)
     .
 \end{align*}
@@ -778,18 +788,15 @@ The dynamics of the nominal pendulum arise from evaluating
 \(f_\mu\) and \(f_\alpha\) at \(I = 0\).
 MATLAB's symbolic toolbox evaluates the nominal dynamics as
 \begin{align}\label{eqn:acrobot-mu-dot-nom}
-    \dot{\mu}_n &= 0
+    \dot{\mu} &= 0
     , \\
     \label{eqn:acrobot-alpha-dot-nom}
-    \dot{\alpha}_n &= \sqrt{\frac{6g}{5l}} 
-        \sqrt{\frac{\cos(\mu_n\cos(\alpha_n)) - \cos(\mu_n)}
-            {\mu_n^2 \sin(\alpha_n)^2}}
+    \dot{\alpha} &= \sqrt{\frac{6g}{5l}} 
+        \sqrt{\frac{\cos(\mu\cos(\alpha)) - \cos(\mu)}
+            {\mu^2 \sin(\alpha)^2}}
     .
 \end{align}
-Note that we write the nominal coordinates as \((\alpha_n,\mu_n)\) to
-distinguish them from the acrobot's coordinates.
-One can confirm that \(\dot{\alpha}_n > 0\) for every \(\mu_n \in ]0,\pi[\).
-This is expected of an oscillating single pendulum.
+One can confirm that \(\dot{\alpha} > 0\) for every \(\mu \in ]0,\pi[\).
 By continuity of ~\eqref{eqn:acrobot-mu-dot}, 
 \(\dot{\alpha}\) remains positive on \(\mathcal{O}\) for \(I\) small enough.
 
@@ -848,16 +855,6 @@ yielding the ``time"-varying scalar ODE
 \end{equation}
 with solution \(\hat{\mu}(\alpha,\mu_0,I)\).
 
-%Using perturbation theory, we will find a first-order
-%approximation of \(\hat{\mu}\). 
-%We will show the dynamics of this approximation are \(\pi\)-periodic in
-%\(\alpha\), so that we only need to study whether \(\hat{\mu}\) increases or
-%decreases along a half-orbit \(\alpha \in [0,\pi]\).
-%To complete the proof of energy gain for oscillations, we will demonstrate that
-%\(\hat{\mu}(\pi) > \hat{\mu}(0)\).
-%This will imply that the the radius of orbits increases
-%until all orbits within \(\mathcal{O}\) eventually leave \(\mathcal{O}\) in finite time.
-
 In the spirit of perturbation analysis, we expand the solution of
 ~\eqref{eqn:muhat-dot} into
 \begin{equation}\label{eqn:acrobot-muhat-approx}
@@ -866,7 +863,7 @@ In the spirit of perturbation analysis, we expand the solution of
     + R(\alpha,\mu_0,I)
     ,
 \end{equation}
-where \(R(\alpha,\mu_0,I)\) is \(O(I^2)\).
+where \(R(\alpha,\mu_0,I)\) is smooth and \(O(I^2)\).
 From ~\eqref{eqn:khalil-perturbation-nominal} we know that 
 \(\hat{\mu}_0\) is the solution to the nominal system
 \[
@@ -958,7 +955,7 @@ will eventually reach a rotation.
 To prove this intuitive argument rigorously, we define the Poincar\'{e} section
 \(P_\mathcal{O}(\mu_0) := \hat{\mu}(\pi,\mu_0)\), which expands into
 \[
-    P_\mathcal{O}(\mu_0) = \mu_0 + I \hat{\mu}_1(\pi,\mu_0) + R(\pi,I)
+    P_\mathcal{O}(\mu_0) = \mu_0 + I \hat{\mu}_1(\pi,\mu_0) + R(\pi,\mu_0,I)
     .
 \]
 Let us define
@@ -989,32 +986,102 @@ Simulations with smaller \(\mu_0\) vanish in MATLAB, so we believe that
     \label{fig:acrobot-Q}
 \end{figure}
 
-We conclude that, for all \(m\), \(g\), \(l\), \(\bar{q}_a\), and for small
-enough \(I\), the Poincar\'{e} section \(P_\mathcal{O}(\mu_0)\) is positive,
-monotonically increasing, and 
+We can therefore state that, for each \(\mu_0 \in \, ]0,\pi[\), there exists
+\(I\) such that
+\[
+    P_\mathcal{O}(\mu_0) = \mu_0\left(1+ IKQ(\mu_0)\right) + R(\pi,\mu_0,I) > 0
+    .
+\]
+Unfortunately, Khalil's perturbation theory does not guarantee this \(I\) is the
+same for all \(\mu_0\). 
+
+We deal with this issue by taking the compact set
+\[
+    \bar{\mathcal{O}} := \left\{(q_u,p_u) \in \Gamma 
+    \mid E(q_u,p_u) \leq E(\pi,0) \right\}
+    .
+\]
+The remainder term \(R(\pi,\mu_0,I)\) is smooth and of order \(I^2\),
+which means it can be written in the form 
+\(R(\pi,\mu_0,I) = I^2\tilde{R}(\mu_0,I)\)
+for some \(\tilde{R}\) a smooth function.
+Since \(\bar{O}\) is compact, \(\tilde{R}\) attains its minimum
+\(\underbar{r}\) on \(\bar{O}\).
+Hence, \(R(\pi,\mu_0,I)\) is bounded below by the parabola
+\(\underbar{r}I^2\), which means
+\begin{equation}\label{eqn:acrobot-Po-lowerbound}
+    P_\mathcal{O}(\mu_0) \geq \mu_0\left(1 + IKQ(\mu_0)\right) + I^2\underbar{r}
+    .
+\end{equation}
+Because \(I\) is assumed to be small, the term \(I^2\) shrinks rapidly.
+If \(\underbar{r} < 0\), we can find a value of \(I\) which overcomes
+the effect of \(I^2\underbar{r}\) and make \(P_\mathcal{O}\) positive.
+Furthermore, ~\eqref{eqn:acrobot-Po-lowerbound} implies that, for fixed \(I\),
+\(P_\mathcal{O}(\mu_0)\) is monotonically increasing in \(\mu_0\).
+
+We conclude that, for all \(m\), \(g\), \(l\), \(\bar{q}_a\), and for
+any \(\epsilon > 0\), there exists \(I(\epsilon)\) small enough so that
+the Poincar\'{e} section \(P_\mathcal{O}(\mu_0)\) is positive for all
+\(\mu_0 \in ]\epsilon,\pi[\) and 
 \(\lim \limits_{\mu_0 \to \pi} P_\mathcal{O}(\mu_0) = \infty\).
 
-Suppose we initialize the acrobot at \((q_0,p_0) \in \mathcal{O}\).
-Since on \(\mathcal{O}\) we have \(\dot{\alpha} > 0\), the orbit of the acrobot
-in \(\Gamma\) spirals clockwise around the origin; 
-if the spiral does not exit \(\mathcal{O}\), it must intersect the \(q_u\) axis.
-Once it does, the Poincar\'{e} section \(P_\mathcal{O}(\cdot)\) tells us 
-the orbit must spiral away from the origin. 
-This implies there cannot be any closed orbits in \(\mathcal{O}\) and that the
-origin is a repeller.
+\subsection*{Energy gain on \(\mathcal{O}_\epsilon\)}
+To simplify notation, denote by \(x(t) := (q_u(t),p_u(t))\) the orbit of the
+acrobot with initial condition \(x(0)\).
+Let \(\epsilon > 0\) and define
+\[
+    \mathcal{O}_\epsilon := \left\{(q_u,p_u) \in \Gamma
+    \mid E(\epsilon,0) < E(q_u,p_u) < E(\pi,0)\right\}
+    ,
+\]
+with \(\bar{\mathcal{O}}_\epsilon\) its (compact) closure.
 
-Once the orbit reaches an intersection point \((\mu_0,0)\) on the \(q_u\)-axis such
-that \(P_\mathcal{O}(\mu_0) > \pi\), the orbit will no longer return to the
-\(q_u\)-axis. 
-Instead, it will escape \(\mathcal{O}\) entirely, which means it must 
-escape any compact subset of \(\mathcal{O}\) in
-finite time. 
-We conclude that the acrobot is gaining energy on \(\mathcal{O}\).
+Since \(\bar{\mathcal{O}}_\epsilon \subset \mathcal{O}\), we still have 
+\(\dot{\alpha} > 0\), which means \(x(t)\) spirals clockwise around the origin.
+If this orbit remains in \(\mathcal{O}\), it must intersect
+the \(q_u\) axis at some radius \(\mu = \delta\)
+which depends on the initial condition \(x(0)\).
+Take 
+\[
+    \underbar{\delta} = 
+    \min\limits_{x(0) \in \bar{\mathcal{O}}_\epsilon} \delta(x(0))
+    ,
+\] 
+which exists because \(\bar{\mathcal{O}}_\epsilon\) is compact.
+From the previous perturbation analysis,
+there exists \(I\) small enough that \(P_\mathcal{O}(\mu_0)\) 
+is positive for all \(\mu_0 \in ]\underbar{\delta},\pi[\).
+
+Suppose \(x(0) \in \mathcal{O}_\epsilon\), and the orbit
+intersects the \(q_u\)-axis at some point \(x(t_0) = (m_0, 0)\).
+The Poincar\'{e} section \(P_\mathcal{O}(|m_0|)\) is positive because 
+\(|m_0| > \underbar{\delta}\).
+As the acrobot continues its oscillation, it might exit
+\(\mathcal{O}\) if it has gained enough energy;
+if not, it will intersect the \(q_u\) axis again at
+a new point \(x(t_1) = (m_1,0)\).
+Theorem \ref{thm:khalil-perturbation} guarantees that \(|m_1|\) differs
+from \(P_\mathcal{O}(|m_0|)\) only up to order \(I^2\), 
+which means \(|m_1| > |m_0|\).
+From here, we can apply Theorem \ref{thm:khalil-perturbation} iteratively:
+initializing the acrobot at \(x(t_i) = (m_i, 0)\), the
+next intersection with the \(q_u\) axis will be at
+\(x(t_{i+1}) = (m_{i+1},0)\) with \(|m_{i+1}| > |m_i|\).
+
+Because the Poincar\'{e} section is monotonically increasing, 
+the orbit will eventually reach an intersection point \(x(t_N) = (m_N,0)\)
+such that \(P_\mathcal{O}(|m_N|) > \pi\). 
+At this point, the orbit will no longer return to the
+\(q_u\)-axis.
+Instead, it will escape \(\mathcal{O}\) entirely; 
+in doing so, it also escapes \(\mathcal{O}_\epsilon\).
+Hence, the orbit must escape any compact subset of \(\mathcal{O}\) in finite
+time, which means the acrobot is gaining energy on \(\mathcal{O}_\epsilon\).
 
 Setting \(I < 0\), the Poincar\'{e} section \(P_\mathcal{O}(\mu_0)\) is now
 decreasing.
-Hence, the orbit in \(\mathcal{O}\) spirals towards the origin, which means the
-constraint is dissipating energy on \(\mathcal{O}\).
+Hence, the orbit in \(\mathcal{O}_\epsilon\) spirals clockwise towards the origin, 
+which means the constraint is dissipating energy.
 
 % Empty proof environment to put QED square on the right of the page
 \begin{proof}[\unskip\nopunct]
@@ -1200,7 +1267,7 @@ We conclude that, for small enough \(I\), the Poincar\'{e} section
 \(0 < \rho_0 < \bar{\rho}\) and
 monotonically decreasing when \(-\bar{\rho} < \rho_0 < 0\).  
 
-\subsection*{Proving Energy Gain}
+\subsection*{Energy Gain on \(\Omega\)}
 We will prove the acrobot gains energy on the set 
 \[
     \Omega := \left\{ (q_u,p_u) \in \Gamma 
