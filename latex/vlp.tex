@@ -167,11 +167,6 @@ In the rest of this chapter, we will derive a \(C^2\) function \(L(q,p)\) based
 on natural human motion.
 This function will produce constrained dynamics that inject energy into the VLP.
 
-% TODO: Describe the oscillation and rotation motion of a pendulum in the
-% qp-plane, and give a figure showing the orbiting motion for each of these.
-% Then describe what the orbit should do under energy injection (spiral away /
-% begin rotation outward) and energy dissipation (spiral in / rotate inward).
-
 \section{The VLP Constraint}
 % Go through the development of the constraint and prove it gains energy
 To motivate why a VNHC could inject energy into the VLP in a human-like
@@ -410,9 +405,11 @@ average.
    the VNHC dissipates energy on \(\Gamma\).
 \end{thm}
 \begin{proof}
-We will first show that, under the given assumptions, the origin of the
-constrained dynamics~\eqref{eqn:vlp-hamiltonian} is a repeller, and for that
-we consider the negative time system obtained
+Since a system that gains energy per Definition \ref{defn:energy-gain}
+cannot have stable equilibria,
+we will first show that, under the given assumptions, the origin of the
+constrained dynamics~\eqref{eqn:vlp-hamiltonian} is a repeller. 
+For that we consider the negative time system obtained
 from~\eqref{eqn:vlp-hamiltonian} by reversing the sign of the vector field:
 \begin{equation}\label{eqn:negative-time-vlp}
    \begin{cases}
@@ -627,7 +624,12 @@ dissipating energy.
 % repeller which means the "bad" set of x(0) does not contain a nbhd of (0,0),
 % so anything near (0,0) will start to gain eenrgy aka ANY slight deviation from
 % 0 will gain energy.
-
+\begin{remark}
+   Theorem \ref{thm:vlp-energy-stabilization} not only guarantees that our VNHC
+   only injects energy, but that the lower equilibrium is a repeller. 
+   If the VLP is initialized at the origin, any slight push along
+   \(q\) will allow it to start gaining energy.
+\end{remark}
 
 The class of VNHCs which satisfies Theorem \ref{thm:vlp-energy-stabilization} is
 illustrated graphically in Figure \ref{fig:vlp-energy-in-out}. 
