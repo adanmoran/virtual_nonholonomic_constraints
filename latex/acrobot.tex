@@ -64,10 +64,10 @@ Suppose we are given an acrobot as in Figure \ref{fig:acrobot-model} modelling a
 gymnast hanging on a horizontal bar, where the ``torso" has moment of
 inertia \(J_u\) and the ``leg" has moment of inertia \(J_a\) (each with respect
 to their own center of mass).
-Let \(q_u \in \mathbb{S}^1\) be the shoulder angle and \(q_a \in \mathbb{S}^1\) 
+Let \(q_u \in \Sone\) be the shoulder angle and \(q_a \in \Sone\) 
 be the hip angle, where only \(q_a\) is actuated. 
 Collecting them together provides the configuration
-\(q = (q_u,q_a) \in \mathbb{S}^1 \times \mathbb{S}^1\). 
+\(q = (q_u,q_a) \in \Sone \times \Sone\). 
 The acrobot has inertia matrix \(D\), potential function \(P\) (with respect to
 the horizontal bar), and input matrix \(B\)  given as
 follows \cite{xingbo_thesis}:
@@ -164,7 +164,7 @@ The control input is a force \(\tau \in \R\) affecting only the dynamics of
 This means \((q,p)\) are simply actuated coordinates inside the phase space
 \(\mathcal{Q} \times \mathcal{P}\) where
 \(\mathcal{Q} = \mathcal{Q}_u \times \mathcal{Q}_a 
-:= \mathbb{S}^1 \times \mathbb{S}^1\), and
+:= \Sone \times \Sone\), and
 \(\mathcal{P} = \mathcal{P}_u \times \mathcal{P}_a
 := \R \times \R\).
 This allows us to apply the theory of VNHCs from Chapter
@@ -431,7 +431,7 @@ control parameter \(I\) to guarantee this is true.
 \begin{thm}\label{thm:acrobot-energy-stabilization}
     Consider the simple acrobot ~\eqref{eqn:acrobot-hamiltonian} constrained by
     the VNHC ~\eqref{eqn:acrobot-constraint}, whose
-    constraint manifold is \(\Gamma = \mathbb{S}^1 \times \R\).
+    constraint manifold is \(\Gamma \simeq \SxR\).
     Let 
     \[
         E(q_u,p_u) := \frac{p_u^2}{10ml^2} + 3(1 - \cos(q_u))
@@ -447,7 +447,7 @@ control parameter \(I\) to guarantee this is true.
         .
     \]
     If instead \(I < 0\), the VNHC dissipates energy on \(\mathcal{O}\).
-\item Define \(b : \mathbb{S}^1 \times \R_{> 0} \rightarrow \R\) by
+\item Define \(b : \SxR_{> 0} \rightarrow \R\) by
     \[
         b(\beta,\rho_0) := 
         \frac{5m^2 g l^3 \bar{q}_a \left(
@@ -500,7 +500,7 @@ The full proof is given in Chapter \ref{sec:acrobot-proof}, so
 we conclude this section with a high level sketch of the proof.
 
 There is a suitable change of coordinates into a pseudo-radius 
-\(\mu \in \R_{>0}\) and pseudo-angle \(\alpha \in \mathbb{S}^1\) on the
+\(\mu \in \R_{>0}\) and pseudo-angle \(\alpha \in \Sone\) on the
 \((q_u,p_u)\)-plane.
 These coordinates have the property that \(\dot{\alpha} > 0\) when
 \(I\) is small enough.
@@ -567,13 +567,13 @@ following properties:
     \item The energy of oscillation in \((\alpha,\mu)\) coordinates is 
         uniquely defined by \(\mu\), which remains constant along oscillations
         of the simple pendulum.
-    \item \(\alpha\) is a pseudo-angle living in \(\mathbb{S}^1\) which is
+    \item \(\alpha\) is a pseudo-angle living in \(\Sone\) which is
         always increasing.
 \end{itemize}
 Once we have these coordinates in hand, we can use perturbation theory to prove
 that \(\mu\) increases on average for the acrobot when \(I\) is small enough.
 Likewise, we will find a second set of coordinates \((\beta, \rho)\) where
-\(\beta \in \mathbb{S}^1\) is always increasing, \(\rho\) is constant along
+\(\beta \in \Sone\) is always increasing, \(\rho\) is constant along
 rotations of the simple pendulum, and \(\rho\) increases for the acrobot when
 \(I\) is small enough.
 Putting these together, we will show the acrobot is gaining energy.
@@ -660,17 +660,17 @@ Hence, the domain of oscillations for the nominal pendulum is given by
     \mathcal{O} := \left\{ (q_u,p_u) \in \Gamma \mid E(q_u,p_u) < E(\pi,0)\right\}
     ,
 \]
-where \(\Gamma = \mathbb{S}^1\times\R\) is the consraint manifold of the
+where \(\Gamma \simeq \Sone\times\R\) is the constraint manifold of the
 acrobot.
 We wish to find a transformation \(T(q_u,p_u)\) on \(\mathcal{O}\) into
-\((\alpha,\mu)\)-coordinates where \(\alpha \in \mathbb{S}^1\) is a pseudo-angle
+\((\alpha,\mu)\)-coordinates where \(\alpha \in \Sone\) is a pseudo-angle
 and \(\mu > 0\) is a pseudo-radius.
 Since the energy of oscillation can be determined by the orbit's intersection
 with the \(q_u\)-axis (as in Figure \ref{fig:mu-intersection}) 
 and \(q_u \in ]-\pi,\pi[\) on \(\mathcal{O}\), we set \(\mu \in ]0,\pi[\).
 The transformation we want is therefore a diffeomorphism of the form
 \begin{align*}
-    T : D\backslash \{(0,0)\} &\rightarrow \mathbb{S}^1 \times \, ]0,\pi[, \\
+    T : D\backslash \{(0,0)\} &\rightarrow \Sone \times \, ]0,\pi[, \\
     (q_u, p_u) &\mapsto (\alpha,\mu)
     .
 \end{align*}
@@ -1048,7 +1048,7 @@ which gives the relationship
     \frac{p_u^2}{10m l^2} + 30mgl(1 - c_u) = \frac{\rho^2}{10 ml^2}
     .
 \end{equation}
-On this level set, \(q_u\) takes all values on \(\mathbb{S}^1\), so our angle of
+On this level set, \(q_u\) takes all values on \(\Sone\), so our angle of
 rotation is uniquely parameterized by \(\beta = q_u\).
 Since \(\rho\) does not change sign along the rotation, we have the smooth
 relationship
@@ -1061,8 +1061,8 @@ relationship
 
 Inverting this relationship gives our (smooth) transformation
 \begin{equation*}
-    T : \mathbb{S}^1 \times \R \rightarrow 
-    \mathbb{S}^1 \times ]-\infty,-60m^2gl^3[\, \cup \, ]60m^2gl^3,\infty[ 
+    T : \SxR \rightarrow 
+    \Sone \times ]-\infty,-60m^2gl^3[\, \cup \, ]60m^2gl^3,\infty[ 
     ,
 \end{equation*}
 where \(T(q_u,p_u) = (\beta,\rho)\) is defined by

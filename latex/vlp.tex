@@ -35,13 +35,13 @@ levels while maintaining the structured motion of a human on a swing.
 % Derive the dynamics of the VLP in Hamiltonian form
 We will model the VLP as a point mass \(m\)
 connected to a fixed pivot by a massless rod of varying length \(l\) with angle 
-\(q \in \mathbb{S}^1\) from the vertical, as in Figure
+\(q \in \Sone\) from the vertical, as in Figure
 \ref{fig:vlp-model}. 
 We will ignore any damping and frictional forces in this model.
 In a realistic VLP, the rod length \(l\) varies between some minimum
 length \(\underline{l} \geq 0\) and some maximum length 
 \(\overline{l} > \underline{l}\). The configuration of the VLP is the vector
-\(\mathbf{q} := (q,l) \in \mathbb{S}^1 \times [\underline{l},\overline{l}]\).
+\(\mathbf{q} := (q,l) \in \Sone \times [\underline{l},\overline{l}]\).
 
 \begin{figure}
    \centering
@@ -107,7 +107,7 @@ dynamics ~\eqref{eqn:simply-actuated-dynamics} resolve to
         . \\
    \end{cases} \nonumber
 \end{align}
-The control input is a force \(\tau \in \mathbb{R}\) affecting the dynamics of
+The control input is a force \(\tau \in \R\) affecting the dynamics of
 \(p_l\), acting collinearly with the rod.
 We assume the force does not affect the dynamics of \(p\) in any way -
 that is, the control input cannot enact any lateral force on the pendulum.
@@ -141,8 +141,8 @@ By Theorem \ref{thm:vnhc-regularity},
    = \frac{1}{m}
 \]
 is always full rank.
-The constraint manifold is
-\(\Gamma = \mathbb{S}^1 \times \R\), which is parameterized by the unactuated
+The constraint manifold \(\Gamma\) is diffeomorphic to 
+\(\SxR\), which is parameterized by the unactuated
 phase \((q,p)\).
 By Theorem \ref{thm:zero-dynamics}, the constrained dynamics
 are described entirely by \((\dot{q},\dot{p})\) with \(l\)
@@ -388,15 +388,15 @@ average.
 
 \begin{thm}\label{thm:vlp-energy-stabilization}
    Define \(\theta := \arctan_2(p,q)\).
-   Let \(L : \mathbb{S}^1 \rightarrow [\underline{l},\overline{l}]\) be a
+   Let \(L : \Sone \rightarrow [\underline{l},\overline{l}]\) be a
    \(C^2\) function of \(\theta\).
    A regular VNHC of the form 
    \(h(\mathbf{q},\mathbf{p}) = l - L(\theta)\) for the VLP injects energy 
-   on the constraint manifold \(\Gamma = \mathbb{S}^1 \times \R\) if there
+   on the constraint manifold \(\Gamma \simeq \SxR\) if there
    exists \(l_\text{avg} \in [\underline{l},\overline{l}]\) such that 
    \begin{equation}\label{eqn:vlp-energy-gain-condition}
       \left(l_\text{avg} - L(\theta)\right)sin(2\theta) \geq 0 
-      \text{ }\forall \theta \in \mathbb{S}^1
+      \text{ }\forall \theta \in \Sone
       ,
    \end{equation}
    with the property that the inequality is strict except at 
@@ -404,7 +404,7 @@ average.
    If instead 
    \[
     \left(l_\text{avg} - L(\theta)\right)sin(2\theta) \leq 0 
-         \text{ }\forall \theta \in \mathbb{S}^1
+         \text{ }\forall \theta \in \Sone
          ,
    \]
    the VNHC dissipates energy on \(\Gamma\).
@@ -422,7 +422,7 @@ from~\eqref{eqn:vlp-hamiltonian} by reversing the sign of the vector field:
    \end{cases}
 \end{equation}
 The state space of~\eqref{eqn:negative-time-vlp} is 
-\(\mathbb{S}^1 \times \R\), and the system has two equilibria,
+\(\SxR\), and the system has two equilibria,
 \((q,p) = (0,0)\) and \((q,p) = (\pi,0)\). 
 We need to show that the equilibrium \((q,p) = (0,0)\) is
 asymptotically stable for~\eqref{eqn:negative-time-vlp}. 
@@ -436,7 +436,7 @@ Consider the Lyapunov function candidate
 which corresponds to the energy of VLP when the pendulum length is fixed at
 \(l_\text{avg}\). 
 The function \(E_\text{avg}\) is positive definite at \((0,0)\), and has compact
-sublevel sets on \(\mathbb{S}^1 \times \R\).  
+sublevel sets on \(\SxR\).  
 The derivative of \(E_\text{avg}\) along~\eqref{eqn:negative-time-vlp} is
 \begin{equation}\label{eqn:eavg-dot-neg}
    \dot{E}_\text{avg} = \frac{g\sin(q)p \left(L(\theta)^3 -
@@ -469,7 +469,7 @@ We have thus shown that \(\dot{E}_\text{avg} \leq 0\), and therefore
 the equilibrium \((q,p)=(0,0)\) is stable for~\eqref{eqn:negative-time-vlp}.
 We now apply the Krasovskii-LaSalle invariance principle, and consider the
 largest subset of 
-\( Z = \left\{(q,p) \in \mathbb{S}^1 \times \R \mid \dot{E}_\text{avg}(q,p) = 0
+\( Z = \left\{(q,p) \in \SxR \mid \dot{E}_\text{avg}(q,p) = 0
 \right\} \). 
 We see from~\eqref{eqn:eavg-dot-neg}
 that \(\dot{E}_\text{avg}(q,p)\) is zero when \(p = 0\), \(\sin(q) = 0\), or
@@ -479,8 +479,8 @@ This latter condition by assumption is met when
 \(q = 0\) or \(p = 0\). 
 All in all, we have that
 \[
-   Z= \left\{(q,p) \in \mathbb{S}^1 \times \R \mid q =0\right\} 
-   \cup \left\{(q,p) \in \mathbb{S}^1 \times \R \mid p =0\right\} 
+   Z= \left\{(q,p) \in \SxR \mid q =0\right\} 
+   \cup \left\{(q,p) \in \SxR \mid p =0\right\} 
    .
 \]
 It is easily seen that the largest invariant subset of \(Z\) is the union of the
@@ -501,7 +501,7 @@ for the constrained dynamics in~\eqref{eqn:vlp-hamiltonian}.
 We now prove that almost all solutions of the reduced
 dynamics~\eqref{eqn:vlp-hamiltonian} escape compact sets in finite
 time, \ie, that for each compact subset \(K\) of 
-\(\mathbb{S}^1 \times \R\), and for almost every condition 
+\(\SxR\), and for almost every condition 
 \( (q_0,p_0) \in K \), there exists \( T > 0\) such that
 \( (q(t),p(t)) \notin K \) for all \( t > T \), where \( (q(t),p(t)) \)
 denotes the solution of~\eqref{eqn:vlp-hamiltonian} with 
@@ -511,7 +511,7 @@ dynamics~\eqref{eqn:vlp-hamiltonian}.
 Also, we denote by \(\Pi^-\) the stable manifold of the equilibrium \((\pi,0)\)
 for system~\eqref{eqn:vlp-hamiltonian}, defined as
 \[
-   \Pi^- := \left\{ x(0) \in \mathbb{S}^1 \times \R \mid
+   \Pi^- := \left\{ x(0) \in \SxR \mid
    \lim_{t \to \infty} x(t) = (\pi, 0) \right\}.
 \]
 The linearization of system~\eqref{eqn:vlp-hamiltonian} at the
@@ -527,10 +527,10 @@ whose spectrum is \(\{\pm \sqrt{{g}/{L(0)}}\}\).
 Since one eigenvalue of ~\eqref{eqn:linearized-vlp} is positive and one is
 negative, the stable manifold theorem implies that the stable manifold 
 \( \Pi^- \) is a one-dimensional immersed submanifold of
-\(\mathbb{S}^1 \times \R\), and thus is a set of measure zero
+\(\SxR\), and thus is a set of measure zero
 \cite{stable_manifold}.
 
-Let \( K \subset \mathbb{S}^1 \times \R\) be an arbitrary compact set and let 
+Let \( K \subset \SxR\) be an arbitrary compact set and let 
 \( x(0) \in K \backslash \left(\Pi^- \cup \left\{(0,0)\right\}\right)\).
 Since \( x(0) \notin \Pi^- \), we have that
 \begin{equation}\label{eqn:vlp-x-does-not-converge}
@@ -586,7 +586,7 @@ Since we have chosen \(x(0) \neq (0,0)\), and since \( (q,p) = (0,0) \) is a
 repeller, \( x(t) \) cannot converge to \( (0,0)\), which gives a contradiction.
 
 We conclude that the VNHC injects energy into the VLP on 
-\(\mathbb{S}^1 \times \R\).
+\(\SxR\).
 By flipping the inequality of ~\eqref{eqn:vlp-energy-gain-condition}
 we find the VLP is gaining energy in negative-time, so the VNHC is
 dissipating energy.
@@ -621,6 +621,12 @@ dissipating energy.
    \] 
    where the inequalities are strict everywhere except the coordinate axes.
 \end{proof}
+
+% TODO: Add a remark:
+% Our controller not only injects energy, but makes the lower equilibrium a
+% repeller which means the "bad" set of x(0) does not contain a nbhd of (0,0),
+% so anything near (0,0) will start to gain eenrgy aka ANY slight deviation from
+% 0 will gain energy.
 
 
 The class of VNHCs which satisfies Theorem \ref{thm:vlp-energy-stabilization} is
