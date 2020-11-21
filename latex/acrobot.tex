@@ -930,39 +930,39 @@ Hence, the solution to ~\eqref{eqn:acrobot-mu1-dot} is given by
     K \int \limits_0^\alpha \hat{b}(\sigma,\mu_0)d\sigma
     .
 \]
-%TODO: EDIT FROM HERE
-Notice that \(\hat{b}(\alpha,\mu_0)\) is both even and 
-\(\pi\)-periodic in \(\alpha\), so that the following properties hold:
-\begin{equation}\label{eqn:bhat-integral-properties}
-    \begin{split}
-    \int \limits_0 ^ {N \pi} \hat{b}(\sigma,\mu_0) d\sigma
-    &= N \int \limits_0^\pi \hat{b}(\sigma,\mu_0) d\sigma \, 
-    \left(\forall N \in \mathbb{Z}_{> 0}\right)
-    , \\
-    \int \limits_{-\pi}^0 \hat{b}(\sigma,\mu_0) d\sigma
-    &= \int \limits_0^\pi \hat{b}(\sigma,\mu_0)d\sigma
-    .
-    \end{split}
-\end{equation}
+
 Suppose we initialize the acrobot at \((\alpha,\mu) = (0,\mu_0)\). 
-After half an orbit, when \(\alpha = \pi\), the acrobot will have a new
-pseudo-radius \(m = \hat{\mu}(\pi,\mu_0)\).
+After half an oscillation, when \(\alpha = \pi\), the orbit will land on the
+negative \(q_u\)-axis with pseudo-radius 
+\(m = \hat{\mu}(\pi,\mu_0) \approx \mu_0 + I\hat{\mu}_1(\pi,\mu_0)\).
 Hence, the change in pseudo-radius is 
 \(m - \mu_0 \approx I\hat{\mu}_1(\pi,\mu_0)\).
-After an additional half orbit, the acrobot lands on the positive \(q_u\)-axis
+If the orbit remains in \(\mathcal{O}\) for the full oscillation, 
+it will land on the positive \(q_u\)-axis
 with pseudo-radius
 \(\tilde{m} \approx \mu_0 + I\hat{\mu}_1(2\pi,\mu_0)\).
-The properties outlined in ~\eqref{eqn:bhat-integral-properties} imply that
-\(\hat{\mu}_1(2\pi,\mu_0) = 2 \hat{\mu}_1(\pi,\mu_0)\). 
-This means the change in pseudo-radius after one entire oscillation is 
-\(\tilde{m} - \mu_0 \approx 2I\hat{\mu}_1(\pi,\mu_0) \approx 2 (m - \mu_0)\).
-Hence, if \(\hat{\mu}_1(\pi,\cdot)\) is always positive,
-\(\hat{\mu}\) must be increasing every half oscillation.
-This in turn would guarantee \(q_u\) is increasing, which means the acrobot
-will eventually reach a rotation.
 
-To prove this intuitive argument rigorously, we define the Poincar\'{e} section
-\(P_\mathcal{O}(\mu_0) := \hat{\mu}(\pi,\mu_0)\), which expands into
+Notice that \(\hat{b}(\alpha,\mu_0)\) is even and 
+\(\pi\)-periodic in \(\alpha\), so that
+\begin{equation}\label{eqn:bhat-integral-properties}
+    \int \limits_{-\pi}^\pi \hat{b}(\sigma,\mu_0) d\sigma
+    = \int \limits_0 ^ {2 \pi} \hat{b}(\sigma,\mu_0) d\sigma
+    = 2 \int \limits_0^\pi \hat{b}(\sigma,\mu_0) d\sigma
+    .
+\end{equation}
+This implies that 
+\(\hat{\mu}_1(2\pi,\mu_0) = 2 \hat{\mu}_1(\pi,\mu_0)\),
+which means the change in pseudo-radius after a full oscillation is 
+\(\tilde{m} - \mu_0 \approx 2I\hat{\mu}_1(\pi,\mu_0)\).
+If \(\hat{\mu}_1(\pi,\mu_0) > 0\), 
+then both \(m - \mu_0 > 0\) and \(\tilde{m} - \mu_0 > 0\).
+In other words, we can study the average behaviour of \(\hat{\mu}\) by examining
+the behaviour over each half oscillation.
+
+We define the Poincar\'{e} section 
+\(P_\mathcal{O}(\mu_0) := \hat{\mu}(\pi,\mu_0)\)
+corresponding to the change in \(\hat{\mu}\) after half an oscillation.
+The section expands into
 \[
     P_\mathcal{O}(\mu_0) = \mu_0 + I \hat{\mu}_1(\pi,\mu_0) + R(\pi,\mu_0,I)
     .
@@ -973,16 +973,15 @@ Let us define
     ,
 \]
 so that \(\hat{\mu}_1(\pi,\mu_0) = K Q(\mu_0)\).
-Note that \(K\) is a positive constant that takes into account the acrobot's
-mass and length, while \(\hat{b}(\alpha,\mu)\) is adimensional;
-that is, it is the same for every possible choice of acrobot.
-Hence, \(Q(\mu_0)\) is the same for every acrobot.
+Note that \(K\) is a positive constant which contains the acrobot's physical
+parameters, while \(\hat{b}(\alpha,\mu)\) is adimensional. 
+This means \(Q(\mu_0)\) is identical for every acrobot.
 If \(Q(\mu_0)\) is strictly positive, then \(\hat{\mu}_1(\pi,\mu_0)\) will be
 positive no matter the values of \(m\), \(g\), \(l\), or \(\bar{q}_a\).
 
 We numerically compute \(Q(\mu_0)\) for \(\mu_0 \in [10^{-5}, \pi - 10^{-5}]\)
 in Figure \ref{fig:acrobot-Q}. 
-We see that \(Q(\mu_0)\) is strictly positive and monotonically increasing, with
+We see that it is strictly positive and monotonically increasing, with
 an asymptote at \(\mu_0 = \pi\). 
 Simulations with smaller \(\mu_0\) vanish in MATLAB, so we believe that 
 \(Q(\mu_0)\) is in fact positive for all \(\mu_0\).
@@ -995,43 +994,54 @@ Simulations with smaller \(\mu_0\) vanish in MATLAB, so we believe that
     \label{fig:acrobot-Q}
 \end{figure}
 
-We can therefore state that, for each \(\mu_0 \in \, ]0,\pi[\), there exists
-\(I\) such that
+This fact, coupled with knowledge that \(R(\pi,\mu_0,I)\) is \(O(I^2)\), 
+implies there exists \(I > 0\) small enough that
 \[
-    P_\mathcal{O}(\mu_0) = \mu_0\left(1+ IKQ(\mu_0)\right) + R(\pi,\mu_0,I) > 0
+    P_\mathcal{O}(\mu_0) = \mu_0 + IKQ(\mu_0) + R(\pi,\mu_0,I) > 0
     .
 \]
-Unfortunately, Khalil's perturbation theory does not guarantee this \(I\) is the
-same for all \(\mu_0\). 
-
+Unfortunately, this \(I\) may not be the
+same for all \(\mu_0 \in \, ]0,\pi[\), since
+the value of \(R(\pi,\mu_0,I)\) could become more negative
+for other initial conditions.
 We deal with this issue by taking the compact set
 \[
     \bar{\mathcal{O}} := \left\{(q_u,p_u) \in \Gamma 
     \mid E(q_u,p_u) \leq E(\pi,0) \right\}
     .
 \]
-The remainder term \(R(\pi,\mu_0,I)\) is smooth and of order \(I^2\),
+The remainder term \(R(\alpha,\mu_0,I)\) is smooth and of order \(I^2\),
 which means it can be written in the form 
-\(R(\pi,\mu_0,I) = I^2\tilde{R}(\mu_0,I)\)
+\(R(\alpha,\mu_0,I) = I^2\tilde{R}(\alpha,\mu_0,I)\)
 for some \(\tilde{R}\) a smooth function.
-Since \(\bar{O}\) is compact, \(\tilde{R}\) attains its minimum
-\(\underbar{r}\) on \(\bar{O}\).
-Hence, \(R(\pi,\mu_0,I)\) is bounded below by the parabola
-\(\underbar{r}I^2\), which means
+Since \(\bar{\mathcal{O}}\) is compact, \(\tilde{R}\) attains its minimum
+\({r}\) on \(\bar{\mathcal{O}}\).
+Hence, \(R(\alpha,\mu_0,I)\) is bounded below on \(\mathcal{O}\) by
+\(I^2{r}\), which implies 
 \begin{equation}\label{eqn:acrobot-Po-lowerbound}
-    P_\mathcal{O}(\mu_0) \geq \mu_0\left(1 + IKQ(\mu_0)\right) + I^2\underbar{r}
+    P_\mathcal{O}(\mu_0) \geq \mu_0 + IKQ(\mu_0) + I^2{r}
     .
 \end{equation}
-Because \(I\) is assumed to be small, the term \(I^2\) shrinks rapidly.
-If \(\underbar{r} < 0\), we can find a value of \(I\) which overcomes
-the effect of \(I^2\underbar{r}\) and make \(P_\mathcal{O}\) positive.
-Furthermore, ~\eqref{eqn:acrobot-Po-lowerbound} implies that, for fixed \(I\),
+This equation implies that, for fixed \(I\),
 \(P_\mathcal{O}(\mu_0)\) is monotonically increasing in \(\mu_0\).
+Thus, for every \(\epsilon > 0\) and \(\mu_0 \in \, [\epsilon,\pi[\) we have
+\[
+    P_\mathcal{O}(\mu_0) \geq P_\mathcal{O}(\epsilon)
+    = \epsilon + IKQ(\epsilon) + I^2{r}
+    .
+\]
+Since \(I\) is assumed to be small, \(I^2\) shrinks rapidly.
+Therefore, we can always find a small enough \(I > 0\) making 
+\(\epsilon + I^2{r} \geq 0\), so that
+\[
+    P_\mathcal{O}(\epsilon) \geq IKQ(\epsilon) > 0
+    .
+\]
 
 We conclude that, for all \(m\), \(g\), \(l\), \(\bar{q}_a\), and for
 any \(\epsilon > 0\), there exists \(I(\epsilon)\) small enough so that
 the Poincar\'{e} section \(P_\mathcal{O}(\mu_0)\) is positive for all
-\(\mu_0 \in ]\epsilon,\pi[\) and 
+\(\mu_0 \in [\epsilon,\pi[\) and 
 \(\lim \limits_{\mu_0 \to \pi} P_\mathcal{O}(\mu_0) = \infty\).
 
 \subsection*{Energy gain on \(\mathcal{O}_\epsilon\)}
@@ -1045,8 +1055,9 @@ Let \(\epsilon > 0\) and define
 \]
 with \(\bar{\mathcal{O}}_\epsilon\) its (compact) closure.
 
-Since \(\bar{\mathcal{O}}_\epsilon \subset \mathcal{O}\), we still have 
-\(\dot{\alpha} > 0\), which means \(x(t)\) spirals clockwise around the origin.
+Let \(x(0) \in \mathcal{O}_\epsilon \subset \mathcal{O}\).
+Since \(\dot{\alpha} > 0\), the orbit \(x(t)\) spirals clockwise around
+the origin.
 If this orbit remains in \(\mathcal{O}\), it must intersect
 the \(q_u\) axis at some radius \(\mu = \delta\)
 which depends on the initial condition \(x(0)\).
@@ -1059,19 +1070,25 @@ Take
 which exists because \(\bar{\mathcal{O}}_\epsilon\) is compact.
 From the previous perturbation analysis,
 there exists \(I\) small enough that \(P_\mathcal{O}(\mu_0)\) 
-is positive for all \(\mu_0 \in ]\underbar{\delta},\pi[\).
+is positive for all \(\mu_0 \in [\underbar{\delta},\pi[\).
 
 Suppose \(x(0) \in \mathcal{O}_\epsilon\), and the orbit
 intersects the \(q_u\)-axis at some point \(x(t_0) = (m_0, 0)\).
 The Poincar\'{e} section \(P_\mathcal{O}(|m_0|)\) is positive because 
-\(|m_0| > \underbar{\delta}\).
-As the acrobot continues its oscillation, it might exit
-\(\mathcal{O}\) if it has gained enough energy;
-if not, it will intersect the \(q_u\) axis again at
-a new point \(x(t_1) = (m_1,0)\).
-Theorem \ref{thm:khalil-perturbation} guarantees that \(|m_1|\) differs
-from \(P_\mathcal{O}(|m_0|)\) only up to order \(I^2\), 
-which means \(|m_1| > |m_0|\).
+\(|m_0| \geq \underbar{\delta}\).
+As the acrobot continues its oscillation, it will intersect the \(q_u\) axis
+again at a new point \(x(t_1) = (m_1,0)\).
+
+Setting \(p_1 := P_\mathcal{O}(|m_0|)\),
+Theorem \ref{thm:khalil-perturbation} guarantees that
+\[
+    \norm{m_1 - p_1} \leq cI^2
+    ,
+\]
+for some \(c > 0\).
+%TODO 
+\textbf{SHOW THIS IMPLIES |m1| > |m0|}
+
 From here, we can apply Theorem \ref{thm:khalil-perturbation} iteratively:
 initializing the acrobot at \(x(t_i) = (m_i, 0)\), the
 next intersection with the \(q_u\) axis will be at
@@ -1088,8 +1105,7 @@ Hence, the orbit must escape any compact subset of \(\mathcal{O}\) in finite
 time, which means the acrobot is gaining energy on \(\mathcal{O}_\epsilon\).
 
 Setting \(I < 0\), the Poincar\'{e} section \(P_\mathcal{O}(\mu_0)\) is now
-decreasing.
-Hence, the orbit in \(\mathcal{O}_\epsilon\) spirals clockwise towards the origin, 
+decreasing instead of increasing,
 which means the constraint is dissipating energy.
 
 % Empty proof environment to put QED square on the right of the page
