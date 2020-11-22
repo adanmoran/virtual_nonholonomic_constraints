@@ -1046,38 +1046,40 @@ Take
     ,
 \] 
 which exists because \(\bar{\mathcal{O}}_\epsilon\) is compact.
-Fruthermore, \(\underbar{\delta} \leq \epsilon\).
+Furthermore, \(\underbar{\delta} \leq \epsilon\) because
+\(x(0) = (\epsilon,0) \in \bar{\mathcal{O}}_\epsilon\).
 From the previous perturbation analysis,
 there exists \(I^\prime(\underbar{\delta})\) small enough that
 \(P_\mathcal{O}(\mu_0)\) is positive for all 
 \(\mu_0 \in [\underbar{\delta},\pi[\).
 
-Suppose \(x(0) \in \mathcal{O}_\epsilon\), and the orbit
-intersects the \(q_u\)-axis at some point \(x(t_0) = (u_0, 0)\).
-The Poincar\'{e} section \(P_\mathcal{O}(|u_0|)\) is positive because 
-\(|u_0| \geq \underbar{\delta}\).
+Suppose \(x(0) \in \mathcal{O}_\epsilon\) and that the orbit
+intersects the \(q_u\)-axis at some point \(x(t_0) = (u_0, 0)\), which
+has pseudo-radius \(\mu = \abs{u_0}\).
+The Poincar\'{e} section \(P_\mathcal{O}(\abs{u_0})\) is positive because 
+\(\abs{u_0} \geq \underbar{\delta}\).
 As the acrobot continues its oscillation, it will intersect the \(q_u\) axis
 again at a new point \(x(t_1) = (u_1,0)\).
 
-Setting \(p_1 := P_\mathcal{O}(|u_0|)\),
+Setting \(p_1 := P_\mathcal{O}(\abs{u_0})\),
 Theorem \ref{thm:khalil-perturbation} guarantees that,
 for all \(I \in ]0,I^\prime(\underbar{\delta})]\),
 \[
-    \abs{|u_1| - p_1} \leq cI^2
+    \abs{\abs{u_1} - p_1} \leq cI^2
     ,
 \]
 where \(c > 0\) is an independent constant.
-This implies that \(|u_1| \geq p_1 - cI^2\). 
+This implies that \(\abs{u_1} \geq p_1 - cI^2\). 
 We also know that
 \[
-    p_1 - |u_0| \geq IKQ(|u_0|) \geq IKQ(\underbar{\delta}) > 0
+    p_1 - \abs{u_0} \geq IKQ(\abs{u_0}) \geq IKQ(\underbar{\delta}) > 0
     .
 \]
 There exists \(I^\star \in ]0,I^\prime(\underbar{\delta})]\) where
 \(c{I^\star}^2 < I^\star KQ(\underbar{\delta})\), which means
 \begin{align*}
-    |u_1| - |u_0| 
-    &= \left(|u_1| - p_1\right) + \left(p_1 - |u_0|\right)
+    \abs{u_1} - \abs{u_0} 
+    &= \left(\abs{u_1} - p_1\right) + \left(p_1 - \abs{u_0}\right)
     \\
     &\geq \left(p_1 - c{I^\star}^2 - p_1\right) + I^\star KQ(\underbar{\delta})
     \\
@@ -1091,23 +1093,23 @@ Since \(u_0 \in [\underbar{\delta},\pi[\) was arbitrary,
 we can apply Theorem \ref{thm:khalil-perturbation} iteratively:
 initializing the acrobot at \(x(t_i) = (u_i, 0)\), the
 next intersection with the \(q_u\) axis will be at
-\(x(t_{i+1}) = (u_{i+1},0)\) with \(|u_{i+1}| > |u_i|\).
+\(x(t_{i+1}) = (u_{i+1},0)\) with \(\abs{u_{i+1}} > \abs{u_i}\).
 
 Because the Poincar\'{e} section is monotonically increasing, 
 the orbit will eventually reach an intersection point \(x(t_N) = (u_N,0)\)
-such that \(P_\mathcal{O}(|u_N|) > \pi + c{I^\star}^2\). 
+such that \(P_\mathcal{O}(\abs{u_N}) > \pi + c{I^\star}^2\). 
 At this point, the orbit will no longer return to the
 \(q_u\)-axis.
-Instead, it will escape \(\mathcal{O}\) entirely; 
-in doing so, it also escapes \(\mathcal{O}_\epsilon\).
-Hence, the orbit must escape any compact subset of \(\mathcal{O}\) in finite
-time. 
+Instead, it will escape \(\mathcal{O}\) entirely, which means
+it also escapes \(\mathcal{O}_\epsilon\).
+Hence, the orbit must escape any compact subset of 
+\(\mathcal{O}_\epsilon\) in finite time. 
 We conclude that the acrobot is gaining energy on \(\mathcal{O}_\epsilon\).
 
 Setting \(I < 0\), the Poincar\'{e} section \(P_\mathcal{O}(\mu_0)\) is now
 monotonically decreasing in \(\mu_0\).
 By the same arguments presented in this section, the constraint 
-must be dissipating energy.
+must be dissipating energy on \(\mathcal{O}_\epsilon\).
 
 % Empty proof environment to put QED square on the right of the page
 \begin{proof}[\unskip\nopunct]
