@@ -453,7 +453,7 @@ control parameter \(I\) to guarantee this is true.
     \]
     and fix \(\bar{\rho} > \sqrt{60m^2gl^3}\).
     Suppose \(\int \limits_{0}^{2\pi} b(\sigma,\rho_0)d\sigma > 0\) for all 
-    \(\rho_0 \in \, \left]\sqrt{60m^2gl^3}, \bar{\rho}\right[\).
+    \(\rho_0 \in \, \left]\sqrt{60m^2gl^3}, \bar{\rho}\right]\).
     Then for all \(\epsilon > 0\) there exists \(I > 0\) small enough that
     ~\eqref{eqn:acrobot-constraint} injects energy into the acrobot on
     \[
@@ -461,7 +461,7 @@ control parameter \(I\) to guarantee this is true.
         \mid E(\epsilon,0) < E(q_u,p_u) < E(0,\bar{\rho})\right\}
         .
     \]
-    If instead \(I < 0\), the VNHC dissipates energy on \(\Omega\).
+    If instead \(I < 0\), the VNHC dissipates energy on \(\Omega_\epsilon\).
 \end{enumerate}
 \end{thm}
 %\footnotetext{In fact, we can be more precise than this. 
@@ -862,7 +862,7 @@ From ~\eqref{eqn:khalil-perturbation-nominal} we know that
     \dot{\hat{\mu}}_0 = g(\alpha,\mu,0)
     , \\
     \hat{\mu}_0(0) = \mu_0
-    ,
+   .,
 \end{cases}
 \]
 Since \(g(\alpha,\mu,0) = 0\) by 
@@ -937,7 +937,7 @@ In other words, we can study the average behaviour of \(\hat{\mu}\) by examining
 the behaviour at each half oscillation.
 
 We define the Poincar\'{e} section 
-\(P_\mathcal{O}(\mu_0) := \hat{\mu}(\pi,\mu_0)\)
+\(P_\mathcal{O}(\mu_0) := \hat{\mu}(\pi,\mu_0,I)\)
 corresponding to the change in \(\hat{\mu}\) after half an oscillation.
 The section expands into
 \[
@@ -1121,19 +1121,40 @@ The rotation region for the nominal pendulum is the set
     \mathcal{R} := \left\{ (q_u,p_u) \in \Gamma \mid E(q_u,p_u) > E(\pi,0)\right\}
     .
 \]
-We wish to find a new set of coordinates \((\beta,\rho)\) for the acrobot
-and perform a similar analysis to what we did for oscillations.
+Figure \ref{fig:pendulum-level-sets} shows that orbits of the 
+pendulum on \(\mathcal{R}\) look like open curves.
+Performing a similar process to what we did for oscillations,
+we wish to find a new set of coordinates \((\beta,\rho)\)
+where \(\rho\) remains constant on level sets of \(E\)
+and \(\beta \in \Sone\) is always increasing on \(\mathcal{R}\).
+
 In the oscillation region \(\mathcal{O}\) we showed that the nominal pendulum's
 energy (and hence, its orbit) is uniquely determined by the intersection point
-\(\mu\) with the \(q_u\)-axis; 
-when the nominal pendulum is rotating, the energy is instead determined by the
-intersection \(\rho\) on the \(p_u\)-axis.
-Note that the boundary of \(\mathcal{O}\) intersects the \(p_u\) axis when 
-\(p_u^2 = 60m^2 g l^3\); 
-hence, for a rotation we must have \(\rho > \sqrt{60 m^2 g l^3}\) if the
+\(\mu\) with the \(q_u\)-axis;
+likewise, on \(\mathcal{R}\) the energy is determined by the
+intersection \(\rho\) on the \(p_u\)-axis, as in Figure
+\ref{fig:rho-intersection}.
+
+\begin{figure}
+    \centering
+    %TODO: Add a figure with one rotation mark a distance rho away from the
+    %origin along the p-axis. Draw the lower boundary of R and shade the
+    %interior, and draw a line to the rotation with angle beta.
+    %\includestandalone[]{images/rho_intersection}
+    \caption{The domain \(\mathcal{R}\) where a pendulum rotates. The
+        pseudo-radius \(\rho\) corresponds to the intersection of an orbit of
+        rotation with the \(p_u\)-axis. The pseudo-angle \(\beta\) is taken to
+        be clockwise positive, because oscillations of a pendulum move clockwise
+        on \(\mathcal{R}\).}
+    \label{fig:rho-intersection}
+\end{figure}
+
+Note that the boundary of \(\mathcal{R}\) intersects the \(p_u\) axis when 
+\(p_u^2 = 60m^2 g l^3\). 
+Hence, we must have \(\rho > \sqrt{60 m^2 g l^3}\) if the
 orbit has momentum \(p_u > 0\) 
-or \(\rho < -\sqrt{60 m^2 g l^3}\) if the orbit has momentum \(p_u < 0\).
-The energy level set associated with \(\rho\) is
+and \(\rho < -\sqrt{60 m^2 g l^3}\) if the orbit has momentum \(p_u < 0\).
+The energy level set associated with \(\rho\) is 
 \[
     \left\{(q_u,p_u) \in \Gamma \mid E(q_u,p_u) = \frac{\rho^2}{10ml^2}\right\}
     ,
@@ -1154,13 +1175,7 @@ relationship
     .
 \end{align}
 
-Inverting this relationship gives our (smooth) transformation
-\begin{equation*}
-    T : \SxR \rightarrow 
-    \Sone \times ]-\infty,-60m^2gl^3[\, \cup \, ]60m^2gl^3,\infty[ 
-    ,
-\end{equation*}
-where \(T(q_u,p_u) = (\beta,\rho)\) is defined by
+Inverting this relationship gives the smooth transformation
 \begin{align}\label{eqn:rotation-T}
     \beta &= q_u
     , \\
@@ -1172,21 +1187,20 @@ Computing the acrobot's constrained dynamics in \((\beta,\rho)\)-coordinates and
 setting \(I = 0\) yields the dynamics of the nominal pendulum.
 MATLAB evaluates those dynamics as
 \begin{align}\label{eqn:acrobot-rot-mu-dot-nom}
-    \dot{\rho}_n &= 0
+    \dot{\rho} &= 0
     , \\
     \label{eqn:acrobot-rot-alpha-dot-nom}
-    \dot{\beta}_n &=  \sign{\rho} 
+    \dot{\beta} &=  \sign{\rho} 
     \frac{\sqrt{\rho^2 - 30m^2gl^3(1 - c_\beta)}}{5ml^2}
     .
 \end{align}
-As expected, \(\dot{\beta}_n\) does not change sign on \(\mathcal{R}\) because
-a rotating pendulum does not change direction:
-if \(\rho_n > 0\), the orbit traces a curve going from \(\beta_n = -\pi\) to 
-\(\beta_n = \pi\); if \(\rho_n < 0\) the curve goes in the reverse direction.
-By continuity of the acrobot's constrained dynamics 
-\((\dot{\beta},\dot{\rho})\), we must also have 
-\(\sign{\dot{\beta}} = \sign{\rho_0}\) for small enough \(I\).
-Hence, we can use \(\beta\) as a new ``time" variable on \(\mathcal{R}\) 
+As expected, \(\dot{\beta}\) does not change sign on \(\mathcal{R}\) because the
+orbits always flow clockwise.
+If \(\rho > 0\), the rotation curve goes from \(\beta = -\pi\) to 
+\(\beta = \pi\); 
+if \(\rho < 0\), it goes from \(\beta = \pi\) to \(\beta = -\pi\).
+
+We can use \(\beta\) as a new ``time" variable on \(\mathcal{R}\) 
 by performing a time transformation \(t = \tau(\beta)\).
 This produces the time-scaled system \(\hat{\rho}(\beta) = \rho(\tau(\beta))\)
 with dynamics
@@ -1198,13 +1212,13 @@ with dynamics
         .
     \end{cases}
 \]
-For a perturbation approach, be expand the solution of these dynamics into
+Using the perturbation method, we expand the solution of these dynamics into
 \begin{equation}\label{eqn:acrobot-rhohat-approx}
-    \hat{\rho}(\beta,\rho_0,I) = \hat{\rho}_0(\beta,\rho_0) + I
-    \hat{\rho}_1(\beta,\rho_0) + R(\beta,\rho_0,I)
+    \hat{\rho}(\beta,\rho_0,I) = \hat{\rho}_0(\beta,\rho_0) +
+    I\hat{\rho}_1(\beta,\rho_0) + R(\beta,\rho_0,I)
     ,
 \end{equation}
-where \(R(\beta,\rho_0,I)\) is \(O(I^2)\).
+where \(R(\beta,\rho_0,I)\) is smooth and \(O(I^2)\).
 
 From ~\eqref{eqn:khalil-perturbation-nominal} we know
 \(\hat{\rho}_0\) is the solution to the nominal system
@@ -1240,25 +1254,21 @@ The solution to ~\eqref{eqn:acrobot-rho1-dot} is given by
     .
 \]
 
-Supposing we initialize the acrobot at \((\beta,\rho) = (0,\rho_0)\),
-then one full rotation amounts to \(\beta\) traversing \(2\pi\)rad in a clockwise
+Suppose we initialize the acrobot at \((\beta,\rho) = (0,\rho_0)\).
+One full rotation amounts to \(\beta\) traversing \(2\pi\)rad in a clockwise
 direction (\ie \(\beta\) going from \(0\) to \(\sign{\rho_0}2\pi\)).
-We define a Poincar\'{e} section as the point reached on the \(p_u\) axis after
-every rotation:
+We define the Poincar\'{e} section
+\(P_\mathcal{R}(\rho_0) := \hat{\rho}(\sign{\rho_0}2\pi,\rho_0,I)\),
+which is the intersection point on the \(p_u\)-axis after a single rotation.
+This expands into
 \[
     P_\mathcal{R}(\rho_0) = \rho_0 + I \hat{\rho}_1(\sign{\rho_0}2\pi, \rho_0)
-      + R(2\pi,I)
+      + R(2\pi,\rho_0,I)
     .
 \]
-If \(|P_\mathcal{R}(\rho_0)| > |\rho_0|\), then the rotation has
-driven the orbit further from the origin.
-In other words, \(|p_u|\) has increased across the rotation.
-If this is true for any \(\rho_0\), the acrobot is gaining momentum, which in
-turn means it is gaining energy.
 
-The function \(b(\beta,\rho_0)\) is even in both its inputs, and is 
-\(2\pi\)-periodic in \(\beta\).
-Hence, we have 
+The function \(b(\beta,\rho_0)\) is even and is 
+\(2\pi\)-periodic in \(\beta\), which implies that
 \begin{align*}
     \hat{\rho}_1(\sign{\rho_0}2\pi, \rho_0) &=
     \int \limits_0^{\sign{\rho_0}2\pi} b(\sigma,\rho_0)d\sigma
@@ -1268,32 +1278,68 @@ Hence, we have
      &= \sign{\rho_0} \hat{\rho}_1(2\pi,\rho_0)
      .
 \end{align*}
-Furthermore, \(\hat{\rho}_1(2\pi,\rho_0) = \hat{\rho}_1(2\pi,|\rho_0|)\).
+Furthermore, \(b(\beta,\rho_0)\) is also even in \(\rho_0\), 
+so \(\hat{\rho}_1(2\pi,\rho_0) = \hat{\rho}_1(2\pi,\abs{\rho_0})\).
 This implies that
+\begin{align*}
+    \abs{P_\mathcal{R}(\rho_0)} &= \left|\sign{\rho_0}\left(
+        \abs{\rho_0} + I \hat{\rho}_1(2\pi,\abs{\rho_0})
+        + \sign{\rho_0}R(2\pi,\rho_0,I)\right)\right|
+    \\
+    &= \left|\abs{\rho_0} + I \hat{\rho}_1(2\pi,\abs{\rho_0})
+        + \sign{\rho_0}R(2\pi,\rho_0,I)\right|
+    .
+\end{align*}
+
+Let now \(\bar{\rho} > \sqrt{60m^2gl^3}\) and take the compact set
 \[
-    |P_\mathcal{R}(\rho_0)| = \left|\sign{\rho_0}\left(
-        |\rho_0| + I \hat{\rho}_1(2\pi,|\rho_0|)\right)
-    \right|
-    = P_\mathcal{R}(|\rho_0|)
+    \bar{\mathcal{R}} := \left\{(q_u,p_u) \in \Gamma 
+    \mid E(\pi,0) \leq E(q_u,p_u) \leq E(0,\bar{\rho}) \right\}
     .
 \]
-Hence, if \(P_\mathcal{R}(|\rho_0|) > |\rho_0|\) (or equivalently if
-\(\hat{\rho}_1(2\pi,|\rho_0|) > 0\))
-the phase \((q_u(t),p_u(t))\) initialized at \((0,\rho_0)\) 
-will intersect the \(p_u\) axis at a point \(p > \rho_0\).
-If we could guarantee that \(\hat{\rho}_1(2\pi,\rho_0) > 0\)
-for all \(\rho_0 > \sqrt{60m^2gl^3}\), then the acrobot would be spiraling away
-from the origin on \(\mathcal{R}\).
+The (modified) remainder term \(\sign{\rho_0}{R}(\beta,\rho_0,I)\) 
+is smooth and \(O(I^2)\), which means
+it attains its minimum \(I^2\hat{r}\) somewhere \(\bar{\mathcal{R}}\).
+Likewise, \(\hat{\rho}_1(2\pi,\abs{\rho_0})\) also attains its minimum, which we
+denote by \(\underbar{\rho}_1\).
+We cannot adimensionalize \(b(\beta,\rho_0)\), so refer to one of the 
+assumptions of Theorem \ref{thm:acrobot-energy-stabilization}
+to suppose  that \(\hat{\rho}_1(2\pi,\rho_0) > 0 \) for all 
+\(\rho_0 \in ]\sqrt{60m^2gl^3},\bar{\rho}]\).
+In particular, this means \(\underbar{\rho}_1 > 0\).
 
-Unfortunately, we cannot adimensionalize
-\(b(\beta,\rho_0)\) like we did for oscillations. 
-Using the assumption , we have that 
-\(\hat{\rho}_1(2\pi,\rho_0) > 0 \) for all 
-\(\rho_0 \in ]\sqrt{60m^2gl^3},\rho_0[\).
-We conclude that, for small enough \(I\), the Poincar\'{e} section 
-\(P_\mathcal{R}(\rho_0)\) is monotonically increasing when 
-\(0 < \rho_0 < \bar{\rho}\) and
-monotonically decreasing when \(-\bar{\rho} < \rho_0 < 0\).  
+There exists \(I > 0\) making 
+\(I\underbar{\rho}_1 + I^2\hat{r} > 0\).
+Hence,
+\begin{align*}
+    \abs{\rho_0} + I\hat{\rho}_1(2\pi,\abs{\rho_0}) + \sign{\rho_0}R(2\pi,\rho_0,I)
+    &\geq \sqrt{60m^2gl^3} + I\underbar{\rho}_1 + I^2\hat{r}
+    \\
+    &> \sqrt{60m^2gl^3}
+    \\
+    &> 0
+    ,
+\end{align*}
+which implies that
+\begin{align*}
+    \abs{P_\mathcal{R}(\rho_0)} - \abs{\rho_0}
+    &= \abs{ \abs{\rho_0} + I\hat{\rho}_1(2\pi,\rho_0) +
+    \sign{\rho_0}R(2\pi,\rho_0,I)} - \abs{\rho_0}
+    \\
+    &= \abs{\rho_0} + I\hat{\rho}_1(2\pi,\rho_0) +
+    \sign{\rho_0}R(2\pi,\rho_0,I) - \abs{\rho_0}
+    \\
+    &= I\hat{\rho}_1(2\pi,\rho_0) + \sign{\rho_0}R(2\pi,\rho_0,I)
+    \\
+    &> 0
+    .
+\end{align*}
+
+We conclude that there exists \(I^\prime(\bar{\rho})\)
+small enough that, for all \( 0 < I \leq I^\prime(\bar{\rho})\), 
+the Poincar\'{e} section \(P_\mathcal{R}(\rho_0)\) is monotonically increasing
+when \(\sqrt{60m^2gl^3} < \rho_0 < \bar{\rho}\) and
+monotonically decreasing when \(-\bar{\rho} < \rho_0 < -\sqrt{60m^2gl^3}\).  
 
 \subsection*{Energy Gain on \(\Omega\)}
 We will prove the acrobot gains energy on the set 
