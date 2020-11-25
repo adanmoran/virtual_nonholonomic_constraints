@@ -433,13 +433,13 @@ control parameter \(I\) to guarantee this is true.
     be the energy of the simple pendulum obtained by setting \(I = 0\).
 \begin{enumerate}
     \item For all \(\epsilon > 0\), there exists \(I > 0\) small enough that 
-    ~\eqref{eqn:acrobot-constraint} injects energy into the acrobot on the set
+    ~\eqref{eqn:acrobot-constraint} injects energy into the acrobot on
     \[
-        \mathcal{O}_\epsilon := \left\{(q_u,p_u) \in \Gamma 
-        \mid E(\epsilon,0) < E(q_u,p_u) < E(\pi,0) \right\}
+        \mathcal{O} := \left\{(q_u,p_u) \in \Gamma 
+        \mid E(q_u,p_u) < E(\pi,0) \right\}
         .
     \]
-    If instead \(I < 0\), the VNHC dissipates energy on \(\mathcal{O}_\epsilon\).
+    If instead \(I < 0\), the VNHC dissipates energy on \(\mathcal{O}\).
 \item Define \(b : \SxR_{> 0} \rightarrow \R\) by
     \[
         b(\beta,\rho_0) := 
@@ -454,14 +454,14 @@ control parameter \(I\) to guarantee this is true.
     and fix \(\bar{\rho} > \sqrt{60m^2gl^3}\).
     Suppose \(\int \limits_{0}^{2\pi} b(\sigma,\rho_0)d\sigma > 0\) for all 
     \(\rho_0 \in \, \left]\sqrt{60m^2gl^3}, \bar{\rho}\right]\).
-    Then for all \(\epsilon > 0\) there exists \(I > 0\) small enough that
+    Then there exists \(I > 0\) small enough that
     ~\eqref{eqn:acrobot-constraint} injects energy into the acrobot on
     \[
-        \Omega_\epsilon := \left\{(q_u,p_u) \in \Gamma 
-        \mid E(\epsilon,0) < E(q_u,p_u) < E(0,\bar{\rho})\right\}
+        \Omega := \left\{(q_u,p_u) \in \Gamma 
+        \mid E(q_u,p_u) < E(0,\bar{\rho})\right\}
         .
     \]
-    If instead \(I < 0\), the VNHC dissipates energy on \(\Omega_\epsilon\).
+    If instead \(I < 0\), the VNHC dissipates energy on \(\Omega\).
 \end{enumerate}
 \end{thm}
 
@@ -627,8 +627,14 @@ Now consider the solution \(x(t,\eta_0,I)\) to ~\eqref{eqn:khalil-setup}.
 Performing a first-order Taylor series expansion at \(I = 0\), we get
 \(x(t,\eta_0,I) = x_0(t,\eta_0) + I x_1(t,\eta_0) + R(t,\eta_0,I)\), where the
 remainder term \(R(t,\eta_0,I)\) is smooth and \(O(I^2)\), \ie,
+there exists \(c > 0\) such that 
 \[
-    \lim \limits_{I \to 0} \frac{R(t,I)}{I} = 0
+    \norm{ R(t,\eta_0,I) } \leq c \abs{I^2}
+    ,
+\]
+for all \((t,\eta_0,I) \in [t_0,t_1] \times D \times [-I_0,I_0]\), and
+\[
+    \lim \limits_{I \to 0} \frac{R(t,\eta_0,I)}{I} = 0
     .
 \]
 One can show \(x_1(t,\eta_0)\) is the solution to the scalar time-varying ODE
@@ -662,7 +668,7 @@ Theorem \ref{thm:khalil-perturbation} tells us that we can approximate the
 solution of the nonlinear system by the Taylor approximation 
 \(x(t,\eta_0,I) \approx x_0(t,\eta_0) + I x_1(t,\eta_0)\).
 When \(I\) is small enough, solutions of the nonlinear system and
-the Taylor approximation are the same up to order \(I^2\) along compact time
+the Taylor approximation are the same up to order \(O(I^2)\) along compact time
 intervals.
 Since we know that the acrobot behaves like a pendulum at \(I = 0\), we can
 use this theory to prove energy injection properties on the acrobot by studying
@@ -1028,175 +1034,132 @@ so we believe that \(Q(\mu_0)\) is in fact positive for all \(\mu_0\).
     \label{fig:acrobot-Q}
 \end{figure}
 
-\subsubsection*{Energy Gain on \(\mathcal{O}\)}
-
-The Poincar\'{e} section \(P_\mathcal{O}\) allows us understand the evolution of
-\(\hat{\mu}(\alpha,\mu_0,I)\) by studying the evolution of a discrete time system;
-abusing notation, we set the state of this discrete time system to be
-\(\hat{\mu}(n)\) for \(n \in \mathbb{Z}_{\geq 0}\). 
-The dynamics of \(\hat{\mu}(n)\) are
-\begin{equation}\label{eqn:muhat-discrete}
-    \begin{cases}
-        \hat{\mu}(n+1) = P_\mathcal{O}(\hat{\mu}(n)) 
-        = \hat{\mu}(n) + I K Q(\hat{\mu}(n)) + R(\pi,\hat{\mu}(n),I)
-        , \\
-        \hat{\mu}(0) = \mu_0
-        .
-    \end{cases}
-\end{equation}
-
-To show energy gain on \(\mathcal{O}\), it is sufficient to 
-show this discrete time system is non-decreasing.
-That is, we wish to show there exists \(I^\star \in ]0, I_1]\) where, for all 
-\(\delta > 0\) and \(\mu_0 \in ]0,\pi-\delta]\), there exists \(N > 0\) so that
-for all \(n \geq N\), \(\hat{\mu}(n) \notin ]0,\pi-\delta]\).
-
-% TODO: Replace from here
 This fact, coupled with knowledge that \(R(\pi,\mu_0,I)\) is \(O(I^2)\), 
 implies there exists \(I > 0\) small enough that
 \[
     P_\mathcal{O}(\mu_0) = \mu_0 + IKQ(\mu_0) + R(\pi,\mu_0,I) > 0
     .
 \]
-Unfortunately, this \(I\) may not be the
-same for all \(\mu_0 \in \, ]0,\pi[\), since
-the value of \(R(\pi,\mu_0,I)\) could become more negative
-for other initial conditions.
-We deal with this issue by taking the compact set
-\[
-    \bar{\mathcal{O}} := \left\{(q_u,p_u) \in \Gamma 
-    \mid E(q_u,p_u) \leq E(\pi,0) \right\}
-    .
-\]
-The remainder term \(R(\alpha,\mu_0,I)\) is smooth and of order \(I^2\),
-which means it can be written in the form 
-\(R(\alpha,\mu_0,I) = I^2\tilde{R}(\alpha,\mu_0,I)\)
-for some \(\tilde{R}\) a smooth function.
-Since \(\bar{\mathcal{O}}\) is compact, \(\tilde{R}\) attains its minimum
-\({r}\) somewhere on \(\bar{\mathcal{O}}\).
-Hence, \(R(\alpha,\mu_0,I)\) is bounded below on \(\mathcal{O}\) by
-\(I^2{r}\), which implies 
-\begin{equation}\label{eqn:acrobot-Po-lowerbound}
-    P_\mathcal{O}(\mu_0) \geq \mu_0 + IKQ(\mu_0) + I^2{r}
-    .
+Unfortunately, perturbation analysis does not guarantee 
+that \(I\) is the same for all \(\mu_0 \in \, ]0,\pi[\), since the value of
+\(R(\pi,\mu_0,I)\) could become more negative for other initial conditions.
+We will deal with this next.
+
+\subsubsection*{Energy Gain on \(\mathcal{O}\)}
+
+The Poincar\'{e} section \(P_\mathcal{O}\) allows us understand the evolution of
+\(\hat{\mu}(\alpha,\mu_0,I)\) by studying the evolution of a discrete time system;
+abusing notation, we set the state of this discrete time system to be
+\(\mu(n)\) for \(n \in \mathbb{Z}_{\geq 0}\). 
+The dynamics of \(\mu(n)\) are
+\begin{equation}\label{eqn:muhat-discrete}
+    \begin{cases}
+        \mu(n+1) = P_\mathcal{O}(\mu(n)) 
+        = \mu(n) + I K Q(\mu(n)) + R(\pi,\mu(n),I)
+        , \\
+        \mu(0) = \mu_0
+        .
+    \end{cases}
 \end{equation}
-This equation further implies that, for fixed \(I\),
-\(P_\mathcal{O}(\mu_0)\) is monotonically increasing in \(\mu_0\).
-Thus, for every \(\epsilon > 0\) and \(\mu_0 \in \, [\epsilon,\pi[\) we have
+
+To show energy gain on \(\mathcal{O}\), it is sufficient to 
+show this discrete time system is strictly increasing.
+This is because \(\mu(n)\) represents the distance along the \(q_u\)-axis
+when an orbit intersects the \(q_u\)-axis for the \(n\)th time, assuming
+the orbit was initialized at \((q_u,p_u) = (\mu_0,0)\).
+
+Formally, we wish to show there exists \(I^\star \in ]0, I_1]\) where, for all 
+\(\delta > 0\) and \(\mu_0 \in ]0,\pi-\delta]\), there exists \(N > 0\) so that
+for all \(n \geq N\), \(\mu(n) \notin ]0,\pi-\delta]\).
+
+Linearizing ~\eqref{eqn:muhat-discrete} at \(\mu = 0\) yields
 \[
-    P_\mathcal{O}(\mu_0) \geq P_\mathcal{O}(\epsilon)
-    = \epsilon + IKQ(\epsilon) + I^2{r}
+    P^\prime_\mathcal{O}(0) = 1 + I K Q^\prime(0) +
+    \pdiff{R}{\mu}(\pi,0,I)
     .
 \]
-Since \(I\) is assumed to be small, \(I^2\) shrinks rapidly.
-Therefore, we can always find a small enough \(I > 0\) making 
-\(\epsilon + I^2{r} \geq 0\), so that
+If there is some value of \(I \in ]0,I_1]\) for which this term is greater than
+\(1\), then \(0\) is a repeller of the discrete time system.
+To show such a value of \(I\) exists, we first compute 
 \[
-    P_\mathcal{O}(\epsilon) \geq IKQ(\epsilon) > 0
+    Q^\prime(0) = \int \limits_0^\pi \pdiff{b}{\mu}(\sigma,0) d\sigma
     .
 \]
-
-We conclude that, for all \(m\), \(g\), \(l\), \(\bar{q}_a\), and for
-any \(\epsilon > 0\), there exists \(I^\prime(\epsilon)\) small enough so that,
-for all \(0 < I \leq I^\prime(\epsilon)\),
-the Poincar\'{e} section \(P_\mathcal{O}(\mu_0)\) is positive for all
-\(\mu_0 \in [\epsilon,\pi[\) and 
-\(\lim \limits_{\mu_0 \to \pi} P_\mathcal{O}(\mu_0) = \infty\).
-
-\subsection*{Energy gain on \(\mathcal{O}_\epsilon\)}
-To simplify notation, denote by \(x(t) := (q_u(t),p_u(t))\) the orbit of the
-acrobot with initial condition \(x(0)\).
-Let \(\epsilon > 0\) and define
+MATLAB reveals that 
 \[
-    \mathcal{O}_\epsilon := \left\{(q_u,p_u) \in \Gamma
-    \mid E(\epsilon,0) < E(q_u,p_u) < E(\pi,0)\right\}
+    \lim \limits_{\mu_0 \to 0^+}
+    \pdiff{b}{\mu}(\alpha,\mu_0) 
+    = -\frac{\sqrt{2}}{2} \left(11\sin(\alpha)^2 - 6\right)
     ,
 \]
-with \(\bar{\mathcal{O}}_\epsilon\) its (compact) closure.
-
-Let \(x(0) \in \mathcal{O}_\epsilon \subset \mathcal{O}\).
-Since \(\dot{\alpha} > 0\), the orbit \(x(t)\) spirals clockwise around
-the origin.
-If this orbit remains in \(\mathcal{O}\), it must intersect
-the \(q_u\) axis at some radius \(\mu = \delta\)
-which depends on the initial condition \(x(0)\).
-Take 
+which means 
 \[
-    \underbar{\delta} = 
-    \min\limits_{x(0) \in \bar{\mathcal{O}}_\epsilon} \delta(x(0))
+    Q^\prime(0)  = \frac{\pi}{2\sqrt{2}} > 0
+    .
+\]
+Since the remainder term \(R(\alpha,\mu_0,I)\) is \(O(I^2)\), 
+its partial derivative \(\pdiff{R}{\mu}(\pi,\mu_0,I)\) is also \(O(I^2)\).
+Hence, it can be written in the form
+\(I^2 \tilde{R}^\prime(\mu_0,I)\) where \(\tilde{R}^\prime(\mu_0,I)\) is smooth and
+zero at \(I = 0\).
+Since \(I\) is assumed to be small, \(I^2\) shrinks rapidly;
+thus, there exists \(I_2 \in ]0,I_1]\) where 
+\(I_2 K Q^\prime(0) + I_2^2 \tilde{R}^\prime(0,I) > 0\).
+Hence,
+\[
+    P^\prime_\mathcal{O}(0) \geq 1 + IKQ^\prime(0) + I^2 \tilde{R}^\prime(0,I) 
+    > 1
     ,
 \] 
-which exists because \(\bar{\mathcal{O}}_\epsilon\) is compact.
-Furthermore, \(\underbar{\delta} \leq \epsilon\) because
-\(x(0) = (\epsilon,0) \in \bar{\mathcal{O}}_\epsilon\).
-From the previous perturbation analysis,
-there exists \(I^\prime(\underbar{\delta})\) small enough that
-\(P_\mathcal{O}(\mu_0)\) is positive for all 
-\(\mu_0 \in [\underbar{\delta},\pi[\).
+for all \(I \in ]0, I_2]\), .
 
-Suppose \(x(0) \in \mathcal{O}_\epsilon\) and that the orbit
-intersects the \(q_u\)-axis at some point \(x(t_0) = (u_0, 0)\), which
-has pseudo-radius \(\mu = \abs{u_0}\).
-The Poincar\'{e} section \(P_\mathcal{O}(\abs{u_0})\) is positive because 
-\(\abs{u_0} \geq \underbar{\delta}\).
-As the acrobot continues its oscillation, it will intersect the \(q_u\) axis
-again at a new point \(x(t_1) = (u_1,0)\).
+This proves \(0\) is a repeller of the discrete time system, which means
+there exists some (unknown) \(\epsilon > 0\) where the interval
+\(]0,\epsilon[\) is negatively invariant for ~\eqref{eqn:muhat-discrete}.
+What's more, all solutions starting in this interval will flow towards the value
+\(\mu = \epsilon\).
+In other words, we have found a value \(I_2 > 0\) small enough
+that \(\mu(n)\) is strictly increasing on \([0,\epsilon[\).
 
-Setting \(p_1 := P_\mathcal{O}(\abs{u_0})\),
-Theorem \ref{thm:khalil-perturbation} guarantees that,
-for all \(I \in ]0,I^\prime(\underbar{\delta})]\),
+Next, recall that \(R(\pi,\mu_0,I)\) is smooth and \(O(I^2)\)
+and is therefore bounded below on \(\mu \in [\epsilon,\pi]\) by some value
+\(-I^2r\).
+Furhtermore, \(Q(\mu_0)\) is a strictly increasing function, so
+for\(\mu_0 \in [\epsilon,\pi[\) we have
 \[
-    \abs{\abs{u_1} - p_1} \leq cI^2
+    P_\mathcal{O}(\mu_0) \geq \mu_0 + I K Q(\epsilon) - I^2 r
+    .
+\]
+There clearly exists a small enough \(I^\star \in ]0,I_2]\) making
+\(I^\star K Q(\epsilon) - (I^\star)^2 r > 0\), which means
+\[
+    P_\mathcal{O}(\mu_0) > \mu_0
     ,
 \]
-where \(c > 0\) is an independent constant.
-This implies that \(\abs{u_1} \geq p_1 - cI^2\). 
-We also know that
-\[
-    p_1 - \abs{u_0} \geq IKQ(\abs{u_0}) \geq IKQ(\underbar{\delta}) > 0
-    .
-\]
-There exists \(I^\star \in ]0,I^\prime(\underbar{\delta})]\) where
-\(c{I^\star}^2 < I^\star KQ(\underbar{\delta})\), which means
-\begin{align*}
-    \abs{u_1} - \abs{u_0} 
-    &= \left(\abs{u_1} - p_1\right) + \left(p_1 - \abs{u_0}\right)
-    \\
-    &\geq \left(p_1 - c{I^\star}^2 - p_1\right) + I^\star KQ(\underbar{\delta})
-    \\
-    &= I^\star KQ(\underbar{\delta}) - c{I^\star}^2
-    \\
-    &> 0
-    .
-\end{align*}
+for all \(\mu_0 \in [\epsilon,\pi[\).
 
-Since \(u_0 \in [\underbar{\delta},\pi[\) was arbitrary, 
-we can apply Theorem \ref{thm:khalil-perturbation} iteratively:
-initializing the acrobot at \(x(t_i) = (u_i, 0)\), the
-next intersection with the \(q_u\) axis will be at
-\(x(t_{i+1}) = (u_{i+1},0)\) with \(\abs{u_{i+1}} > \abs{u_i}\).
+We have thus shown that \(P_\mathcal{O}(\mu_0) > \mu_0\) for all
+\(\mu_0 \in ]0,\pi[\).
+Looking at ~\eqref{eqn:muhat-discrete}, this means
+\(\mu(n+1) > \mu(n)\) and all solutions of the discrete time system will flow
+towards \(\mu = \pi\).
+Hence, orbits of the constrained dynamics will eventually escape
+\(\mathcal{O}\).
 
-Because the Poincar\'{e} section is monotonically increasing, 
-the orbit will eventually reach an intersection point \(x(t_N) = (u_N,0)\)
-such that \(P_\mathcal{O}(\abs{u_N}) > \pi + c{I^\star}^2\). 
-At this point, the orbit will no longer return to the
-\(q_u\)-axis.
-Instead, it will escape \(\mathcal{O}\) entirely, which means
-it also escapes \(\mathcal{O}_\epsilon\).
-Hence, the orbit must escape any compact subset of 
-\(\mathcal{O}_\epsilon\) in finite time. 
-We conclude that the acrobot is gaining energy on \(\mathcal{O}_\epsilon\).
+We conclude that, for all \(m\), \(g\), \(l\), \(\bar{q}_a\), 
+there exists \(I > 0)\) small enough that the constraint 
+~\eqref{eqn:acrobot-constraint} is injecting energy on \(\mathcal{O}\).
 
 Setting \(I < 0\), the Poincar\'{e} section \(P_\mathcal{O}(\mu_0)\) is now
 monotonically decreasing in \(\mu_0\).
 By the same arguments presented in this section, the constraint 
-must be dissipating energy on \(\mathcal{O}_\epsilon\).
+must be dissipating energy on \(\mathcal{O}\).
 
 % Empty proof environment to put QED square on the right of the page
 \begin{proof}[\unskip\nopunct]
 \end{proof}
 
-\subsection*{Perturbation Analysis for Rotations}
+\subsection{Perturbation Analysis for Rotations}
 The rotation region for the nominal pendulum is the set
 \[
     \mathcal{R} := \left\{ (q_u,p_u) \in \Gamma \mid E(q_u,p_u) > E(\pi,0)\right\}
