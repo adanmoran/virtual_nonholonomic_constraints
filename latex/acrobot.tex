@@ -432,7 +432,7 @@ control parameter \(I\) to guarantee this is true.
     \]
     be the energy of the simple pendulum obtained by setting \(I = 0\).
 \begin{enumerate}
-    \item For all \(\epsilon > 0\), there exists \(I > 0\) small enough that 
+    \item There exists \(I > 0\) small enough that 
     ~\eqref{eqn:acrobot-constraint} injects energy into the acrobot on
     \[
         \mathcal{O} := \left\{(q_u,p_u) \in \Gamma 
@@ -465,47 +465,47 @@ control parameter \(I\) to guarantee this is true.
 \end{enumerate}
 \end{thm}
 
-The first result of Theorem \ref{thm:acrobot-energy-stabilization} states
+A small enough fixed value \(I > 0\) will enable the acrobot to 
+escape any compact subset of \(\mathcal{O}\) in finite time. 
+What's more, the acrobot's phase will flow towards the heteroclinic orbit
+corresponding to \(E(\pi,0)\), as in Figure
+\ref{fig:acrobot-oscillation-domain}.
+Hence, the first result of Theorem \ref{thm:acrobot-energy-stabilization} states
 that all acrobots constrained by ~\eqref{eqn:acrobot-constraint} 
 will gain enough energy to begin rotating around the bar.
-Setting \(\epsilon > 0\) arbitrarily small, a fixed value
-\(I(\epsilon)\) will enable the acrobot to gain energy and escape any compact
-subset of \(\mathcal{O}_\epsilon\) in finite time. 
-What's more, the acrobot's phase will flow towards the heteroclinic orbit of the
-nominal pendulum, as seen in Figure \ref{fig:O-epsilon}.
+In the worst case, the acrobot will at least perform a swing-up routine to reach
+the \((q_u,p_u) = (\pi,0)\) equilibrium.
 
-If we want to guarantee the acrobot can reach rotations beyond a given level set
-of \(E\), 
-An acrobot satisfying the second result of Theorem
-\ref{thm:acrobot-energy-stabilization} is guaranteed to achieve giants with
-momentum \(|p_u| < \bar{\rho}\).
-This is true because the acrobot escapes all compact sets of \(\Omega_\epsilon\)
-in finite time, as seen in Figure \ref{fig:Omega-epsilon}.
-Note that, for this result, the parameter \(I\) depend on both \(\epsilon\) and
-the target momentum \(\bar{\rho}\).
+If we want the acrobot to achieve giants with energy
+\(E(0,\bar{\rho})\), the acrobot needs to satisfy the assumption on the
+integral of \(b(\beta,\rho_0)\).
+In this case, orbits will escape compact subsets of \(\Omega\) in finite time
+until the acrobot has reached a momentum of at least \(\bar{\rho}\).
+One example of this behaviour is displayed in Figure \ref{fig:acrobot-omega}.
+Note that the value of \(I\) will depend on \(\bar{\rho}\).
 
 \begin{figure}
     \centering
-    % TODO: show an image of two subfigures: one is O_epsilon, with a spiraling
+    % TODO: show an image of two subfigures: one is O, with a spiraling
     % orbit heading towards the heteroclinic orbit E(pi,0).
-    % The second is Omega_epsilon, with a spiral leaving O_epsilon and becoming
+    % The second is Omega, with a spiral leaving O and becoming
     % a set of rotations that approaches E(0,rho_bar)
     \begin{subfigure}[t]{0.45\textwidth}
         % TODO: 
         %includestandalone[]{images/O_epsilon}
-        \caption{The set \(\mathcal{O}_\epsilon\). Orbits starting in this set
+        \caption{The set \(\mathcal{O}\). Orbits starting in this set
             will reach the level set \(E(\pi,0)\) of the nominal pendulum in
             finite time.}
-        \label{fig:O-epsilon}
+        \label{fig:acrobot-oscillation-domain}
     \end{subfigure}
     \hfill
     \begin{subfigure}[t]{0.45\textwidth}
         %TODO:
         %includestandalone[]{images/Omega_epsilon}
-        \caption{The set \(\Omega_\epsilon\). Orbits starting in this set will
+        \caption{The set \(\Omega\). Orbits starting in this set will
             reach the level set \(E(0,\bar{\rho})\) of the nominal pendulum in
             finite time.}
-        \label{fig:Omega-epsilon}
+            \label{fig:acrobot-omega}
     \end{subfigure}
     \caption{The sets defined by Theorem \ref{thm:acrobot-energy-stabilization}
         on which the acrobot gains energy.}
@@ -571,21 +571,21 @@ following properties:
         uniquely defined by \(\mu\), which remains constant along oscillations
         of the simple pendulum.
     \item \(\alpha\) is a pseudo-angle living in \(\Sone\) which is
-        always increasing along solutions.
+        always increasing along oscillations.
 \end{itemize}
 The coordinates \((\alpha,\mu)\) can be thought of as deformed polar coordinates
 adapted to level sets of \(E\) below the value \(E(\pi,0)\), 
 where \(\mu\) specifies the level set and \(\alpha\) identifies a point on that
 level set.
 Once we have these coordinates in hand, we can use perturbation theory to prove
-that \(\mu\) increases on \(\mathcal{O}_\epsilon\) when \(I > 0\) is small enough.
+that \(\mu\) increases on \(\mathcal{O}\) when \(I > 0\) is small enough.
 
-Likewise, we will find a second set of coordinates \((\beta, \rho)\) where
-\(\beta \in \Sone\) is always increasing, \(\rho\) is constant along
-rotations of the simple pendulum, and \(\rho\) increases for the acrobot when
-\(I > 0\) is small enough.
-Putting these together, we will show the acrobot is gaining energy on
-\(\Omega_\epsilon\).
+Likewise, we will find a second set of coordinates \((\beta, \rho)\) for
+rotations, where \(\beta \in \Sone\) is always increasing along solutions,
+\(\rho\) is constant along rotations of the simple pendulum, and \(\rho\)
+increases for the acrobot when \(I > 0\) is small enough.
+Using both \((\alpha,\mu)\) and \((\beta,\rho)\), we will show the acrobot is
+gaining energy on \(\Omega\).
 
 \subsection{Background on Perturbation Theory}
 Nonlinear systems like the acrobot are difficult (or even impossible) to solve
@@ -621,23 +621,20 @@ Setting \(I = 0\) we get the nominal system
         x_0(t_0) = \eta_0 ,
     \end{cases}
 \end{equation}
-which we need to solve for the explicit solution \(x_0(t,\eta_0)\) on \([t_0,t_1]\).
+which we need to solve for the explicit solution \(x_0(t,\eta_0)\) on
+\([t_0,t_1]\).
+We assume this solution is contained in \(D\).
 
 Now consider the solution \(x(t,\eta_0,I)\) to ~\eqref{eqn:khalil-setup}.
 Performing a first-order Taylor series expansion at \(I = 0\), we get
-\(x(t,\eta_0,I) = x_0(t,\eta_0) + I x_1(t,\eta_0) + R(t,\eta_0,I)\), where the
-remainder term \(R(t,\eta_0,I)\) is smooth and \(O(I^2)\), \ie,
-there exists \(c > 0\) such that 
-\[
-    \norm{ R(t,\eta_0,I) } \leq c \abs{I^2}
-    ,
-\]
-for all \((t,\eta_0,I) \in [t_0,t_1] \times D \times [-I_0,I_0]\), and
+\(x(t,\eta_0,I) = x_0(t,\eta_0) + I x_1(t,\eta_0) + R(t,\eta_0,I)\),
+where the remainder term \(R(t,\eta_0,I)\) is smooth and \(O(I^2)\), \ie, 
 \[
     \lim \limits_{I \to 0} \frac{R(t,\eta_0,I)}{I} = 0
     .
 \]
-One can show \(x_1(t,\eta_0)\) is the solution to the scalar time-varying ODE
+One can recover \(x_1(t,\eta_0)\) as the solution to the scalar
+time-varying ODE
 \begin{equation}\label{eqn:khalil-perturbation-firstorder}
     \begin{cases}
         \dot{x}_1 = \pdiff{f}{x}(t,x_0(t,\eta_0),0)x_1 + \pdiff{f}{I}(t,x_0(t,\eta_0),0)
@@ -650,7 +647,7 @@ One can show \(x_1(t,\eta_0)\) is the solution to the scalar time-varying ODE
 We now paraphrase Khalil's Theorem 10.1 \cite{khalil_nonlinear} on the
 accuracy of perturbation analysis.
 \begin{thm}\label{thm:khalil-perturbation}
-    Let \(t_0 < t_1 \in \mathbb{R}\).
+    Fix \(t_0, t_1 \in \mathbb{R}\) with \(t_0 < t_1\).
     Suppose \(f : [t_0,t_1] \times D \times [-I_0,I_0] \rightarrow \R^2\) is
     \(C^1\), and that the nominal system
     ~\eqref{eqn:khalil-perturbation-nominal} has a unique solution
@@ -668,8 +665,15 @@ Theorem \ref{thm:khalil-perturbation} tells us that we can approximate the
 solution of the nonlinear system by the Taylor approximation 
 \(x(t,\eta_0,I) \approx x_0(t,\eta_0) + I x_1(t,\eta_0)\).
 When \(I\) is small enough, solutions of the nonlinear system and
-the Taylor approximation are the same up to order \(O(I^2)\) along compact time
+the Taylor approximation are the same up to order \(I^2\) along compact time
 intervals.
+This is equivalent to saying that the remainder term \(R(t,\eta_0,I)\) is
+bounded, because 
+\[
+    \norm{x(t,\eta_0,I) - \left(x_0(t,\eta_0) + I x_1(t,\eta_0)\right)} 
+    = \norm{R(t,\eta_0,I)} \leq k |I^2|
+    .
+\]
 Since we know that the acrobot behaves like a pendulum at \(I = 0\), we can
 use this theory to prove energy injection properties on the acrobot by studying
 the simple pendulum.
@@ -690,8 +694,8 @@ From Figure \ref{fig:pendulum-level-sets}, we know that oscillation level sets
 look like ellipses contained in \(\mathcal{O}\).
 Since perturbation theory requires us to analyze the nominal pendulum, we will
 make our analysis convenient by changing coordinates into a
-``radius" \(\mu > 0\) which remains constant on level sets of \(E\), 
-along with an ``angle" \(\alpha \in \Sone\) satisfying \(\dot{\alpha} > 0\) on
+pseudo-radius \(\mu > 0\) which remains constant on level sets of \(E\), 
+along with a pseudo-angle \(\alpha \in \Sone\) satisfying \(\dot{\alpha} > 0\) on
 \(\mathcal{O}\).
 
 \subsubsection*{Pseudo-Polar Coordinates}
@@ -862,17 +866,17 @@ enough that \(\dot{\alpha}\) remains positive on \(\mathcal{O}\) for
 
 We have observed that \(\dot{\alpha} > 0\) on \(\mathcal{O}\) for small enough \(I\). 
 Hence, we can use \(\alpha\) as our time variable by reparameterizing \(t\) as a
-function \(t = \tau(\alpha)\).
+function \(t(\alpha)\).
 This allows us to study the evolution of \(\mu\) as a function of \(\alpha\)
 rather than a function of time.
-Setting \(\hat{\mu}(\alpha) := \mu(\tau(\alpha))\) yields the dynamics
+Setting \(\hat{\mu}(\alpha) := \mu(t(\alpha))\) yields the dynamics
 \[
     \diff{\hat{\mu}}{\alpha} = 
     \diff{\mu}{t} \diff{t}{\alpha}
     .
 \] 
-This reduces the system \((\dot{\alpha},\dot{\mu})\) into the time-varying
-scalar ODE 
+This reduces the system \((\dot{\alpha},\dot{\mu})\) into the scalar
+time-varying ODE 
 \begin{equation}\label{eqn:muhat-dot}
     \begin{cases}
         \diff{\hat{\mu}}{\alpha} 
@@ -886,9 +890,9 @@ scalar ODE
 
 \subsubsection*{Perturbation Analysis of the Time Scaled System}
 
-In the spirit of perturbation analysis, we find the nominal system 
-\(\hat{\mu}_0(\alpha,\mu_0)\) which,
-by ~\eqref{eqn:khalil-perturbation-nominal}, is the solution to 
+In the spirit of perturbation analysis, we will expand our time-scaled system
+\(\hat{\mu}(\alpha,\mu_0,I)\).
+We begin by setting \(I = 0\) to find the nominal system
 \[
 \begin{cases}
     \dot{\hat{\mu}}_0 = g(\alpha,\hat{\mu}_0,0)
@@ -897,12 +901,13 @@ by ~\eqref{eqn:khalil-perturbation-nominal}, is the solution to
    .
 \end{cases}
 \]
-Since \(g(\alpha,\mu,0) = 0\) by 
-~\eqref{eqn:acrobot-mu-dot-nom}-\eqref{eqn:acrobot-alpha-dot-nom}, we find that
+Equations ~\eqref{eqn:acrobot-mu-dot-nom}-\eqref{eqn:acrobot-alpha-dot-nom})
+imply that \(g(\alpha,\mu,0) = 0\),
+so the solution to this nominal system is 
 \(\hat{\mu}_0(\alpha,\mu_0) \equiv \mu_0\) for all \(\alpha\).
 
 We now take a first-order Taylor approximation of \(\hat{\mu}(\alpha,\mu_0,I)\)
-approximation around the nominal system \(\hat{\mu}_0(\alpha,\mu_0)\), which 
+around the nominal system \(\hat{\mu}_0(\alpha,\mu_0)\), which 
 expands into 
 \begin{equation}\label{eqn:acrobot-muhat-approx}
     \hat{\mu}(\alpha,\mu_0,I) = \hat{\mu}_0(\alpha,\mu_0) + I
@@ -956,6 +961,7 @@ Therefore, the first-order Taylor approximation of \(\hat{\mu}(\alpha,\mu_0,I)\)
     \hat{\mu}(\alpha,\mu_0,I)
     = \mu_0 + I K \int \limits_0^\alpha b(\sigma,\mu_0)d\sigma +
     R(\alpha,\mu_0,I)
+    .
 \end{equation}
 
 \subsubsection{Poincar\'{e} Analysis}
@@ -989,16 +995,14 @@ Therefore, the first-order Taylor approximation of \(\hat{\mu}(\alpha,\mu_0,I)\)
 %the behaviour at each half oscillation.
 
 Since \(\dot{\alpha} > 0\), there is a well-defined Poincar\'{e} map 
-showing how \(\mu\) changes every time the orbit of \((q_u(t),p_u(t))\) hits the
-\(q_u\)-axis.
-This intersection with the \(q_u\)-axis is represented by \(\alpha = n\pi\) for
-\(n \in \mathbb{Z}_{\geq 0}\).
+describing how \(\mu\) changes each time the orbit of \((q_u(t),p_u(t))\)
+intersects the \(q_u\)-axis, \ie, when \(\alpha = 0\) or \(\alpha = \pi\).
 Using our time-scaled system, we can define this Poincar\'{e} map as the change
-in \(\hat{\mu}\) at each of these intersections: 
+in \(\hat{\mu}\) at each of these intersections:
 \begin{align*}
-    P_\mathcal{O} : ]0,\pi[ &\rightarrow \R_+,
+    P_\mathcal{O} : \,]0,\pi[ &\rightarrow \R_+,
     \\
-    \mu_0 \mapsto \hat{\mu}(\pi,\mu_0,I)
+    \mu_0 &\mapsto \hat{\mu}(\pi,\mu_0,I)
     .
 \end{align*}
 From our perturbation analysis, the section expands into
@@ -1034,10 +1038,10 @@ so we believe that \(Q(\mu_0)\) is in fact positive for all \(\mu_0\).
     \label{fig:acrobot-Q}
 \end{figure}
 
-This fact, coupled with knowledge that \(R(\pi,\mu_0,I)\) is \(O(I^2)\), 
+This fact, coupled with knowledge that \(R(\pi,\mu_0,I)\) is \(O(I^2)\),
 implies there exists \(I > 0\) small enough that
 \[
-    P_\mathcal{O}(\mu_0) = \mu_0 + IKQ(\mu_0) + R(\pi,\mu_0,I) > 0
+    P_\mathcal{O}(\mu_0) = \mu_0 + IKQ(\mu_0) + R(\pi,\mu_0,I) > \mu_0
     .
 \]
 Unfortunately, perturbation analysis does not guarantee 
@@ -1048,10 +1052,7 @@ We will deal with this next.
 \subsubsection*{Energy Gain on \(\mathcal{O}\)}
 
 The Poincar\'{e} section \(P_\mathcal{O}\) allows us understand the evolution of
-\(\hat{\mu}(\alpha,\mu_0,I)\) by studying the evolution of a discrete time system;
-abusing notation, we set the state of this discrete time system to be
-\(\mu(n)\) for \(n \in \mathbb{Z}_{\geq 0}\). 
-The dynamics of \(\mu(n)\) are
+\(\hat{\mu}(\alpha,\mu_0,I)\) by studying the evolution of the discrete time
 \begin{equation}\label{eqn:muhat-discrete}
     \begin{cases}
         \mu(n+1) = P_\mathcal{O}(\mu(n)) 
@@ -1061,16 +1062,17 @@ The dynamics of \(\mu(n)\) are
         .
     \end{cases}
 \end{equation}
+Tolerating the abuse of notation, \(\mu(n)\) represents the distance along the
+\(q_u\)-axis when an orbit of the constrained dynamics intersects the
+\(q_u\)-axis for the \(n\)th time, assuming the orbit was initialized at
+\((q_u,p_u) = (\mu_0,0)\).
 
-To show energy gain on \(\mathcal{O}\), it is sufficient to 
-show this discrete time system is strictly increasing.
-This is because \(\mu(n)\) represents the distance along the \(q_u\)-axis
-when an orbit intersects the \(q_u\)-axis for the \(n\)th time, assuming
-the orbit was initialized at \((q_u,p_u) = (\mu_0,0)\).
-
-Formally, we wish to show there exists \(I^\star \in ]0, I_1]\) where, for all 
+Show energy gain on \(\mathcal{O}\) is equivalent to 
+finding some \(I^\star \in ]0, I_1]\) where, for all 
 \(\delta > 0\) and \(\mu_0 \in ]0,\pi-\delta]\), there exists \(N > 0\) so that
 for all \(n \geq N\), \(\mu(n) \notin ]0,\pi-\delta]\).
+We will show \(P_\mathcal{O}(\mu_0) > \mu_0\) for all \(\mu_0 \in ]0,\pi[\),
+which implies this characterization of energy gain holds true.
 
 Linearizing ~\eqref{eqn:muhat-discrete} at \(\mu = 0\) yields
 \[
@@ -1113,24 +1115,31 @@ Hence,
 \] 
 for all \(I \in ]0, I_2]\), .
 
-This proves \(0\) is a repeller of the discrete time system, which means
+We have shown \(0\) is a repeller of the discrete time system, which means
 there exists some (unknown) \(\epsilon > 0\) where the interval
 \(]0,\epsilon[\) is negatively invariant for ~\eqref{eqn:muhat-discrete}.
-What's more, all solutions starting in this interval will flow towards the value
+All solutions starting in this interval will flow towards the value
 \(\mu = \epsilon\).
 In other words, we have found a value \(I_2 > 0\) small enough
 that \(\mu(n)\) is strictly increasing on \([0,\epsilon[\).
 
-Next, recall that \(R(\pi,\mu_0,I)\) is smooth and \(O(I^2)\)
-and is therefore bounded below on \(\mu \in [\epsilon,\pi]\) by some value
-\(-I^2r\).
-Furhtermore, \(Q(\mu_0)\) is a strictly increasing function, so
-for\(\mu_0 \in [\epsilon,\pi[\) we have
+Next, recall that \(R(\pi,\mu_0,I)\) is smooth in all its parameters as well as
+being \(O(I^2)\).
+Therefore, it is bounded below on the compact set \(\mu_0 \in [\epsilon,\pi]\)
+by some value \(R(\pi,\underbar{\mu},I)\). 
+Theorem \ref{thm:khalil-perturbation} asserts that there exists some
+\(I_3 > 0\) and \(r > 0\) so that, for all \(I \in ]0, I_3]\),
 \[
-    P_\mathcal{O}(\mu_0) \geq \mu_0 + I K Q(\epsilon) - I^2 r
+    R(\pi,\mu_0,I) \geq R(\pi, \underbar{\mu}, I) > -I^2 r
     .
 \]
-There clearly exists a small enough \(I^\star \in ]0,I_2]\) making
+Furthermore, \(Q(\mu_0)\) is a strictly increasing function, so
+for\(\mu_0 \in [\epsilon,\pi[\) we have
+\[
+    P_\mathcal{O}(\mu_0) > \mu_0 + I K Q(\epsilon) - I^2 r
+    .
+\]
+There clearly exists a small enough \(I^\star \in ]0,I_3]\) making
 \(I^\star K Q(\epsilon) - (I^\star)^2 r > 0\), which means
 \[
     P_\mathcal{O}(\mu_0) > \mu_0
