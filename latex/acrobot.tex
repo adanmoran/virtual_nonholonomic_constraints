@@ -902,7 +902,7 @@ We begin by setting \(I = 0\) to find the nominal system
 \end{cases}
 \]
 Equations ~\eqref{eqn:acrobot-mu-dot-nom}-\eqref{eqn:acrobot-alpha-dot-nom})
-imply that \(g(\alpha,\mu,0) = 0\),
+reveal that \(g(\alpha,\mu,0) = 0\),
 so the solution to this nominal system is 
 \(\hat{\mu}_0(\alpha,\mu_0) \equiv \mu_0\) for all \(\alpha\).
 
@@ -934,14 +934,14 @@ computation to reveal that
 \begin{align*}
     \pdiff{g}{\hat{\mu}}(\alpha,\mu_0,0) &= 0
     , \\
-    \pdiff{g}{I}(\alpha, \mu_0, 0) &= K b(\alpha,\mu_0)
+    \pdiff{g}{I}(\alpha, \mu_0, 0) &= K a(\alpha,\mu_0)
     ,
 \end{align*}
 where we define
 \begin{align*}
     K &:= \frac{\bar{q}_a \sqrt{30m^2g l^3}}{15}
     , \\
-    b(\alpha,\mu_0) &:= \frac{
+    a(\alpha,\mu_0) &:= \frac{
         \mu_0 |\sin(\alpha)| \left(
         5 c_{\mu_0} \cos(\mu_0 c_\alpha) - 8 \cos(\mu_0c_\alpha)^2 + 3
     \right)
@@ -953,72 +953,45 @@ where we define
 Hence, the solution to ~\eqref{eqn:acrobot-mu1-dot} is given by
 \[
     \hat{\mu}_1(\alpha,\mu_0) =
-    K \int \limits_0^\alpha b(\sigma,\mu_0)d\sigma
+    K \int \limits_0^\alpha a(\sigma,\mu_0)d\sigma
     .
 \]
 Therefore, the first-order Taylor approximation of \(\hat{\mu}(\alpha,\mu_0,I)\) is
 \begin{equation}\label{eqn:acrobot-muhat-expanded}
     \hat{\mu}(\alpha,\mu_0,I)
-    = \mu_0 + I K \int \limits_0^\alpha b(\sigma,\mu_0)d\sigma +
+    = \mu_0 + I K \int \limits_0^\alpha a(\sigma,\mu_0)d\sigma +
     R(\alpha,\mu_0,I)
     .
 \end{equation}
 
 \subsubsection{Poincar\'{e} Analysis}
 
-%Suppose we initialize the acrobot at \((\alpha,\mu) = (0,\mu_0)\). 
-%After half an oscillation, when \(\alpha = \pi\), the orbit will land on the
-%negative \(q_u\)-axis with pseudo-radius 
-%\(u = \hat{\mu}(\pi,\mu_0) \approx \mu_0 + I\hat{\mu}_1(\pi,\mu_0)\).
-%Hence, the change in pseudo-radius is 
-%\(u - \mu_0 \approx I\hat{\mu}_1(\pi,\mu_0)\).
-%If the orbit remains in \(\mathcal{O}\) for the full oscillation, 
-%it will land on the positive \(q_u\)-axis
-%with pseudo-radius
-%\(\tilde{u} \approx \mu_0 + I\hat{\mu}_1(2\pi,\mu_0)\).
-%
-%Notice that \(b(\alpha,\mu_0)\) is even and 
-%\(\pi\)-periodic in \(\alpha\), so that
-%\begin{equation}\label{eqn:bhat-integral-properties}
-%    \int \limits_{-\pi}^\pi b(\sigma,\mu_0) d\sigma
-%    = \int \limits_0 ^ {2 \pi} b(\sigma,\mu_0) d\sigma
-%    = 2 \int \limits_0^\pi b(\sigma,\mu_0) d\sigma
-%    .
-%\end{equation}
-%This implies that 
-%\(\hat{\mu}_1(2\pi,\mu_0) = 2 \hat{\mu}_1(\pi,\mu_0)\),
-%which means the change in pseudo-radius after a full oscillation is 
-%\(\tilde{u} - \mu_0 \approx 2I\hat{\mu}_1(\pi,\mu_0)\).
-%If \(\hat{\mu}_1(\pi,\mu_0) > 0\), 
-%then both \(u - \mu_0 > 0\) and \(\tilde{u} - \mu_0 > 0\).
-%In other words, we can study the average behaviour of \(\hat{\mu}\) by examining
-%the behaviour at each half oscillation.
-
 Since \(\dot{\alpha} > 0\), there is a well-defined Poincar\'{e} map 
-describing how \(\mu\) changes each time the orbit of \((q_u(t),p_u(t))\)
+describing how the pseudo-radius \(\mu\) changes each time the orbit of \((q_u(t),p_u(t))\)
 intersects the \(q_u\)-axis, \ie, when \(\alpha = 0\) or \(\alpha = \pi\).
 Using our time-scaled system, we can define this Poincar\'{e} map as the change
-in \(\hat{\mu}\) at each of these intersections:
+in \(\hat{\mu}\) when \(\alpha\) increases by \(\pi\):
 \begin{align*}
     P_\mathcal{O} : \,]0,\pi[ &\rightarrow \R_+,
     \\
     \mu_0 &\mapsto \hat{\mu}(\pi,\mu_0,I)
     .
 \end{align*}
-From our perturbation analysis, the section expands into
+From our perturbation analysis, the Poincar\'{e} map -- also known as a
+Poincar\'{e} section --  expands into
 \[
-    P_\mathcal{O}(\mu_0) = \mu_0 + I K \int\limits_0^\pi b(\sigma,\mu_0)d\sigma
+    P_\mathcal{O}(\mu_0) = \mu_0 + I K \int\limits_0^\pi a(\sigma,\mu_0)d\sigma
     + R(\pi,\mu_0,I)
     .
 \]
 Let us define
 \[
-    Q(\mu_0) := \int \limits_0^\pi b(\sigma,\mu_0)d\sigma
+    Q(\mu_0) := \int \limits_0^\pi a(\sigma,\mu_0)d\sigma
     ,
 \]
 so that \(\hat{\mu}_1(\pi,\mu_0) = K Q(\mu_0)\).
 Note that \(K\) is a positive constant which contains the acrobot's physical
-parameters, while \(b(\alpha,\mu)\) is adimensional. 
+parameters, while \(a(\alpha,\mu)\) is adimensional. 
 This means \(Q(\mu_0)\) is identical for every acrobot.
 If \(Q(\mu_0)\) is strictly positive, then \(\hat{\mu}_1(\pi,\mu_0)\) will be
 positive no matter the values of \(m\), \(g\), \(l\), or \(\bar{q}_a\).
@@ -1027,8 +1000,9 @@ We numerically compute \(Q(\mu_0)\) for \(\mu_0 \in [10^{-10}, \pi - 10^{-3}]\)
 in Figure \ref{fig:acrobot-Q}. 
 We see that it is strictly positive and monotonically increasing, with
 an asymptote at \(\mu_0 = \pi\). 
-Simulations with smaller \(\mu_0\) result in an infinite integration error,
-so we believe that \(Q(\mu_0)\) is in fact positive for all \(\mu_0\).
+Simulations with smaller \(\mu_0\) result in an infinite integral error due
+to a division by zero, so we believe that \(Q(\mu_0)\) is in fact positive for
+all \(\mu_0\).
 
 \begin{figure}
     \centering
@@ -1053,9 +1027,10 @@ We will deal with this next.
 
 The Poincar\'{e} section \(P_\mathcal{O}\) allows us understand the evolution of
 \(\hat{\mu}(\alpha,\mu_0,I)\) by studying the evolution of the discrete time
+system
 \begin{equation}\label{eqn:muhat-discrete}
     \begin{cases}
-        \mu(n+1) = P_\mathcal{O}(\mu(n)) 
+        \mu(n+1) := P_\mathcal{O}(\mu(n)) 
         = \mu(n) + I K Q(\mu(n)) + R(\pi,\mu(n),I)
         , \\
         \mu(0) = \mu_0
@@ -1067,12 +1042,13 @@ Tolerating the abuse of notation, \(\mu(n)\) represents the distance along the
 \(q_u\)-axis for the \(n\)th time, assuming the orbit was initialized at
 \((q_u,p_u) = (\mu_0,0)\).
 
-Show energy gain on \(\mathcal{O}\) is equivalent to 
-finding some \(I^\star \in ]0, I_1]\) where, for all 
+Show energy gain on \(\mathcal{O}\) is equivalent to showing \(\mu(n)\)
+eventually reaches \(\pi\).
+That is, we want to find \(I^\star \in ]0, I_1]\) where, for all 
 \(\delta > 0\) and \(\mu_0 \in ]0,\pi-\delta]\), there exists \(N > 0\) so that
-for all \(n \geq N\), \(\mu(n) \notin ]0,\pi-\delta]\).
-We will show \(P_\mathcal{O}(\mu_0) > \mu_0\) for all \(\mu_0 \in ]0,\pi[\),
-which implies this characterization of energy gain holds true.
+for all \(n \geq N\), \(\mu(n) \notin [0,\pi-\delta]\).
+A sufficient condition for this characterization is to show 
+\(P_\mathcal{O}(\mu_0) > \mu_0\) for all \(\mu_0 \in ]0,\pi[\),
 
 Linearizing ~\eqref{eqn:muhat-discrete} at \(\mu = 0\) yields
 \[
@@ -1084,13 +1060,13 @@ If there is some value of \(I \in ]0,I_1]\) for which this term is greater than
 \(1\), then \(0\) is a repeller of the discrete time system.
 To show such a value of \(I\) exists, we first compute 
 \[
-    Q^\prime(0) = \int \limits_0^\pi \pdiff{b}{\mu}(\sigma,0) d\sigma
+    Q^\prime(0) = \int \limits_0^\pi \pdiff{a}{\mu}(\sigma,0) d\sigma
     .
 \]
 MATLAB reveals that 
 \[
     \lim \limits_{\mu_0 \to 0^+}
-    \pdiff{b}{\mu}(\alpha,\mu_0) 
+    \pdiff{a}{\mu}(\alpha,\mu_0) 
     = -\frac{\sqrt{2}}{2} \left(11\sin(\alpha)^2 - 6\right)
     ,
 \]
@@ -1102,14 +1078,14 @@ which means
 Since the remainder term \(R(\alpha,\mu_0,I)\) is \(O(I^2)\), 
 its partial derivative \(\pdiff{R}{\mu}(\pi,\mu_0,I)\) is also \(O(I^2)\).
 Hence, it can be written in the form
-\(I^2 \tilde{R}^\prime(\mu_0,I)\) where \(\tilde{R}^\prime(\mu_0,I)\) is smooth and
+\(I^2 \tilde{R}(\mu_0,I)\) where \(\tilde{R}(\mu_0,I)\) is smooth and
 zero at \(I = 0\).
 Since \(I\) is assumed to be small, \(I^2\) shrinks rapidly;
 thus, there exists \(I_2 \in ]0,I_1]\) where 
-\(I_2 K Q^\prime(0) + I_2^2 \tilde{R}^\prime(0,I) > 0\).
+\(I_2 K Q^\prime(0) + (I_2)^2 \tilde{R}(0,I) > 0\).
 Hence,
 \[
-    P^\prime_\mathcal{O}(0) \geq 1 + IKQ^\prime(0) + I^2 \tilde{R}^\prime(0,I) 
+    P^\prime_\mathcal{O}(0) \geq 1 + IKQ^\prime(0) + I^2 \tilde{R}(0,I) 
     > 1
     ,
 \] 
@@ -1118,17 +1094,17 @@ for all \(I \in ]0, I_2]\), .
 We have shown \(0\) is a repeller of the discrete time system, which means
 there exists some (unknown) \(\epsilon > 0\) where the interval
 \(]0,\epsilon[\) is negatively invariant for ~\eqref{eqn:muhat-discrete}.
-All solutions starting in this interval will flow towards the value
+What's more, all solutions starting in this interval will flow towards the value
 \(\mu = \epsilon\).
 In other words, we have found a value \(I_2 > 0\) small enough
-that \(\mu(n)\) is strictly increasing on \([0,\epsilon[\).
+that \(\mu(n)\) is strictly increasing on \(]0,\epsilon[\).
 
 Next, recall that \(R(\pi,\mu_0,I)\) is smooth in all its parameters as well as
 being \(O(I^2)\).
 Therefore, it is bounded below on the compact set \(\mu_0 \in [\epsilon,\pi]\)
 by some value \(R(\pi,\underbar{\mu},I)\). 
 Theorem \ref{thm:khalil-perturbation} asserts that there exists some
-\(I_3 > 0\) and \(r > 0\) so that, for all \(I \in ]0, I_3]\),
+\(I_3 > 0\) and \(r > 0\) so that, for all \(I \in [-I_3, I_3]\),
 \[
     R(\pi,\mu_0,I) \geq R(\pi, \underbar{\mu}, I) > -I^2 r
     .
@@ -1139,7 +1115,7 @@ for\(\mu_0 \in [\epsilon,\pi[\) we have
     P_\mathcal{O}(\mu_0) > \mu_0 + I K Q(\epsilon) - I^2 r
     .
 \]
-There clearly exists a small enough \(I^\star \in ]0,I_3]\) making
+There exists a small enough \(I^\star \in ]0,I_3]\) making
 \(I^\star K Q(\epsilon) - (I^\star)^2 r > 0\), which means
 \[
     P_\mathcal{O}(\mu_0) > \mu_0
@@ -1156,13 +1132,16 @@ Hence, orbits of the constrained dynamics will eventually escape
 \(\mathcal{O}\).
 
 We conclude that, for all \(m\), \(g\), \(l\), \(\bar{q}_a\), 
-there exists \(I > 0)\) small enough that the constraint 
+there exists \(I > 0\) small enough that the constraint 
 ~\eqref{eqn:acrobot-constraint} is injecting energy on \(\mathcal{O}\).
 
-Setting \(I < 0\), the Poincar\'{e} section \(P_\mathcal{O}(\mu_0)\) is now
-monotonically decreasing in \(\mu_0\).
-By the same arguments presented in this section, the constraint 
-must be dissipating energy on \(\mathcal{O}\).
+Setting \(I < 0\), the Poincar\'{e} section now satisfies
+\[
+    P_\mathcal{O}(\mu_0) < \mu_0
+    ,
+\]
+thanks to the same arguments presented in this section. 
+The constraint is therefore dissipating energy on \(\mathcal{O}\).
 
 % Empty proof environment to put QED square on the right of the page
 \begin{proof}[\unskip\nopunct]
