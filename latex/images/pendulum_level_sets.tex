@@ -1,0 +1,78 @@
+
+%! TEX program = lualatex
+
+% Use :VimtexToggleMain to compile this file alone with Vimtex
+\documentclass[tikz]{standalone}
+
+\usepackage{sty/adantikz}
+%TODO: Add a figure with one oscillation mark at a distance mu from
+    % the origin to the intersection on the q-axis. We also draw the boundary of
+    % mathcalO and shade the interior, and draw a line to the oscillation with
+    % clockwise angle alpha
+
+\begin{document}
+\begin{tikzpicture}
+    % Set homoclinic orbit x and y intersection
+    \pgfmathsetmacro{\homoy}{15};
+    % Set oscillation mu 
+    \pgfmathsetmacro{\mu}{pi/2};
+    % Define the value of m2gl3 making sqrt(60m2gl3)=\homoy
+    \pgfmathsetmacro{\mgl}{\homoy^2/60};
+    % Set rotation y intersection (positive)
+    \pgfmathsetmacro{\roty}{20};
+    % Set y axis dimension
+    \pgfmathsetmacro{\ymax}{22};
+% Define the figure
+\begin{axis}[
+ axis line style = thick,
+ % Set the axes to be centered nicely
+ axis lines  = center,
+ % Turn off arrows
+ axis line style={-},
+ % Set the axes
+ xlabel = $q_u$, 
+ x label style={right},
+ xmin = -3.5, xmax = 3.5,
+ ylabel = $p_u$,
+ y label style={above},
+ ymin = -\ymax, ymax = \ymax,
+ % Custom tick labels at specified positions
+ xtick = {-3.1415, 3.1415},
+ xticklabels = {$-\pi$, $\pi$},
+ xticklabel style={xshift={(\ticknum==0)*(-0.3cm) + (\ticknum==1)*(0.25cm)}},
+ ytick = {-15, 15},
+ yticklabels = {},
+ % Move the label so it looks good
+ yticklabel style={yshift={(\ticknum == 0)*(-0.3cm) + (\ticknum == 1)*(0.25cm)}}
+]
+    % Draw the homoclinic orbit with arrows pointing in the direction of flow
+%    \draw[black, thick,->]  (-pi,0) arc 
+%        [start angle=180, end angle = 0, x radius=pi, y radius=\homoy];
+%    \draw[black, thick,->]  (pi,0) arc 
+%        [start angle=0, end angle = -180, x radius=pi, y radius=\homoy];
+    \addplot[black,->,thick,samples=100,domain=-pi:pi]
+        {sqrt(30*\mgl*(cos(deg(x))+1))};
+    \addplot[black,<-,thick,samples=100,domain=-pi:pi]
+        {-sqrt(30*\mgl*(cos(deg(x))+1))};
+
+    % Draw vertical dashed lines at +-pi
+    \draw[gray, dashed] (-pi,-\ymax) -- (-pi,\ymax);
+    \draw[gray, dashed] (pi,-\ymax) -- (pi,\ymax);
+
+    % Draw an oscillation contained entirely in the oscillation region
+    \addplot[blue,->,thick,samples=100,domain=-\mu:\mu]
+        {sqrt(30*\mgl*(cos(deg(x))-cos(deg(\mu))))};
+    \addplot[blue,<-,thick,samples=100,domain=-\mu:\mu]
+        {-sqrt(30*\mgl*(cos(deg(x))-cos(deg(\mu))))};
+
+    % Draw a rotation contained outside the oscillation region on the top and bottom
+    % The rotation has pu = sign(rho)sqrt(rhob^2+30m^2gl^3(cos(q_u)-1)
+    \addplot[red,->,name path=upper,thick,samples=100,domain=-pi:pi]
+        {sqrt(\roty^2+30*\mgl*(cos(deg(x))-1))};
+    \addplot[red,<-,name path=upper,thick,samples=100,domain=-pi:pi]
+        {-sqrt(\roty^2+30*\mgl*(cos(deg(x))-1))};
+
+\end{axis}
+\end{tikzpicture}
+\end{document}
+% vim: set tw=80 ts=4 sw=4 sts=0 et ffs=unix :

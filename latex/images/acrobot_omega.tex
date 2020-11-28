@@ -1,0 +1,81 @@
+%! TEX program = lualatex
+
+% Use :VimtexToggleMain to compile this file alone with Vimtex
+\documentclass[tikz]{standalone}
+
+\usepackage{sty/adantikz}
+%TODO: Add a figure with one oscillation mark at a distance mu from
+    % the origin to the intersection on the q-axis. We also draw the boundary of
+    % mathcalO and shade the interior, and draw a line to the oscillation with
+    % clockwise angle alpha
+
+\begin{document}
+\begin{tikzpicture}
+    % Define rho_bar
+    \pgfmathsetmacro{\rhob}{18};
+    % Define the value of m2gl3 making sqrt(60m2gl3)=15
+    \pgfmathsetmacro{\mgl}{15^2/60};
+% Define the figure
+\begin{axis}[
+ axis line style = thick,
+ % Set the axes to be centered nicely
+ axis lines  = center,
+ % Turn off arrows
+ axis line style={-},
+ % Set the axes
+ xlabel = $q_u$, 
+ x label style={right},
+ xmin = -3.5, xmax = 3.5,
+ ylabel = $p_u$,
+ y label style={above},
+ ymin = -22, ymax = 22,
+ % Custom tick labels at specified positions
+ xtick = {-3.1415, 3.1415},
+ xticklabels = {$-\pi$, $\pi$},
+ xticklabel style={xshift={(\ticknum==0)*(-0.3cm) + (\ticknum==1)*(0.25cm)}},
+ ytick = {-18,-15, 15,18},
+ yticklabels = {},
+ % Move the label so it looks good
+ yticklabel style={yshift={(\ticknum == 0)*(-0.25cm) + (\ticknum == 3)*(0.2cm)}}
+]
+    % Draw rotations for rho_bar
+    % The rotation has pu = sign(rho)sqrt(rhob^2+30m^2gl^3(cos(q_u)-1)
+    \addplot[name path=upper,thick,samples=100,domain=-pi:pi]
+        {sqrt(\rhob^2+30*\mgl*(cos(deg(x))-1))};
+    \addplot[name path=lower,thick,samples=100,domain=-pi:pi]
+        {-sqrt(\rhob^2+30*\mgl*(cos(deg(x))-1))};
+
+    % Add a label for the orbit energy level
+    \node at (-pi/4, 20) {$E(0,\bar{\rho})$};
+
+    % Colour in the region for Omega by filling between rotations
+    \addplot[fill=blue,opacity=0.2] 
+        fill between[of=upper and lower];
+	% Draw the homoclinic orbit
+    \addplot[black,->,thick,samples=100,domain=-pi:pi]
+        {sqrt(30*\mgl*(cos(deg(x))+1))};
+    \addplot[black,<-,thick,samples=100,domain=-pi:pi]
+        {-sqrt(30*\mgl*(cos(deg(x))+1))};
+
+    % Draw a spiraling orbit heading towards the homoclinic orbit
+    \spiral[blue,thick]{center={(0,0)},
+        start angle=0,end angle=90,
+        start radius=0cm, end radius=1.95cm,
+        revolutions=4,
+        clockwise};
+    % Draw increasing rotations towards the rho_bar line
+    % We don't use \mgl, but instead pretend that there was a rotation at pu=15
+    % by changing \mgl to 14^2/60
+    \addplot[blue,name path=lower,thick,samples=100,domain=0:pi]
+        {sqrt(15^2+3*14^2/6*(cos(deg(x))-1))};
+    \draw[blue, thick] plot[smooth] coordinates{
+        (-pi,6) (-4*pi/5,7) (-pi/4,16) (0,18)};
+
+    % Draw vertical dashed lines at +-pi
+    \draw[gray, dashed] (-pi,-22) -- (-pi,22);
+    \draw[gray, dashed] (pi,-22) -- (pi,22);
+
+\end{axis}
+\end{tikzpicture}
+\end{document}
+% vim: set tw=80 ts=4 sw=4 sts=0 et ffs=unix :

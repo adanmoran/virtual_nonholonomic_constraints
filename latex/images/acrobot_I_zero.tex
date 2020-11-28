@@ -1,0 +1,59 @@
+%! TEX program = lualatex
+
+% Use :VimtexToggleMain to compile this file alone with Vimtex
+\documentclass[tikz]{standalone}
+
+\usepackage{sty/adantikz}
+
+\begin{document}
+\begin{tikzpicture}
+    % Define coordinates
+    \coordinate (origin) at (0,0);
+    % Define our lengths, etc for the acrobot
+    \pgfmathsetmacro{\len}{3};
+    \pgfmathsetmacro{\qu}{30};
+    \pgfmathsetmacro{\qa}{0};
+    \pgfmathsetmacro{\quc}{\len*cos(\qu)};
+    \pgfmathsetmacro{\qus}{\len*sin(\qu)};
+    \pgfmathsetmacro{\qac}{\len*cos(\qa+\qu)};
+    \pgfmathsetmacro{\qas}{\len*sin(\qa+\qu)};
+    % Positions of the VLP representation
+    \pgfmathsetmacro{\xe}{\len*(sin(\qu)+0.5*sin(\qu+\qa))};
+    \pgfmathsetmacro{\ye}{-\len*(cos(\qu)+0.5*cos(\qu+\qa))};
+    % The base of the pivot
+    \draw[thick] (-2,0) coordinate (leftwall) -- (2+\len,0) coordinate (rightwall);
+    \fill[black] (origin) circle (0.05);
+    % Fill a cross-hatched wall above the pivot
+    \fill[pattern=north east lines] (leftwall) rectangle ($(rightwall) + (0,0.1)$);
+    % The gravity arrow
+    \draw[draw=gray, ->] ($(leftwall) + (0.5,-0.5)$) -- ($(leftwall) +(0.5,-1)$) node [right,black] {$g$};
+
+    % The dashed line at the vertical of the origin
+    \draw[draw=gray, dashed] (origin) -- ++(0,-2) coordinate (vert);
+
+    % The first link as a thick rod
+    \draw[draw=black, ultra thick] (origin) -- 
+        ($(origin) + (\qus,-\quc)$) coordinate (m1);
+    \fill[black] (m1) circle (0.05);
+
+    % The second link
+    \draw[draw=black, ultra thick] (m1) -- 
+        ($(m1) + (\qas,-\qac)$) coordinate (m2);
+    % The effective COM
+	\coordinate (me) at ($(origin) + (\xe,\ye)$);
+
+    % The angle q_u
+    \pic [draw,->, "$q_u$", angle eccentricity = 1.2,angle radius=25, pic text
+    options={shift={(-2pt,-2pt)}}] {angle=vert--origin--me};
+
+    % The first center of mass
+    % label uses {angle:label_name}
+    \node[draw=none, rotate=\qu, inner sep = 0pt, label={[label
+        distance=-2pt]\qu+180:$m$}] at (m1) 
+    {\centerofmass};
+    % The second center of mass
+    \node[draw=none, rotate=\qa+\qu, inner sep=0pt, label={[label distance=-1pt]110:$m$}] at (m2)
+        {\centerofmass};
+\end{tikzpicture}
+\end{document}
+% vim: set tw=80 ts=4 sw=4 sts=0 et ffs=unix :
