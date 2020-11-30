@@ -51,9 +51,9 @@
     \coordinate (alphapoint) at (\xalpha, \yalpha);
 
     % Colour in the region for oscillations
-    \addplot[black,->,thick,name path=upper,samples=100,domain=-pi:pi]
+    \addplot[black,->,dashed,thick,name path=upper,samples=100,domain=-pi:pi]
         {sqrt(30*\mgl*(cos(deg(x))+1))};
-    \addplot[black,<-,thick,name path=lower, samples=100,domain=-pi:pi]
+    \addplot[black,<-,dashed,thick,name path=lower, samples=100,domain=-pi:pi]
         {-sqrt(30*\mgl*(cos(deg(x))+1))};
     \addplot[fill=blue,opacity=0.2] 
         fill between[of=upper and lower];

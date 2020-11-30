@@ -46,10 +46,6 @@
  yticklabel style={yshift={(\ticknum == 0)*(-0.3cm) + (\ticknum == 1)*(0.25cm)}}
 ]
     % Draw the homoclinic orbit with arrows pointing in the direction of flow
-%    \draw[black, thick,->]  (-pi,0) arc 
-%        [start angle=180, end angle = 0, x radius=pi, y radius=\homoy];
-%    \draw[black, thick,->]  (pi,0) arc 
-%        [start angle=0, end angle = -180, x radius=pi, y radius=\homoy];
     \addplot[black,->,thick,samples=100,domain=-pi:pi]
         {sqrt(30*\mgl*(cos(deg(x))+1))};
     \addplot[black,<-,thick,samples=100,domain=-pi:pi]

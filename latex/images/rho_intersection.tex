@@ -1,0 +1,88 @@
+%! TEX program = lualatex
+
+% Use :VimtexToggleMain to compile this file alone with Vimtex
+\documentclass[tikz]{standalone}
+
+\usepackage{sty/adantikz}
+%TODO: Add a figure with one oscillation mark at a distance mu from
+    % the origin to the intersection on the q-axis. We also draw the boundary of
+    % mathcalO and shade the interior, and draw a line to the oscillation with
+    % clockwise angle alpha
+
+\begin{document}
+\begin{tikzpicture}
+    % Define the maximum y axis value
+    \pgfmathsetmacro{\ymax}{22};
+    % Define the value of m2gl3 making sqrt(60m2gl3)=15
+    \pgfmathsetmacro{\mgl}{15^2/60};
+    % rotation intersection with pu axis
+    \pgfmathsetmacro{\roty}{20};
+    % beta location on the q_u axis
+    \pgfmathsetmacro{\betax}{-pi/2};
+    % beta location on the y-axis
+    \pgfmathsetmacro{\betay}{sqrt(\roty^2+30*\mgl*(cos(deg(\betax))-1))};
+
+% Define the figure
+\begin{axis}[
+ axis line style = thick,
+ % Set the axes to be centered nicely
+ axis lines  = center,
+ % Turn off arrows
+ axis line style={-},
+ % Set the axes
+ xlabel = $q_u$, 
+ x label style={right},
+ xmin = -3.5, xmax = 3.5,
+ ylabel = $p_u$,
+ y label style={above},
+ ymin = -\ymax, ymax = \ymax,
+ % Custom tick labels at specified positions
+ xtick = {-3.1415, \betax, 3.1415},
+ xticklabels = {$-\pi$, $\beta$, $\pi$},
+ xticklabel style={xshift={(\ticknum==0)*(-0.3cm) + (\ticknum==1)*(-0.25cm) + (\ticknum==2)*(0.25cm)}},
+ ytick = {-\roty, \roty},
+ yticklabels = {$-\rho$,$\rho$},
+ % Move the label so it looks good
+ yticklabel style={yshift={(\ticknum == 0)*(0.25cm) + (\ticknum == 1)*(-0.25cm)}}
+]
+    % Draw the homoclinic orbit with arrows pointing in the direction of flow
+    \addplot[black,->,dashed,thick,name path=upper,samples=100,domain=-pi:pi]
+        {sqrt(30*\mgl*(cos(deg(x))+1))};
+    \addplot[black,<-,dashed,thick,name path=lower,samples=100,domain=-pi:pi]
+        {-sqrt(30*\mgl*(cos(deg(x))+1))};
+
+    % Colour in the region for rotations
+%    \fill[blue, opacity=0.2] (-pi,\ymax) -- upper -- (pi,\ymax) -- cycle;
+    \fill[blue,opacity=0.2,domain=-pi:pi,variable=\x]
+        (-pi,\ymax) 
+        -- plot({\x},{sqrt(30*\mgl*(cos(deg(\x))+1))})
+        -- (pi,\ymax)
+        -- cycle;
+
+    \fill[blue,opacity=0.2,domain=-pi:pi,variable=\x]
+        (-pi,-\ymax) 
+        -- plot({\x},{-sqrt(30*\mgl*(cos(deg(\x))+1))})
+        -- (pi,-\ymax)
+        -- cycle;
+
+    % Draw a rotation on the upper and lower halves, with the intersection
+    % points rho and -rho labelled.
+    \addplot[red,->,name path=upper,thick,samples=100,domain=-pi:pi]
+        {sqrt(\roty^2+30*\mgl*(cos(deg(x))-1))};
+    \addplot[red,<-,name path=upper,thick,samples=100,domain=-pi:pi]
+        {-sqrt(\roty^2+30*\mgl*(cos(deg(x))-1))};
+
+    % Draw an arrow as a vertical line pointing from the q_u axis to the
+    % rotation, with a label of \(\beta\) on the q_u axis where this connects.
+    % oscillation orbit.
+    \draw[black, ->] (\betax,0) -- (\betax,\betay);
+    \draw[black, ->] (\betax,0) -- (\betax,-\betay);
+
+    % Draw vertical dashed lines at +-pi
+    \draw[gray, dashed] (-pi,-20) -- (-pi,20);
+    \draw[gray, dashed] (pi,-20) -- (pi,20);
+
+\end{axis}
+\end{tikzpicture}
+\end{document}
+% vim: set tw=80 ts=4 sw=4 sts=0 et ffs=unix :
