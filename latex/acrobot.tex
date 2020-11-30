@@ -1066,7 +1066,7 @@ for\(\mu_0 \in [\epsilon,\pi[\) we have
     P_\mathcal{O}(\mu_0) > \mu_0 + I K Q(\epsilon) - I^2 r
     .
 \]
-Choosing \(I^\star \in\, ]0,I_3]\) so that
+Choosing \(I^\star \in\, ]0,\min\left\{I_2,I_3\right\}]\) so that
 \(I^\star K Q(\epsilon) - (I^\star)^2 r > 0\)
 means that
 \( P_\mathcal{O}(\mu_0) > \mu_0\)
@@ -1092,44 +1092,45 @@ In this case, the constraint dissipates energy on \(\mathcal{O}\).
 \end{proof}
 
 \subsection{Perturbation Analysis for Rotations}
-The rotation region for the nominal pendulum is the set
+Figure \ref{fig:pendulum-level-sets} reminds us that rotations of the 
+nominal pendulum obtained by setting \(I = 0\) look like open curves on some
+rotation region \(\mathcal{R} \subset \Gamma\).
+One can compute this rotation domain to be the set
 \[
     \mathcal{R} := \left\{ (q_u,p_u) \in \Gamma \mid E(q_u,p_u) > E(\pi,0)\right\}
     .
 \]
-Figure \ref{fig:pendulum-level-sets} shows that orbits of the 
-pendulum on \(\mathcal{R}\) look like open curves.
 Performing a similar process to what we did for oscillations,
 we wish to find a new set of coordinates \((\beta,\rho)\)
-where \(\rho\) remains constant on level sets of \(E\)
-and \(\beta \in \Sone\) is always increasing on \(\mathcal{R}\).
+where the pseudo-radius \(\rho \in \mathbb{R}\) remains constant on level sets
+of \(E\) and the pseudo-angle \(\beta \in \Sone\) is always increasing on
+\(\mathcal{R}\).
+
+\subsubsection*{Pseudo-Polar Coordinates}
 
 In the oscillation region \(\mathcal{O}\) we showed that the nominal pendulum's
 energy (and hence, its orbit) is uniquely determined by the intersection point
 \(\mu\) with the \(q_u\)-axis;
-likewise, on \(\mathcal{R}\) the energy is determined by the
-intersection \(\rho\) on the \(p_u\)-axis, as in Figure
-\ref{fig:rho-intersection}.
+likewise, on \(\mathcal{R}\) the energy is determined by the intersection
+\(\rho\) on the \(p_u\)-axis, as in Figure \ref{fig:rho-intersection}.
 
 \begin{figure}
     \centering
-    %TODO: Add a figure with one rotation mark a distance rho away from the
-    %origin along the p-axis. Draw the lower boundary of R and shade the
-    %interior, and draw a line to the rotation with angle beta.
-    %\includestandalone[]{images/rho_intersection}
-    \caption{The domain \(\mathcal{R}\) where a pendulum rotates. The
+    \includestandalone[]{images/rho_intersection}
+    \caption{The domain \(\mathcal{R}\) (blue) where a pendulum rotates. The
         pseudo-radius \(\rho\) corresponds to the intersection of an orbit of
-        rotation with the \(p_u\)-axis. The pseudo-angle \(\beta\) is taken to
-        be clockwise positive, because oscillations of a pendulum move clockwise
-        on \(\mathcal{R}\).}
+        rotation with the \(p_u\)-axis. The pseudo-angle \(\beta\) selects a
+        point on the rotation.}
     \label{fig:rho-intersection}
 \end{figure}
 
 Note that the boundary of \(\mathcal{R}\) intersects the \(p_u\) axis when 
 \(p_u^2 = 60m^2 g l^3\). 
-Hence, we must have \(\rho > \sqrt{60 m^2 g l^3}\) if the
-orbit has momentum \(p_u > 0\) 
-and \(\rho < -\sqrt{60 m^2 g l^3}\) if the orbit has momentum \(p_u < 0\).
+The level set of this boundary is \(E(\pi,0)\), the homoclinic orbit for the
+upright equilibrium of the pendulum.
+Hence, we must have \(\rho > \sqrt{60 m^2 g l^3}\) if a
+rotation has momentum \(p_u > 0\) 
+and \(\rho < -\sqrt{60 m^2 g l^3}\) if it has momentum \(p_u < 0\).
 The energy level set associated with \(\rho\) is 
 \[
     \left\{(q_u,p_u) \in \Gamma \mid E(q_u,p_u) = \frac{\rho^2}{10ml^2}\right\}
@@ -1175,11 +1176,14 @@ orbits always flow clockwise.
 If \(\rho > 0\), the rotation curve goes from \(\beta = -\pi\) to 
 \(\beta = \pi\); 
 if \(\rho < 0\), it goes from \(\beta = \pi\) to \(\beta = -\pi\).
+By continuity of ~\eqref{eqn:rotation-T}, there exists \(I_1 > 0\) small enough
+that \(\dot{\beta}\) is non-zero and does not change sign on \(\mathcal{R}\) for
+all \(I \in [-I_1,I_1]\).
 
-We can use \(\beta\) as a new ``time" variable on \(\mathcal{R}\) 
-by performing a time transformation \(t = \tau(\beta)\).
-This produces the time-scaled system \(\hat{\rho}(\beta) = \rho(\tau(\beta))\)
-with dynamics
+\subsubsection*{Time Scaling}
+
+Using \(\beta\) as our new time variable produces the time-scaled system
+\(\hat{\rho}(\beta) = \rho(\tau(\beta))\) with dynamics
 \[
     \begin{cases}
         \dot{\hat{\rho}} = \frac{\dot{\rho}}{\dot{\beta}}
@@ -1188,16 +1192,13 @@ with dynamics
         .
     \end{cases}
 \]
-Using the perturbation method, we expand the solution of these dynamics into
-\begin{equation}\label{eqn:acrobot-rhohat-approx}
-    \hat{\rho}(\beta,\rho_0,I) = \hat{\rho}_0(\beta,\rho_0) +
-    I\hat{\rho}_1(\beta,\rho_0) + R(\beta,\rho_0,I)
-    ,
-\end{equation}
-where \(R(\beta,\rho_0,I)\) is smooth and \(O(I^2)\).
 
-From ~\eqref{eqn:khalil-perturbation-nominal} we know
-\(\hat{\rho}_0\) is the solution to the nominal system
+\subsubsection*{Perturbation Analysis of the Time Scaled System}
+
+In the spirit of perturbation analysis, we expand the time-scaled system 
+\(\hat{\rho}(\beta,\rho_0,I)\). 
+From ~\eqref{eqn:khalil-perturbation-nominal} we know the nominal system at
+\(I = 0\) is
 \[
     \begin{cases} 
         \dot{\hat{\rho}}_0 = 0
@@ -1206,9 +1207,10 @@ From ~\eqref{eqn:khalil-perturbation-nominal} we know
         ,
     \end{cases}
 \]
-which means \(\hat{\mu}_0(\beta,\rho_0) \equiv \rho_0\) for all \(\beta\).
+with solution \(\hat{\rho}_0(\beta,\rho_0) \equiv \rho_0\) for all \(\beta\).
 Likewise, ~\eqref{eqn:khalil-perturbation-firstorder} 
-gives us the following dynamics for \(\hat{\rho}_1\):
+tells us that \(\hat{\rho}_1(\beta,\rho_0)\) is the solution to the linear
+time-varying scalar system
 \begin{equation}\label{eqn:acrobot-rho1-dot}
   \begin{cases}
     \dot{\hat{\rho}}_1 =
@@ -1221,29 +1223,42 @@ gives us the following dynamics for \(\hat{\rho}_1\):
     =: b(\beta,\rho_0)
      , \\
      \hat{\rho}_1(0) = 0
-     .
+     ,
  \end{cases}
 \end{equation}
-The solution to ~\eqref{eqn:acrobot-rho1-dot} is given by
+whose solution is
 \[
     \hat{\rho}_1(\beta,\rho_0) = \int \limits_0^\beta b(\sigma,\rho_0)d\sigma
     .
 \]
+Therefore, the first-order Taylor approximation of
+\(\hat{\rho}(\beta,\rho_0,I)\) is
+\begin{equation}\label{eqn:acrobot-rhohat-approx}
+    \hat{\rho}(\beta,\rho_0,I) = \hat{\rho}_0(\beta,\rho_0) +
+    I\hat{\rho}_1(\beta,\rho_0) + R(\beta,\rho_0,I)
+    ,
+\end{equation}
+where \(R(\beta,\rho_0,I)\) is smooth and \(O(I^2)\).
+
+\subsubsection*{Poincar\'{e} Analysis}
 
 Suppose we initialize the acrobot at \((\beta,\rho) = (0,\rho_0)\).
 One full rotation amounts to \(\beta\) traversing \(2\pi\)rad in a clockwise
 direction (\ie \(\beta\) going from \(0\) to \(\sign{\rho_0}2\pi\)).
-We define the Poincar\'{e} section
+Since \(\dot{\beta}\) does not change sign on \(\mathcal{R}\),
+there is a well-defined Poincar\'{e} map describing how the pseudo-radius
+\(\rho\) changes each time the orbit \((q(t),p(t))\) hits the \(p_u\) axis, \ie,
+every time \(\beta\) changes by \(2\pi\).
+We define this Poincar\'{e} map as
 \(P_\mathcal{R}(\rho_0) := \hat{\rho}(\sign{\rho_0}2\pi,\rho_0,I)\),
-which is the intersection point on the \(p_u\)-axis after a single rotation.
-This expands into
+which expands into
 \[
     P_\mathcal{R}(\rho_0) = \rho_0 + I \hat{\rho}_1(\sign{\rho_0}2\pi, \rho_0)
-      + R(2\pi,\rho_0,I)
+    + R(\sign{\rho_0}2\pi,\rho_0,I)
     .
 \]
 
-The function \(b(\beta,\rho_0)\) is even and is 
+The function \(b(\beta,\rho_0)\) is even and
 \(2\pi\)-periodic in \(\beta\), which implies that
 \begin{align*}
     \hat{\rho}_1(\sign{\rho_0}2\pi, \rho_0) &=
@@ -1254,19 +1269,79 @@ The function \(b(\beta,\rho_0)\) is even and is
      &= \sign{\rho_0} \hat{\rho}_1(2\pi,\rho_0)
      .
 \end{align*}
-Furthermore, \(b(\beta,\rho_0)\) is also even in \(\rho_0\), 
-so \(\hat{\rho}_1(2\pi,\rho_0) = \hat{\rho}_1(2\pi,\abs{\rho_0})\).
-This implies that
-\begin{align*}
-    \abs{P_\mathcal{R}(\rho_0)} &= \left|\sign{\rho_0}\left(
-        \abs{\rho_0} + I \hat{\rho}_1(2\pi,\abs{\rho_0})
-        + \sign{\rho_0}R(2\pi,\rho_0,I)\right)\right|
-    \\
-    &= \left|\abs{\rho_0} + I \hat{\rho}_1(2\pi,\abs{\rho_0})
-        + \sign{\rho_0}R(2\pi,\rho_0,I)\right|
+Thus, we have that
+\[
+    P_\mathcal{R}(\rho_0) = \rho_0 + I\sign{\rho_0}\hat{\rho}_1(2\pi,\rho_0) 
+    + R(\sign{\rho_0}2\pi,\rho_0,I)
     .
-\end{align*}
+\]
 
+Note that \(b(\beta,\rho_0)\) is even in \(\rho_0\), which means
+\(\hat{\rho}_1(2\pi,\rho_0) = \hat{\rho}_0(2\pi,\abs{\rho_0})\).
+Recalling the assumption that there exists \(\bar{\rho} > 0\) so that
+\(\int \limits_{0}^{2\pi} b(\sigma,\rho_0)d\sigma > 0\) for all 
+\(\rho_0 \in \,]\sqrt{60m^2gl^3},\bar{\rho}]\),
+we have that \(\hat{\rho}_1(2\pi,\rho_0) > 0\)
+for every \(\rho_0\) with \(\sqrt{60m^2gl^3} < \abs{\rho} \leq \bar{rho}\).
+Finally, \(R(\sign{\rho_0}2\pi,\rho_0,I)\) is \(O(I^2)\). 
+Defining 
+\[
+    D := [-\bar{\rho},\sqrt{60m^2gl^3}[ \, \cup \, ]\sqrt{60m^2gl^3},\bar{\rho}]
+    ,
+\]
+these facts all together imply that, for
+each \(\rho_0 \in D\),
+there exists \(I > 0\) small enough that 
+\[
+    \begin{cases}
+        P_\mathcal{R}(\rho_0) > \rho_0 & \rho_0 > 0
+        ,\\
+        P_\mathcal{R}(\rho_0) < \rho_0 & \rho_0 < 0
+        .\\
+    \end{cases}
+\]
+
+\subsubsection*{Energy Gain on \(\mathcal{R}\)}
+
+The Poincar\'{e} section \(P_\mathcal{R}\) allows us understand the evolution of
+\(\hat{\rho}(\beta,\rho_0,I)\) by studying the evolution of the discrete time
+system
+\begin{equation}\label{eqn:rhohat-discrete}
+    \begin{cases}
+        \rho(n+1) := P_\mathcal{R}(\rho(n)) 
+        = \rho(n) + I\sign{\rho_0}\hat{\rho}_1(2\pi,\rho(n)) + 
+            R(\sign{\rho_0}2\pi,\rho(n),I)
+        , \\
+        \rho(0) = \rho_0
+        .
+    \end{cases}
+\end{equation}
+Tolerating the abuse of notation, \(\rho(n)\) represents the distance along the
+\(p_u\)-axis when an orbit of the constrained dynamics intersects the
+\(p_u\)-axis for the \(n\)th time, assuming the orbit was initialized at
+\((q_u,p_u) = (0,\rho_0)\).
+
+We wish to show \(\abs{\rho(n)}\) eventually reaches \(\bar{\rho}\).
+That is, we wish to find some \(I^\star \in \,]0,I_1]\) making
+\(\abs{P_\mathcal{R}(\rho_0)} > \abs{\rho_0}\) for all 
+\(\rho_0 \in D\)
+We will restrict ourselves, without loss of generality, to the case where
+\(\rho_0 > 0\).
+
+Recall that \(R(\beta,\rho_0,I)\) is \(O(I^2)\) and smooth in all
+its parameters.
+Therefore, it is bounded below on the compact set
+\(\rho_0 \in [\sqrt{60m^2gl^3},\bar{\rho}]\) by some value
+\(R(2\pi,\underbar{\rho},I)\).
+Theorem \ref{thm:khalil-perturbation} asserts that there exists some 
+\(I_2 > 0\) and \(r > 0\) so that, for all \(I \in [-I_2,I_2]\),
+\[
+    R(2\pi,\rho_0,I) \geq R(2\pi,\underbar{\rho},I) > -I^2r
+    .
+\]
+
+
+%TODO: replace this with an analysis of poincare section
 Let now \(\bar{\rho} > \sqrt{60m^2gl^3}\) and take the compact set
 \[
     \bar{\mathcal{R}} := \left\{(q_u,p_u) \in \Gamma 
