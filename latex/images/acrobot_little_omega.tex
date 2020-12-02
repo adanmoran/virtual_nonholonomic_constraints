@@ -1,0 +1,74 @@
+%! TEX program = lualatex
+
+% Use :VimtexToggleMain to compile this file alone with Vimtex
+\documentclass[tikz]{standalone}
+
+\usepackage{sty/adantikz}
+%TODO: Add a figure with one oscillation mark at a distance mu from
+    % the origin to the intersection on the q-axis. We also draw the boundary of
+    % mathcalO and shade the interior, and draw a line to the oscillation with
+    % clockwise angle alpha
+
+\begin{document}
+\begin{tikzpicture}
+    % Define rho_bar
+    \pgfmathsetmacro{\rhob}{18};
+    % Define the value of m2gl3 making sqrt(60m2gl3)=15
+    \pgfmathsetmacro{\mgl}{15^2/60};
+% Define the figure
+\begin{axis}[
+ axis line style = thick,
+ % Set the axes to be centered nicely
+ axis lines  = center,
+ % Turn off arrows
+ axis line style={-},
+ % Set the axes
+ xlabel = $q_u$, 
+ x label style={right},
+ xmin = -3.5, xmax = 3.5,
+ ylabel = $p_u$,
+ y label style={above},
+ ymin = -22, ymax = 22,
+ % Custom tick labels at specified positions
+ xtick = {-3.1415, 3.1415},
+ xticklabels = {$-\pi$, $\pi$},
+ xticklabel style={xshift={(\ticknum==0)*(-0.3cm) + (\ticknum==1)*(0.25cm)}},
+ ytick = {-\rhob,-15, 15,\rhob},
+ yticklabels = {},
+ % Move the label so it looks good
+ yticklabel style={yshift={(\ticknum == 0)*(-0.25cm) + (\ticknum == 3)*(0.2cm)}}
+]
+    % Draw rotations for rho_bar
+    % The rotation has pu = sign(rho)sqrt(rhob^2+30m^2gl^3(cos(q_u)-1)
+    \addplot[name path=upper,thick,samples=100,domain=-pi:pi]
+        {sqrt(\rhob^2+30*\mgl*(cos(deg(x))-1))};
+    \addplot[name path=lower,thick,samples=100,domain=-pi:pi]
+        {-sqrt(\rhob^2+30*\mgl*(cos(deg(x))-1))};
+
+    % Add a label for the orbit energy level
+    \node at (-pi/4, 20) {$E(0,\bar{\rho})$};
+
+	% Draw the homoclinic orbit
+    \addplot[black,->,dashed,thick,name path=hupper,samples=100,domain=-pi:pi]
+        {sqrt(30*\mgl*(cos(deg(x))+1))};
+    \addplot[black,<-,dashed,thick,name path=hlower,samples=100,domain=-pi:pi]
+        {-sqrt(30*\mgl*(cos(deg(x))+1))};
+
+    % ADd a label for the homoclinic orbit energy level
+    \node at (-pi/4, 10) {$E(\pi,0)$};
+
+    % Colour in the region for omega by filling between rho_bar and homoclinic
+    % orbit 
+    \addplot[fill=blue,opacity=0.2] 
+        fill between[of=upper and hupper];
+    \addplot[fill=blue,opacity=0.2] 
+        fill between[of=lower and hlower];
+
+    % Draw vertical dashed lines at +-pi
+    \draw[gray, dashed] (-pi,-22) -- (-pi,22);
+    \draw[gray, dashed] (pi,-22) -- (pi,22);
+
+\end{axis}
+\end{tikzpicture}
+\end{document}
+% vim: set tw=80 ts=4 sw=4 sts=0 et ffs=unix :
