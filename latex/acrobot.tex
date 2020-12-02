@@ -451,9 +451,10 @@ control parameter \(I\) to guarantee this is true.
         }
         ,
     \]
-    and fix \(\bar{\rho} > \sqrt{60m^2gl^3}\).
-    Suppose \(\int \limits_{0}^{2\pi} b(\sigma,\rho_0)d\sigma > 0\) for all 
-    \(\rho_0 \in \, \left]\sqrt{60m^2gl^3}, \bar{\rho}\right]\).
+    and set \(S(\rho_0) := \int \limits_{0}^{2\pi} b(\sigma,\rho_0)d\sigma\).
+    Fix \(\bar{\rho} > \sqrt{60m^2gl^3}\).
+    Suppose there exists \(\epsilon > 0\) so that \(S(\rho_0) > \epsilon\) for
+    all \(\rho_0 \in \, \left]\sqrt{60m^2gl^3}, \bar{\rho}\right]\).
     Then there exists \(I > 0\) small enough that
     ~\eqref{eqn:acrobot-constraint} injects energy into the acrobot on
     \[
@@ -1067,7 +1068,7 @@ for\(\mu_0 \in [\epsilon,\pi[\) we have
     .
 \]
 Choosing \(I^\star \in\, ]0,\min\left\{I_2,I_3\right\}]\) so that
-\(I^\star K Q(\epsilon) - (I^\star)^2 r > 0\)
+\(I^\star K Q(\epsilon) - (I^\star)^2 r \geq 0\)
 means that
 \( P_\mathcal{O}(\mu_0) > \mu_0\)
 for all \(\mu_0 \in [\epsilon,\pi[\).
@@ -1269,20 +1270,21 @@ The function \(b(\beta,\rho_0)\) is even and
      &= \sign{\rho_0} \hat{\rho}_1(2\pi,\rho_0)
      .
 \end{align*}
-Thus, we have that
+Defining \(S(\rho_0) := \hat{\rho}_1(2\pi,\rho_0)\),
+we get
 \[
-    P_\mathcal{R}(\rho_0) = \rho_0 + I\sign{\rho_0}\hat{\rho}_1(2\pi,\rho_0) 
+    P_\mathcal{R}(\rho_0) = \rho_0 + I\sign{\rho_0}S(\rho_0) 
     + R(\sign{\rho_0}2\pi,\rho_0,I)
     .
 \]
 
 Note that \(b(\beta,\rho_0)\) is even in \(\rho_0\), which means
-\(\hat{\rho}_1(2\pi,\rho_0) = \hat{\rho}_0(2\pi,\abs{\rho_0})\).
-Recalling the assumption that there exists \(\bar{\rho} > 0\) so that
-\(\int \limits_{0}^{2\pi} b(\sigma,\rho_0)d\sigma > 0\) for all 
-\(\rho_0 \in \,]\sqrt{60m^2gl^3},\bar{\rho}]\),
-we have that \(\hat{\rho}_1(2\pi,\rho_0) > 0\)
-for every \(\rho_0\) with \(\sqrt{60m^2gl^3} < \abs{\rho} \leq \bar{rho}\).
+\(S(\rho_0) = S(\abs{\rho_0})\).
+Recall the assumption that there exist \(\bar{\rho} > 0\) and
+\(\epsilon > 0\) where \(S(\rho_0) \geq \epsilon\) for all 
+\(\rho_0 \in \,]\sqrt{60m^2gl^3},\bar{\rho}]\).
+Hence, we have that \(S(\rho_0) \geq \epsilon\)
+for every \(\rho_0\) with \(\sqrt{60m^2gl^3} < \abs{\rho} \leq \bar{\rho}\).
 Finally, \(R(\sign{\rho_0}2\pi,\rho_0,I)\) is \(O(I^2)\). 
 Defining 
 \[
@@ -1300,8 +1302,10 @@ there exists \(I > 0\) small enough that
         .\\
     \end{cases}
 \]
+As with oscillations, this \(I\) may not work for all \(\rho_0 \in D\). We deal
+with this issue next.
 
-\subsubsection*{Energy Gain on \(\mathcal{R}\)}
+\subsubsection*{Energy Gain on a Subset of \(\mathcal{R}\)}
 
 The Poincar\'{e} section \(P_\mathcal{R}\) allows us understand the evolution of
 \(\hat{\rho}(\beta,\rho_0,I)\) by studying the evolution of the discrete time
@@ -1309,7 +1313,7 @@ system
 \begin{equation}\label{eqn:rhohat-discrete}
     \begin{cases}
         \rho(n+1) := P_\mathcal{R}(\rho(n)) 
-        = \rho(n) + I\sign{\rho_0}\hat{\rho}_1(2\pi,\rho(n)) + 
+        = \rho(n) + I\sign{\rho_0}S(\rho(n)) + 
             R(\sign{\rho_0}2\pi,\rho(n),I)
         , \\
         \rho(0) = \rho_0
@@ -1325,9 +1329,8 @@ We wish to show \(\abs{\rho(n)}\) eventually reaches \(\bar{\rho}\).
 That is, we wish to find some \(I^\star \in \,]0,I_1]\) making
 \(\abs{P_\mathcal{R}(\rho_0)} > \abs{\rho_0}\) for all 
 \(\rho_0 \in D\)
-We will restrict ourselves, without loss of generality, to the case where
-\(\rho_0 > 0\).
 
+We begin with examining the case where \(\rho_0 > 0\).
 Recall that \(R(\beta,\rho_0,I)\) is \(O(I^2)\) and smooth in all
 its parameters.
 Therefore, it is bounded below on the compact set
@@ -1339,113 +1342,149 @@ Theorem \ref{thm:khalil-perturbation} asserts that there exists some
     R(2\pi,\rho_0,I) \geq R(2\pi,\underbar{\rho},I) > -I^2r
     .
 \]
-
-
-%TODO: replace this with an analysis of poincare section
-Let now \(\bar{\rho} > \sqrt{60m^2gl^3}\) and take the compact set
+Since \(S(\rho_0) \geq \epsilon\), we find that
 \[
-    \bar{\mathcal{R}} := \left\{(q_u,p_u) \in \Gamma 
-    \mid E(\pi,0) \leq E(q_u,p_u) \leq E(0,\bar{\rho}) \right\}
+    P_\mathcal{R}(\rho_0) > \rho_0 + I\epsilon -I^2r
+    ,
+\]
+for all \(\rho_0 \in ]\sqrt{60m^2gl^3},\bar{\rho}]\).
+Choosing \(I_3 \in ]0,I_2]\) so that 
+\(I_3\epsilon - (I_3)^2 r \geq 0\) means that
+\(P_\mathcal{R}(\rho_0) > \rho_0\)
+for all \(\rho_0 \in ]\sqrt{60m^2gl^3},\bar{\rho}]\)
+
+We now examine the case when \(\rho_0 < 0\), where we wish to show that 
+\(P_\mathcal{R}(\rho_0) < \rho_0\).
+The remainder \(R(\beta,\rho_0,I)\) is bounded above on the compact set 
+\(\rho_0 \in [-\bar{\rho},-\sqrt{60m^2gl^3}]\), and 
+Theorem \ref{thm:khalil-perturbation} asserts that there exists some 
+\(I_4 > 0\) and \(r^\prime > 0\) so that, for all \(I \in [-I_4,I_4]\), 
+\[
+    R(-2\pi,\rho_0,I) < I^2 r^\prime
     .
 \]
-The (modified) remainder term \(\sign{\rho_0}{R}(\beta,\rho_0,I)\) 
-is smooth and \(O(I^2)\), which means
-it attains its minimum \(I^2\hat{r}\) somewhere \(\bar{\mathcal{R}}\).
-Likewise, \(\hat{\rho}_1(2\pi,\abs{\rho_0})\) also attains its minimum, which we
-denote by \(\underbar{\rho}_1\).
-We cannot adimensionalize \(b(\beta,\rho_0)\), so refer to one of the 
-assumptions of Theorem \ref{thm:acrobot-energy-stabilization}
-to suppose  that \(\hat{\rho}_1(2\pi,\rho_0) > 0 \) for all 
-\(\rho_0 \in ]\sqrt{60m^2gl^3},\bar{\rho}]\).
-In particular, this means \(\underbar{\rho}_1 > 0\).
-
-There exists \(I > 0\) making 
-\(I\underbar{\rho}_1 + I^2\hat{r} > 0\).
 Hence,
 \begin{align*}
-    \abs{\rho_0} + I\hat{\rho}_1(2\pi,\abs{\rho_0}) + \sign{\rho_0}R(2\pi,\rho_0,I)
-    &\geq \sqrt{60m^2gl^3} + I\underbar{\rho}_1 + I^2\hat{r}
-    \\
-    &> \sqrt{60m^2gl^3}
-    \\
-    &> 0
-    ,
-\end{align*}
-which implies that
-\begin{align*}
-    \abs{P_\mathcal{R}(\rho_0)} - \abs{\rho_0}
-    &= \abs{ \abs{\rho_0} + I\hat{\rho}_1(2\pi,\rho_0) +
-    \sign{\rho_0}R(2\pi,\rho_0,I)} - \abs{\rho_0}
-    \\
-    &= \abs{\rho_0} + I\hat{\rho}_1(2\pi,\rho_0) +
-    \sign{\rho_0}R(2\pi,\rho_0,I) - \abs{\rho_0}
-    \\
-    &= I\hat{\rho}_1(2\pi,\rho_0) + \sign{\rho_0}R(2\pi,\rho_0,I)
-    \\
-    &> 0
+    P_\mathcal{R}(\rho_0)
+    &= \rho_0 - IS(\rho_0) + R(-2\pi,\rho_0,I)
+    &< \rho_0 - IS(\epsilon) + I^2r^\prime
     .
 \end{align*}
+Choosing \(I_5 \in ]0,I_4]\) so that 
+\((I_5)^2r^\prime - I_5 S(\epsilon) \leq 0\) makes
+\(P_\mathcal{R}(\rho_0) < \rho_0\) for all 
+\(\rho_0 \in [-\bar{\rho},-\sqrt{60m^2gl^3}[\).
 
-We conclude that there exists \(I^\prime(\bar{\rho})\)
-small enough that, for all \( 0 < I \leq I^\prime(\bar{\rho})\), 
-the Poincar\'{e} section \(P_\mathcal{R}(\rho_0)\) is monotonically increasing
-when \(\sqrt{60m^2gl^3} < \rho_0 < \bar{\rho}\) and
-monotonically decreasing when \(-\bar{\rho} < \rho_0 < -\sqrt{60m^2gl^3}\).  
-
-\subsection*{Energy Gain on \(\Omega\)}
-We will prove the acrobot gains energy on the set 
+Finally, choosing \(I^\star \in ]0,\min{I_3,I_5}]\) yields that
+\(\abs{P_\mathcal{R}(\rho_0)} > \abs{\rho_0}\) for all \(\rho_0 \in D\), as
+desired.
+Looking at ~\eqref{eqn:rhohat-discrete}, this means all solutions of the
+discrete-time system will flow away from the origin until it reaches a magnitude
+\(\abs{\rho(n)} = \bar{\rho}\).
+Hence, the constrained dynamics will eventually escape the set
+\(\omega \subset \mathcal{R}\) defined by
 \[
-    \Omega := \left\{ (q_u,p_u) \in \Gamma 
-     \mid E(q_u,p_u) < E(0,\bar{\rho}) \right\}
-    .
-\]
-% Can we use the jacobian? The spectrum is hard to find.
-% TODO: W and D's boundary is two elements: the point (pi,0) and the curve of the
-% homoclinic orbit connecting (pi,0) to (-pi,0). We need to show that almost
-% every initial condition starting in \(mathcal{O}\) will NOT converge to (pi,0), and
-% therefore exit D and enter W.
-
-Define the set of points in \(\mathcal{R}\) which have pseudo-radius in \(U\) by
-\[
-    W := \left\{(q_u,p_u) \in \Gamma \mid |\rho(q_u,p_u)| \in U \right\}
+    \omega := \left\{(q_u,p_u) \in \Gamma
+        \mid E(\pi,0) < E(q_u,p_u) < E(0,\bar{\rho} \right\}
     ,
 \]
-as in Figure \ref{fig:acrobot-rot-W}.
-Monotonicity of \(P(\rho_0)\) means there are no closed orbits of 
-\((q_u,p_u)\) on \(W\). 
-Furthermore, \(|p_u|\) is increasing every time the orbit hits the
-\(p_u\)-axis. 
+which is displayed in Figure \ref{fig:acrobot-little-omega}.
+
+We conclude that there exists \(I > 0\) small enough that the constraint
+~\eqref{eqn:acrobot-constraint} is injecting energy on \(\omega\).
 
 \begin{figure}
     \centering
-    % TODO: Display the set W, which is the two rotation bands at the top and
-    % bottom with outer limit +- \bar{mu}  and inner limit +- sqrt{60m^2gl^3}.
-    % Show also that the inner limit connects to D
-    %\includestandalone[width=0.5\textwidth]{images/acrobot_rot_W}
-    \caption{The set \(W\) of points which have pseudo-radius 
-        \(|\rho| \in ]\sqrt{60m^2gl^3}, \bar{\rho}[\). The inner boundary of \(W\)
-        is \((q_u,p_u) = (\pi,0)\), which is also the boundary of the
-        oscillation domain \(mathcal{O}\).}
-    \label{fig:acrobot-rot-W}
+    \includestandalone[width=0.5\textwidth]{images/acrobot_little_omega}
+    \caption{The set \(\omega \subset \mathcal{R}\) on which the acrobot will gain energy.
+    }
+    \label{fig:acrobot-little-omega}
 \end{figure}
 
-We conclude that \(|\rho(q_u,p_u)|\) will eventually reach \(\bar{\rho}\). 
-We cannot claim this fits the definition  of energy injection 
-(since \((0,0) \notin W\)), but we can still say that \((q_u,p_u)\) will
-eventually depart \(W\) through the outer boundary in finite time.
-The acrobot is thereby gaining energy in the literal sense that its momentum
-is increasing on \(W\).
+By the same arguments presented in this section, the Poincar\'{e} section
+satisfies \(\abs{P_\mathcal{R}(\rho_0)} < \abs{\rho_0}\) when \(I < 0\).
+In this case, the constraint dissipates energy on \(\omega\).
 
-If we set \(I < 0\), we have \(P(|\rho_0|) < |\rho_0|\).
-Hence, \(|p_u|\) is decreasing every time the orbit hits the \(p_u\)-axis, so
-the acrobot will eventually depart \(W\) through the inner boundary. 
-The acrobot is losing momentum, and therefore it is losing energy on \(W\).
+\subsection{Energy Gain on \(\Omega\)}
+Define \(E_\pi\) to be the energy level set associated with \(E(pi,0)\).
+We will prove the acrobot gains energy on the set 
+\begin{align*}
+    \Omega &= \left\{(q_u,p_u) \in \Gamma
+    \mid E(q_u,p_u) < E(0,\bar{\rho}) \right\}
+    ,\\
+    &= \mathcal{O} \cup E_\pi \cup \omega
+    .
+\end{align*}
+There exists some control input \(I_1 > 0\) for which the acrobot is gaining
+energy on \(\mathcal{O}\). 
+Hence, there are no closed orbits in \(\mathcal{O}\) and almost all orbits flow
+towards \(E_\pi\).
+Likewise, there exists some \(I_2 > 0\)for which the acrobot is gaining energy
+on \(\omega\), so there are no closed orbits in \(\omega\) and almost every
+orbit is flowing away from \(E_\pi\).
+Choosing \(I^\star \in ]0,\min{I_1,I_2}]\) means the acrobot will gain energy on
+both \(\mathcal{O}\) as well as \(\omega\).
 
-A hybrid supervisor that flips the sign of \(I\) based on the current
-value of \(\mu\) will stabilize any energy level of oscillation.
-As was the case in the VLP, this supervisor should implement some kind of
-hysteresis to avoid infinite switching.
+We can prove energy gain on \(\Omega\) by showing two properties of the system.
+First, that the set \(\Pi^+\) of initial conditions converging to  \((\pi,0)\)
+is of measure zero in \(\Gamma\);
+second, that \(E_\pi\) is not an invariant set and therefore is not equal to 
+\(\Pi^+\).
+If both these conditions are true, then orbits flowing from \(\mathcal{O}\) into
+\(E_\pi\) will generally swing past \(E_\pi\) into \(\omega\).
 
+To show the first condition, we will simply prove that \((\pi,0)\) is an
+unstable equilibrium of the constrained dynamics.
+Taking the jacobian of ~\eqref{eqn:acrobot-constrained-dynamics} at \((\pi,0)\)
+yields
+\[
+    J = \begin{bmatrix}
+        -\frac{6mgl\bar{q}_aI}{5} & \frac{1 - 2m^2gl^3\bar{q}_a^2 I^2}{5ml^2} \\
+        3mgl & mgl\bar{q}_aI
+    \end{bmatrix}
+    ,
+\]
+which has the characteristic polynomial
+\[
+    \det\left(\lambda \Id{2} - J\right)
+    = \lambda^2 + \frac{mgl\bar{q}_a I}{5} \lambda - 3g
+    .
+\]
+By Descartes' rule of signs, this polynomial has one root with positive real
+part. 
+Hence, the equilibrium \((\pi,0)\) is unstable.
+
+To show the second condition, we evaluate \(\dot{E}(q_u,p_u)\) at the point
+\((0,\pm\sqrt{60m^2gl^3}) \in E_\pi\).
+MATLAB returns the value
+\[
+    \dot{E}(0,\pm\sqrt{60m^2gl^3}) 
+    = \mp\frac{g}{5l}
+    \sqrt{60m^2gl^3} \sin\left(\bar{q}_a \arctan(I \sqrt{60m^2gl^3})\right)
+    .
+\]
+This is zero only if \(\bar{q}_a \arctan(I\sqrt{60m^2gl^3}) = \frac{\pi}{2}\), a
+situation which occurs only when \(\bar{q}_a \geq 1\) at a single value of
+\(I\).
+Avoiding this value of \(I\) (if it exists) makes \(E_\pi\) a non-invariant set
+as desired.
+
+We know that almost all orbits starting in \(\omega\) will escape \(\Omega\).
+Non-invariance of \(E_\pi\) and instability of \((\pi,0)\) implies that 
+almost all orbits initialized in \(\mathcal{O}\) will reach \(E_\pi\) and
+eventually swing into \(\omega\), rather than stay in \(E_\pi\) and converge to
+\((\pi,0)\). 
+We conclude that almost all orbits will depart the energy level set associated with
+\(E(0,\bar{\rho})\), thereby escaping \(\Omega\) all together.
+Hence, the acrobot is gaining energy on \(\Omega\).
+
+If \(I < 0\), orbits in \(\mathcal{O}\) will converge to the origin and orbits in
+\(\omega\) will flow towards \(E_\pi\).
+However, the upright equilibrium \((\pi,0)\) will still be unstable, and
+\(E_\pi\) will remain a non-invariant set. 
+This means that almost all orbits in \(\omega\) will flow past \(E_\pi\) into
+\(\mathcal{O}\), so the constrained system will be gaining energy in
+negative-time. Thus, the constraint is dissipating energy on \(\Omega\).
 
 \section{Experimental Results}
 % TODO: This might be a separate chapter
