@@ -1183,11 +1183,12 @@ all \(I \in [-I_1,I_1]\).
 
 \subsubsection*{Time Scaling}
 
-Using \(\beta\) as our new time variable produces the time-scaled system
-\(\hat{\rho}(\beta) = \rho(\tau(\beta))\) with dynamics
+Using \(\beta\) as our new time variable (via a time reparameterization
+\(t = t(\beta)\)) produces the time-scaled system
+\(\hat{\rho}(\beta,\rho_0,I) = \rho(t(\beta),\rho_0,I)\) with dynamics
 \[
     \begin{cases}
-        \dot{\hat{\rho}} = \frac{\dot{\rho}}{\dot{\beta}}
+        \diff{\hat{\rho}}{\beta} = \frac{\dot{\rho}}{\dot{\beta}}
         , \\
         \hat{\rho}(0) = \rho_0
         .
@@ -1244,8 +1245,8 @@ where \(R(\beta,\rho_0,I)\) is smooth and \(O(I^2)\).
 \subsubsection*{Poincar\'{e} Analysis}
 
 Suppose we initialize the acrobot at \((\beta,\rho) = (0,\rho_0)\).
-One full rotation amounts to \(\beta\) traversing \(2\pi\)rad in a clockwise
-direction (\ie \(\beta\) going from \(0\) to \(\sign{\rho_0}2\pi\)).
+One full rotation amounts to \(\beta\) traversing \(2\pi\) rad in a clockwise
+direction; that is, when \(\beta\) goes from \(0\) to \(\sign{\rho_0}2\pi\)).
 Since \(\dot{\beta}\) does not change sign on \(\mathcal{R}\),
 there is a well-defined Poincar\'{e} map describing how the pseudo-radius
 \(\rho\) changes each time the orbit \((q(t),p(t))\) hits the \(p_u\) axis, \ie,
@@ -1278,22 +1279,25 @@ we get
     .
 \]
 
-Note that \(b(\beta,\rho_0)\) is even in \(\rho_0\), which means
-\(S(\rho_0) = S(\abs{\rho_0})\).
 Recall the assumption that there exist \(\bar{\rho} > 0\) and
 \(\epsilon > 0\) where \(S(\rho_0) \geq \epsilon\) for all 
 \(\rho_0 \in \,]\sqrt{60m^2gl^3},\bar{\rho}]\).
-Hence, we have that \(S(\rho_0) \geq \epsilon\)
-for every \(\rho_0\) with \(\sqrt{60m^2gl^3} < \abs{\rho} \leq \bar{\rho}\).
-Finally, \(R(\sign{\rho_0}2\pi,\rho_0,I)\) is \(O(I^2)\). 
-Defining 
+Let us define
 \[
-    D := [-\bar{\rho},\sqrt{60m^2gl^3}[ \, \cup \, ]\sqrt{60m^2gl^3},\bar{\rho}]
-    ,
+    D := \left[-\bar{\rho},\sqrt{60m^2gl^3}\right[ \, 
+    \cup \, 
+    \left]\sqrt{60m^2gl^3},\bar{\rho}\right]
+    .
 \]
-these facts all together imply that, for
-each \(\rho_0 \in D\),
+Since \(b(\beta,\rho_0)\) is even in \(\rho_0\),
+\(S(\rho_0) = S(\abs{\rho_0})\);
+hence, \(S(\rho_0) \geq \epsilon\) for every \(\rho_0 \in D\).
+
+Finally, recall that \(R(\sign{\rho_0}2\pi,\rho_0,I)\) is \(O(I^2)\), so 
+for each fixed \(\rho_0 \in D\)
 there exists \(I > 0\) small enough that 
+\( IS(\rho_0) + R(\sign{\rho_0}2\pi,\rho_0,I) > 0\).
+For this value of \(I\), we have that
 \[
     \begin{cases}
         P_\mathcal{R}(\rho_0) > \rho_0 & \rho_0 > 0
@@ -1302,7 +1306,7 @@ there exists \(I > 0\) small enough that
         .\\
     \end{cases}
 \]
-As with oscillations, this \(I\) may not work for all \(\rho_0 \in D\). We deal
+Unfortunately, this \(I\) may not work for all \(\rho_0 \in D\). We deal
 with this issue next.
 
 \subsubsection*{Energy Gain on a Subset of \(\mathcal{R}\)}
@@ -1367,6 +1371,7 @@ Hence,
 \begin{align*}
     P_\mathcal{R}(\rho_0)
     &= \rho_0 - IS(\rho_0) + R(-2\pi,\rho_0,I)
+    , \\
     &< \rho_0 - IS(\epsilon) + I^2r^\prime
     .
 \end{align*}
@@ -1375,17 +1380,17 @@ Choosing \(I_5 \in ]0,I_4]\) so that
 \(P_\mathcal{R}(\rho_0) < \rho_0\) for all 
 \(\rho_0 \in [-\bar{\rho},-\sqrt{60m^2gl^3}[\).
 
-Finally, choosing \(I^\star \in ]0,\min{I_3,I_5}]\) yields that
+Finally, choosing \(I^\star \in\, ]0,\min\left\{I_3,I_5\right\}]\) yields that
 \(\abs{P_\mathcal{R}(\rho_0)} > \abs{\rho_0}\) for all \(\rho_0 \in D\), as
 desired.
-Looking at ~\eqref{eqn:rhohat-discrete}, this means all solutions of the
-discrete-time system will flow away from the origin until it reaches a magnitude
-\(\abs{\rho(n)} = \bar{\rho}\).
+Looking at the discrete-time system ~\eqref{eqn:rhohat-discrete}, 
+a solution of the system will flow away from the origin until it reaches a
+magnitude \(\abs{\rho(n)} = \bar{\rho}\).
 Hence, the constrained dynamics will eventually escape the set
 \(\omega \subset \mathcal{R}\) defined by
 \[
     \omega := \left\{(q_u,p_u) \in \Gamma
-        \mid E(\pi,0) < E(q_u,p_u) < E(0,\bar{\rho} \right\}
+    \mid E(\pi,0) < E(q_u,p_u) < E(0,\bar{\rho}) \right\}
     ,
 \]
 which is displayed in Figure \ref{fig:acrobot-little-omega}.
@@ -1406,7 +1411,7 @@ satisfies \(\abs{P_\mathcal{R}(\rho_0)} < \abs{\rho_0}\) when \(I < 0\).
 In this case, the constraint dissipates energy on \(\omega\).
 
 \subsection{Energy Gain on \(\Omega\)}
-Define \(E_\pi\) to be the energy level set associated with \(E(pi,0)\).
+Define \(E_\pi\) to be the energy level set associated with \(E(\pi,0)\).
 We will prove the acrobot gains energy on the set 
 \begin{align*}
     \Omega &= \left\{(q_u,p_u) \in \Gamma
@@ -1417,26 +1422,25 @@ We will prove the acrobot gains energy on the set
 \end{align*}
 There exists some control input \(I_1 > 0\) for which the acrobot is gaining
 energy on \(\mathcal{O}\). 
-Hence, there are no closed orbits in \(\mathcal{O}\) and almost all orbits flow
-towards \(E_\pi\).
-Likewise, there exists some \(I_2 > 0\)for which the acrobot is gaining energy
+Hence, there are no closed orbits in \(\mathcal{O}\) and almost all orbits 
+hit \(E_\pi\) in finite time.
+Likewise, there exists some \(I_2 > 0\) for which the acrobot is gaining energy
 on \(\omega\), so there are no closed orbits in \(\omega\) and almost every
 orbit is flowing away from \(E_\pi\).
-Choosing \(I^\star \in ]0,\min{I_1,I_2}]\) means the acrobot will gain energy on
+Choosing \(I^\star \in ]0,\min\left\{I_1,I_2\right\}]\) means the acrobot will gain energy on
 both \(\mathcal{O}\) as well as \(\omega\).
 
 We can prove energy gain on \(\Omega\) by showing two properties of the system.
 First, that the set \(\Pi^+\) of initial conditions converging to  \((\pi,0)\)
 is of measure zero in \(\Gamma\);
-second, that \(E_\pi\) is not an invariant set and therefore is not equal to 
-\(\Pi^+\).
+second, that \(E_\pi\) is not a positively-invariant set.
 If both these conditions are true, then orbits flowing from \(\mathcal{O}\) into
 \(E_\pi\) will generally swing past \(E_\pi\) into \(\omega\).
 
 To show the first condition, we will simply prove that \((\pi,0)\) is an
 unstable equilibrium of the constrained dynamics.
-Taking the jacobian of ~\eqref{eqn:acrobot-constrained-dynamics} at \((\pi,0)\)
-yields
+Taking the Jacobian of the constrained dynamics
+~\eqref{eqn:acrobot-constrained-dynamics} at \((\pi,0)\) yields
 \[
     J = \begin{bmatrix}
         -\frac{6mgl\bar{q}_aI}{5} & \frac{1 - 2m^2gl^3\bar{q}_a^2 I^2}{5ml^2} \\
@@ -1452,30 +1456,34 @@ which has the characteristic polynomial
 \]
 By Descartes' rule of signs, this polynomial has one root with positive real
 part. 
-Hence, the equilibrium \((\pi,0)\) is unstable.
+The equilibrium \((\pi,0)\) is therefore unstable, so the set \(\Pi^+\) of
+initial conditions converging to \((\pi,0)\) is one-dimensional, and hence is
+of measure zero in \(\Gamma\).
 
-To show the second condition, we evaluate \(\dot{E}(q_u,p_u)\) at the point
-\((0,\pm\sqrt{60m^2gl^3}) \in E_\pi\).
-MATLAB returns the value
-\[
-    \dot{E}(0,\pm\sqrt{60m^2gl^3}) 
-    = \mp\frac{g}{5l}
-    \sqrt{60m^2gl^3} \sin\left(\bar{q}_a \arctan(I \sqrt{60m^2gl^3})\right)
-    .
-\]
-This is zero only if \(\bar{q}_a \arctan(I\sqrt{60m^2gl^3}) = \frac{\pi}{2}\), a
-situation which occurs only when \(\bar{q}_a \geq 1\) at a single value of
-\(I\).
-Avoiding this value of \(I\) (if it exists) makes \(E_\pi\) a non-invariant set
-as desired.
+For the second condition, let us seek a contradiction by 
+supposing that \(E_\pi\) is a positively-invariant set. 
+Let \(x(t)\) be an orbit of the constrained dynamics initialized at 
+\(x(0) \in \mathal{O}\).
+Since the constrained dynamics gain energy on \(\mathcal{O}\), there exists a
+time \(T > 0\) such that \(x(T) \in E_\pi\).
+By the assumed positive invariance of \(E_\pi\), this means 
+\(x(t) \in E_\pi\) for all \(t \in [T,\infty[\).
+Since \(E_\pi\) is a closed curve containing the equilibrium \((\pi,0)\) and no
+other equilibria, \(x(t)\) must converge to \((\pi,0)\).
+The initial condition \(x(0) \in \mathcal{O}\) was arbitrary, so this implies
+that \(\mathcal{O} \subset \Pi^+\).
+But \(\Pi^+\) is a set of measure zero, while \(\mathcal{O}\) has positive
+measure. 
+This is a contradiction: \(E_\pi\) cannot be positively-invariant.
 
-We know that almost all orbits starting in \(\omega\) will escape \(\Omega\).
 Non-invariance of \(E_\pi\) and instability of \((\pi,0)\) implies that 
 almost all orbits initialized in \(\mathcal{O}\) will reach \(E_\pi\) and
 eventually swing into \(\omega\), rather than stay in \(E_\pi\) and converge to
 \((\pi,0)\). 
-We conclude that almost all orbits will depart the energy level set associated with
-\(E(0,\bar{\rho})\), thereby escaping \(\Omega\) all together.
+We know that almost all orbits starting in \(\omega\) will reach 
+\(E(0,\bar{\rho})\) in finite time;
+we conclude that almost all orbits starting in \(\Omega\) will depart the energy
+escaping \(\Omega\) all together.
 Hence, the acrobot is gaining energy on \(\Omega\).
 
 If \(I < 0\), orbits in \(\mathcal{O}\) will converge to the origin and orbits in
