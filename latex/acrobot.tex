@@ -418,28 +418,63 @@ Hence, the constrained dynamics for the acrobot under
     .
 \end{equation}
 
-These dynamics do not always gain energy -- we need certain conditions on our
-control parameter \(I\) to guarantee this is true.
+These dynamics do not gain energy everywhere; we need to define some sets where
+this energy gain is possible.
+First, let 
+\[
+    E(q_u,p_u) := \frac{p_u^2}{10ml^2} + 3mgl(1 - \cos(q_u))
+    ,
+\]
+be the energy function obtained by setting \(I = 0\).
+As we will see later, this is the mechanical energy of a simple pendulum with
+two masses.
+Next, define the set
+\begin{equation}\label{eqn:oscillation-domain}
+    \mathcal{O}_1 := \left\{(q_u,p_u) \in \SxR 
+    \mid E(q_u,p_u) < E(\pi,0) \right\}
+    ,
+\end{equation}
+which is seen in Figure \ref{fig:acrobot-oscillation-domain}.
+Finally, let \(\bar{\rho} > \sqrt{60m^2gl^3}\) and define the set
+\begin{equation}\label{eqn:o-rhobar}
+    \mathcal{O}_2(\bar{\rho}) := \left\{(q_u,p_u) \in \SxR
+        \mid E(q_u,p_u) < E(0,\bar{\rho}) \right\}
+    ,
+\end{equation}
+as in Figure \ref{fig:acrobot-o2}
+
+\begin{figure}
+    \centering
+    \begin{subfigure}[t]{0.45\textwidth}
+        \includestandalone[width=\linewidth]{images/acrobot_oscillation_domain}
+        \caption{The set \(\mathcal{O}\). An orbit starting in this set (blue)
+            will reach the level set \(E(\pi,0)\) of the nominal pendulum.}
+        \label{fig:acrobot-oscillation-domain}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[t]{0.45\textwidth}
+        \includestandalone[width=\linewidth]{images/acrobot_omega}
+        \caption{The set \(\mathcal{O}_2(\bar{\rho})\). Orbits starting in this set will
+            reach the level set \(E(0,\bar{\rho})\) of the nominal pendulum.}
+            \label{fig:acrobot-o2}
+    \end{subfigure}
+    \caption{The sets on which Theorem \ref{thm:acrobot-energy-stabilization}
+        claims the acrobot gains energy.}
+\end{figure}
+
+For small enough \(I\), our VNHC will inject energy on the open set
+\(\mathcal{O}_1\) and (provided a suitable condition is met) on the open set
+\(\mathcal{O}_2(\bar{\rho})\).
 
 \begin{thm}\label{thm:acrobot-energy-stabilization}
     Consider the simple acrobot ~\eqref{eqn:acrobot-hamiltonian} constrained by
     the VNHC ~\eqref{eqn:acrobot-constraint}, whose
     constraint manifold is \(\Gamma \simeq \SxR\).
-    Let 
-    \[
-        E(q_u,p_u) := \frac{p_u^2}{10ml^2} + 3mgl(1 - \cos(q_u))
-        ,
-    \]
-    be the energy of the simple pendulum obtained by setting \(I = 0\).
 \begin{enumerate}
     \item There exists \(I > 0\) small enough that 
     ~\eqref{eqn:acrobot-constraint} injects energy into the acrobot on
-    \[
-        \mathcal{O} := \left\{(q_u,p_u) \in \Gamma 
-        \mid E(q_u,p_u) < E(\pi,0) \right\}
-        .
-    \]
-    If instead \(I < 0\), the VNHC dissipates energy on \(\mathcal{O}\).
+    \(\mathcal{O}_1\).
+    If instead \(I < 0\), the VNHC dissipates energy on this set.
 \item Define \(b : \SxR_{> 0} \rightarrow \R\) by
     \[
         b(\beta,\rho_0) := 
@@ -457,54 +492,39 @@ control parameter \(I\) to guarantee this is true.
     all \(\rho_0 \in \, \left]\sqrt{60m^2gl^3}, \bar{\rho}\right]\).
     Then there exists \(I > 0\) small enough that
     ~\eqref{eqn:acrobot-constraint} injects energy into the acrobot on
-    \[
-        \Omega := \left\{(q_u,p_u) \in \Gamma 
-        \mid E(q_u,p_u) < E(0,\bar{\rho})\right\}
-        .
-    \]
-    If instead \(I < 0\), the VNHC dissipates energy on \(\Omega\).
+    \(\mathcal{O}_2(\bar{\rho})\).
+    If instead \(I < 0\), the VNHC dissipates energy on this set.
 \end{enumerate}
 \end{thm}
 
-A small enough fixed value \(I > 0\) will enable the acrobot to 
-escape any compact subset of \(\mathcal{O}\) in finite time. 
+Notice that \(\mathcal{O}_1 \subset \mathcal{O}_2(\bar{\rho})\), yet
+Theorem \ref{thm:acrobot-energy-stabilization} considers these sets separately.
+This separation is advantageous: 
+regardless of one's choice of acrobot, 
+a small enough fixed value \(I > 0\) will enable the acrobot to 
+escape any compact subset of \(\mathcal{O}_1\) in finite time. 
 What's more, the acrobot's phase will flow towards the homoclinic orbit
 corresponding to \(E(\pi,0)\), as in Figure
 \ref{fig:acrobot-oscillation-domain}.
+
 Hence, the first result of Theorem \ref{thm:acrobot-energy-stabilization} states
 that all acrobots constrained by ~\eqref{eqn:acrobot-constraint} 
 will gain enough energy to begin rotating around the bar.
 In the worst case, the acrobot will at least perform a swing-up routine to reach
-the \((q_u,p_u) = (\pi,0)\) equilibrium.
+the unstable equilibrium at \((q_u,p_u) = (\pi,0)\).
 
+The second result of Theorem
+\ref{thm:acrobot-energy-stabilization} pertains to energy injection once the
+acrobot has started rotating - that is, when its phase lies in 
+\(\mathcal{O}_2(\bar{\rho}) \backslash \mathcal{O}_1\).
 If we want the acrobot to achieve giants with energy
 \(E(0,\bar{\rho})\), the acrobot needs to satisfy the assumption on the
 integral of \(b(\beta,\rho_0)\).
-In this case, orbits will escape compact subsets of \(\Omega\) in finite time
-until the acrobot eventually reaches a momentum of at least \(\bar{\rho}\).
-One example of this behaviour is displayed in Figure \ref{fig:acrobot-omega}.
+In this case, orbits will escape compact subsets of
+\(\mathcal{O}_2(\bar{\rho})\) in finite time until the acrobot eventually
+reaches a momentum of at least \(\bar{\rho}\).
+One example of this behaviour is displayed in Figure \ref{fig:acrobot-o2}.
 Note that the value of \(I\) will depend on \(\bar{\rho}\).
-
-\begin{figure}
-    \centering
-    \begin{subfigure}[t]{0.45\textwidth}
-        \includestandalone[width=\linewidth]{images/acrobot_oscillation_domain}
-        \caption{The set \(\mathcal{O}\). An orbit starting in this set (blue)
-            will reach the level set \(E(\pi,0)\) of the nominal pendulum in
-            finite time.}
-        \label{fig:acrobot-oscillation-domain}
-    \end{subfigure}
-    \hfill
-    \begin{subfigure}[t]{0.45\textwidth}
-        \includestandalone[width=\linewidth]{images/acrobot_omega}
-        \caption{The set \(\Omega\). Orbits starting in this set will
-            reach the level set \(E(0,\bar{\rho})\) of the nominal pendulum in
-            finite time.}
-            \label{fig:acrobot-omega}
-    \end{subfigure}
-    \caption{The sets defined by Theorem \ref{thm:acrobot-energy-stabilization}
-        on which the acrobot gains energy.}
-\end{figure}
 
 Unfortunately, the proof used in Chapter \ref{ch:vlp} does not
 readily transfer to the acrobot.
@@ -570,14 +590,14 @@ adapted to level sets of \(E\) below the value \(E(\pi,0)\),
 where \(\mu\) specifies the level set and \(\alpha\) identifies a point on that
 level set.
 Once we have these coordinates in hand, we can use perturbation theory to prove
-that \(\mu\) increases on \(\mathcal{O}\) when \(I > 0\) is small enough.
+that \(\mu\) increases on \(\mathcal{O}_1\) when \(I > 0\) is small enough.
 
 Likewise, we will find a second set of coordinates \((\beta, \rho)\) for
 rotations, where \(\beta \in \Sone\) is always increasing along solutions,
 \(\rho\) is constant along rotations of the simple pendulum, and \(\rho\)
 increases for the acrobot when \(I > 0\) is small enough.
 Using both \((\alpha,\mu)\) and \((\beta,\rho)\), we will show the acrobot is
-gaining energy on \(\Omega\).
+gaining energy on \(\mathcal{O}_2(\bar{\rho})\).
 
 \subsection{Background on Perturbation Theory}
 Nonlinear systems like the acrobot are difficult (or even impossible) to solve
@@ -676,11 +696,9 @@ This pendulum oscillates whenever the nominal energy
 ~\eqref{eqn:acrobot-nominal-E} is less than \(E(\pi,0)\). 
 Hence, the domain of oscillations for the nominal pendulum is given by
 \[
-    \mathcal{O} := \left\{ (q_u,p_u) \in \Gamma \mid E(q_u,p_u) < E(\pi,0)\right\}
-    ,
+    \mathcal{O}_1 := \left\{ (q_u,p_u) \in \SxR \mid E(q_u,p_u) < E(\pi,0)\right\}
+    .
 \]
-where \(\Gamma \simeq \SxR\) is the constraint manifold of the
-acrobot.
 Recall that orbits of a pendulum are level sets of \(E\). 
 From Figure \ref{fig:pendulum-level-sets}, we know that oscillation level sets
 look like ellipses contained in \(\mathcal{O}\).
@@ -692,12 +710,27 @@ along with a pseudo-angle \(\alpha \in \Sone\) satisfying \(\dot{\alpha} > 0\) o
 
 \subsubsection*{Pseudo-Polar Coordinates}
 
-The energy of oscillation can be determined by the orbit's intersection
-\(\mu\) with the \(q_u\)-axis (as in Figure \ref{fig:mu-intersection}).
-Since \(q_u \in ]-\pi,\pi[\) on \(\mathcal{O}\), we set \(\mu \in ]0,\pi[\).
+Once again, to define pseudo-polar coordinates, we consider the dynamics of the
+pendulum obtained by setting \(I = 0\) in
+~\eqref{eqn:acrobot-constrained-dynamics}, resulting in
+\begin{equation}\label{eqn:acrobot-nominal-dynamics}
+    \begin{cases}
+        \dot{q}_u = \frac{p_u}{5ml^2}
+        , \\
+        \dot{p}_u = -3mgl\sin(q_u)
+        . 
+    \end{cases}
+\end{equation}
+
+The above is a simple mechanical system whose total energy is precisely the
+function \(E(q_u,p_u)\) defined in ~\eqref{eqn:acrobot-nominal-E}.
+The energy of oscillation can be determined by the intersection
+\(\mu\) of an orbit of ~\eqref{eqn:acrobot-nominal-dynamics}
+with the \(q_u\)-axis (as in Figure \ref{fig:mu-intersection}).
+Since \(q_u \in ]-\pi,\pi[\) on \(\mathcal{O}_1\), we set \(\mu \in ]0,\pi[\).
 The transformation we want is therefore a diffeomorphism of the form
 \begin{align*}
-    T : \mathcal{O} \backslash \{(0,0)\} &\rightarrow \Sone \times \, ]0,\pi[, \\
+    T : \mathcal{O}_1 \backslash \{(0,0)\} &\rightarrow \Sone \times \, ]0,\pi[, \\
     (q_u, p_u) &\mapsto (\alpha,\mu)
     .
 \end{align*}
@@ -705,18 +738,18 @@ The transformation we want is therefore a diffeomorphism of the form
 \begin{figure}
     \centering
     \includestandalone[width=0.5\textwidth]{images/mu_intersection}
-    \caption{The domain \(\mathcal{O}\) (blue) where a pendulum oscillates.
+    \caption{The domain \(\mathcal{O}_1\) (blue) where a pendulum oscillates.
     The pseudo-radius \(\mu\) corresponds to the
     intersection of an oscillation (red) with the \(q_u\)-axis.
     The psuedo-angle \(\alpha\) is taken to be clockwise positive because 
-    oscillations of a pendulum move clockwise on \(\mathcal{O}\).}
+    oscillations of a pendulum move clockwise on \(\mathcal{O}_1\).}
     \label{fig:mu-intersection}
 \end{figure}
 
 The energy level set corresponding to the intersection \((q_u,p_u) = (\mu,0)\)
 is 
 \[
-    \left\{(q_u,p_u) \in \Gamma \mid E(q_u,p_u) = 3mgl(1- \cos(\mu))\right\}
+    \left\{(q_u,p_u) \in \SxR \mid E(q_u,p_u) = 3mgl(1- \cos(\mu))\right\}
     ,
 \]
 which gives the relationship
@@ -749,10 +782,10 @@ Notice from ~\eqref{eqn:oscillation-pu2} that
     .
 \]
 Since \(\mu \in ]0,\pi[\), we can uniquely express \(\mu\) by
-\begin{equation}\label{eqn:mu-qupu}
+\begin{equation*}
     \mu = \arccos\left(C_\mu(q_u,p_u)\right)
     .
-\end{equation}
+\end{equation*}
 Next we need to find \(\alpha\). 
 Recall that 
 \begin{equation}\label{eqn:acrobot-cosalpha-qu}
@@ -768,14 +801,22 @@ Using ~\eqref{eqn:oscillation-pu}, we determine that
 \(\sign{\sin(\alpha)} = -\sign{p_u}\).
 Putting together ~\eqref{eqn:acrobot-cosalpha-qu} and
 ~\eqref{eqn:acrobot-sinalpha-qu}, we deduce that
-\begin{equation}\label{eqn:alpha-qupu}
+\begin{equation*}
     \alpha = \left.
         \arctan_2\left( -\sign{p_u}\sqrt{1 - \frac{q_u^2}{\mu^2}}, \frac{q_u}{\mu}\right)
         \right|_{\mu = \arccos(C_\mu(q_u,p_u))}
     .
-\end{equation}
-Thus, ~\eqref{eqn:mu-qupu} and ~\eqref{eqn:alpha-qupu} define 
-our transformation into \((\alpha,\mu)\)-coordinates on \(\mathcal{O}\).
+\end{equation*}
+Thus, our transformation into \((\alpha,\mu)\)-coordinates is
+\begin{align}
+        \label{eqn:mu-qupu}
+        \mu &= \arccos\left(C_\mu(q_u,p_u)\right), \\
+        \label{eqn:alpha-qupu}
+        \alpha &= \left.
+        \arctan_2\left( -\sign{p_u}\sqrt{1 - \frac{q_u^2}{\mu^2}}, \frac{q_u}{\mu}\right)
+        \right|_{\mu = \arccos(C_\mu(q_u,p_u))}
+        .
+\end{align}
 
 The acrobot's constrained dynamics in
 \((\alpha,\mu)\)-coordinates can be computed by evaluating
@@ -812,14 +853,46 @@ MATLAB's symbolic toolbox evaluates the nominal dynamics as
             {\mu^2 \sin(\alpha)^2}}
     .
 \end{align}
-One can confirm that \(\dot{\alpha} > 0\) for every \(\mu \in ]0,\pi[\).
+Note that ~\eqref{eqn:acrobot-alpha-dot-nom} has a removable singularity at
+\(\alpha \in \{0,\pi\}\): 
+taking the limit as \(\alpha\) approaches these points yields
+\[
+    \lim \limits_{\alpha \to 0}\dot{\alpha} 
+    = \lim \limits_{\alpha \to \pi} \dot{\alpha}
+    = \sqrt{\frac{6g \sin(\mu)}{10l \mu}}
+    ,
+\]
+which is smooth and well-defined for all \(\mu \in ]0,\pi[\).
+Taking this removable singularity into account,
+one can confirm that \(\dot{\alpha} > 0\) for every \(\mu \in ]0,\pi[\).
 By continuity of ~\eqref{eqn:acrobot-alpha-dot}, there exists \(I_1 > 0\) small
-enough that \(\dot{\alpha}\) remains positive on \(\mathcal{O}\) for 
-\(I \in [-I_1,I_1]\).
+enough that \(\dot{\alpha}\) remains positive on \(\mathcal{O}_1\) for 
+\(I \in [-I_1,I_1]\). 
+
+These pseudo-polar coordinates can be extended smoothly to 
+\(\bar{\mathcal{O}}_1\), the closure of \(\mathcal{O}_1\).
+Notice that, for each \(\alpha \in \Sone\),
+\[
+    \lim \limits_{\mu \to \pi} \dot{\alpha}
+    = \sqrt{\frac{6g}{5l}} 
+        \sqrt{\frac{\cos(\pi\cos(\alpha)) + 1}
+            {\pi^2 \sin(\alpha)^2}}
+    \geq 0
+    ,
+\]
+with equality if and only if \(\alpha \in \{0,\pi\}\).
+In other words, the coordinates \(\mu = \pi, \alpha\) dictate the behaviour of
+the nominal pendulum on the homoclinic orbit with energy \(E(\pi,0)\).
+Hence, for small enough \(I\) we have \(\dot{\alpha} \geq 0\) everywhere on the 
+closed set \(\bar{\mathcal{O}}_1\), with equality only at the upright
+equilibrium \((q_u,p_u) = (\pi,0)\).
+We will use this later to prove that all orbits starting in
+\(\mathcal{O}_1\) cross the boundary and enter the rotation region.
 
 \subsubsection*{Time Scaling}
 
-We have observed that \(\dot{\alpha} > 0\) on \(\mathcal{O}\) for small enough \(I\). 
+We have observed in ~\eqref{eqn:acrobot-mu-dot}-\eqref{eqn:acrobot-alpha-dot}
+that \(\dot{\alpha} > 0\) on \(\mathcal{O}_1\) for small enough \(I\). 
 Hence, we can use \(\alpha\) as our time variable by reparameterizing \(t\) as a
 function \(t(\alpha)\).
 This allows us to study the evolution of \(\mu\) as a function of \(\alpha\)
@@ -850,7 +923,7 @@ In the spirit of perturbation analysis, we will expand our time-scaled system
 We begin by setting \(I = 0\) to find the nominal system
 \[
 \begin{cases}
-    \dot{\hat{\mu}}_0 = g(\alpha,\hat{\mu}_0,0)
+    \pdiff{\hat{\mu}_0}{\alpha} = g(\alpha,\hat{\mu}_0,0)
     , \\
     \hat{\mu}_0(0) = \mu_0
    .
@@ -862,8 +935,7 @@ so the solution to this nominal system is
 \(\hat{\mu}_0(\alpha,\mu_0) \equiv \mu_0\) for all \(\alpha\).
 
 We now take a first-order Taylor approximation of \(\hat{\mu}(\alpha,\mu_0,I)\)
-around the nominal system \(\hat{\mu}_0(\alpha,\mu_0)\), which 
-expands into 
+around the nominal \(\hat{\mu}_0(\alpha,\mu_0)\),
 \begin{equation}\label{eqn:acrobot-muhat-approx}
     \hat{\mu}(\alpha,\mu_0,I) = \hat{\mu}_0(\alpha,\mu_0) + I
     \hat{\mu}_1(\alpha,\mu_0)
@@ -876,7 +948,7 @@ By ~\eqref{eqn:khalil-perturbation-firstorder}, we know the function
 system
 \begin{equation}\label{eqn:acrobot-mu1-dot}
     \begin{cases}
-        \dot{\hat{\mu}}_1 = 
+        \pdiff{\hat{\mu}_1}{\alpha} = 
         \pdiff{g}{\hat{\mu}}(\alpha,\mu_0,0)\hat{\mu}_1 + \pdiff{g}{I}(\alpha, \mu_0, 0)
         , \\
         \hat{\mu}_1(0) = 0
@@ -891,7 +963,7 @@ computation to reveal that
     \pdiff{g}{I}(\alpha, \mu_0, 0) &= K a(\alpha,\mu_0)
     ,
 \end{align*}
-where we define
+where 
 \begin{align*}
     K &:= \frac{\bar{q}_a \sqrt{30m^2g l^3}}{15}
     , \\
@@ -904,7 +976,7 @@ where we define
     }
     .
 \end{align*}
-Hence, the solution to ~\eqref{eqn:acrobot-mu1-dot} is given by
+Equation ~\eqref{eqn:acrobot-mu1-dot} can be solved by quadrature, giving
 \[
     \hat{\mu}_1(\alpha,\mu_0) =
     K \int \limits_0^\alpha a(\sigma,\mu_0)d\sigma
@@ -923,32 +995,32 @@ Therefore, the first-order Taylor approximation of \(\hat{\mu}(\alpha,\mu_0,I)\)
 Since \(\dot{\alpha} > 0\), there is a well-defined Poincar\'{e} map 
 describing how the pseudo-radius \(\mu\) changes each time the orbit of \((q_u(t),p_u(t))\)
 intersects the \(q_u\)-axis, \ie, when \(\alpha = 0\) or \(\alpha = \pi\).
-Using our time-scaled system, we can define this Poincar\'{e} map as the change
-in \(\hat{\mu}\) when \(\alpha\) increases by \(\pi\):
+Using our time-scaled system ~\eqref{eqn:muhat-dot}, we can define this
+Poincar\'{e} map as the change in \(\hat{\mu}\) when \(\alpha\) increases by
+\(\pi\):
 \begin{align*}
-    P_\mathcal{O} : \,]0,\pi[ &\rightarrow \R_+,
+    P_{\mathcal{O}_1} : \,]0,\pi[ &\rightarrow \R_+,
     \\
     \mu_0 &\mapsto \hat{\mu}(\pi,\mu_0,I)
     .
 \end{align*}
-From our perturbation analysis, the Poincar\'{e} map -- also known as a
-Poincar\'{e} section --  expands into
+The Poincar\'{e} map expands into
 \[
-    P_\mathcal{O}(\mu_0) = \mu_0 + I K \int\limits_0^\pi a(\sigma,\mu_0)d\sigma
+    P_{\mathcal{O}_1}(\mu_0) = \mu_0 + I K \int\limits_0^\pi a(\sigma,\mu_0)d\sigma
     + R(\pi,\mu_0,I)
     .
 \]
 Let us define
 \[
     Q(\mu_0) := \int \limits_0^\pi a(\sigma,\mu_0)d\sigma
-    ,
+    .
 \]
-so that \(\hat{\mu}_1(\pi,\mu_0) = K Q(\mu_0)\).
 Note that \(K\) is a positive constant which contains the acrobot's physical
-parameters, while \(a(\alpha,\mu)\) is adimensional. 
+parameters \(m\), \(g\), \(l\), and \(\bar{q}_a\), 
+while \(a(\alpha,\mu)\) is adimensional. 
 This means \(Q(\mu_0)\) is identical for every acrobot.
 If \(Q(\mu_0)\) is strictly positive, then \(\hat{\mu}_1(\pi,\mu_0)\) will be
-positive no matter the values of \(m\), \(g\), \(l\), or \(\bar{q}_a\).
+positive for any acrobot.
 
 We numerically compute \(Q(\mu_0)\) for \(\mu_0 \in [10^{-10}, \pi - 10^{-3}]\)
 in Figure \ref{fig:acrobot-Q}. 
@@ -965,10 +1037,11 @@ all \(\mu_0\).
     \label{fig:acrobot-Q}
 \end{figure}
 
+% TODO: Replace or remove this as per Manfredi's suggestions
 This fact, coupled with knowledge that \(R(\pi,\mu_0,I)\) is \(O(I^2)\),
 implies there exists \(I > 0\) small enough that
 \[
-    P_\mathcal{O}(\mu_0) = \mu_0 + IKQ(\mu_0) + R(\pi,\mu_0,I) > \mu_0
+    P_{\mathcal{O}_1}(\mu_0) = \mu_0 + IKQ(\mu_0) + R(\pi,\mu_0,I) > \mu_0
     .
 \]
 Unfortunately, perturbation analysis does not guarantee 
@@ -976,39 +1049,41 @@ that \(I\) is the same for all \(\mu_0 \in \, ]0,\pi[\), since the value of
 \(R(\pi,\mu_0,I)\) could become more negative for other initial conditions.
 We will deal with this next.
 
-\subsubsection*{Energy Gain on \(\mathcal{O}\)}
+\subsubsection*{Energy Gain on \(\mathcal{O}_1\)}
 
-The Poincar\'{e} section \(P_\mathcal{O}\) allows us understand the evolution of
+The Poincar\'{e} map \(P_{\mathcal{O}_1}\) allows us understand the evolution of
 \(\hat{\mu}(\alpha,\mu_0,I)\) by studying the evolution of the discrete time
 system
 \begin{equation}\label{eqn:muhat-discrete}
     \begin{cases}
-        \mu(n+1) := P_\mathcal{O}(\mu(n)) 
-        = \mu(n) + I K Q(\mu(n)) + R(\pi,\mu(n),I)
+        \mu_{n+1} := P_{\mathcal{O}_1}(\mu_n) 
+        = \mu_n + I K Q(\mu_n) + R(\pi,\mu_n,I)
         , \\
         \mu(0) = \mu_0
         .
     \end{cases}
 \end{equation}
-Tolerating the abuse of notation, \(\mu(n)\) represents the distance along the
+Here, \(\mu_n\) represents the distance along the
 \(q_u\)-axis when an orbit of the constrained dynamics intersects the
 \(q_u\)-axis for the \(n\)th time, assuming the orbit was initialized at
 \((q_u,p_u) = (\mu_0,0)\).
 
-Proving the constrained dynamics gain energy on \(\mathcal{O}\) is equivalent to
-showing \(\mu(n)\) eventually reaches \(\pi\).
+Proving the constrained dynamics gain energy on \(\mathcal{O}_1\) is equivalent to
+showing \(\mu_n\) eventually reaches \(\pi\).
 That is, we want to find \(I^\star \in\, ]0, I_1]\) where, for all 
 \(\delta > 0\) and \(\mu_0 \in ]0,\pi-\delta]\), there exists \(N > 0\) so that
-for all \(n \geq N\), \(\mu(n) \notin [0,\pi-\delta]\).
+for all \(n \geq N\), \(\mu_n \notin [0,\pi-\delta]\).
+% TODO: Show two sufficient conditions, explain how we are using each, etc
 A sufficient condition for this characterization is to show 
-\(P_\mathcal{O}(\mu_0) > \mu_0\) for all \(\mu_0 \in\, ]0,\pi[\),
+\(P_{\mathcal{O}_1}(\mu_0) > \mu_0\) for all \(\mu_0 \in\, ]0,\pi[\),
 
 Linearizing ~\eqref{eqn:muhat-discrete} at \(\mu = 0\) yields
 \[
-    P^\prime_\mathcal{O}(0) = 1 + I K Q^\prime(0) +
+    P^\prime_{\mathcal{O}_1}(0) = 1 + I K Q^\prime(0) +
     \pdiff{R}{\mu}(\pi,0,I)
-    .
+    ,
 \]
+where prime denotes differentiation with respect to \(\mu\).
 If there is some value of \(I \in ]0,I_1]\) for which this term is greater than
 \(1\), then \(0\) is a repeller of the discrete time system.
 To show such a value of \(I\) exists, we first compute 
@@ -1016,7 +1091,7 @@ To show such a value of \(I\) exists, we first compute
     Q^\prime(0) = \int \limits_0^\pi \pdiff{a}{\mu}(\sigma,0) d\sigma
     .
 \]
-MATLAB reveals that 
+Numerical computations reveal that 
 \[
     \lim \limits_{\mu_0 \to 0^+}
     \pdiff{a}{\mu}(\alpha,\mu_0) 
@@ -1028,17 +1103,16 @@ which means
     Q^\prime(0)  = \frac{\pi}{2\sqrt{2}} > 0
     .
 \]
-Since the remainder term \(R(\alpha,\mu_0,I)\) is \(O(I^2)\), 
-its partial derivative \(\pdiff{R}{\mu}(\pi,\mu_0,I)\) is also \(O(I^2)\).
+Since the remainder term \(R(\pi,0,I)\) is \(O(I^2)\), 
+its partial derivative \(R^\prime(\pi,0,I)\) is also \(O(I^2)\).
 Hence, it can be written in the form
-\(I^2 \tilde{R}(\mu_0,I)\) where \(\tilde{R}(\mu_0,I)\) is smooth and
+\(I^2 \tilde{R}(I)\) where \(\tilde{R}(I)\) is smooth and
 zero at \(I = 0\).
-Since \(I\) is assumed to be small, \(I^2\) shrinks rapidly;
-thus, there exists \(I_2 \in ]0,I_1]\) where 
-\(I_2 K Q^\prime(0) + (I_2)^2 \tilde{R}(0,I) > 0\).
+Thus, there exists \(I_2 \in ]0,I_1]\) where 
+\(I_2 K Q^\prime(0) + (I_2)^2 \tilde{R}(I) > 0\).
 Hence,
 \[
-    P^\prime_\mathcal{O}(0) \geq 1 + IKQ^\prime(0) + I^2 \tilde{R}(0,I) 
+    P^\prime_{\mathcal{O}_1}(0) \geq 1 + IKQ^\prime(0) + I^2 \tilde{R}(I) 
     > 1
     ,
 \] 
@@ -1048,45 +1122,71 @@ We have shown \(0\) is a repeller of the discrete time system, which means
 there exists some (unknown) \(\epsilon > 0\) where the interval
 \(]0,\epsilon[\) is negatively invariant for ~\eqref{eqn:muhat-discrete}.
 What's more, all solutions starting in this interval will flow towards the value
-\(\mu = \epsilon\), so we must have \(P_\mathcal{O}(\mu_0) > \mu_0\) for all 
-\(\mu_0 \in \, ]0,\epsilon[\).
+\(\mu = \epsilon\).
 
 Next, recall that \(R(\pi,\mu_0,I)\) is smooth in all its parameters as well as
 being \(O(I^2)\).
 Therefore, it is bounded below on the compact set \(\mu_0 \in [\epsilon,\pi]\)
-by some value \(R(\pi,\underbar{\mu},I)\). 
+by some value \(\underbar{R}(I)\). 
 Theorem \ref{thm:khalil-perturbation} asserts that there exists some
 \(I_3 > 0\) and \(r > 0\) so that, for all \(I \in [-I_3, I_3]\),
 \[
-    R(\pi,\mu_0,I) \geq R(\pi, \underbar{\mu}, I) > -I^2 r
+    R(\pi,\mu_0,I) \geq \underbar{R}(I) > -I^2 r
     .
 \]
 Furthermore, \(Q(\mu_0)\) is a strictly increasing function, so
 for\(\mu_0 \in [\epsilon,\pi[\) we have
 \[
-    P_\mathcal{O}(\mu_0) > \mu_0 + I K Q(\epsilon) - I^2 r
+    P_{\mathcal{O}_1}(\mu_0) > \mu_0 + I K Q(\epsilon) - I^2 r
     .
 \]
-Choosing \(I^\star \in\, ]0,\min\left\{I_2,I_3\right\}]\) so that
-\(I^\star K Q(\epsilon) - (I^\star)^2 r \geq 0\)
+Picking a small \(\lambda > 0\) and choosing 
+\(I^\star \in\, ]0,\min\left\{I_2,I_3\right\}]\) so that
+\(I^\star K Q(\epsilon) - (I^\star)^2 r \geq \lambda > 0\)
 means that
-\( P_\mathcal{O}(\mu_0) > \mu_0\)
+\( P_{\mathcal{O}_1}(\mu_0) > \mu_0 + \lambda\)
 for all \(\mu_0 \in [\epsilon,\pi[\).
 
-We have thus shown that \(P_\mathcal{O}(\mu_0) > \mu_0\) for all
-\(\mu_0 \in ]0,\pi[\).
 Looking at ~\eqref{eqn:muhat-discrete}, this means
-\(\mu(n+1) > \mu(n)\) and all solutions of the discrete time system will flow
+\(\mu_{n+1} > \mu_n + \lambda\), and all solutions of the discrete time system will flow
 towards \(\mu = \pi\).
 Hence, orbits of the constrained dynamics will eventually escape
-\(\mathcal{O}\).
+\(\mathcal{O}_1\).
 We conclude that, for all \(m\), \(g\), \(l\), \(\bar{q}_a\), 
 there exists \(I > 0\) small enough that the constraint 
-~\eqref{eqn:acrobot-constraint} is injecting energy on \(\mathcal{O}\).
+~\eqref{eqn:acrobot-constraint} is injecting energy on \(\mathcal{O}_1\).
 
 By the same arguments presented in this section, the Poincar\'{e} section
-satisfies \( P_\mathcal{O}(\mu_0) < \mu_0 \) when \(I < 0\). 
-In this case, the constraint dissipates energy on \(\mathcal{O}\).
+satisfies \( P_{\mathcal{O}_1}(\mu_0) < \mu_0 \) when \(I < 0\). 
+In this case, the constraint dissipates energy on \(\mathcal{O}_1\).
+
+\subsubsection*{Summary}
+
+We have proven the first part of Theorem \ref{thm:acrobot-energy-stabilization},
+which claims there exists \(I > 0\) small enough that 
+~\eqref{eqn:acrobot-constraint} injects energy into the acrobot on
+\(\mathcal{O}_1\).
+
+Here is a summary of the proof:
+\begin{enumerate}
+    \item We defined pseudo-polar coordinates \((\mu,\alpha)\) adapted to level
+        sets of the nominal energy function ~\eqref{eqn:acrobot-nominal-E}.
+    \item We showed there exists a value \(I_1\) small enough where 
+        \(\dot{\alpha} > 0\) everywhere on \(\mathcal{O}_1\).
+    \item We used time scaling to find \(\hat{\mu}\) and
+        expanded it into ~\eqref{eqn:acrobot-muhat-approx} using
+        perturbation theory.
+    \item Taking this expanded solution, we defined and expanded the
+        Poincar\'{e} map \(P_{\mathcal{O}_1}\) to analyze the discrete-time system
+        ~\eqref{eqn:muhat-discrete}.
+    \item We found a value \(I_2 \leq I_1\) making 0 a repeller of the
+        ~\eqref{eqn:muhat-discrete}, and a value \(I_3 \leq I_2\) which drives
+        all its orbits towards \(\mu = \pi\).
+\end{enumerate}
+Hence, choosing \(I \in [0,I_3]\) guarantees energy injection on
+\(\mathcal{O}_1\) because all orbits approach the pseudo-radius \(\mu = \pi\).
+Likewise, choosing \(I \in [-I_3,0]\) guarantees energy dissipation on
+\(\mathcal{O}_1\).
 
 % Empty proof environment to put QED square on the right of the page
 \begin{proof}[\unskip\nopunct]
@@ -1095,10 +1195,10 @@ In this case, the constraint dissipates energy on \(\mathcal{O}\).
 \subsection{Perturbation Analysis for Rotations}
 Figure \ref{fig:pendulum-level-sets} reminds us that rotations of the 
 nominal pendulum obtained by setting \(I = 0\) look like open curves on some
-rotation region \(\mathcal{R} \subset \Gamma\).
+rotation region \(\mathcal{R} \subset \SxR\).
 One can compute this rotation domain to be the set
 \[
-    \mathcal{R} := \left\{ (q_u,p_u) \in \Gamma \mid E(q_u,p_u) > E(\pi,0)\right\}
+    \mathcal{R} := \left\{ (q_u,p_u) \in \SxR \mid E(q_u,p_u) > E(\pi,0)\right\}
     .
 \]
 Performing a similar process to what we did for oscillations,
@@ -1109,7 +1209,7 @@ of \(E\) and the pseudo-angle \(\beta \in \Sone\) is always increasing on
 
 \subsubsection*{Pseudo-Polar Coordinates}
 
-In the oscillation region \(\mathcal{O}\) we showed that the nominal pendulum's
+In the oscillation region \(\mathcal{O}_1\) we showed that the nominal pendulum's
 energy (and hence, its orbit) is uniquely determined by the intersection point
 \(\mu\) with the \(q_u\)-axis;
 likewise, on \(\mathcal{R}\) the energy is determined by the intersection
@@ -1134,7 +1234,7 @@ rotation has momentum \(p_u > 0\)
 and \(\rho < -\sqrt{60 m^2 g l^3}\) if it has momentum \(p_u < 0\).
 The energy level set associated with \(\rho\) is 
 \[
-    \left\{(q_u,p_u) \in \Gamma \mid E(q_u,p_u) = \frac{\rho^2}{10ml^2}\right\}
+    \left\{(q_u,p_u) \in \SxR \mid E(q_u,p_u) = \frac{\rho^2}{10ml^2}\right\}
     ,
 \]
 which gives the relationship
@@ -1387,55 +1487,55 @@ Looking at the discrete-time system ~\eqref{eqn:rhohat-discrete},
 a solution of the system will flow away from the origin until it reaches a
 magnitude \(\abs{\rho(n)} = \bar{\rho}\).
 Hence, the constrained dynamics will eventually escape the set
-\(\omega \subset \mathcal{R}\) defined by
+\(\mathcal{O}_2(\bar{\rho}) \subset \mathcal{R}\) defined by
 \[
-    \omega := \left\{(q_u,p_u) \in \Gamma
+    \mathcal{O}_2(\bar{\rho}) := \left\{(q_u,p_u) \in \SxR
     \mid E(\pi,0) < E(q_u,p_u) < E(0,\bar{\rho}) \right\}
     ,
 \]
 which is displayed in Figure \ref{fig:acrobot-little-omega}.
 
 We conclude that there exists \(I > 0\) small enough that the constraint
-~\eqref{eqn:acrobot-constraint} is injecting energy on \(\omega\).
+~\eqref{eqn:acrobot-constraint} is injecting energy on \(\mathcal{O}_2(\bar{\rho})\).
 
 \begin{figure}
     \centering
     \includestandalone[width=0.5\textwidth]{images/acrobot_little_omega}
-    \caption{The set \(\omega \subset \mathcal{R}\) on which the acrobot will gain energy.
+    \caption{The set \(\mathcal{O}_2(\bar{\rho}) \subset \mathcal{R}\) on which the acrobot will gain energy.
     }
     \label{fig:acrobot-little-omega}
 \end{figure}
 
 By the same arguments presented in this section, the Poincar\'{e} section
 satisfies \(\abs{P_\mathcal{R}(\rho_0)} < \abs{\rho_0}\) when \(I < 0\).
-In this case, the constraint dissipates energy on \(\omega\).
+In this case, the constraint dissipates energy on \(\mathcal{O}_2(\bar{\rho})\).
 
-\subsection{Energy Gain on \(\Omega\)}
+\subsection{Energy Gain on \(\mathcal{O}_2(\bar{\rho})\)}
 Define \(E_\pi\) to be the energy level set associated with \(E(\pi,0)\).
 We will prove the acrobot gains energy on the set 
 \begin{align*}
-    \Omega &= \left\{(q_u,p_u) \in \Gamma
+    \mathcal{O}_2(\bar{\rho}) &= \left\{(q_u,p_u) \in \SxR
     \mid E(q_u,p_u) < E(0,\bar{\rho}) \right\}
     ,\\
-    &= \mathcal{O} \cup E_\pi \cup \omega
+    &= \mathcal{O}_1 \cup E_\pi \cup \mathcal{O}_2(\bar{\rho})
     .
 \end{align*}
 There exists some control input \(I_1 > 0\) for which the acrobot is gaining
-energy on \(\mathcal{O}\). 
-Hence, there are no closed orbits in \(\mathcal{O}\) and almost all orbits 
+energy on \(\mathcal{O}_1\). 
+Hence, there are no closed orbits in \(\mathcal{O}_1\) and almost all orbits 
 hit \(E_\pi\) in finite time.
 Likewise, there exists some \(I_2 > 0\) for which the acrobot is gaining energy
-on \(\omega\), so there are no closed orbits in \(\omega\) and almost every
+on \(\mathcal{O}_2(\bar{\rho})\), so there are no closed orbits in \(\mathcal{O}_2(\bar{\rho})\) and almost every
 orbit is flowing away from \(E_\pi\).
 Choosing \(I^\star \in ]0,\min\left\{I_1,I_2\right\}]\) means the acrobot will gain energy on
-both \(\mathcal{O}\) as well as \(\omega\).
+both \(\mathcal{O}_1\) as well as \(\mathcal{O}_2(\bar{\rho})\).
 
-We can prove energy gain on \(\Omega\) by showing two properties of the system.
+We can prove energy gain on \(\mathcal{O}_2(\bar{\rho})\) by showing two properties of the system.
 First, that the set \(\Pi^+\) of initial conditions converging to  \((\pi,0)\)
-is of measure zero in \(\Gamma\);
+is of measure zero in \(\SxR\);
 second, that \(E_\pi\) is not a positively-invariant set.
-If both these conditions are true, then orbits flowing from \(\mathcal{O}\) into
-\(E_\pi\) will generally swing past \(E_\pi\) into \(\omega\).
+If both these conditions are true, then orbits flowing from \(\mathcal{O}_1\) into
+\(E_\pi\) will generally swing past \(E_\pi\) into \(\mathcal{O}_2(\bar{\rho})\).
 
 To show the first condition, we will simply prove that \((\pi,0)\) is an
 unstable equilibrium of the constrained dynamics.
@@ -1458,41 +1558,41 @@ By Descartes' rule of signs, this polynomial has one root with positive real
 part. 
 The equilibrium \((\pi,0)\) is therefore unstable, so the set \(\Pi^+\) of
 initial conditions converging to \((\pi,0)\) is one-dimensional, and hence is
-of measure zero in \(\Gamma\).
+of measure zero in \(\SxR\).
 
 For the second condition, let us seek a contradiction by 
 supposing that \(E_\pi\) is a positively-invariant set. 
 Let \(x(t)\) be an orbit of the constrained dynamics initialized at 
-\(x(0) \in \mathal{O}\).
-Since the constrained dynamics gain energy on \(\mathcal{O}\), there exists a
+\(x(0) \in \mathcal{O}_1\).
+Since the constrained dynamics gain energy on \(\mathcal{O}_1\), there exists a
 time \(T > 0\) such that \(x(T) \in E_\pi\).
 By the assumed positive invariance of \(E_\pi\), this means 
 \(x(t) \in E_\pi\) for all \(t \in [T,\infty[\).
 Since \(E_\pi\) is a closed curve containing the equilibrium \((\pi,0)\) and no
 other equilibria, \(x(t)\) must converge to \((\pi,0)\).
-The initial condition \(x(0) \in \mathcal{O}\) was arbitrary, so this implies
-that \(\mathcal{O} \subset \Pi^+\).
-But \(\Pi^+\) is a set of measure zero, while \(\mathcal{O}\) has positive
+The initial condition \(x(0) \in \mathcal{O}_1\) was arbitrary, so this implies
+that \(\mathcal{O}_1 \subset \Pi^+\).
+But \(\Pi^+\) is a set of measure zero, while \(\mathcal{O}_1\) has positive
 measure. 
 This is a contradiction: \(E_\pi\) cannot be positively-invariant.
 
 Non-invariance of \(E_\pi\) and instability of \((\pi,0)\) implies that 
-almost all orbits initialized in \(\mathcal{O}\) will reach \(E_\pi\) and
-eventually swing into \(\omega\), rather than stay in \(E_\pi\) and converge to
+almost all orbits initialized in \(\mathcal{O}_1\) will reach \(E_\pi\) and
+eventually swing into \(\mathcal{O}_2(\bar{\rho})\), rather than stay in \(E_\pi\) and converge to
 \((\pi,0)\). 
-We know that almost all orbits starting in \(\omega\) will reach 
+We know that almost all orbits starting in \(\mathcal{O}_2(\bar{\rho})\) will reach 
 \(E(0,\bar{\rho})\) in finite time;
-we conclude that almost all orbits starting in \(\Omega\) will depart the energy
-escaping \(\Omega\) all together.
-Hence, the acrobot is gaining energy on \(\Omega\).
+we conclude that almost all orbits starting in \(\mathcal{O}_2(\bar{\rho})\) will depart the energy
+escaping \(\mathcal{O}_2(\bar{\rho})\) all together.
+Hence, the acrobot is gaining energy on \(\mathcal{O}_2(\bar{\rho})\).
 
-If \(I < 0\), orbits in \(\mathcal{O}\) will converge to the origin and orbits in
-\(\omega\) will flow towards \(E_\pi\).
+If \(I < 0\), orbits in \(\mathcal{O}_1\) will converge to the origin and orbits in
+\(\mathcal{O}_2(\bar{\rho})\) will flow towards \(E_\pi\).
 However, the upright equilibrium \((\pi,0)\) will still be unstable, and
 \(E_\pi\) will remain a non-invariant set. 
-This means that almost all orbits in \(\omega\) will flow past \(E_\pi\) into
-\(\mathcal{O}\), so the constrained system will be gaining energy in
-negative-time. Thus, the constraint is dissipating energy on \(\Omega\).
+This means that almost all orbits in \(\mathcal{O}_2(\bar{\rho})\) will flow past \(E_\pi\) into
+\(\mathcal{O}_1\), so the constrained system will be gaining energy in
+negative-time. Thus, the constraint is dissipating energy on \(\mathcal{O}_2(\bar{\rho})\).
 
 \section{Experimental Results}
 % TODO: This might be a separate chapter
