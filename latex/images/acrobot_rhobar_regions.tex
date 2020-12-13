@@ -12,7 +12,7 @@
 \begin{document}
 \begin{tikzpicture}
     % Define rho_bar
-    \pgfmathsetmacro{\rhob}{18};
+    \pgfmathsetmacro{\rhob}{25};
     % Define the value of m2gl3 making sqrt(60m2gl3)=15
     \pgfmathsetmacro{\mgl}{15^2/60};
 % Define the figure
@@ -28,13 +28,13 @@
  xmin = -3.5, xmax = 3.5,
  ylabel = $p_u$,
  y label style={above},
- ymin = -22, ymax = 22,
+ ymin = -28, ymax = 28,
  % Custom tick labels at specified positions
  xtick = {-3.1415, 3.1415},
  xticklabels = {$-\pi$, $\pi$},
  xticklabel style={xshift={(\ticknum==0)*(-0.3cm) + (\ticknum==1)*(0.25cm)}},
  ytick = {-\rhob,-15, 15,\rhob},
- yticklabels = {},
+ yticklabels = {$-\bar{\rho}$,,,$\bar{\rho}$},
  % Move the label so it looks good
  yticklabel style={yshift={(\ticknum == 0)*(-0.25cm) + (\ticknum == 3)*(0.2cm)}}
 ]
@@ -45,8 +45,13 @@
     \addplot[name path=lower,thick,samples=100,domain=-pi:pi]
         {-sqrt(\rhob^2+30*\mgl*(cos(deg(x))-1))};
 
-    % Add a label for the orbit energy level
-    \node at (-pi/4, 20) {$E(0,\bar{\rho})$};
+    \addplot[fill=green,opacity=0.2]
+        fill between[of=upper and lower];
+
+    % Add a node for O_1
+    \node at (pi/2, 5) {$\mathcal{O}_1$};
+    % and one for O_2
+    \node at (pi-0.1,24) {$\mathcal{O}_2(\bar{\rho})$};
 
 	% Draw the homoclinic orbit
     \addplot[black,->,dashed,thick,name path=hupper,samples=100,domain=-pi:pi]
@@ -54,15 +59,23 @@
     \addplot[black,<-,dashed,thick,name path=hlower,samples=100,domain=-pi:pi]
         {-sqrt(30*\mgl*(cos(deg(x))+1))};
 
-    % ADd a label for the homoclinic orbit energy level
-    \node at (-pi/4, 10) {$E(\pi,0)$};
+    % Add a label for the homoclinic orbit energy level
+    \node at (-pi/2, 15) {$\mathcal{R}_{\bar{\rho}}$};
 
-    % Colour in the region for omega by filling between rho_bar and homoclinic
+    % Colour in the region for R_\bar{rho} by filling between rho_bar and homoclinic
     % orbit 
     \addplot[fill=blue,opacity=0.2] 
         fill between[of=upper and hupper];
     \addplot[fill=blue,opacity=0.2] 
         fill between[of=lower and hlower];
+
+    % Draw red lines at the pu-axis where D is
+    \draw[red,ultra thick] (0,15)--(0,\rhob);
+    \draw[red,ultra thick] (0,-15)--(0,-\rhob);
+    % Draw a label for D^+ and D^-
+    \node at (pi/8,20) {$D^+$};
+    \node at (pi/8,-20) {$D^-$};
+    
 
     % Draw vertical dashed lines at +-pi
     \draw[gray, dashed] (-pi,-22) -- (-pi,22);
