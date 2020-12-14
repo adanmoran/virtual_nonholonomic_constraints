@@ -164,6 +164,40 @@ auto SinuVNHC::dpu(const UnactuatedPhase& qpu) const -> double
     return -qmax()*qpu.qu*qpu.qu/qpu_norm3;
 }
 
+////////////////
+// ArctanVNHC //
+////////////////
+ArctanVNHC::ArctanVNHC(const Acrobot& acrobot, ActuatorLimit qmax)
+: ArctanVNHC(acrobot, qmax, ScalingFactor(1.0))
+{}
+
+ArctanVNHC::ArctanVNHC(const Acrobot& acrobot, ActuatorLimit qmax, ScalingFactor scale)
+: AcrobotVNHC(acrobot,qmax),
+  scale_(scale)
+{}
+
+ArctanVNHC::~ArctanVNHC()
+{}
+
+auto ArctanVNHC::qa(const UnactuatedPhase& qpu) const -> double
+{
+    // This should return qmax*Arctan(scale*pu)
+    return qmax()*pib2inv_*atan(scale_*qpu.pu);
+}
+
+auto ArctanVNHC::dqu(const UnactuatedPhase& qpu) const -> double
+{
+    // This should return -d/dqu Arctan(pu) = 0
+    return 0.0;
+}
+
+auto ArctanVNHC::dpu(const UnactuatedPhase& qpu) const -> double
+{
+    // This returns the derivative dh/dpu = -qmax* d/dpu Arctan(scale*pu) =
+    // -qmax*scale/(1 + scale^2*pu^2)
+    return -qmax()*pib2inv_*scale_/(1 + scale_*scale_*qpu.pu*qpu.pu);
+}
+
 //-------------------//
 // Private Functions //
 //-------------------//

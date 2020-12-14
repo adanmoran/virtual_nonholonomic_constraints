@@ -61,7 +61,8 @@ public:
         g_),
       zero_(xingbot_),
       tanhVNHC_(xingbot_, qmax_),
-      sinuVNHC_(xingbot_, qmax_)
+      sinuVNHC_(xingbot_, qmax_),
+      arctanVNHC_(xingbot_,qmax_)
     {}
 protected:
     void SetUp() override 
@@ -99,6 +100,7 @@ protected:
     // Define our concrete VNHCs
     TanhVNHC tanhVNHC_;
     SinuVNHC sinuVNHC_;
+    ArctanVNHC arctanVNHC_;
 }; // class VNHCTest
 
 // Test that dh/dqa is always 1 and dh/dpa = 0 for all inputs
@@ -220,6 +222,21 @@ TEST_F(VNHCTest, CONCRETE_PA_MATCHES_SOLVABILITY_EQUATIONS)
     qpu_.qu = sqrt(3); qpu_.pu = 1;
     auto pa_pb6 = 0.348085485082814; 
     EXPECT_PRED3(Within, pVNHC_->pa(qpu_), pa_pb6, eps_);
+
+    // Since we're getting the correct output for this with the previous two
+    // constraints, let's just check at pu = 0 for the arctan constraint.
+    pVNHC_ = &arctanVNHC_;
+
+    //At pu = 0, we get pa = -2.939607210240234e-04*sin(qu) - the same as
+    //tanh*2/pi.
+    qpu_.pu = 0;
+    for(int i = -10; i <= 10; ++i)
+    {
+        auto qu = i*M_PI/10;
+        qpu_.qu = qu; 
+        auto expected_pa = -2.939607210240234e-04*sin(qu);
+        ASSERT_PRED3(Within, pVNHC_->pa(qpu_), expected_pa, eps_);
+    }
 }
 
 // Test for the TanhVNHC, to make sure its outputs are valid
@@ -279,6 +296,32 @@ TEST_F(VNHCTest, SINU_OUTPUTS_VALID)
         }
     }
 }
+
+// Test for the ArctanVNHC, to make sure its outputs are valid
+TEST_F(VNHCTest, ARCTAN_OUTPUTS_VALID)
+{
+    for (int i = -10; i <= 10; ++i)
+    {
+        qpu_.qu = i*M_PI/10.0;
+        qpu_.qu = i/2.0;
+        for(int j = -5; j <= 5; ++j)
+        {
+            qpu_.pu = j*10/5.0;
+
+            // qa is only a function of pu
+            ASSERT_DOUBLE_EQ(arctanVNHC_.qa(qpu_), (2/M_PI)*atan(qpu_.pu));
+
+            // dqu is 0
+            ASSERT_DOUBLE_EQ(arctanVNHC_.dqu(qpu_), 0);
+
+            // dpu is the derivative, which is dependent only on pu
+            // it is of the form -(qa_bar I)/(1+I^2 pu^2)
+            double pu2 = qpu_.pu*qpu_.pu;
+            ASSERT_PRED3(Within, arctanVNHC_.dpu(qpu_), -1.0*(2/M_PI)/(1+pu2), eps_);
+        }
+    }
+}
+
 // Test for TanhVNHC to test different q_max values
 TEST_F(VNHCTest, Tanh_QMAX)
 {
@@ -312,6 +355,9 @@ TEST_F(VNHCTest, Tanh_QMAX)
         }
     }
 }
+
+
+
 // Test for TanhVNHC to test different inner scaling values
 TEST_F(VNHCTest, Tanh_INNER_SCALING)
 {
@@ -352,6 +398,7 @@ TEST_F(VNHCTest, Tanh_INNER_SCALING)
         }
     }
 }
+
 // Test for SinuVNHC to test different q_max values
 TEST_F(VNHCTest, SINU_QMAX)
 {
@@ -384,6 +431,81 @@ TEST_F(VNHCTest, SINU_QMAX)
                 EXPECT_PRED3(Within, sinu_below_0.qa(qpu_), 0, eps_);
                 EXPECT_PRED3(Within, sinu_above_pi.qa(qpu_), M_PI*sin(theta), eps_);
             }
+        }
+    }
+}
+
+// Test for ArctanVNHC to test different q_max values
+TEST_F(VNHCTest, Arctan_QMAX)
+{
+    // Positive values should work fine
+    ArctanVNHC arctan_0(xingbot_, 0);
+    ArctanVNHC arctan_1(xingbot_, 1);
+    ArctanVNHC arctan_pi(xingbot_, M_PI);
+    // Values outside of [0, M_PI] should be capped to within that range.
+    ArctanVNHC arctan_above_pi(xingbot_,  10);
+    ArctanVNHC arctan_below_0(xingbot_, -5);
+
+    for (int i = -10; i <= 10; ++i)
+    {
+        qpu_.qu = i*M_PI/10.0;
+        qpu_.qu = i/2.0;
+        for(int j = -5; j <= 5; ++j)
+        {
+            qpu_.pu = j*10/5.0;
+
+            // This is not valid at qu = pu = 0
+            if(qpu_.qu != 0 && qpu_.pu != 0)
+            {
+                // Test the positive (energy_gain) vnhcs
+                EXPECT_PRED3(Within, arctan_0.qa(qpu_), 0, eps_);
+                EXPECT_PRED3(Within, arctan_1.qa(qpu_), (2/M_PI)*atan(qpu_.pu), eps_);
+                EXPECT_PRED3(Within, arctan_pi.qa(qpu_), 2*atan(qpu_.pu), eps_);
+                // Test the outside of range vnhc, which should be capped
+                EXPECT_PRED3(Within, arctan_above_pi.qa(qpu_), 2*atan(qpu_.pu), eps_);
+                ASSERT_PRED3(Within, arctan_below_0.qa(qpu_), 0, eps_);
+            }
+        }
+    }
+}
+
+// Test for ArctanVNHC to test different inner scaling values
+TEST_F(VNHCTest, Arctan_INNER_SCALING) 
+{
+    auto qmax = 2;
+    // Zero scaling should result in arctan(0) = 0
+    ArctanVNHC arctan_zero(xingbot_, qmax, 0 );
+    // scaling of 1 should be the same as non-scaling
+    ArctanVNHC arctan_unscaled(xingbot_, qmax);
+    ArctanVNHC arctan_one(xingbot_, qmax, 1);
+
+    // More than one
+    ArctanVNHC arctan_ten(xingbot_, qmax, 10);
+    // Less than 0
+    ArctanVNHC arctan_negative(xingbot_, qmax, -1);
+
+    for (int i = -10; i <= 10; ++i)
+    {
+        qpu_.qu = i*M_PI/10.0;
+        qpu_.qu = i/2.0;
+        for(int j = -5; j <= 5; ++j)
+        {
+            qpu_.pu = j*10/5.0;
+
+            EXPECT_PRED3(Within, arctan_zero.qa(qpu_), 0, eps_);
+            // Verify that not adding scaling is the same as scaling by 1
+            EXPECT_DOUBLE_EQ(arctan_unscaled.qa(qpu_), arctan_one.qa(qpu_));
+            EXPECT_PRED3(Within, arctan_one.qa(qpu_), qmax*(2/M_PI)*atan(qpu_.pu), eps_);
+
+            // Verify that a larger scaling results in a larger output, but
+            // still within [-qmax qmax], and that the derivative takes this
+            // scaling into account
+            double arctan10pu = atan(10*qpu_.pu);
+            EXPECT_PRED3(Within, arctan_ten.qa(qpu_), qmax*(2/M_PI)*arctan10pu, eps_);
+            EXPECT_PRED3(Within, arctan_ten.dpu(qpu_), -qmax*(2/M_PI)*10/(1+100*qpu_.pu*qpu_.pu), eps_);
+            
+            // Make sure that arctan(-pu) = -arctan(pu)
+            EXPECT_DOUBLE_EQ(arctan_negative.qa(qpu_), -arctan_one.qa(qpu_));
         }
     }
 }

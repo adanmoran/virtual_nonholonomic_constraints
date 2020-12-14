@@ -259,6 +259,72 @@ private:
 
 }; // class SinuVNHC
 
+/**
+ * @brief: A class for the acrobot VNHC of the type qa = Arctan(pu), which is a
+ * regular VNHC that successfully injects energy into the acrobot in simulation.
+ */
+class ArctanVNHC : public AcrobotVNHC
+{
+public:
+    /**
+     * @brief: Constructs a VNHC of the type qa = qmax*2/pi*Arctan(pu). Note that qmax
+     * must be wtihin [0, pi]. If not, it is truncated to be within that
+     * value.
+     *
+     * @param: const Acrobot&
+     * @param: ActuatorLimit
+     */
+    ArctanVNHC(const Acrobot& acrobot, ActuatorLimit qmax);
+
+    /**
+     * @brief: Constructs a VNHC of the type qa = qmax*2/pi*Arctan(scale*pu). Note that
+     * qmax must be within [0, pi]. If not, it is truncated to be within that
+     * value.
+     *
+     * @param: const Acrobot&
+     * @param: ActuatorLimit
+     * @param: ScalingFactor
+     */
+    ArctanVNHC(const Acrobot& acrobot, ActuatorLimit qmax, ScalingFactor scale);
+
+    ~ArctanVNHC();
+
+    /**
+     * @brief: Implementation of AcrobotVNHC's qa function, which gives qa =
+     * qmax*2/pi*Arctan(scale*pu)
+     *
+     * @param: const UnactuatedPhase& 
+     * @return: double
+     */
+    auto qa(const UnactuatedPhase& qpu) const -> double;
+
+    /**
+    * @brief: Implementation of AcrobotVNHC's dqu function, whch gives 
+    * dh/dqu = 0 since d/dqu arctan(pu) = 0.
+    *
+    * @param: const UnactuatedPhase&
+    * @return: double
+    */
+    auto dqu(const UnactuatedPhase& qpu) const -> double;
+
+    /**
+    * @brief: Implementation of AcrobotVNHC's dpu function, which gives dh/dpu =
+    * -d/dpu qmax*2/pi*arctan(scale*pu)
+    *
+    * @param: const UnactuatedPhase& qpu
+    * @return: double 
+    */
+    auto dpu(const UnactuatedPhase& qpu) const -> double;
+
+private:
+    // Store the scaling factor
+    ScalingFactor scale_;
+    // Store the value for 2/pi
+    const double pib2inv_ = 2.0/M_PI;
+
+}; // class ArctanVNHC
+
+
 } // namespace SUGAR
 #endif /* VNHC_H */
 /* vim: set tw=80 ts=4 sw=4 sts=0 et ffs=unix : */
