@@ -472,12 +472,13 @@ For small enough \(I\), our VNHC will inject energy on the open set
     the VNHC ~\eqref{eqn:acrobot-constraint}, whose
     constraint manifold is \(\Gamma \simeq \SxR\).
 \begin{enumerate}
-    \item There exists \(I > 0\) small enough that 
+    \item There exists \(I^\star > 0\) such that, for all 
+        \(I \in \,]0,I^\star]\), 
     ~\eqref{eqn:acrobot-constraint} injects energy into the acrobot on
     \(\mathcal{O}_1\).
-    What's more, almost every orbit will escape the closure of 
-    \(\mathcal{O}_1\).
-    If instead \(I < 0\), the VNHC dissipates energy.
+    Moreover, almost every orbit will escape the closure of 
+    \(\mathcal{O}_1\) in finite time.
+    If instead \(I \in [-I^\star,0[\), the VNHC dissipates energy.
 \item Define \(b : \SxR_{> 0} \rightarrow \R\) by
     \[
         b(\beta,\rho_0) := 
@@ -493,10 +494,11 @@ For small enough \(I\), our VNHC will inject energy on the open set
     Fix \(\bar{\rho} > \sqrt{60m^2gl^3}\).
     Suppose there exists \(\epsilon > 0\) so that \(S(\rho_0) \geq \epsilon\) for
     all \(\rho_0 \in \, \left]\sqrt{60m^2gl^3}, \bar{\rho}\right]\).
-    Then there exists \(I > 0\) small enough that
+    Then there exists \(I^\star > 0\) such that, for all 
+    \(I \in \, ]0,I^\star]\)
     ~\eqref{eqn:acrobot-constraint} injects energy into the acrobot on
     \(\mathcal{O}_2(\bar{\rho})\).
-    If instead \(I < 0\), the VNHC dissipates energy.
+    If instead \(I \in [-I^\star,0[\), the VNHC dissipates energy.
 \end{enumerate}
 \end{thm}
 
@@ -506,10 +508,11 @@ This separation is advantageous because the first result holds for any
 \(m\), \(g\), \(l\), and \(\bar{q}_a\). 
 That is, regardless of one's choice of acrobot, 
 a small enough fixed value \(I > 0\) will enable the acrobot to 
-escape any compact subset of \(\mathcal{O}_1\) in finite time. 
-What's more, the acrobot's phase will flow towards (and through) the homoclinic orbit
-corresponding to \(E(\pi,0)\), as in Figure
-\ref{fig:acrobot-oscillation-domain}.
+escape any compact subset of \(\mathcal{O}_1\) in finite time.
+Therefore, the acrobot will display an oscillatory behaviour whereby the
+amplitude of oscillation increases with time.
+In so doing, the acrobot's orbit will exit in finite time the closure of
+\(\mathcal{O}_1\) as in Figure \ref{fig:acrobot-oscillation-domain}.
 
 In other words, the first result of Theorem
 \ref{thm:acrobot-energy-stabilization} states that all acrobots constrained by
@@ -1199,24 +1202,41 @@ which has characteristic polynomial
 \]
 By Descartes' rule of signs, this polynomial has one root with positive real
 part. 
-The equilibrium \((\pi,0)\) is therefore unstable, so the set \(\Pi^+\) of
+The equilibrium \((\pi,0)\) is therefore unstable, so the stable manifold \(\Pi^+\) of
 initial conditions converging to \((\pi,0)\) is one-dimensional, and hence is
 of measure zero in \(\SxR\).
 
 Using \(x(t) := (q_u(t),p_u(t))\) as shorthand, let
 \(x(0) \in \mathcal{O}_1\) be a nonzero initial condition of the acrobot.
-Suppose the orbit \(x(\R)\) does not cross through \(E_\pi\)
-into the rotation zone.
+Suppose the orbit \(x(\R)\) is confined within 
+\(\bar{\mathcal{O}}_1\), and does not exit through \(E_\pi\) into the rotation
+zone.
+Since \(\bar{\mathcal{O}}_1\) is compact, the Birkhoff Theorem \cite{birkhoff}
+implies:
+\begin{itemize}
+    \item The positive limit set \(L_+\) of \(x(t)\) is non-empty, compact, and
+        invariant.
+    \item The solution \(x(t)\) asymptotically tends to \(L_+\).
+\end{itemize}
 Since the acrobot gains energy on \(\mathcal{O}_1\), the positive limit set of
-\(x(t)\) must be \(E_\pi\). 
-By the Birkhoff Theorem \cite{birkhoff}, \(x(t)\) converges to an invariant
-subset of \(E_\pi\).
+\(x(t)\) must be the largest invariant subset of \(E_\pi\). 
 From our discussion on pseudo-polar coordinates (in particular the extension
 ~\eqref{eqn:alpha-dot-boundary} of \(\dot{\alpha}\) to \(\bar{\mathcal{O}}_1\)),
 we know that \(\dot{\alpha} \geq 0\) on \(E_\pi\), with equality if and only if 
 \(\alpha \in \{0,\pi\}\).
-In other words, the only invariant subset of \(E_\pi\) is the upright equilibrium.
-Hence, \(x(t)\) must converge to \((\pi,0)\), which means \(x(0) \in \Pi^+\).
+There are two possibilities: either \(E_\pi\) itself is invariant, or the
+largest invariant subset of \(E_\pi\) is \(\{(\pi,0)\}\).
+To rule out the first possibility, take the derivative of \(E(q_u,p_u)\) at the
+\(p_u\)-axis to get
+\[
+    \dot{E}(0,p_u) = -\frac{g}{5l} \sin(q_a)p_u
+    .
+\]
+This is non-zero everywhere except at the origin, which means it is non-zero on
+\(E_\pi\). 
+This means \(E_\pi\) is not invariant, so the positive limit set of \(x(t)\)
+must be the set \(\{(\pi,0)\}\).
+Hence, \(x(t)\) converges to \((\pi,0)\), which means \(x(0) \in \Pi^+\).
 Since we know that \(\Pi^+\) is a set of measure zero in \(\SxR\), almost every
 other orbit initialized in \(\mathcal{O}_1\) must escape through the boundary
 \(E_\pi\) into the rotation domain.
@@ -1225,21 +1245,23 @@ other orbit initialized in \(\mathcal{O}_1\) must escape through the boundary
 \subsubsection*{Summary}
 
 We have proven the first part of Theorem \ref{thm:acrobot-energy-stabilization},
-which claims there exists \(I > 0\) small enough that 
-~\eqref{eqn:acrobot-constraint} injects energy into the acrobot on
-\(\mathcal{O}_1\).
+which claims there exists a control value \(I^\star > 0\) such that, for 
+\(I \in \, ]0,I^\star]\), ~\eqref{eqn:acrobot-constraint} injects energy into
+the acrobot on \(\mathcal{O}_1\).
 Enough energy is injected that orbits will exit the closure of \(\mathcal{O}_1\)
 and enter the rotation domain.
 
 Here is a summary of the proof:
 \begin{enumerate}
     \item We found pseudo-polar coordinates \((\alpha,\mu)\) adapted to level
-        sets of the nominal pendulum's mechanical energy on \(\mathcal{O}_1\).
+        sets of the nominal pendulum's mechanical energy on \(\mathcal{O}_1\),
+        where \(\alpha \in \Sone\) is a pseudo-angle and \(\mu \in \, ]0,\pi[\)
+        is a pseudo-radius.
     \item We showed there exists a value \(I_1\) small enough where 
         \(\dot{\alpha} > 0\) everywhere on \(\mathcal{O}_1\).
-    \item We found the time-scaled pseudo-radius \(\hat{\mu}\) and
-        expanded it into ~\eqref{eqn:acrobot-muhat-approx} using
-        perturbation theory.
+    \item Using \(\alpha\) as a time variable, we found the time-scaled
+        pseudo-radius \(\hat{\mu}\) and expanded it into
+        ~\eqref{eqn:acrobot-muhat-approx} using perturbation theory.
     \item Taking this expanded solution, we defined and expanded the
         Poincar\'{e} map \(P_\mathcal{O}\) to analyze the discrete-time system
         ~\eqref{eqn:muhat-discrete}.
@@ -1247,11 +1269,13 @@ Here is a summary of the proof:
         ~\eqref{eqn:muhat-discrete}, and a value \(I_3 \leq I_2\) which drives
         \(\mu_n\) towards \(\mu = \pi\).
     \item We showed that the upright equilibrium \((\pi,0)\) is unstable, and
-        used this fact to prove that almost every orbit crosses through \(E_\pi\)
-        into the rotation zone.
+        used this fact to prove that almost every orbit crosses through
+        \(E_\pi\), thereby exiting the closure of \(\mathcal{O}_1\) in finite
+        time.
 \end{enumerate}
 Choosing \(I \in \,]0,I_3]\) guarantees energy injection on
 \(\mathcal{O}_1\) because all orbits approach the pseudo-radius \(\mu = \pi\).
+In fact, almost all orbits escape \(\bar{\mathcal{O}}_1\).
 Likewise, choosing \(I \in [-I_3,0[\) guarantees energy dissipation on
 \(\mathcal{O}_1\).
 
@@ -1612,11 +1636,14 @@ on \(S(\rho_0)\), there exists \(I > 0\) small enough that the constraint
 Here is a summary of the proof:
 \begin{enumerate}
     \item We found pseudo-polar coordinates \((\beta,\rho)\) adapted to level
-        sets of the nominal pendulum's mechanical energy on \(\mathcal{R}\).
+        sets of the nominal pendulum's mechanical energy on \(\mathcal{R}\),
+        where \(\beta \in \Sone\) is a pseudo-angle and
+        \(\rho \in D\) is a pseudo-radius.
     \item We showed there exists a value \(I_1\) small enough where
         \(\dot{\beta} > 0\) everywhere on \(\mathcal{R}\).
-    \item We found the time-scaled pseudo-radius \(\hat{\rho}\) and expanded it
-        into ~\eqref{eqn:acrobot-rhohat-approx} using perturbation theory.
+    \item Using \(\beta\) as a time variable, we found the evolution of the
+        time-scaled pseudo-radius \(\hat{\rho}\) and expanded it into
+        ~\eqref{eqn:acrobot-rhohat-approx} using perturbation theory.
     \item Taking this expanded solution, we defined and expanded the
         Poincar\'{e} map \(P_\mathcal{R}\) on the domain 
         \(D = D^- \cup D^+\) which shows how the acrobot's orbits behave on
@@ -1634,6 +1661,9 @@ Choosing \(I \in \,]0,\min\{I_3,I_5,I^\star\}]\)
 guarantees energy injection on \(\mathcal{O}_2(\bar{\rho})\).
 Likewise, choosing \(I \in [-\min\{I_3,I_5,I^\star\},0[\) guarantees energy
 dissipation on \(\mathcal{O}_2(\bar{\rho})\).
+
+This analysis, together with that of section \ref{sec:acrobot-proof-o1},
+completes the proof of Theorem \ref{thm:acrobot-energy-stabilization}.
 
 % Draw the proof square only
 \begin{proof}[\unskip\nopunct]
