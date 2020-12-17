@@ -507,15 +507,6 @@ Even if the robot's legs perfectly track a specified trajectory,
 an external disturbance will desynchronize the leg motion
 with the swing - thereby stopping the amplitude-increasing effects.
 
-%As has been observed in the field of mobile robotics, a trajectory tracking
-%controller which has lagged behind due to a disturbance will do whatever is
-%required to ``catch up" to the trajectory. 
-%This can cause major safety issues, which is why many mobile roboticists prefer to
-%design controllers which drive a vehicle along a gemoetric path in space rather than a
-%trajectory in time.
-
-%This path tracking approach has been extended to biologically-inspired robotics
-%in a method known as \textit{virtual holonomic constraints} (VHCs).
 Rather than tracking a trajectory over time, a more human-like behaviour 
 is to force the robot's legs track a function of the swing's state. 
 One recent control method known as \textit{virtual holonomic constraints} (VHCs)
