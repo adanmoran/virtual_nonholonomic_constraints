@@ -20,7 +20,7 @@ injecting and dissipating energy in a robust manner, all while producing
 realistic biological motion.
 
 \section{Limitations and Future Research}
-Our VNHC framework is relies on the following assumptions:
+Our VNHC framework relies on the following assumptions:
 \begin{enumerate}
     \item The input matrix \(B(q) \equiv B \in \R^{n \times k}\) is constant and
         full rank.
@@ -33,20 +33,20 @@ Our VNHC framework is relies on the following assumptions:
         function of \((q_u,p_u)\).
 \end{enumerate}
 If any of these assumptions are not satisfied, one may not be able to find the
-constrained dynamics in simply actuated coordinates, and the results may not
-hold.
-In particular, the theoretical guarantees of this thesis do not hold for systems
-with physical nonholonomic constraints like friction, nor does it apply to vehicles
+constrained dynamics in simply actuated coordinates, and the results of this
+thesis may not hold.
+In particular, the theoretical guarantees of this thesis do not apply to systems
+with physical nonholonomic constraints (\eg friction), nor do they apply to vehicles
 with wheels.
 
-This guides us to the following research directions. 
-First, one might consider relaxing the assumptions on the input and inertia
-matrices to widen the class of systems to which VNHCs can be applied.
+These limitations guide us toward the following research directions. 
+First, one might relax the assumptions on the input and inertia
+matrices, thereby widening the class of systems to which VNHCs can be applied.
 Second, one might forgo the assumption that \(q_a\) is solvable on the
 constraint manifold; instead, one could borrow from the VHC literature
 and parameterize the constraint manifold with a different set of
 coordinates than \((q_u,p_u)\).
-Third, one might consider abstract mechanical systems with dynamics
+Third, one might consider more general mechanical systems with dynamics given by
 \[
     \begin{cases}
         \dot{q} = \Minv(q) p
@@ -55,7 +55,7 @@ Third, one might consider abstract mechanical systems with dynamics
         ,
     \end{cases}
 \]
-where \(Q_{nh}(q,p) \in \R^n\) are the equations for physical nonholonomic
+where \(Q_{nh}(q,p) \in \R^n\) are terms corresponding to physical nonholonomic
 constraints like friction.
 Fourth, one can investigate a smoother mechanism for energy stabilization, where
 a VNHC is explicitly designed to inject energy below some energy level, and
@@ -64,13 +64,13 @@ For example, this might involve a mechanism for smoothly transferring between
 VNHCs while maintaining certain safety requirements.
 
 Finally, the proof of Theorem \ref{thm:acrobot-energy-stabilization} 
-in Chapter \ref{sec:acrobot-proof} opens a door to the idea of VNHC generation. 
-One might search for suitable conditions on a VNHC whereby the Poincar\'{e}
+in Chapter \ref{sec:acrobot-proof} opens a door to the possibility of VNHC generation. 
+One might search for suitable conditions on VNHCs where the Poincar\'{e}
 sections for oscillations and rotations are increasing.
 Then, one can extend Otsason's ``virtual constraint
-generator" \cite{vcg} with the goal of generating regular VNHCs which satisfy
+generator" \cite{vcg} to generate regular VNHCs which satisfy
 these energy injection/dissipation conditions.
-In this way, one could automatically generate VNHCs which stabilize a
+In this way, one could automatically generate regular VNHCs which stabilize a
 desired energy level.
 
 %/========== /Conclusion ==========/%

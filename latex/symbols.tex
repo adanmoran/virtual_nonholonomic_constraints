@@ -15,13 +15,11 @@
    \toprule
    Symbol & Definition \\
    \midrule
-   \(\n\) & The index set \(\{1,\ldots,n\}\) of natural numbers up to \(n\). \\
    \(\R^n\) & Real numbers in \(n\) dimensions. \\
-   \(\Rt{T}\) & Real numbers modulo \(T > 0\), with \(\Rt{\infty} = \R\). \\
-   \(\mathbb{S}^1\) & The unit circle, equivalent to \(\Rt{2\pi}\). \\
+   \(\Rt{T}\) & Real numbers modulo \(T > 0\), with \(\Rt{\infty} := \R\). \\
+   \(\mathbb{S}^1\) & The unit circle, diffeomorphic to \(\Rt{2\pi}\). \\
    \(\mathcal{Q}\) & The configuration manifold of a system. \\
    \(C^r(X;Y)\) & The space of \(r\)-times continuously differentiable functions from \(X\) to \(Y\). \\
-         & If \(r = \infty\), the space of smooth functions from \(X\) to \(Y\). \\
    \(\R^{n \times m}\) & The space of real-valued matrices with \(n\) rows and \(m\) columns. \\
    \(\Id{n}\) & The \(n \times n\) identity matrix. \\
    \(\Zmat{n \times m}\) & The \(n \times m\) matrix of all zeros. \\
@@ -32,9 +30,7 @@
    \(\nabla_v F\) & If \(F\) is \(\R\)-valued, the gradient of \(F\) with respect to \(v\). \\
             & If \(F\) is \(\R^{n\times n}\)-valued and \(v \in \R^m\), the block gradient \(\left[\nabla_{v_1}F\tpose \ldots \nabla_{v_m}F\tpose\right]\tpose \in \R^{nm \times n}\). \\
    \(dF_v\) & Total differential (Jacobian) of \(F\), equivalent to \((\nabla_v F)\tpose\). \\
-   \(\Hess F\) & If \(F : \R^n \rightarrow \R\), the \(n \times n\) Hessian matrix of double derivatives of \(F\). \\
-               & If \(F : \R^n \rightarrow \R^k\), the block matrix \((\Hess F_1, \ldots, \Hess F_k) \in \R^{n \times nk}\). \\
-   \(\partial_v \partial_w F\) & Derivative matrix of \(F : \R^n \times \R^m \rightarrow \R\), with \((i,j)\) element \(\ppdiff{F}{v_i}{w_j}\). \\
+   \(\partial_w F\) & Partial differential of \(F\) with respect to \(w\), with \(i^\text{th}\) element \(\pdiff{F}{w_i}\). \\
    \(\delta_{i,j}\) & The Kronecker delta: 1 if \(i = j\) and 0 otherwise. \\
    \(\otimes\) & The matrix kronecker product. \\ 
    \(\norm{\cdot}\) & The euclidean norm on \(\R^n\). \\

@@ -4,37 +4,49 @@
 
 \chapter{Introduction}
 
-Consider a child on a standing swing.
-Naturally, they begin by pushing off the ground and proceed to alternate between
-standing and squatting. 
-This allows them to swing higher and faster over time, until they have reached
-their express goal of going as high and fast as possible.
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=0.6\textwidth,angle=270]{images/kiiking.jpg}
+    \caption{Kiiking, which translates to ``swing", involves a person standing
+        and squatting on a giant swing until they are rotating around the bar.
+    Image taken from \cite{kiiking-img}.}
+    \label{fig:kiiking}
+\end{figure}
 
-Now imagine that the child is a robot, and their creator is teaching them to
+The Estonian sport of ``Kiiking" (Figure \ref{fig:kiiking}) is the adult
+equivalent of a child playing on a standing swing. 
+Here, an athlete attempts to make a giant solid steel swing gain momentum.
+Naturally, the kiiker begins by pushing off the ground and proceeds to alternate
+between standing and squatting. 
+This allows them to swing higher and faster over time, until they have reached
+their express goal of spinning at high speed around the bar.
+
+Now imagine that the kiiker is a robot, and their creator is teaching them to
 behave like a real boy.
-If the roboticist had studied classical control theory, they would plot the leg
-motion of a human child as a trajectory over time and tell the robot to
+If the roboticist had studied classical control theory, they would plot 
+a human's squat depth as a trajectory over time and tell the robot to
 synchronize with this trajectory.
 In an ideal world, this technique would work perfectly; unfortunately, this
 control approach is entirely unnatural. 
-Humans on swings do not have an internal stopwatch.
+After all, humans on swings do not have an internal stopwatch telling them when
+to squat.
 Rather, they adjust how much they bend their knees based on the current angle of
 the swing along with their direction of motion.
 This position-velocity adjustment allows humans to correct for external
-disturbances (like strong winds or overly enthusiastic parents).
+disturbances (like strong winds or overly enthusiastic pushers). 
 Figure \ref{fig:swing-pos-vel} shows this usual adjustment:
 a person will squat at the peak of the swing and stand as they reach the fastest
 point at the bottom \cite{pumping_swing_standing_squatting}.
 Even if the robot could perfectly track a time-based trajectory, an external
 disturbance may swap the order of squatting and standing to the point that
-the swing slows down rather than speeding up.
+the swing can never begin rotating.
 
 \begin{figure}
     \centering
     \includegraphics[width=0.75\textwidth]{images/swing_pos_vel.png}
     \caption{A person on a standing swing will squat as they approach the
         bottom of the swing path, and stand after they pass it until they hit
-        the peak of their swing. Image taken and modified from
+        the peak of their swing. Figure modified from
     \cite{pumping_swing_standing_squatting}.}
     \label{fig:swing-pos-vel}
 \end{figure}
@@ -42,24 +54,30 @@ the swing slows down rather than speeding up.
 One recent control technique known as \textit{virtual holonomic constraints}
 \cite{vhcs_for_el_systems} forces a robot's actuators to track a function of
 position rather than time.
-Sadly, this will not work for the swing-bot: one needs to know their velocity to
-determine when they have reached the peak of their swing.
+Sadly, this will not work for the swinging robot since one needs to know their
+velocity to determine when they have reached the peak of their swing.
 In other words, the robot needs to move according to a function of both position
 and velocity if it has any hope of behaving like a real person.
 These position-velocity controllers are known as 
 \textit{virtual nonholonomic constraints}, and they are the focus of this
 thesis.
 
-Throughout this thesis we will refer to two examples to build intuition.
-The first is the variable-length pendulum, which models the child on a swing.
-The second is the acrobot, which models a gymnast hanging on a horizontal bar.
-For each of these mechanical systems, we will develop virtual nonholonomic
-constraints which replicate human behaviours. 
+Our goal throughout this thesis is to develop rigorous proof that virtual
+nonholonomic constraints are capable of increasing a robot's momentum through a
+process known as \textit{energy injection}.
+We will use two benchmark robotic systems to build intuition and test
+our theory.
+The first system is the variable-length pendulum, which models a person
+on a swing.
+The second is the acrobot, an actuated double pendulum which models a gymnast
+hanging on a horizontal bar.
+For each of these examples, we will create virtual nonholonomic
+constraints which model human motion to make the robot rotate around a bar.
 Finally, we will rigorously prove that these constraints inject energy into
 their respective robots.
 
 \section{Literature Review}
-Here we review some of the previous work on energy injection and virtual
+Let us review some of the previous work on energy injection and virtual
 nonholonomic constraints.
 
 Energy injection for mechanical systems is often performed by passivity-based
@@ -71,8 +89,9 @@ ida_pbc_acrobot_example,energy_shaping_revisited}).
 Energy shaping has been applied to both the variable-length
 pendulum \cite{vlp_energy_shaping} and the acrobot
 \cite{swingup_acrobot_energy,swingup_giant_acrobot}.
-This technique is useful, but it does not necessarily produce the structured
-human-like motion we wish to generate using virtual nonholonomic constraints.
+This technique is useful and widely applicable, but it does not
+produce the structured human-like motion we wish to generate using virtual
+nonholonomic constraints.
 
 The modern concept of virtual nonholonomic constraints was described by
 \citet{nhvc_dynamic_walking} in 2015, though there are references to more
@@ -86,14 +105,14 @@ They have also been used for error-reduction in time-delayed teleoperation
 \cite{vnhc_time_delay_teleop} and human-robot interaction
 \cite{psd_based_vnhc_redundant_manipulator,haptic_vnhc}.
 All these fields use different formulations of virtual nonholonomic constraints;
-\citet{hybrid_zero_dynamics_bipedal_nhvcs} have derived the constrained dynamics
-of virtual nonholonomic constraints for hybrid mechanical systems,
-but to the best of our knowledge no one has attempted to generalize the
-concept to abstract mechanical systems.
+\citet{hybrid_zero_dynamics_bipedal_nhvcs} have derived the so-called
+constrained dynamics for hybrid mechanical systems under virtual nonholonomic
+constraints, but to the best of our knowledge no one has attempted to generalize
+the concept to abstract mechanical systems.
 
-Many of our contributions in Chapter \ref{ch:vnhcs} extend
-concepts from the field of virtual \textit{holonomic} constraints. 
-Of note is the theoretical framework devised by Mohammadi, Maggiore, and
+Many of our contributions are extensions of concepts from the field of virtual
+holonomic constraints. 
+Of note is the framework devised by Mohammadi, Maggiore, and
 Consolini, among others
 \cite{vhcs_for_el_systems,dynamic_vhcs_stabilize_closed_orbits,lagrangian_structure_reduced_dynamics_vhcs,xingbo_thesis}.
 
