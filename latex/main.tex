@@ -62,13 +62,13 @@
 
 %% This generates the List of Figures (on a separate page), if needed
 %% (uncomment to have it appear in the document).
-%\listoffigures
+\listoffigures
 
 %% You can add commands here to generate any other material that belongs
 %% in the head matter (for example, List of Plates, Index of Symbols, or
 %% List of Appendices).
 
-% TODO: Index of Symbols and Notation
+% Index of Symbols and Notation
 \include{symbols}
 
 %% End of the preliminary sections: reset page style and numbering.
@@ -142,25 +142,22 @@ TEST CITATIONS:
 
 % Introduce the thesis
 \input{introduction}
-%
-%% Develop the formulation of VNHCs
+
+% Develop the formulation of VNHCs
 %\input{vnhcs}
-%
-%% Discuss the variable length pendulum and prove our VNHC gains energy
+
+% Discuss the variable length pendulum and prove our VNHC gains energy
 %\input{vlp}
-%
-%% Give the Acrobot model, its VNHC, and prove it gains energy
+
+% Give the Acrobot model, its VNHC, and prove it gains energy
 %\input{acrobot}
-%
-%% Concluding remarks and future work
+
+% Concluding remarks and future work
 \input{conclusion}
-%
-%% Appendices
-%\appendix
-%\input{appendix_I_bounds}
+
+% Appendices, if any
 
 %---------- Bibliography ----------%
-%\newpage
 % This adds a line for the Bibliography in the Table of Contents.
 \addcontentsline{toc}{chapter}{Bibliography}
 \bibliography{bib}
