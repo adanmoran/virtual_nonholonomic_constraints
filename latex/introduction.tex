@@ -34,9 +34,10 @@ Rather, they adjust how much they bend their knees based on the current angle of
 the swing along with their direction of motion.
 This position-velocity adjustment allows humans to correct for external
 disturbances (like strong winds or overly enthusiastic pushers). 
-Figure \ref{fig:swing-pos-vel} shows this usual adjustment:
-a person will squat at the peak of the swing and stand as they reach the fastest
-point at the bottom \cite{pumping_swing_standing_squatting}.
+Figure \ref{fig:swing-pos-vel} shows this adjustment process:
+a person will squat when they are stopped at the peak of the swing arc, and
+stand when they reach the fastest point at the bottom
+\cite{pumping_swing_standing_squatting}.
 Even if the robot could perfectly track a time-based trajectory, an external
 disturbance may swap the order of squatting and standing to the point that
 the swing can never begin rotating.
@@ -72,17 +73,16 @@ on a swing.
 The second is the acrobot, an actuated double pendulum which models a gymnast
 hanging on a horizontal bar.
 For each of these examples, we will create virtual nonholonomic
-constraints which model human motion to make the robot rotate around a bar.
-Finally, we will rigorously prove that these constraints inject energy into
-their respective robots.
+constraints which model human motion to increase the robot's momentum.
+Finally, we will rigorously prove that these constraints inject energy. 
 
 \section{Literature Review}
-Let us review some of the previous work on energy injection and virtual
+Let us review some of the existing research on energy injection and virtual
 nonholonomic constraints.
 
 Energy injection for mechanical systems is often performed by passivity-based
 control and energy shaping --- one views the robot and its inputs as energy
-transformations which are moulded to force the system to behave as desired.
+transformations which are moulded to enforce desired behaviour.
 Much of the theoretical work in this field has been performed by Ortega, van der
 Schaft, and others (see for example \cite{ida_pbc_underactuation_one,
 ida_pbc_acrobot_example,energy_shaping_revisited}).
@@ -97,21 +97,21 @@ The modern concept of virtual nonholonomic constraints was described by
 \citet{nhvc_dynamic_walking} in 2015, though there are references to more
 primitive versions going back as early as the the year 2000
 \cite{vnhc_human_robot_cooperation}.
-Virtual nonholonomic constraints have been of most notable use in the area of
-bipedal locomotion \cite{nhvc_incline_walking,output_nhvc_bipedal_conrol},
+Virtual nonholonomic constraints have been of most notable use in
+bipedal locomotion \cite{nhvc_incline_walking,output_nhvc_bipedal_control},
 where they have shown marked improvements in the robustness of walking gaits
-when compared to previous control technqiues \cite{nhvc_incline_walking}.
+when compared to previous control technqiues.
 They have also been used for error-reduction in time-delayed teleoperation
-\cite{vnhc_time_delay_teleop} and human-robot interaction
+\cite{vnhc_time_delay_teleop} and in the field of human-robot interaction
 \cite{psd_based_vnhc_redundant_manipulator,haptic_vnhc}.
-All these fields use different formulations of virtual nonholonomic constraints;
+All these research areas use different formulations of virtual nonholonomic constraints;
 \citet{hybrid_zero_dynamics_bipedal_nhvcs} have derived the so-called
-constrained dynamics for hybrid mechanical systems under virtual nonholonomic
+``constrained dynamics" for hybrid mechanical systems under virtual nonholonomic
 constraints, but to the best of our knowledge no one has attempted to generalize
 the concept to abstract mechanical systems.
 
-Many of our contributions are extensions of concepts from the field of virtual
-holonomic constraints. 
+Many of the contributions in this thesis are extensions of concepts from the
+field of virtual holonomic constraints. 
 Of note is the framework devised by Mohammadi, Maggiore, and
 Consolini, among others
 \cite{vhcs_for_el_systems,dynamic_vhcs_stabilize_closed_orbits,lagrangian_structure_reduced_dynamics_vhcs,xingbo_thesis}.
@@ -150,8 +150,8 @@ for the variable-length pendulum as a virtual nonholonomic constraint, and
 prove that the pendulum will gain enough energy to rotate around the bar with
 arbitrary speed;
 and in Chapter \ref{ch:acrobot} we find a virtual nonholonomic constraint 
-which enables the acrobot to kick its legs like a gymnast until it is
-performing backflips on a horizontal bar.
+which enables the acrobot to kick its legs like a gymnast until it
+performs backflips on a horizontal bar.
 Finally, we show experimental results on a physical acrobot which confirm
 that the theory works in the real world.
 
