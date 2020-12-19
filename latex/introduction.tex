@@ -5,46 +5,47 @@
 \chapter{Introduction}
 % TODO: Introduce the thesis with a short, sweet, intuitive approach.
 % No math, just whet the reader's appetite for what we are doing. What are the motivating examples? Why do we study what we study? Why choose VNHCs over other methods?
-Consider a child who is standing on a swing.
-Naturally, the child pushes off the ground and starts bending and extending
-their knees; they swing higher and faster over time, until they 
-have reached their express goal of going as high and fast as possible.
+Consider a child on a standing swing.
+Naturally, they push off the ground and proceed to alternate between standing
+and squatting. 
+This allows them to swing higher and faster over time, until they have reached
+their express goal of going as high and fast as possible.
 
 Now imagine that the child is a robot, and their creator is teaching them to
-swing like a real boy.
-The first thing the roboticist might do is plot the leg motion of a human child
-as a function of time and have the robot synchronize with this plot.
-In an ideal world, this technique would work perfectly and the robot boy would
-swing high, experiencing the same soaring feeling as his human counterpart.
-
-Unfortunately, this behaviour is entirely unnatural. 
-Humans on swings do not bend or extend their knees at specific times; rather,
-they adjust their leg position based on the current angle of the swing along
-with their direction of motion, as in Figure \ref{fig:swing-pos-vel}.
+behave like a real boy.
+If the roboticist had studied classical control theory, they would plot the leg
+motion of a human child as a trajectory over time and tell the robot to
+synchronize with this trajectory.
+In an ideal world, this technique would work perfectly; unfortunately, this
+control approach is entirely unnatural. 
+Humans on swings do not have an internal stopwatch.
+Rather, they adjust their leg position based on the current angle of the swing
+along with their direction of motion, as in Figure \ref{fig:swing-pos-vel}.
 This position-velocity adjustment allows humans to correct for external
 disturbances (like strong winds or overly enthusiastic parents).
+A person will squat at the peak of the swing and stand at the bottom.
 Even if the robot could perfectly track a time-based trajectory, an external
-disturbance may desynchronize the leg motion with the swing to the point that
-the swing will slow down rather than speed up.
+disturbance may swap the order of squatting and standing to the point that
+the swing slows down rather than speeding up.
 
 \begin{figure}
     \centering
     \includegraphics[width=0.75\textwidth]{images/swing_pos_vel.png}
     \caption{A person on a standing swing will squat as they approach the
         bottom of the swing path, and stand after they pass it until they hit
-        the peak of their swing. Image taken (with modifications) from
+        the peak of their swing. Image taken and modified from
     \cite{pumping_swing_standing_squatting}.}
     \label{fig:swing-pos-vel}
 \end{figure}
 
 One recent control technique known as \textit{virtual holonomic constraints}
 forces a robot's actuators to track a function of position rather than time.
-Sadly, this still won't do for our robot boy because a real child also bends
-their knees according to their direction of motion.
-In other words, the robot's legs need to move as a function not only of
-position, but also of velocity.
+Sadly, this will not work because one needs velocity to determine when
+they have reached the peak of their swing.
+In other words, the robot needs to move according to a function of both position
+and velocity if it has any hope of behaving like a real person.
 
-These are the types of controllers we study in this thesis: they are called
+These position-velocity controllers are the focus of this thesis: they are called
 \textit{virtual nonholonomic constraints}.
 
 \section{Literature Review}
