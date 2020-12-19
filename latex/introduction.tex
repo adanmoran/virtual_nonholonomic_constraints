@@ -3,11 +3,10 @@
 %/========== Introduction ==========/%
 
 \chapter{Introduction}
-% TODO: Introduce the thesis with a short, sweet, intuitive approach.
-% No math, just whet the reader's appetite for what we are doing. What are the motivating examples? Why do we study what we study? Why choose VNHCs over other methods?
+
 Consider a child on a standing swing.
-Naturally, they push off the ground and proceed to alternate between standing
-and squatting. 
+Naturally, they begin by pushing off the ground and proceed to alternate between
+standing and squatting. 
 This allows them to swing higher and faster over time, until they have reached
 their express goal of going as high and fast as possible.
 
@@ -19,11 +18,13 @@ synchronize with this trajectory.
 In an ideal world, this technique would work perfectly; unfortunately, this
 control approach is entirely unnatural. 
 Humans on swings do not have an internal stopwatch.
-Rather, they adjust their leg position based on the current angle of the swing
-along with their direction of motion, as in Figure \ref{fig:swing-pos-vel}.
+Rather, they adjust how much they bend their knees based on the current angle of
+the swing along with their direction of motion.
 This position-velocity adjustment allows humans to correct for external
 disturbances (like strong winds or overly enthusiastic parents).
-A person will squat at the peak of the swing and stand at the bottom.
+Figure \ref{fig:swing-pos-vel} shows this usual adjustment:
+a person will squat at the peak of the swing and stand as they reach the fastest
+point at the bottom \cite{pumping_swing_standing_squatting}.
 Even if the robot could perfectly track a time-based trajectory, an external
 disturbance may swap the order of squatting and standing to the point that
 the swing slows down rather than speeding up.
@@ -39,18 +40,62 @@ the swing slows down rather than speeding up.
 \end{figure}
 
 One recent control technique known as \textit{virtual holonomic constraints}
-forces a robot's actuators to track a function of position rather than time.
-Sadly, this will not work because one needs velocity to determine when
-they have reached the peak of their swing.
+\cite{vhcs_for_el_systems} forces a robot's actuators to track a function of
+position rather than time.
+Sadly, this will not work for the swing-bot: one needs to know their velocity to
+determine when they have reached the peak of their swing.
 In other words, the robot needs to move according to a function of both position
 and velocity if it has any hope of behaving like a real person.
+These position-velocity controllers are known as 
+\textit{virtual nonholonomic constraints}, and they are the focus of this
+thesis.
 
-These position-velocity controllers are the focus of this thesis: they are called
-\textit{virtual nonholonomic constraints}.
+Throughout this thesis we will refer to two examples to build intuition.
+The first is the variable-length pendulum, which models the child on a swing.
+The second is the acrobot, which models a gymnast hanging on a horizontal bar.
+For each of these mechanical systems, we will develop virtual nonholonomic
+constraints which replicate human behaviours. 
+Finally, we will rigorously prove that these constraints inject energy into
+their respective robots.
 
 \section{Literature Review}
+Here we review some of the previous work on energy injection and virtual
+nonholonomic constraints.
 
-% TODO: write a brief lit review on energy injection and VNHCs.
+Energy injection for mechanical systems is often performed by passivity-based
+control and energy shaping --- one views the robot and its inputs as energy
+transformations which are moulded to force the system to behave as desired.
+Much of the theoretical work in this field has been performed by Ortega, van der
+Schaft, and others (see for example \cite{ida_pbc_underactuation_one,
+ida_pbc_acrobot_example,energy_shaping_revisited}).
+Energy shaping has been applied to both the variable-length
+pendulum \cite{vlp_energy_shaping} and the acrobot
+\cite{swingup_acrobot_energy,swingup_giant_acrobot}.
+This technique is useful, but it does not necessarily produce the structured
+human-like motion we wish to generate using virtual nonholonomic constraints.
+
+The modern concept of virtual nonholonomic constraints was described by
+\citet{nhvc_dynamic_walking} in 2015, though there are references to more
+primitive versions going back as early as the the year 2000
+\cite{vnhc_human_robot_cooperation}.
+Virtual nonholonomic constraints have been of most notable use in the area of
+bipedal locomotion \cite{nhvc_incline_walking,output_nhvc_bipedal_conrol},
+where they have shown marked improvements in the robustness of walking gaits
+when compared to previous control technqiues \cite{nhvc_incline_walking}.
+They have also been used for error-reduction in time-delayed teleoperation
+\cite{vnhc_time_delay_teleop} and human-robot interaction
+\cite{psd_based_vnhc_redundant_manipulator,haptic_vnhc}.
+All these fields use different formulations of virtual nonholonomic constraints;
+\citet{hybrid_zero_dynamics_bipedal_nhvcs} have derived the constrained dynamics
+of virtual nonholonomic constraints for hybrid mechanical systems,
+but to the best of our knowledge no one has attempted to generalize the
+concept to abstract mechanical systems.
+
+Many of our contributions in Chapter \ref{ch:vnhcs} extend
+concepts from the field of virtual \textit{holonomic} constraints. 
+Of note is the theoretical framework devised by Mohammadi, Maggiore, and
+Consolini, among others
+\cite{vhcs_for_el_systems,dynamic_vhcs_stabilize_closed_orbits,lagrangian_structure_reduced_dynamics_vhcs,xingbo_thesis}.
 
 \section{Statement of Contributions}
 Here are the contributions of this thesis.
@@ -59,9 +104,9 @@ Here are the contributions of this thesis.
       virtual nonholonomic constraints.
       This includes the definition of simply actuated mechanical systems, virtual
       nonholonomic constraints, regular constraints, and energy injection.
-      Theorem \ref{thm:vnhc-regularity} yields a characterization of regularity, 
-      while Theorem \ref{thm:zero-dynamics} provides the constrained dynamics
-      for a certain class of systems.
+      Theorem \ref{thm:vnhc-regularity} yields a computational characterization
+      of regularity, while Theorem \ref{thm:zero-dynamics} explicitly finds the
+      constrained dynamics for a certain class of systems.
    \item \textbf{Chapter \ref{ch:vlp}} An application of virtual nonholonomic
       constraints to the variable-length pendulum, based on a pumping technique
       used by children on standing swings.
@@ -69,15 +114,16 @@ Here are the contributions of this thesis.
       which guarantees that a certain class of VNHCs will inject energy into
       this system.
    \item \textbf{Chapter \ref{ch:acrobot}} An application of virtual
-      nonholonomic constraints to the acrobot, where we develop a constraint
-      by examining the intuitive motion performed by human gymnasts.
+      nonholonomic constraints to the acrobot, based on the motion performed by
+      human gymnasts.
       The chapter ends with Theorem \ref{thm:acrobot-energy-stabilization},
-      which proves that the constraint injects energy into the acrobot.
+      which proves that the constraint we design does in fact inject energy into
+      the acrobot.
 \end{itemize}
 
 \section{Organization of the Thesis}
-The thesis is laid out as such: 
-in Chapter \ref{ch:vnhcs} we cover the requisite background on Hamiltonian
+The thesis is laid out as follows: 
+in Chapter \ref{ch:vnhcs} we cover the requisite background on analytical 
 mechanics, after which we develop the main theory of virtual nonholonomic
 constraints;
 in Chapter \ref{ch:vlp} we reformulate a time-optimal energy-injection strategy
@@ -87,8 +133,8 @@ arbitrary speed;
 and in Chapter \ref{ch:acrobot} we find a virtual nonholonomic constraint 
 which enables the acrobot to kick its legs like a gymnast until it is
 performing backflips on a horizontal bar.
-Finally, we show experimental results for the acrobot which confirm that the
-theory works in the real world.
+Finally, we show experimental results on a physical acrobot which confirm
+that the theory works in the real world.
 
 %/========== /Introduction ==========/%
 % vim: set tw=80 ts=4 sw=4 sts=0 et ffs=unix :

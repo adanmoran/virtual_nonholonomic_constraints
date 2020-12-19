@@ -3,13 +3,75 @@
 %/========== Conclusion ==========/%
 
 \chapter{Conclusion}\label{ch:conclusion}
-% TODO: Summarize the work
 
-\section{Limitations of this Work}
+This thesis has shown the utility of VNHCs as a means of injecting energy into
+mechanical systems.
+In Chapter \ref{ch:vnhcs} we developed the framework of VNHCs for underactuated
+mechanical systems, with a focus on VNHCs for simply actuated Hamiltonian
+systems.
+We then applied this framework to two benchmark systems: the variable-length
+pendulum and the acrobot.
+In Chapter \ref{ch:vlp} we proved that a certain class of VNHCs will always
+inject energy into the VLP, while in Chapter \ref{ch:acrobot} we designed a
+constraint inspired by gymnastics and proved it injects energy into the
+acrobot.
+In the end, we demonstrated that virtual nonholonomic constraints are capable of
+injecting and dissipating energy in a robust manner, all while producing
+realistic biological motion.
 
+\section{Limitations and Future Research}
+Our VNHC framework is relies on the following assumptions:
+\begin{enumerate}
+    \item The input matrix \(B(q) \equiv B \in \R^{n \times k}\) is constant and
+        full rank.
+    \item The input matrix has a left-annihilator 
+        \(B^\perp \in \R^{(n-k)\times n}\). 
+    \item The annihilator matrix \(B^\perp\) is right semi-orthogonal.
+    \item The inertia matrix of the system satisfies 
+        \(\nabla_{q_u}M(q) = \Zmat{n(n-k) \times n}\).
+    \item On the constraint manifold \(\Gamma\), one can solve for \(q_a\) as a
+        function of \((q_u,p_u)\).
+\end{enumerate}
+If any of these assumptions are not satisfied, one may not be able to find the
+constrained dynamics in simply actuated coordinates, and the results may not
+hold.
+In particular, the theoretical guarantees of this thesis do not hold for systems
+with physical nonholonomic constraints like friction, nor does it apply to vehicles
+with wheels.
 
-\section{Future Research}
+This guides us to the following research directions. 
+First, one might consider relaxing the assumptions on the input and inertia
+matrices to widen the class of systems to which VNHCs can be applied.
+Second, one might forgo the assumption that \(q_a\) is solvable on the
+constraint manifold; instead, one could borrow from the VHC literature
+and parameterize the constraint manifold with a different set of
+coordinates than \((q_u,p_u)\).
+Third, one might consider abstract mechanical systems with dynamics
+\[
+    \begin{cases}
+        \dot{q} = \Minv(q) p
+        , \\
+        \dot{p} = -\pdmat - \nabla_q V(q) + Q_{nh}(q,p) + B(q)\tau
+        ,
+    \end{cases}
+\]
+where \(Q_{nh}(q,p) \in \R^n\) are the equations for physical nonholonomic
+constraints like friction.
+Fourth, one can investigate a smoother mechanism for energy stabilization, where
+a VNHC is explicitly designed to inject energy below some energy level, and
+dissipate energy above it.
+For example, this might involve a mechanism for smoothly transferring between 
+VNHCs while maintaining certain safety requirements.
 
+Finally, the proof of Theorem \ref{thm:acrobot-energy-stabilization} 
+in Chapter \ref{sec:acrobot-proof} opens a door to the idea of VNHC generation. 
+One might search for suitable conditions on a VNHC whereby the Poincar\'{e}
+sections for oscillations and rotations are increasing.
+Then, one can extend Otsason's ``virtual constraint
+generator" \cite{vcg} with the goal of generating regular VNHCs which satisfy
+these energy injection/dissipation conditions.
+In this way, one could automatically generate VNHCs which stabilize a
+desired energy level.
 
 %/========== /Conclusion ==========/%
-% vim: set ts=3 sw=3 sts=0 et ffs=unix :
+% vim: set tw=80 ts=4 sw=4 sts=0 et ffs=unix :
