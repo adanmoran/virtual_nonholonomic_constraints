@@ -679,10 +679,69 @@ Furthermore, we see that VNHCs are a powerful tool for creating simple energy
 stabilization techniques based on natural human motion.
 
 \section{Simulation Results}
-% TODO: Show the simulations of the VLP VNHCs (multiple of them). How does the
-% energy injection time of our sin(2theta) VNHC compare to the energy injection
-% time of the optimal one? How does the VNHC version compare in robustness with
-% the time-based one from the pumping paper?
+In this section, we compare the energy injection properties of our smooth VNHC
+\(L_\frac{\pi}{2}(\theta)\), the time-optimal VNHC \(L^\star(\theta)\) from
+Equation \eqref{eqn:vlp-optimal-controller}, and the differentiable
+VNHC \(L_T(\theta)\) from Equation \eqref{eqn:vlp-T-controller} with 
+\(T = 0.01\).
+To do this comparison, we simulate an adult Estonian performing a Kiiking
+routine.
+
+The average weight of a 25 year old Estonian man is \(80.17\)kg
+\cite{estonian-body-data}, so we set the VLP mass \(m\) to this value.
+To find our upper and lower bounds on length, we first need to choose the size
+of a swing.
+The common model of a Kiiking swing is between \(3-4\)m tall
+\cite{kiiking-sale}, so we take the length to be \(3\)m.
+The average 25 year old Estonian is \(1.8\)m tall \cite{estonian-body-data}, and
+we assume their squat height is half that at \(0.9\)m tall.
+We further assume that their center of mass (COM) is always located at half
+their current height, which means their standing COM is \(0.9\)m from the ground
+while their squatting COM is \(0.45\)m from the ground.
+This means the distance from their standing COM to the pivot is \(2.1\)m, while
+the distance from their squatting COM to the pivot is \(2.55\)m.
+Hence, we set \(\underbar{l} = 2.1\) and \(\overbar{l} = 2.55\).
+We initialize a VLP with these parameters at 
+\((q,p) = \left(\frac{\pi}{32},0\right)\) and plot the resulting orbits
+in Figure \ref{fig:vlp-sim-orbit}.
+
+\begin{figure}
+   \centering
+   \includegraphics[width=0.8\textwidth]{images/kiiking_orbits.png}
+   \caption{The orbits of the time-optimal controller \(L^\star(\theta)\)
+      (black), the differentiable controller \(L_T(\theta)\) (red),
+      and the smooth VNHC \(L_\frac{\pi}{2}(\theta)\) (cyan) employed by a 25
+      year old Estonian male on a 3m tall Kiiking swing. All the controllers are
+      initialized at \(q(0) = \frac{\pi}{32}\), and they each steadily gain
+      energy until they reach a rotation.}
+   \label{fig:vlp-sim-orbit}
+\end{figure}
+
+The time-optimal controller reaches a rotation within 18 seconds, the
+differentiable controller rotates in 41 seconds, and
+the smooth VNHC takes 4691 seconds (78 minutes).
+Despite the fact that the smooth VNHC is several orders of magnitude slower than
+the other controllers, it still succeeds at injecting energy into the
+system.
+This is especially clear when looking at Figure \ref{fig:vlp-sim-energy}, which
+shows the smooth VNHC steadily gaining energy over time.
+
+\begin{figure}
+   \centering
+   \includegraphics[width=0.8\textwidth]{images/E_kiiking_ltheta.png}
+   \caption{The energy \(E_\text{avg}(q,p)\) of a 25 year old Estonian male on a
+      3m tall Kiiking swing who employs the smooth VNHC
+   \(L_\frac{\pi}{2}(\theta)\).}
+   \label{fig:vlp-sim-energy}
+\end{figure}
+
+Overall, this simulation confirms that VNHCs are capable of injecting energy
+into the VLP. 
+Moreover, if one can use the differentiable controller \(L_T(\theta)\) (which
+humans certainly can), one is able to approximate the time-optimal controller
+arbitrarily well.
+We conclude that VNHCs are powerful tools for injecting energy into the VLP
+while maintaining the natural structure of human motion.
 
 %/========== /Variable Length Pendulum ==========/%
 % vim: set ts=3 sw=3 sts=0 et tw=80 ffs=unix :
