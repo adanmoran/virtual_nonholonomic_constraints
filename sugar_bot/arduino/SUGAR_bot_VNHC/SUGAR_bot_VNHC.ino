@@ -77,8 +77,18 @@ TanhVNHC tanh_vnhc(acrobot, qa_max, tanh_scale);
 // Generate a VNHC for the sin(theta) function
 SinuVNHC sinu_vnhc(acrobot, qa_max);
 
+// Generate a VNHC for the qa_max*(2/pi)*arctan(scale*pu) function
+// Note that the acrobot rotates when pu = sqrt(60m^2gl^3)
+// If you take m = avg(ml,mt) and l = avg(Rt,Rl,ll,lt), MATLAB says that
+// sqrt(60m^2gl^3) = 0.1866. 
+// Since qmax = pi/2, qa=arctan(Ipu) can never reach pi/2,
+// we want qa ~ pi/3 at pu = 0.1866.
+// i.e we need pi/3 = arctan(I*0.1866) <-> I = tan(pi/3)/0.1866 ~ 10.
+ScalingFactor arctan_scale = 10;
+ArctanVNHC arctan_vnhc(acrobot, qa_max, arctan_scale);
+
 // Assign the VNHC pointer
-AcrobotVNHC* pVNHC = &tanh_vnhc;
+AcrobotVNHC* pVNHC = &arctan_vnhc;
 
 // HARDWARE CONSTANTS ----------------------------------------------------------
 
@@ -218,15 +228,13 @@ void rtloop() {
     // Send it off to the servo
     int pos = radiansToServo(servo_goal_rad);
 #if DEBUG_ENABLE
-    Serial.print("Psi = ");
+    Serial.print("qu = ");
     Serial.print(phase.qu);
-    Serial.print(" | Psi_d = ");
+    Serial.print(" | qu_d = ");
     Serial.print(encoder_vel_rad_s);
     Serial.print(" | pu = ");
     Serial.print(phase.pu);
     Serial.print(" | qa_des = ");
-    Serial.println(servo_goal_rad);
-    Serial.print("Desired Servo angle: ");
     Serial.println(servo_goal_rad);
   } else {
   }
@@ -273,8 +281,8 @@ void update_velocities()
   servo_pos_rad = servoToRadians(RX24F.readPosition(SERVO_ID));
 #endif // ifdef DEBUG_ENABLE
 
-  // TODO: What are these magic constants? Check the servo's datasheet
-  //       and replace them with constant variables
+  // TODO: What are these magic constants? Xingbo wrote them in without comment.
+  // Check the Servo datasheet and replace them with constant variables.
   servo_vel_rad_s = 11.58 * (servo_pos_rad - servo_pos_rad_2)
                     + 0.7799 * servo_vel_rad_s_1 - 0.1506 * servo_vel_rad_s_2;
 }
@@ -393,8 +401,8 @@ void send_wire_data()
 void update_configuration()
 {
   // Update the configuration with the current state
-  configuration.psi = atan2(sin(encoder_pos_rad), cos(encoder_pos_rad));
-  configuration.alpha = atan2(sin(servo_pos_rad), cos(servo_pos_rad));
+  configuration.psi = encoder_pos_rad; //atan2(sin(encoder_pos_rad), cos(encoder_pos_rad));
+  configuration.alpha = servo_pos_rad; //atan2(sin(servo_pos_rad), cos(servo_pos_rad));
   configuration.dpsi = encoder_vel_rad_s;
   configuration.dalpha = servo_vel_rad_s;
   configuration.E = compute_energy(configuration);

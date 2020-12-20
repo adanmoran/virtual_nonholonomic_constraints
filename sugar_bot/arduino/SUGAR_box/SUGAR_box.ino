@@ -14,7 +14,7 @@
 
 // Define this to enable Serial outputs, to read the data we are
 // sending to the SUGAR_box over the wire.
-#define DEBUG_ENABLE 1
+#define DEBUG_ENABLE 0
 
 #define ENCODER_OPTIMIZE_INTERRUPTS
 #include <Encoder.h>
@@ -34,10 +34,12 @@ const float Ts_sec = Ts_ms/1000.;
 
 // HARDWARE CONSTANTS ----------------------------------------------------------
 
-// A randomly chosen I2C address
+// A randomly chosen I2C address for this box
+// The SUGAR_bot address must match this one for the two
+// arduinos to communicate properly
 const int I2C_address = 0x1B;
 
-// Encoder PPR
+// Encoder PPR (pulses per revolution)
 const long ENCODER_PPR = 1000;
 
 // Encoder counting mode (either 1, 2, or 4)
@@ -60,7 +62,8 @@ float encoder_pos_rad = 0;
 // ...run through a LPF to remove jagged edges, or tries to at least
 float encoder_pos_filtered_1 = 0;
 
-// This is the filtered angle, to report
+// This is the filtered angle, to report.
+// It corresponds to Xingbo's psi, Adan's qu.
 float encoder_angle_rad = 0;
 
 // We estimate the angular velocity with a washout-lowpass filter
@@ -72,6 +75,7 @@ float encoder_pos_rad_1 = 0;
 float encoder_pos_rad_2 = 0;
 
 // The velocity is then converted to rad/s
+// This corresponds to psi_dot <-> qu_dot
 float encoder_vel_rad_s = 0;
 
 // State of the main switch
@@ -81,12 +85,14 @@ byte main_switch_state = 0;
 byte bot_switch_state = 0;
 
 // Angle of the servo as reported by the robot arduino
+// This corresponds to alpha <-> qa
 float servo_pos_rad = 0;
 
 // Angular velocity of the servo as reported by the robot arduino
+// This corresponds to alpha_dot <-> qa_dot
 float servo_vel_rad_s = 0;
 
-// Goal angle of the servo
+// Goal angle of the servo, alpha_des <-> qa_des
 float servo_goal_rad = 0;
 
 // State of the link between this arduino and the robot arduino
@@ -180,6 +186,8 @@ void rtloop() {
   encoder_pos_rad = encoderMap((float)(encoder_pos_raw), 2*M_PI);
   
   // Filter the raw data to remove some of the jagged edges
+  // TODO: Xingbo wrote this filter. Where do the numbers come from? Replace these
+  // with variables.
   encoder_angle_rad = 0.2929*(encoder_pos_rad + encoder_pos_rad_1) 
                           + 0.4142*encoder_pos_filtered_1;
   encoder_pos_filtered_1 = encoder_angle_rad;
@@ -245,11 +253,44 @@ void rtloop() {
     iteration_phase = 0;
   }
 
+#if DEBUG_ENABLE
+  // Print twice per second.
+  // This loop runs once every Ts_ms, so we need 500*Ts_ms iterations 
+  // between each printout.
+  if(iteration_phase % (int((500*Ts_ms))) == 0)
+  {
+    Serial.println("");
+    Serial.println("-------------------------");
+    Serial.print("Switch State = ");
+    Serial.println(main_switch_state);
+    Serial.print("Switch State (bot view) = ");
+    Serial.println(bot_switch_state);
+    Serial.print("Encoder angle = ");
+    Serial.println(encoder_angle_rad);
+    Serial.print("Encoder Velocity = ");
+    Serial.println(encoder_vel_rad_s);
+    Serial.print("Potentiometer Value = ");
+    Serial.println(potentiometer_state);
+    Serial.print("Servo Position = ");
+    Serial.println(servo_pos_rad);
+    Serial.print("Servo Velocity = ");
+    Serial.println(servo_vel_rad_s);
+    Serial.print("* Desired Servo Position = ");
+    Serial.println(servo_goal_rad);
+    Serial.print("Acrobot Energy = ");
+    Serial.println(energy);
+    Serial.println("-------------------------");
+    Serial.println("");
+  }
+  
+#else
   // Send some data over serial
   // Let's try removing some overhead and call Serial.write just once
   // some fancy pointer work here to send the right chunks of data
   Serial.write( (4*iteration_phase + data_buffer), 4);
-  
+#endif
+
+  // Update the counter
   iteration_phase++;
   
   // Check if we are receiving requests from the master
@@ -341,30 +382,6 @@ void wireReceiveEvent(int howmany){
 void loop() {
   // Update the timer, do nothing else here
   timer.update();
-#if DEBUG_ENABLE
-  Serial.println("");
-  Serial.println("-------------------------");
-  Serial.print("Switch State = ");
-  Serial.println(main_switch_state);
-  Serial.print("Switch State (bot view) = ");
-  Serial.println(bot_switch_state);
-  Serial.print("Encoder angle = ");
-  Serial.println(encoder_angle_rad);
-  Serial.print("Encoder Velocity = ");
-  Serial.println(encoder_vel_rad_s);
-  Serial.print("Potentiometer Value = ");
-  Serial.println(potentiometer_state);
-  Serial.print("Servo Position = ");
-  Serial.println(servo_pos_rad);
-  Serial.print("Servo Velocity = ");
-  Serial.println(servo_vel_rad_s);
-  Serial.print("* Desired Servo Position = ");
-  Serial.println(servo_goal_rad);
-  Serial.print("Acrobot Energy = ");
-  Serial.println(energy);
-  Serial.println("-------------------------");
-  Serial.println("");
-#endif
 }
 
 // AUXILIARY STUFF ----------------------------------------------------------
