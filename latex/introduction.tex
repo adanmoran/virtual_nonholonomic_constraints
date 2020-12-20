@@ -4,15 +4,6 @@
 
 \chapter{Introduction}
 
-\begin{figure}[t]
-    \centering
-    \includegraphics[width=0.6\textwidth,angle=270]{images/kiiking.jpg}
-    \caption{Kiiking, which translates to ``swing", involves a person standing
-        and squatting on a giant swing until they are rotating around the bar.
-    Image taken from \cite{kiiking-img}.}
-    \label{fig:kiiking}
-\end{figure}
-
 The Estonian sport of ``Kiiking" (Figure \ref{fig:kiiking}) is the adult
 equivalent of a child playing on a standing swing. 
 Here, an athlete attempts to make a giant solid steel swing gain momentum.
@@ -21,13 +12,22 @@ between standing and squatting.
 This allows them to swing higher and faster over time, until they have reached
 their express goal of spinning at high speed around the bar.
 
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.6\textwidth,angle=270]{images/kiiking.jpg}
+    \caption{Kiiking, which translates to ``swing", involves a person standing
+        and squatting on a giant swing until they are rotating around the bar.
+    Image taken from \cite{kiiking-img}.}
+    \label{fig:kiiking}
+\end{figure}
+
 Now imagine that the kiiker is a robot, and their creator is teaching them to
-behave like a real boy.
+behave like a real person.
 If the roboticist had studied classical control theory, they would plot 
 a human's squat depth as a trajectory over time and tell the robot to
 synchronize with this trajectory.
-In an ideal world, this technique would work perfectly; unfortunately, this
-control approach is entirely unnatural. 
+In an ideal world, this technique would work perfectly; unfortunately, it is
+also entirely unnatural. 
 After all, humans on swings do not have an internal stopwatch telling them when
 to squat.
 Rather, they adjust how much they bend their knees based on the current angle of
@@ -35,7 +35,7 @@ the swing along with their direction of motion.
 This position-velocity adjustment allows humans to correct for external
 disturbances (like strong winds or overly enthusiastic pushers). 
 Figure \ref{fig:swing-pos-vel} shows this adjustment process:
-a person will squat when they are stopped at the peak of the swing arc, and
+a person will squat when they are stopped at the peak of their swing, and
 stand when they reach the fastest point at the bottom
 \cite{pumping_swing_standing_squatting}.
 Even if the robot could perfectly track a time-based trajectory, an external
@@ -53,9 +53,9 @@ the swing can never begin rotating.
 \end{figure}
 
 One recent control technique known as \textit{virtual holonomic constraints}
-\cite{vhcs_for_el_systems} forces a robot's actuators to track a function of
-position rather than time.
-Sadly, this will not work for the swinging robot since one needs to know their
+forces a robot's actuators to track a function of
+position rather than time \cite{vhcs_for_el_systems}.
+Sadly, this will not help the swinging robot since one needs
 velocity to determine when they have reached the peak of their swing.
 In other words, the robot needs to move according to a function of both position
 and velocity if it has any hope of behaving like a real person.
@@ -73,8 +73,8 @@ on a swing.
 The second is the acrobot, an actuated double pendulum which models a gymnast
 hanging on a horizontal bar.
 For each of these examples, we will create virtual nonholonomic
-constraints which model human motion to increase the robot's momentum.
-Finally, we will rigorously prove that these constraints inject energy. 
+constraints which model human motion and will rigorously prove that these
+constraints inject energy. 
 
 \section{Literature Review}
 Let us review some of the existing research on energy injection and virtual
