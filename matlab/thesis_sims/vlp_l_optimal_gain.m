@@ -9,7 +9,7 @@
 %
 % Output:
 % * l^\star(theta), the time-optimal controller.
-function l = vlp_l_optimal(theta,lu,lb)
+function l = vlp_l_optimal_gain(theta,lu,lb)
 % If theta is within ]-pi,-pi/2] or [0,pi/2], we stand.
 if theta <= -pi/2 || (0 <= theta && theta <= pi/2)
     l = lu;
