@@ -17,7 +17,7 @@
 function l = vlp_l_T(theta,lu,lb,T)
 % Return vlp_l_optimal if T = 0
 if T == 0
-    l = vlp_l_optimal(theta,lu,lb);
+    l = vlp_l_optimal_gain(theta,lu,lb);
     return;
 elseif T == pi/2
      l = vlp_l_smooth(theta,lu,lb);
@@ -45,7 +45,7 @@ elseif pi/2 - T/2 < theta && theta < pi/2 + T/2
 % If it's none of these cases, then we are within the domain of the optimal
 % controller, so we return the optimal result.
 else
-    l = vlp_l_optimal(theta,lu,lb);
+    l = vlp_l_optimal_gain(theta,lu,lb);
 end
 end
 
