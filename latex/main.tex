@@ -58,7 +58,7 @@
 
 %% This generates the List of Tables (on a separate page), if needed
 %% (uncomment to have it appear in the document).
-%\listoftables
+\listoftables
 
 %% This generates the List of Figures (on a separate page), if needed
 %% (uncomment to have it appear in the document).
@@ -75,66 +75,69 @@
 \end{preliminary}
 
 %---------- Main Content ----------%
-TEST CITATIONS:
-
-\cite{constrained_hamiltonian_systems}
-\cite{control_giant_two_link_gymnastic_robot}
-\cite{dynamical_servo_acrobot_vc}
-\cite{dynamic_vhcs_stabilize_closed_orbits}
-\cite{energy_pumping_robotic_swinging}
-\cite{hamiltonian_nonholonomic_systems}
-\cite{hamiltonization_of_nh_systems}
-\cite{how_to_pump_a_swing}
-\cite{hybrid_zero_dynamics_bipedal_nhvcs}
-\cite{integrating_factors}
-\cite{lagrangian_structure_reduced_dynamics_vhcs} 
-\cite{multiple_lyapunov_functions}
-\cite{multiple_lyapunov_functions_switched_systems}
-\cite{nonholonomic_dynamics}
-\cite{pendulum_length_giant_gymnastics}
-\cite{pumping_swing_standing_squatting}
-\cite{swingup_acrobot_pendulum}
-\cite{swingup_giant_acrobot}
-\cite{vhcs_for_el_systems}
-\cite{vlp_energy_shaping}
-\cite{xingbo_thesis}
-\cite{khalil_nonlinear}
-\cite{greenwood_dynamics}
-\cite{landau_mechanics}
-\cite{ida_pbc_underactuation_one}
-\cite{ida_pbc_acrobot_example}
-\cite{vhc_robotic_walking}
-\cite{vhc_stable_walking}
-\cite{vhc_snake}
-\cite{vhc_bicycle}
-\cite{vhc_helicopter}
-\cite{vnhc_human_robot_cooperation}
-\cite{psd_based_vnhc_redundant_manipulator}
-\cite{haptic_vnhc}
-\cite{vnhc_time_delay_teleop}
-\cite{nhvc_dynamic_walking}
-\cite{nhvc_incline_walking}
-\cite{output_nhvc_bipedal_control}
-\cite{dynamics_periodic_vlp}
-\cite{oscillation_suppression_vlp}
-\cite{vlp_tuned_mass_damper}
-\cite{lyapunov}
-\cite{nonlinear_controllers_nonintegrable_acrobot}
-\cite{toward_framework_biped_locomotion}
-\cite{swingup_problem_acrobot}
-\cite{swingup_acrobot_energy}
-\cite{motion_control_gymnastic_skill}
-\cite{usagym_giant}
-\cite{calculating_svd}
-\cite{krasovskii_lasalle}
-\cite{kronprod}
-\cite{poincare_bendixson}
-\cite{stable_manifold}
-\cite{birkhoff}
-\cite{energy_shaping_revisited}
-\cite{robust_energy_shaping}
-\cite{vcg}
-\cite{kiiking-img}
+%TEST CITATIONS:
+%
+%\cite{constrained_hamiltonian_systems}
+%\cite{control_giant_two_link_gymnastic_robot}
+%\cite{dynamical_servo_acrobot_vc}
+%\cite{dynamic_vhcs_stabilize_closed_orbits}
+%\cite{energy_pumping_robotic_swinging}
+%\cite{hamiltonian_nonholonomic_systems}
+%\cite{hamiltonization_of_nh_systems}
+%\cite{how_to_pump_a_swing}
+%\cite{hybrid_zero_dynamics_bipedal_nhvcs}
+%\cite{integrating_factors}
+%\cite{lagrangian_structure_reduced_dynamics_vhcs} 
+%\cite{multiple_lyapunov_functions}
+%\cite{multiple_lyapunov_functions_switched_systems}
+%\cite{nonholonomic_dynamics}
+%\cite{pendulum_length_giant_gymnastics}
+%\cite{pumping_swing_standing_squatting}
+%\cite{swingup_acrobot_pendulum}
+%\cite{swingup_giant_acrobot}
+%\cite{vhcs_for_el_systems}
+%\cite{vlp_energy_shaping}
+%\cite{xingbo_thesis}
+%\cite{khalil_nonlinear}
+%\cite{greenwood_dynamics}
+%\cite{landau_mechanics}
+%\cite{ida_pbc_underactuation_one}
+%\cite{ida_pbc_acrobot_example}
+%\cite{vhc_robotic_walking}
+%\cite{vhc_stable_walking}
+%\cite{vhc_snake}
+%\cite{vhc_bicycle}
+%\cite{vhc_helicopter}
+%\cite{vnhc_human_robot_cooperation}
+%\cite{psd_based_vnhc_redundant_manipulator}
+%\cite{haptic_vnhc}
+%\cite{vnhc_time_delay_teleop}
+%\cite{nhvc_dynamic_walking}
+%\cite{nhvc_incline_walking}
+%\cite{output_nhvc_bipedal_control}
+%\cite{dynamics_periodic_vlp}
+%\cite{oscillation_suppression_vlp}
+%\cite{vlp_tuned_mass_damper}
+%\cite{lyapunov}
+%\cite{nonlinear_controllers_nonintegrable_acrobot}
+%\cite{toward_framework_biped_locomotion}
+%\cite{swingup_problem_acrobot}
+%\cite{swingup_acrobot_energy}
+%\cite{motion_control_gymnastic_skill}
+%\cite{usagym_giant}
+%\cite{calculating_svd}
+%\cite{krasovskii_lasalle}
+%\cite{kronprod}
+%\cite{poincare_bendixson}
+%\cite{stable_manifold}
+%\cite{birkhoff}
+%\cite{energy_shaping_revisited}
+%\cite{robust_energy_shaping}
+%\cite{vcg}
+%\cite{kiiking-img}
+%\cite{estonian-body-data}
+%\cite{kiiking-sale}
+%\cite{montecarlo}
 
 % When using external files, we use \input instead of \include because \input
 % allows you to nest the inclusion. This way, we can separate the .tikz files
@@ -144,18 +147,16 @@ TEST CITATIONS:
 \input{introduction}
 
 % Develop the formulation of VNHCs
-%\input{vnhcs}
+\input{vnhcs}
 
 % Discuss the variable length pendulum and prove our VNHC gains energy
 \input{vlp}
 
 % Give the Acrobot model, its VNHC, and prove it gains energy
-%\input{acrobot}
+\input{acrobot}
 
 % Concluding remarks and future work
 \input{conclusion}
-
-% Appendices, if any
 
 %---------- Bibliography ----------%
 % This adds a line for the Bibliography in the Table of Contents.

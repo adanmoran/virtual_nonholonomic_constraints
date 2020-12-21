@@ -15,6 +15,8 @@ In Chapter \ref{ch:vlp} we proved that a certain class of VNHCs will always
 inject energy into the VLP, while in Chapter \ref{ch:acrobot} we designed a
 constraint inspired by gymnastics and proved it injects energy into the
 acrobot.
+At the end of each chapter we performed simulations and experiments which
+validated the theory and showed the utility of VNHCs. 
 In the end, we demonstrated that virtual nonholonomic constraints are capable of
 injecting and dissipating energy in a robust manner, all while producing
 realistic biological motion.
@@ -39,7 +41,7 @@ In particular, the theoretical guarantees of this thesis do not apply to systems
 with physical nonholonomic constraints (\eg friction), nor do they apply to vehicles
 with wheels.
 
-These limitations guide us toward the following research directions. 
+These limitations guide us to the following research directions. 
 First, one might relax the assumptions on the input and inertia
 matrices, thereby widening the class of systems to which VNHCs can be applied.
 Second, one might forgo the assumption that \(q_a\) is solvable on the
@@ -57,11 +59,11 @@ Third, one might consider more general mechanical systems with dynamics given by
 \]
 where \(Q_{nh}(q,p) \in \R^n\) are terms corresponding to physical nonholonomic
 constraints like friction.
-Fourth, one can investigate a smoother mechanism for energy stabilization, where
+Fourth, one can investigate a smoother method for energy stabilization, where
 a VNHC is explicitly designed to inject energy below some energy level, and
 dissipate energy above it.
-For example, this might involve a mechanism for smoothly transferring between 
-VNHCs while maintaining certain safety requirements.
+For example, one might devise a mechanism for smoothly transferring
+between VNHCs while maintaining certain safety requirements.
 
 Finally, the proof of Theorem \ref{thm:acrobot-energy-stabilization} 
 in Chapter \ref{sec:acrobot-proof} opens a door to the possibility of VNHC generation. 
