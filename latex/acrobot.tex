@@ -324,7 +324,8 @@ Since we want our constraint to \textit{provably} inject energy, we must forgo
 this type of constraint in favour of something less complex.
 
 \section{The Acrobot Constraint}
-One may be tempted to design a constraint of the form \(q_a = \bar{q}_a\sin(\theta)\) 
+One may be tempted to design a constraint of the form 
+\(q_a = \bar{q}_a\sin(\theta)\),
 with \(\theta := \arctan_2(p_u,q_u)\), since a similar approach 
 was so effective for the VLP in Chapter \ref{ch:vlp}.
 Unfortunately, this constraint is not regular, and it is difficult to find any
@@ -1162,7 +1163,12 @@ there exists \(I > 0\) small enough that the constraint
 ~\eqref{eqn:acrobot-constraint} is injecting energy on \(\mathcal{O}_1\).
 
 By the same arguments presented in this section, the Poincar\'{e} section
-satisfies \( P_\mathcal{O}(\mu_0) \leq \mu_0 - \gamma\) when \(I < 0\). 
+satisfies
+\[
+    P_\mathcal{O}(\mu_0) \leq \mu_0 - \gamma
+    ,
+\] 
+when \(I < 0\). 
 In this case, the constraint dissipates energy on \(\mathcal{O}_1\).
 
 \subsubsection*{Energy Gain on \(\bar{\mathcal{O}}_1\)}
@@ -1238,9 +1244,22 @@ This means \(E_\pi\) is not invariant, so the positive limit set of \(x(t)\)
 must be the set \(\{(\pi,0)\}\).
 Hence, \(x(t)\) converges to \((\pi,0)\), which means \(x(0) \in \Pi^+\).
 Since we know that \(\Pi^+\) is a set of measure zero in \(\SxR\), almost every
-other orbit initialized in \(\mathcal{O}_1\) must escape through the boundary
+orbit initialized in \(\mathcal{O}_1\) must escape through the boundary
 \(E_\pi\) into the rotation domain.
 
+Escaping once into the rotation domain does not guarantee the acrobot
+orbit will not return to \(\mathcal{O}_1\).
+Indeed, the orbit could escape through \(E_\pi\) and return to \(\mathcal{O}_1\)
+several times.
+However, the orbit must eventually remain outside the closure of 
+\(\mathcal{O}_1\). 
+If not, the positive limit set would once again be
+\(E_\pi\); by the same argument as above, the orbit must converge to 
+\((\pi,0)\).
+
+We conclude that all orbits beginning in \(\mathcal{O}_1\) will, in finite time,
+escape the closure of \(\mathcal{O}_1\) and remain in the rotation domain
+forever after.
 
 \subsubsection*{Summary}
 
@@ -1440,7 +1459,6 @@ whose solution is
 
 \subsubsection*{Poincar\'{e} Analysis}
 
-
 Suppose we initialize the acrobot at \((\beta,\rho) = (0,\rho_0)\).
 One full rotation amounts to \(\beta\) traversing \(2\pi\) rad in a clockwise
 direction; that is, when \(\beta\) goes from \(0\) to \(\sign{\rho_0}2\pi\).
@@ -1449,7 +1467,10 @@ there is a well-defined Poincar\'{e} map describing how the pseudo-radius
 \(\rho\) changes each time the orbit \((q(t),p(t))\) hits the \(p_u\) axis, \ie,
 every time \(\beta\) changes by \(2\pi\).
 We define this Poincar\'{e} map as
-\(P_\mathcal{R}(\rho_0) := \hat{\rho}(\sign{\rho_0}2\pi,\rho_0,I)\),
+\[
+    P_\mathcal{R}(\rho_0) := \hat{\rho}\left(\sign{\rho_0}2\pi,\rho_0,I\right)
+    ,
+\]
 which expands into
 \[
     P_\mathcal{R}(\rho_0) = \rho_0 + I \hat{\rho}_1(\sign{\rho_0}2\pi, \rho_0)
@@ -1623,7 +1644,11 @@ Then \(\abs{P_\mathcal{R}(\rho_0)} \geq \abs{\rho_0} + \gamma\) for all
 \(\mathcal{R}_{\bar{\rho}}\).
 
 By the same arguments presented in this section, the Poincar\'{e} section
-satisfies \(\abs{P_\mathcal{R}(\rho_0)} \leq \abs{\rho_0} - \gamma\) 
+satisfies 
+\[
+    \abs{P_\mathcal{R}(\rho_0)} \leq \abs{\rho_0} - \gamma
+    ,
+\]
 when \(I < 0\).
 
 \subsubsection*{Conclusion}
@@ -1670,7 +1695,204 @@ completes the proof of Theorem \ref{thm:acrobot-energy-stabilization}.
 \end{proof}
 
 \section{Experimental Results}
-% TODO: This might be a separate chapter
+In this section, we test our VNHC on the physical acrobot built by
+\citet{xingbo_thesis} (Figure \ref{fig:xingbo-acrobot}).
+Since it is not a simple acrobot, this experiment will test whether VNHCs are
+robust to model uncertainties.
+As we will see, our VNHC can inject energy on the general acrobot model.
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.5\linewidth]{images/xingbo_acrobot.png}
+    \caption{The acrobot built by Wang \cite{xingbo_thesis}.}
+    \label{fig:xingbo-acrobot}
+\end{figure}
+
+Wang's acrobot  has inertia matrix as in ~\eqref{eqn:general-acrobot-inertia}
+and potential function as in ~\eqref{eqn:general-acrobot-potential}.
+The physical parameters are written explicitly in Table
+\ref{tab:acrobot-parameters}.
+
+\begin{table}
+    \centering
+    \caption{Physical parameters for the real acrobot, as measured by
+    \citet{xingbo_thesis}.}
+    \label{tab:acrobot-parameters}
+    \begin{tabular}{ccccccccc}
+        \toprule
+        $m_t$ & $m_l$ & $d_t$ & $d_l$ & $l_t$ & $l_l$ & $J_t$ & $J_l$ & $g$ \\
+        \midrule
+        0.2112 & 0.1979 & % mass
+        0.148 & 0.145 & % total length
+        0.073 & 0.083 & % COM distance
+        0.00129 & 0.00075 & % moment of inertia
+        9.81 \\ % gravity
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+This acrobot's actuator is a servo motor with a built-in PID controller, so we
+can set \(q_a = \arctan\left(I p_u\right)\) directly without needing to solve
+for the VNHC's torque input \(\tau\).
+The control parameter \(I\) needs to be small, but it also needs to be large
+enough to overcome friction in the servo motor.
+Since the acrobot's mass and length values are small, its momentum is
+also small.
+Through various experiments, we determined that \(I = 10\) is sufficient to
+ensure the actuator can fully rotate in its allowable range
+\(q_a \in \left[ -\frac{\pi}{2}, \frac{\pi}{2}\right]\).
+
+\subsection{Simulations}
+
+To compute the energy of the nominal pendulum, we evaluate the system at the
+VNHC \(q_a = 0\), which yields
+\[
+    E(q_u,p_u) \approx 396.5501 p_u^2 + 0.5997(1 - \cos(q_u))
+    .
+\]
+Hence, the level set of \(E_\pi\) of the energy \(E(\pi,0)\) is parameterized by
+\begin{align*}
+    p_u &\approx \pm \sqrt{\frac{1.1994}{793.1001}(2 - (1 - \cos(q_u))}
+    ,
+\end{align*}
+for each \(q_u \in ]-\pi,\pi]\).
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.8\linewidth]{images/acrobot_orbit.png}
+    \caption{A simulation of the acrobot from \cite{xingbo_thesis}.}
+    \label{fig:acrobot-orbit}
+\end{figure}
+
+We initialize the simulation for this acrobot at 
+\((q_u,p_u) = \left(\frac{\pi}{32},0 \right)\) and plot the resulting orbit in 
+Figure \ref{fig:acrobot-orbit}.
+The nominal energy level set \(E_\pi\) is outlined in black. 
+Because this acrobot is not simple, \(E_\pi\) is not the boundary between
+rotations and oscillations.
+The oscillation domain is actually much larger: orbits rotate once they hit the
+\(p_u\)-axis at \(\abs{p_u} \approx 0.15\), while \(E_\pi\) intersects the
+\(p_u\)-axis at \(\abs{p_u} \approx 0.055\).
+Despite this, we see that eventually the acrobot remains outside \(E_\pi\).
+The points where the orbit exits \(E_\pi\) are highlighted with black stars,
+with the final departure highlighted in red.
+At this final departure, the acrobot begins rotating and continues to gain
+energy over time.
+
+To verify that the acrobot will consistently begin rotating, we use a Monte
+Carlo method \cite{montecarlo} to simulate this
+acrobot \(1000\) times.
+At each iteration, we initialize the acrobot randomly inside the sublevel set
+\[
+    \left\{(q_u,p_u) \in \SxR \mid
+    E(q_u,p_u) \leq E\left(\frac{\pi}{32},0\right)\right\}
+    ,
+\] 
+and measure how long it takes the acrobot to begin rotating.
+The results are plotted in Figure \ref{fig:acrobot-mc}.
+The acrobot always rotates within 10--35 seconds.
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.8\textwidth]{images/acrobot_mc.png}
+    \caption{Monte Carlo simulation results for the acrobot from
+    \cite{xingbo_thesis}.}
+    \label{fig:acrobot-mc}
+\end{figure}
+
+\subsection{Physical Experiments}
+To complete this chapter, we perform a four experiments with the physical
+acrobot:
+\begin{enumerate}
+    \item An undisturbed test to validate that the acrobot reaches rotations.
+    \item A test where we stop the acrobot once it has started rotating.
+    \item A test where we push the acrobot in its direction of motion after it has
+        started rotating.
+    \item A test where we push the acrobot against its direction of motion.
+\end{enumerate}
+
+The acrobot has an encoder at the pivot which measures \(q_u\) and
+\(\dot{q}_u\), and the servo provides a measurement of \(q_a\).
+We estimate \(\dot{q}_a\) through sequential values of \(q_a\) and
+compute \(p_u\) through \(p_u = e_1^T M(q) \dot{q}\).
+The actuator value at iteration \(k \in \mathbb{Z}_{> 0}\) is assigned through
+the equation
+\[
+    q_a^{k} = \arctan(I p_u^{k-1})
+    .
+\]
+
+\subsubsection*{Test 1: No Disturbances}
+For this test we initialize the acrobot at 
+\((q_u,p_u) \approx \left(\frac{\pi}{8},0\right)\). 
+The resulting orbit is shown in Figure \ref{fig:acrobot-unperturbed-orbit},
+which is clearly gaining energy over time.
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.5\linewidth]{images/acrobot_unperturbed_orbit.png}
+    \caption{The orbit of the physical acrobot during an unperturbed test.}
+    \label{fig:acrobot-unperturbed-orbit}
+\end{figure}
+
+\subsubsection*{Test 2: Stopping the Acrobot}
+For this test we initialize the acrobot at 
+\((q_u,p_u) \approx \left(\pi,0\right)\) and let it run for 15
+seconds, then stop the acrobot as it reaches the bottom of its arc.
+The resulting orbit is shown in Figure \ref{fig:acrobot-stopped-orbit}.
+The blue curves correspond to the orbit before the disturbance, while the red
+spiral shows that the acrobot continues to oscillate after it is stopped.
+Despite the disturbance, it gains energy and eventually reaches a rotation
+again.
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.5\linewidth]{images/acrobot_stopped_orbit.png}
+    \caption{The orbit of the physical acrobot before (blue) and after (red) it
+    is stopped.}
+    \label{fig:acrobot-stopped-orbit}
+\end{figure}
+
+\subsubsection*{Test 3: Pushing the Acrobot Forwards}
+To see how the acrobot responds when pushed in its direction of motion, we allow
+the acrobot to rotate freely for 15 seconds and then give it a push in its
+direction of motion.
+The orbit in Figure \ref{fig:acrobot-fpush-orbit} shows that the acrobot speeds
+up to rotate with energy \(E(0,0.22)\), but then slows down until it reaches a
+stable rotation with energy \(E(0,-0.195)\).
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.5\textwidth]{images/acrobot_fpush_orbit.png}
+    \caption{The orbit of the physical acrobot before (blue) and after (red) it
+    is pushed in its current direction of motion.}
+    \label{fig:acrobot-fpush-orbit}
+\end{figure}
+
+\subsubsection*{Test 4: Pushing the Acrobot Backwards}
+In this final experiment, we test whether the acrobot can easily change
+directions when pushed against its current direction of motion.
+We again allow the acrobot to rotate freely for 15 seconds, then push it the
+opposite way.
+The orbit in Figure \ref{fig:acrobot-rpush-orbit} demonstrates that the acrobot
+responds by readily changing direction, and quickly achieves its maximum speed
+with energy \(E(0,0.195)\).
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.5\textwidth]{images/acrobot_rpush_orbit.png}
+    \caption{The orbit of the physical acrobot before (blue) and after (red) it
+    is pushed against its current direction of motion.}
+    \label{fig:acrobot-rpush-orbit}
+\end{figure}
+
+\subsection{Summary of Experimental Results}
+The simulations and experiments in this section show that VNHCs are excellent
+tools for injecting energy even in non-simple acrobots. 
+Furthermore, the experimental results show that the energy gain is robust
+against a variety of disturbances.
+Finally, the two push tests suggest that Wang's acrobot constrained by our VNHC
+will gain energy on \(\mathcal{O}_2(0.195)\).
 
 %/========== /Acrobot ==========/%
 % vim: set tw=80 ts=4 sw=4 sts=0 et ffs=unix :
