@@ -100,9 +100,12 @@ dynamics ~\eqref{eqn:simply-actuated-dynamics} resolve to
       \end{bmatrix} \begin{bmatrix} p \\ p_l \end{bmatrix} - mgl\cos(q)
       , \\
      &\begin{cases}
-        \dot{q} = \frac{p}{ml^2} \\
-        \dot{l} = \frac{p_l}{m} \\
-        \dot{p} = -mgl\sin(q) \\
+        \dot{q} = \frac{p}{ml^2} 
+        ,\\
+        \dot{l} = \frac{p_l}{m} 
+        ,\\
+        \dot{p} = -mgl\sin(q) 
+        ,\\
         \dot{p}_l = \frac{p^2}{ml^3} + mg\cos(q) + \tau
         . \\
    \end{cases} \nonumber
@@ -139,6 +142,7 @@ By Theorem \ref{thm:vnhc-regularity},
       1
    \end{bmatrix}
    = \frac{1}{m}
+   ,
 \]
 is always full rank.
 The constraint manifold \(\Gamma\) is diffeomorphic to 
@@ -149,7 +153,8 @@ are described entirely by \((\dot{q},\dot{p})\) with \(l\)
 replaced by \(L(q,p)\):
 \begin{equation}\label{eqn:vlp-hamiltonian}
    \begin{cases}
-      \dot{q} = \frac{p}{m L^2} \\
+      \dot{q} = \frac{p}{m L^2} 
+      , \\
       \dot{p} = -mgL\sin(q)
       . \\ 
    \end{cases}
@@ -259,7 +264,7 @@ where now the length varies between \([\underline{l},\overline{l}]\) rather than
 \begin{equation}\label{eqn:vlp-optimal-controller}
    L^\star(\theta):= \begin{cases}
       \overline{l} & \theta \in [-\frac{\pi}{2},0[ \cup [\frac{\pi}{2}, \pi[ \\
-      \underline{l} & \theta \in [-pi, -\frac{\pi}{2}[ \cup [0,\frac{\pi}{2}[ 
+      \underline{l} & \theta \in [-\pi, -\frac{\pi}{2}[ \cup [0,\frac{\pi}{2}[ 
       .
    \end{cases}
 \end{equation}
@@ -396,7 +401,7 @@ average.
       ,
    \end{equation}
    with the property that the inequality is strict except at 
-   \(\theta \in \{0, \frac{\pi}{2}, \frac{\pi}, \frac{3\pi}{2}\}\).  
+   \(\theta \in \left\{0, \frac{\pi}{2}, \pi, \frac{3\pi}{2}\right\}\).  
    If instead 
    \[
     \left(l_\text{avg} - L(\theta)\right)sin(2\theta) \leq 0 
@@ -414,7 +419,8 @@ For that we consider the negative time system obtained
 from~\eqref{eqn:vlp-hamiltonian} by reversing the sign of the vector field:
 \begin{equation}\label{eqn:negative-time-vlp}
    \begin{cases}
-      \dot{q} = -\frac{p}{m L^2} \\
+      \dot{q} = -\frac{p}{m L^2} 
+      ,\\
       \dot{p} = mgL\sin(q)
       . \\ 
    \end{cases}
@@ -506,10 +512,10 @@ denotes the solution of~\eqref{eqn:vlp-hamiltonian} with
 \( (q(0),p(0)) = (q_0,p_0)\). 
 In what follows, we denote by \( x = (q,p) \) the state of the reduced
 dynamics~\eqref{eqn:vlp-hamiltonian}. 
-Also, we denote by \(\Pi^-\) the stable manifold of the equilibrium \((\pi,0)\)
+Also, we denote by \(\Pi^+\) the stable manifold of the equilibrium \((\pi,0)\)
 for system~\eqref{eqn:vlp-hamiltonian}, defined as
 \[
-   \Pi^- := \left\{ x(0) \in \SxR \mid
+   \Pi^+ := \left\{ x(0) \in \SxR \mid
    \lim_{t \to \infty} x(t) = (\pi, 0) \right\}.
 \]
 The linearization of system~\eqref{eqn:vlp-hamiltonian} at the
@@ -524,13 +530,13 @@ equilibrium \((\pi,0)\) has a system matrix given by
 whose spectrum is \(\{\pm \sqrt{{g}/{L(0)}}\}\).  
 Since one eigenvalue of ~\eqref{eqn:linearized-vlp} is positive and one is
 negative, the stable manifold theorem implies that the stable manifold 
-\( \Pi^- \) is a one-dimensional immersed submanifold of
+\( \Pi^+ \) is a one-dimensional immersed submanifold of
 \(\SxR\), and thus is a set of measure zero
 \cite{stable_manifold}.
 
 Let \( K \subset \SxR\) be an arbitrary compact set and let 
-\( x(0) \in K \backslash \left(\Pi^- \cup \left\{(0,0)\right\}\right)\).
-Since \( x(0) \notin \Pi^- \), we have that
+\( x(0) \in K \backslash \left(\Pi^+ \cup \left\{(0,0)\right\}\right)\).
+Since \( x(0) \notin \Pi^+ \), we have that
 \begin{equation}\label{eqn:vlp-x-does-not-converge}
    x(t) \nrightarrow_{t \to \infty} (\pi,0).
 \end{equation}
@@ -567,7 +573,7 @@ system~\eqref{eqn:negative-time-vlp}, but changing the sign of the
 vector field does not change the set where 
 \(\dot E_\text{avg} =0\) nor the invariant sets.}
 \[
-   \{x \mid \dot E_\text{avg}(x) = 0\} = \left\{(q,p) \mid q = 0\right\}
+   \left\{x \mid \dot E_\text{avg}(x) = 0\right\} = \left\{(q,p) \mid q = 0\right\}
    \cup \left\{(q,p) \mid p =0\right\},
 \]
 and the only invariant subset of this set is the union of two disjoint
@@ -576,7 +582,7 @@ Since the orbit \(z(\R)\) is an invariant set which is
 connected, \(z(\R)\) must be an equilibrium and cannot be a nontrivial
 closed orbit.
 
-Returning to the Poincar\`e-Bendixson theorem, the positive limit set
+Returning to the Poincar\'e-Bendixson theorem, the positive limit set
 of \( x(t)\) must be an equilibrium and,
 by~\eqref{eqn:vlp-x-does-not-converge}, this equilibrium must be 
 \( (0,0)\). 
@@ -661,7 +667,7 @@ Let us define \((L^\star)^{-}(\theta)\) by swapping the order of
 \[
    (L^\star)^-(\theta) := \begin{cases}
       \underline{l} & \theta \in [-\frac{\pi}{2},0[ \cup [\frac{\pi}{2}, \pi[ \\
-      \overline{l} & \theta \in [-pi, -\frac{\pi}{2}[ \cup [0,\frac{\pi}{2}[ 
+      \overline{l} & \theta \in [-\pi, -\frac{\pi}{2}[ \cup [0,\frac{\pi}{2}[ 
       .
    \end{cases}
 \]
@@ -710,7 +716,7 @@ in Figure \ref{fig:vlp-sim-orbit}.
    \centering
    \includegraphics[width=0.8\textwidth]{images/kiiking_orbits.png}
    \caption{The orbits of the time-optimal controller \(L^\star(\theta)\)
-      (black), the differentiable controller \(L_T(\theta)\) (red),
+      (black), the differentiable controller \(L_T(\theta)\) (magenta),
       and the smooth VNHC \(L_\frac{\pi}{2}(\theta)\) (cyan) employed by a 25
       year old Estonian male on a 3m tall Kiiking swing. All the controllers are
       initialized at \(q(0) = \frac{\pi}{32}\), and they each steadily gain
@@ -729,7 +735,7 @@ shows the smooth VNHC steadily gaining energy over time.
 
 \begin{figure}
    \centering
-   \includegraphics[width=0.8\textwidth]{images/E_kiiking_ltheta.png}
+   \includegraphics[width=0.9\textwidth]{images/E_kiiking_ltheta.png}
    \caption{The energy \(E_\text{avg}(q,p)\) of a 25 year old Estonian male on a
       3m tall Kiiking swing who employs the smooth VNHC
    \(L_\frac{\pi}{2}(\theta)\).}

@@ -142,8 +142,10 @@ The dynamics in \((q,p)\) coordinates are given by
     mgl\left(2 c_u + c_{ua}\right)
     , \\
      &\begin{cases}
-        \dot{q} = \Minv(q) p \\
-        \dot{p}_u = -mgl\left(2s_u + s_{ua}\right) \\
+        \dot{q} = \Minv(q) p 
+        ,\\
+        \dot{p}_u = -mgl\left(2s_u + s_{ua}\right) 
+        ,\\
         \dot{p}_a =-\frac{1}{2}p\tpose \nabla_{q_a}\Minv(q) p
         - mgl s_{ua} + \tau,
     \end{cases} \nonumber
@@ -939,7 +941,7 @@ We begin by setting \(I = 0\) to find the nominal system
    .
 \end{cases}
 \]
-Equations ~\eqref{eqn:acrobot-mu-dot-nom}-\eqref{eqn:acrobot-alpha-dot-nom}
+Equations ~\eqref{eqn:acrobot-alpha-dot-nom}-\eqref{eqn:acrobot-mu-dot-nom}
 reveal that \(g(\alpha,\mu,0) = 0\),
 so the solution to this nominal system is 
 \(\hat{\mu}_0(\alpha,\mu_0) \equiv \mu_0\) for all \(\alpha\).
@@ -1163,12 +1165,7 @@ there exists \(I > 0\) small enough that the constraint
 ~\eqref{eqn:acrobot-constraint} is injecting energy on \(\mathcal{O}_1\).
 
 By the same arguments presented in this section, the Poincar\'{e} section
-satisfies
-\[
-    P_\mathcal{O}(\mu_0) \leq \mu_0 - \gamma
-    ,
-\] 
-when \(I < 0\). 
+satisfies \(P_\mathcal{O}(\mu_0) \leq \mu_0 - \gamma\) when \(I < 0\). 
 In this case, the constraint dissipates energy on \(\mathcal{O}_1\).
 
 \subsubsection*{Energy Gain on \(\bar{\mathcal{O}}_1\)}
@@ -1184,8 +1181,9 @@ Indeed, let \(E_\pi\) be the level set with energy \(E(\pi,0)\),
 which forms the boundary of \(\mathcal{O}_1\). 
 Define \(\bar{\mathcal{O}}_1 = \mathcal{O}_1 \cup E_\pi\) to be the closure of
 \(\mathcal{O}_1\).
-An orbit of the acrobot will only begin rotating if it escapes 
-\(\bar{\mathcal{O}}_1\) by crossing through \(E_\pi\).
+An orbit of the acrobot will only begin rotating if it escapes
+\(\bar{\mathcal{O}}_1\) by crossing through \(E_\pi\), and eventually remains
+outside this set.
 It is possible for orbits starting in \(\mathcal{O}_1\) to always approach
 \(E_\pi\) without ever crossing into the rotation zone.
 We will prove this does not happen in general.
@@ -1248,14 +1246,13 @@ orbit initialized in \(\mathcal{O}_1\) must escape through the boundary
 \(E_\pi\) into the rotation domain.
 
 Escaping once into the rotation domain does not guarantee the acrobot
-orbit will not return to \(\mathcal{O}_1\).
+orbit will never return to \(\mathcal{O}_1\).
 Indeed, the orbit could escape through \(E_\pi\) and return to \(\mathcal{O}_1\)
 several times.
-However, the orbit must eventually remain outside the closure of 
+However, almost every orbit must eventually remain outside the closure of 
 \(\mathcal{O}_1\). 
 If not, the positive limit set would once again be
-\(E_\pi\); by the same argument as above, the orbit must converge to 
-\((\pi,0)\).
+\(E_\pi\); by the same argument as above, that orbit would be in \(\Pi^+\).
 
 We conclude that all orbits beginning in \(\mathcal{O}_1\) will, in finite time,
 escape the closure of \(\mathcal{O}_1\) and remain in the rotation domain
@@ -1349,7 +1346,7 @@ The energy level set associated with \(\rho\) is
 \]
 which gives the relationship
 \begin{equation}\label{eqn:rotation-pu2}
-    \frac{p_u^2}{10m l^2} + 30mgl(1 - c_u) = \frac{\rho^2}{10 ml^2}
+    \frac{p_u^2}{10m l^2} + 3mgl(1 - c_u) = \frac{\rho^2}{10 ml^2}
     .
 \end{equation}
 On this level set, \(q_u\) takes all values on \(\Sone\), so our angle of
@@ -1374,12 +1371,13 @@ Inverting this relationship gives our pseudo-polar coordinates
 Computing the acrobot's constrained dynamics in \((\beta,\rho)\)-coordinates and
 setting \(I = 0\) yields the dynamics of the nominal pendulum.
 MATLAB evaluates those dynamics as
-\begin{align}\label{eqn:acrobot-rot-mu-dot-nom}
-    \dot{\rho} &= 0
-    , \\
+\begin{align}
     \label{eqn:acrobot-rot-alpha-dot-nom}
     \dot{\beta} &=  \sign{\rho} 
     \frac{\sqrt{\rho^2 - 30m^2gl^3(1 - c_\beta)}}{5ml^2}
+    , \\
+    \label{eqn:acrobot-rot-mu-dot-nom}
+    \dot{\rho} &= 0
     .
 \end{align}
 As expected, \(\dot{\beta}\) does not change sign on \(\mathcal{R}\) because the
@@ -1489,7 +1487,7 @@ the acrobot will gain energy on
 \]
 for some \(\bar{\rho} > \sqrt{60m^2gl^3}\).
 Recall from Section \ref{sec:acrobot-proof-o1} that any acrobot initialized in
-\(\mathcal{O}_1\) will eventually enter the rotation region \(\mathcal{R}\).
+\(\mathcal{O}_1\) will eventually remain in the rotation region \(\mathcal{R}\).
 What remains, then, is to prove that the acrobot's orbits will also gain
 energy on
 \[
@@ -1500,7 +1498,7 @@ This can be proven by analyzing the Poincar\'{e} map \(P_\mathcal{R}(\rho_0)\).
 Looking at Figure \ref{fig:acrobot-rhobar-regions}, it is clear that
 \(P_\mathcal{R}\) has the domain
 \[
-    D := \left[-\bar{\rho},\sqrt{60m^2gl^3}\right[ \, 
+    D := \left[-\bar{\rho},-\sqrt{60m^2gl^3}\right[ \, 
     \cup \, 
     \left]\sqrt{60m^2gl^3},\bar{\rho}\right]
     ,
@@ -1508,7 +1506,7 @@ Looking at Figure \ref{fig:acrobot-rhobar-regions}, it is clear that
 which is the intersection of \(\mathcal{R}_{\bar{\rho}}\) with the \(p_u\)-axis.
 We label the part of \(D\) contained in the negative \(p_u\)-axis as
 \[
-    D^- :=\left[-\bar{\rho},\sqrt{60m^2gl^3}\right[
+    D^- :=\left[-\bar{\rho},-\sqrt{60m^2gl^3}\right[
     ,
 \]
 and the part contained in the positive \(p_u\)-axis as
@@ -1576,7 +1574,7 @@ ODE
 \end{equation}
 Here, \(\rho_n\) represents the distance along the
 \(p_u\)-axis when an orbit of the constrained dynamics intersects the
-\(p_u\)-axis for the \(n\)th time, assuming the orbit was initialized at
+\(p_u\)-axis for the \(n^\text{th}\) time, assuming the orbit was initialized at
 \((q_u,p_u) = (0,\rho_0)\).
 
 To prove energy gain on \(\mathcal{R}_{\bar{\rho}}\), it is
@@ -1609,7 +1607,7 @@ Choosing \(I_3 \in \,]0,I_2]\) so that
     ,
 \] 
 makes \(P_\mathcal{R}(\rho_0) \geq \rho_0 + \gamma\) for all 
-\(\rho_0 \in D^+\)
+\(\rho_0 \in D^+\).
 
 Now take \(\rho_0 \in D^-\), where we wish to show that 
 \(P_\mathcal{R}(\rho_0) \leq \rho_0 - \gamma\).
@@ -1623,10 +1621,7 @@ Theorem \ref{thm:khalil-perturbation} asserts that there exists some
 \]
 Hence,
 \begin{align*}
-    P_\mathcal{R}(\rho_0)
-    &= \rho_0 - IS(\rho_0) + R(-2\pi,\rho_0,I)
-    , \\
-    &\leq \rho_0 - I\epsilon + I^2r^\prime
+    P_\mathcal{R}(\rho_0) < \rho_0 - I\epsilon + I^2r^\prime
     .
 \end{align*}
 Choosing \(I_5 \in ]0,I_4]\) so that 
@@ -1645,10 +1640,7 @@ Then \(\abs{P_\mathcal{R}(\rho_0)} \geq \abs{\rho_0} + \gamma\) for all
 
 By the same arguments presented in this section, the Poincar\'{e} section
 satisfies 
-\[
-    \abs{P_\mathcal{R}(\rho_0)} \leq \abs{\rho_0} - \gamma
-    ,
-\]
+\(\abs{P_\mathcal{R}(\rho_0)} \leq \abs{\rho_0} - \gamma\)
 when \(I < 0\).
 
 \subsubsection*{Conclusion}
@@ -1698,8 +1690,8 @@ completes the proof of Theorem \ref{thm:acrobot-energy-stabilization}.
 In this section, we test our VNHC on the physical acrobot built by
 \citet{xingbo_thesis} (Figure \ref{fig:xingbo-acrobot}).
 Since it is not a simple acrobot, this experiment will test whether VNHCs are
-robust to model uncertainties.
-As we will see, our VNHC can inject energy on the general acrobot model.
+robust to model mismatch.
+As we will see, our VNHC does inject energy on the general acrobot model.
 
 \begin{figure}
     \centering
@@ -1720,7 +1712,7 @@ The physical parameters are written explicitly in Table
     \label{tab:acrobot-parameters}
     \begin{tabular}{ccccccccc}
         \toprule
-        $m_t$ & $m_l$ & $d_t$ & $d_l$ & $l_t$ & $l_l$ & $J_t$ & $J_l$ & $g$ \\
+        $m_u$ & $m_a$ & $l_u$ & $l_a$ & $l_{c_u}$ & $l_{c_a}$ & $J_u$ & $J_a$ & $g$ \\
         \midrule
         0.2112 & 0.1979 & % mass
         0.148 & 0.145 & % total length
@@ -1752,7 +1744,7 @@ VNHC \(q_a = 0\), which yields
 \]
 Hence, the level set of \(E_\pi\) of the energy \(E(\pi,0)\) is parameterized by
 \begin{align*}
-    p_u &\approx \pm \sqrt{\frac{1.1994}{793.1001}(2 - (1 - \cos(q_u))}
+    p_u &\approx \pm \sqrt{\frac{1.1994}{793.1001}(1 + \cos(q_u))}
     ,
 \end{align*}
 for each \(q_u \in ]-\pi,\pi]\).
@@ -1801,7 +1793,7 @@ The acrobot always rotates within 10--35 seconds.
 \end{figure}
 
 \subsection{Physical Experiments}
-To complete this chapter, we perform a four experiments with the physical
+To complete this chapter, we perform four experiments with the physical
 acrobot:
 \begin{enumerate}
     \item An undisturbed test to validate that the acrobot reaches rotations.
@@ -1841,8 +1833,8 @@ For this test we initialize the acrobot at
 seconds, then stop the acrobot as it reaches the bottom of its arc.
 The resulting orbit is shown in Figure \ref{fig:acrobot-stopped-orbit}.
 The blue curves correspond to the orbit before the disturbance, while the red
-spiral shows that the acrobot continues to oscillate after it is stopped.
-Despite the disturbance, it gains energy and eventually reaches a rotation
+spiral shows that the acrobot begins oscillating after it is stopped.
+Despite the disturbance, it gains energy and eventually starts rotating
 again.
 
 \begin{figure}[ht]
@@ -1855,7 +1847,7 @@ again.
 
 \subsubsection*{Test 3: Pushing the Acrobot Forwards}
 To see how the acrobot responds when pushed in its direction of motion, we allow
-the acrobot to rotate freely for 15 seconds and then give it a push in its
+the acrobot to rotate undisturbed for 15 seconds and then give it a push in its
 direction of motion.
 The orbit in Figure \ref{fig:acrobot-fpush-orbit} shows that the acrobot speeds
 up to rotate with energy \(E(0,0.22)\), but then slows down until it reaches a
@@ -1872,8 +1864,8 @@ stable rotation with energy \(E(0,-0.195)\).
 \subsubsection*{Test 4: Pushing the Acrobot Backwards}
 In this final experiment, we test whether the acrobot can easily change
 directions when pushed against its current direction of motion.
-We again allow the acrobot to rotate freely for 15 seconds, then push it the
-opposite way.
+We again allow the acrobot to rotate undisturbed for 15 seconds, then push it
+the opposite way.
 The orbit in Figure \ref{fig:acrobot-rpush-orbit} demonstrates that the acrobot
 responds by readily changing direction, and quickly achieves its maximum speed
 with energy \(E(0,0.195)\).

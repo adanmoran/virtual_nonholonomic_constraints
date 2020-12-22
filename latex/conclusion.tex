@@ -16,7 +16,7 @@ inject energy into the VLP, while in Chapter \ref{ch:acrobot} we designed a
 constraint inspired by gymnastics and proved it injects energy into the
 acrobot.
 At the end of each chapter we performed simulations and experiments which
-validated the theory and showed the utility of VNHCs. 
+validated the theory, and which showed the efficacy and robustness of VNHC-driven motion. 
 In the end, we demonstrated that virtual nonholonomic constraints are capable of
 injecting and dissipating energy in a robust manner, all while producing
 realistic biological motion.
@@ -24,6 +24,11 @@ realistic biological motion.
 \section{Limitations and Future Research}
 Our VNHC framework relies on the following assumptions:
 \begin{enumerate}
+    \item The Hamiltonian of the system is of the form 
+        \[
+            H(q,p) = \frac{1}{2}p\tpose \Minv(q) p + V(q)
+            .
+        \]
     \item The input matrix \(B(q) \equiv B \in \R^{n \times k}\) is constant and
         full rank.
     \item The input matrix has a left-annihilator 

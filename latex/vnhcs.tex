@@ -14,7 +14,7 @@ for each spatial axis), so the system as a whole can be described by a vector in
 \(\R^{3N}\) with \(r\) EOC. 
 The dynamics of the system are computed by deriving the \(3N\)
 \textit{equations of motion} (EOM) produced by Newton's second law \(F = m a\).
-While this technique works for simple systems, it is tedius and becomes
+While this technique works for simple systems, it is tedious and becomes
 impossible to apply to complex mechanical systems where the forces are not
 explicitly known. 
 
@@ -89,7 +89,7 @@ energy \(P(q)\) of the system to define the Lagrangian
 When the mechanical system is actuated, the EOM are described by \(n\) second-order
 ordinary differential equations (ODEs) obtained from the \textit{Euler-Lagrange
 equations} ~\eqref{eqn:el-eqns-general} with \textit{generalized input forces} 
-\(\tau \in \R^k\)
+\(\tau \in \R^k\),
 \begin{equation}\label{eqn:el-eqns-general}
     \diff{}{t}\left\{ \pdiff{\mathcal{L}}{\dot{q}_i} \right\}
     - \pdiff{\mathcal{L}}{q_i} = B_i\tpose(q) \tau
@@ -148,7 +148,8 @@ The EOM in the Hamiltonian framework are the \(2n\)
 first-order equations called \textit{Hamilton's equations}. They are given by
 \begin{equation}\label{eqn:hamiltons-eqns}
     \begin{cases}
-        \dot{q} = \nabla_p\mathcal{H} \\
+        \dot{q} = \nabla_p\mathcal{H} 
+        , \\
         \dot{p} = -\nabla_q\mathcal{H} + B(q)\tau
         .
     \end{cases}
@@ -179,9 +180,9 @@ Recall the Kronecker product of matrices \cite{kronprod}, defined as follows.
     The Kronecker product \(A \otimes B \in \R^{nr \times ms}\) is the  matrix
     \[
         A \otimes B = \begin{bmatrix}
-            a_{1,1}B & \cdots & a_{1,m} B \\
+            A_{1,1}B & \cdots & A_{1,m} B \\
             \vdots & \ddots & \vdots \\
-            a_{n,1} B & \cdots & a_{n,m} B
+            A_{n,1} B & \cdots & A_{n,m} B
         \end{bmatrix} 
         .
     \]
@@ -235,7 +236,7 @@ change of coordinates \((q,p) \to (Q,P)\) is a canonical transformation.
         [P_i, Q_j] &= \delta_{i,j}
         , 
     \end{align*}
-    for all \(i,j \in \n\).
+    for all \(i,j \in \{1,\ldots,n\}\).
 \end{thm}
 \begin{proof}
     See (45.10) in \cite{landau_mechanics}.
@@ -265,7 +266,8 @@ The following Lemma allows us to prove it is a canonical transformation.
         \pdiff{P_i}{q_m}\pdiff{P_j}{p_m} = 0
         .
     \end{align*}
-    Note that \((A_i)\tpose (A\tpose)_j = (A_i)\tpose (A\inv)_j = \delta_{i,j}\). 
+    Since \(A\) is orthogonal, 
+    \((A_i)\tpose (A\tpose)_j = (A_i)\tpose (A\inv)_j = \delta_{i,j}\). 
     Using this fact we see that the Poisson brackets between \(P_i\) and \(Q_j\)
     are given by
     \begin{align*}
@@ -428,32 +430,35 @@ are affected by the input forces.
     Under Assumptions \ref{assm:B-const},\ref{assm:B-perp}, and
     \ref{assm:B-orthogonal}, the Hamiltonian system ~\eqref{eqn:hamiltonian}
     has simply actuated canonical coordinates 
-    \(\left(Q = \mathbf{B}q, P = \mathbf{B}p\right)\). The resulting dynamics are 
-    given by ~\eqref{eqn:simple-hamiltonian},
+    \(\left(\tilde{q} = \mathbf{B}q, \tilde{p} = \mathbf{B}p\right)\). 
+    The resulting dynamics are given by 
     \begin{align}\label{eqn:simple-hamiltonian}
-        \mathcal{H}(Q,P) &= 
-        \frac{1}{2} P\tpose \Minv(Q) P + V(Q)
+        \mathcal{H}(\tilde{q},\tilde{p}) &= 
+        \frac{1}{2} \tilde{p}\tpose \Minv(\tilde{q}) \tilde{p} + V(\tilde{q})
         , \\
        &\begin{cases}
-            \dot{Q} = \Minv(Q)P \\
-            \dot{P} = -\frac{1}{2} (\Id{n} \otimes P\tpose) \nabla_Q \Minv(Q) P
-                - \nabla_Q V(Q) + \simpleB \tau
+           \dot{\tilde{q}} = \Minv(\tilde{q})\tilde{p}
+           , \\
+           \dot{\tilde{p}} = -\frac{1}{2} (\Id{n} \otimes \tilde{p}\tpose)
+           \nabla_{\tilde{q}} \Minv(\tilde{q}) \tilde{p}
+           - \nabla_{\tilde{q}} V(\tilde{q}) + \simpleB \tau
             ,
         \end{cases} \nonumber
     \end{align}
     where
     \begin{align*}
-        \Minv(Q) &:= \mathbf{B}D^{-1}(\mathbf{B}\tpose Q)\mathbf{B}\tpose
+        \Minv(\tilde{q}) &:= 
+        \mathbf{B}D^{-1}(\mathbf{B}\tpose \tilde{q})\mathbf{B}\tpose
         , \\
-        V(Q) &:= P(\mathbf{B}\tpose Q)
+        V(\tilde{q}) &:= P(\mathbf{B}\tpose \tilde{q})
         .
     \end{align*}
 \end{thm}
 \begin{proof}
-    The change of coordinates \((Q = \mathbf{B}q, P = \mathbf{B}p)\)
+    The change of coordinates \((\tilde{q} = \mathbf{B}q, \tilde{p} = \mathbf{B}p)\)
     satisfies Lemma \ref{lemma:linear-is-canonical}, making it a canonical
     transformation.
-    Furthermore, since \(\dot{P} = \mathbf{B}\dot{p}\), the new input matrix is
+    Furthermore, since \(\dot{\tilde{p}} = \mathbf{B}\dot{p}\), the new input matrix is
     given by 
     \[
         \mathbf{B}B = \begin{bmatrix}
@@ -466,7 +471,7 @@ are affected by the input forces.
         \end{bmatrix}
         ,
     \]
-    which means \(\left(Q = (q_u,q_a), P = (p_u,p_a)\right)\) are simply
+    which means \(\left(\tilde{q} = (q_u,q_a), \tilde{p} = (p_u,p_a)\right)\) are simply
     actuated coordinates for \(\mathcal{H}\) as desired.
 \end{proof}
 
@@ -546,7 +551,7 @@ constraints on a general class of systems.
     relation \(h(q,p) = 0\) where \(h : \mathcal{Q}\times\R^n \rightarrow \R^k\) is
     \(C^2\), \(\rank{\left[ dh_q,\, dh_p \right]} = k\) for all 
     \((q,p) \in h\inv(0)\), and there exists a feedback controller \(\tau(q,p)\)
-    rendering the \textit{constraint manifold} \(\Gamma\) invariant
+    rendering the \textit{constraint manifold} \(\Gamma\) invariant,
     where
     \[
         \Gamma = \left\{(q,p) \mid h(q,p) = 0, dh_q \dot{q} + dh_p \dot{p} = 0\right\}
@@ -556,8 +561,8 @@ constraints on a general class of systems.
 
 From the definition of VNHCs, one finds that the constraint manifold \(\Gamma\)
 is a \(2(n-k)\)-dimensional closed embedded submanifold of \(\mathcal{Q} \times \R^n\). 
-The next obvious question is the following: when does a feedback controller
-stabilizing \(\Gamma\) exist?
+The next obvious question is the following: when does there exists a feedback
+controller stabilizing \(\Gamma\)? 
 
 One approach to answering this question is to
 define the error term \(e = h(q,p)\). 
@@ -608,7 +613,8 @@ As a reminder, our system is described in \((q,p)\) coordinates with
     , \\
     \label{eqn:simply-actuated-dynamics}
     &\begin{cases}
-       \dot{q} = \Minv p \\
+       \dot{q} = \Minv p 
+       ,\\
        \dot{p} = -\frac{1}{2} \pdmat - \nabla_q V(q) + \simpleB \tau 
        .\\
     \end{cases}
@@ -725,7 +731,7 @@ As a reminder, our system is described in \((q,p)\) coordinates with
 Using the expression \(\ddot{e} = E(q,p) + H(q,p)\tau\) from the proof of 
 Theorem \ref{thm:vnhc-regularity}, a regular VNHC of order \(k\) can be
 stabilized by\footnote{Under additional mild conditions
-\cite{vhcs_for_el_systems}} the output-linearizing phase-feedback controller
+\cite{vhcs_for_el_systems}.} the output-linearizing phase-feedback controller
 \begin{equation}\label{eqn:vnhc-torque-controller}
     \tau(q,p) = -H\inv(q,p)\left(E(q,p) + k_p e + k_d \dot{e}\right)
     ,
@@ -857,7 +863,7 @@ systems with only one unactuated coordinate.
     where \(f\) is a suitably defined \(C^2\) function.
     Then \(dh_q = \begin{bmatrix} -\partial_{q_u}f & \Id{(n-1)}
     \end{bmatrix}\).
-    Defining \(e_1 := (1,0,\ldots,0) \in \R^n\), the actuated momentum is
+    Defining \(e_1 := (1,0,\ldots,0)\tpose \in \R^n\), the actuated momentum is
     \begin{equation}\label{eqn:g-qupu}
         p_a = -\left.\left(dh_q \Minv(q)
         \begin{bmatrix}
