@@ -4,7 +4,7 @@
 
 \chapter{Introduction}
 
-The Estonian sport of ``Kiiking" (Figure \ref{fig:kiiking}) is the adult
+The Estonian sport of \textit{Kiiking} (Figure \ref{fig:kiiking}) is the adult
 equivalent of a child playing on a standing swing, though here
 an athlete attempts to make a giant solid steel swing gain momentum.
 Naturally, the kiiker begins by pushing off the ground and proceeds to alternate
@@ -97,17 +97,32 @@ The modern concept of virtual nonholonomic constraints was described by
 primitive versions going back as early as the the year 2000
 \cite{vnhc_human_robot_cooperation}.
 Virtual nonholonomic constraints have been of most notable use in
-bipedal locomotion \cite{nhvc_incline_walking,output_nhvc_bipedal_control},
+bipedal locomotion 
+\cite{nhvc_gait_optimization,output_nhvc_bipedal_control},
 where they have shown marked improvements in the robustness of walking gaits
-when compared to previous control technqiues.
+when compared to previous control techniques.
 They have also been used for error-reduction in time-delayed teleoperation
 \cite{vnhc_time_delay_teleop} and in the field of human-robot interaction
 \cite{psd_based_vnhc_redundant_manipulator,haptic_vnhc}.
-All these research areas use different formulations of virtual nonholonomic constraints;
 \citet{hybrid_zero_dynamics_bipedal_nhvcs} have derived the 
 zero dynamics for hybrid mechanical systems under virtual nonholonomic
-constraints, but to the best of our knowledge no one has attempted to generalize
-the concept to abstract mechanical systems.
+constraints.
+In particular, they study a class of constraints formed by taking an affine
+sum of holonomic functions with nonholonomic B\'{e}zier polynomials.
+They widen this class of constraints in \cite{nhvc_incline_walking} to improve
+bipedal locomotion on variable-slope terrain, and generate constraints through
+a specialized optimization routine.
+
+Each of these research areas use different formulations of virtual
+nonholonomic constraints.
+Furthermore, the most recent literature surrounding virtual nonholonomic constraints
+has focused on enforcing stable periodic orbits for hybrid mechanical systems
+with impacts.
+To the best of our knowledge, no one has attempted to create a single unified
+framework of virtual nonholonomic constraints for general mechanical systems.
+Moreover, no one has studied how virtual nonholonomic constraints can be used for energy
+injection, where periodic motion is not desirable.
+This thesis attempts to fill these gaps in the research.
 
 Many of the contributions in this thesis are extensions of concepts from the
 field of virtual holonomic constraints. 

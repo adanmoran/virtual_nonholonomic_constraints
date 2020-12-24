@@ -1212,7 +1212,7 @@ of measure zero in \(\SxR\).
 
 Using \(x(t) := (q_u(t),p_u(t))\) as shorthand, let
 \(x(0) \in \mathcal{O}_1\) be a nonzero initial condition of the acrobot.
-Suppose the orbit \(x(\R)\) is confined within 
+Suppose by way of contradiction that the orbit \(x(\R)\) is confined within 
 \(\bar{\mathcal{O}}_1\), and does not exit through \(E_\pi\) into the rotation
 zone.
 Since \(\bar{\mathcal{O}}_1\) is compact, the Birkhoff Theorem \cite{birkhoff}
@@ -1688,9 +1688,12 @@ completes the proof of Theorem \ref{thm:acrobot-energy-stabilization}.
 
 \section{Experimental Results}
 In this section, we test our VNHC on the physical acrobot built by
-\citet{xingbo_thesis} (Figure \ref{fig:xingbo-acrobot}).
-Since it is not a simple acrobot, this experiment will test whether VNHCs are
-robust to model mismatch.
+Xingbo Wang \cite{xingbo_thesis} (Figure \ref{fig:xingbo-acrobot}).
+This acrobot is not simple, that is, the torso and leg rods have unequal mass
+and differ in length. 
+Furthermore, the centers of mass are not located at the tip of each rod.
+These experiments will therefore test whether VNHCs are robust to model
+mismatch, since our VNHC is only proven to inject energy on simple acrobots.
 As we will see, our VNHC does inject energy on the general acrobot model.
 
 \begin{figure}
