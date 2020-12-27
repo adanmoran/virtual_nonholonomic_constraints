@@ -980,39 +980,40 @@ reduce to a \(2\)D system on the ``\((q,p)\)-plane" \(\Rt{T}\times\R\).
 
 \section{Comparison with Existing VNHC Literature}\label{ch:vnhc-compare}
 
-Griffin and Grizzle were the first to use the unactuated conjugate of momentum
-to define relative degree \(\{2,\ldots,2\}\) VNHCs in
-\cite{nhvc_dynamic_walking} and \cite{nhvc_gait_optimization}.
-\citet{hybrid_zero_dynamics_bipedal_nhvcs} extended their work by defining
-the unactuated coordinate \(q_u = B^\perp q\) and specifying that a
-VNHC must use the conjugate of momentum to \(q_u\).
-This idea is what inspired us to use Hamiltonian mechanics in simply actuated
-coordinates, which are more suitable for the study of VNHCs than
-Lagrangian mechanics. 
+Griffin and Grizzle were the first to define relative degree \(\{2,\ldots,2\}\)
+VNHCs (see \cite{nhvc_dynamic_walking} and \cite{nhvc_gait_optimization}). 
+They required that the first coordinate be unactuated, so 
+\citet{hybrid_zero_dynamics_bipedal_nhvcs} extended their work to more general
+mechanical systems by defining the unactuated coordinate \(q_u = B^\perp q\).
+These ideas are what inspired us to use simply actuated Hamiltonian systems,
+which are more suitable for the study of VNHCs than Lagrangian mechanics. 
 
 Our definition of a VNHC is more general than that of Griffin and
 Grizzle.
 They define a VNHC as a relation \(h(q,\sigma_u)\), where \(\sigma_u\) is the
 Lagrangian mechanics proxy for \(p_u\).
+Their definition carries an implicit assumption that VNHCs are of
+relative degree \(\{2,\ldots,2\}\), which are what we call regular VNHCs.
 By contrast, our definition of a VNHC allows for relations \(h(q,p)\)
 that use the full phase.
-Moreover, we are the first to provide the definition of regular VNHCs, and to
-provide the characterization in Theorem \ref{thm:vnhc-regularity}.
+We are the first to distinguish these from regular VNHCs, and to
+provide the characterization of regularity in Theorem \ref{thm:vnhc-regularity}.
 
 \citet{hybrid_zero_dynamics_bipedal_nhvcs} derive the
 constrained dynamics for VNHCs of the form \(h(q,\sigma_u)\).
-For our derivation of the constrained dynamics in Theorem
-\ref{thm:zero-dynamics}, we use the same assumptions as they do, with the
-additional assumption that one can solve for \(q_a = f(q_u,p_u)\) on \(\Gamma\).
-While this means Horn \etal's constrained dynamics hold for a larger class of VNHCs, 
-their derivations are obscured by a need to use more complicated machinery
-to find the closed form of the dynamics. 
-By making the aforementioned additional assumption, we were able to find a the constrained
-dynamics as functions of the unactuated coordinates.
-Hence, our constrained dynamics are thus more physically intuitive than those of
-Horn \etal~% no period because etal has one 
-Finally, the additional structure of our constrained dynamics will allow us to
-more easily study energy injection properties of VNHCs in the next two chapters.
+Our derivation of the constrained dynamics in Theorem
+\ref{thm:zero-dynamics} uses the same assumptions they require, with the
+additional assumption that one can solve for \(q_a = f(q_u,p_u)\) on the
+constraint manifold.
+While this means Horn \etal's constrained dynamics hold for a larger class of
+VNHCs, their derivations are obscured by a complicated change of coordinates
+when finding the closed form of the dynamics. 
+By making the aforementioned additional assumption, we are instead able to find
+the constrained dynamics in terms of the unactuated coordinates.
+This makes our constrained dynamics more physically intuitive, since they
+describe the behaviour of a specific part of the mechanical system.
+This additional structure will facilitate our analysis of the energy injection
+properties of VNHCs across the next two chapters.
 
 %/========== /Virtual Nonholonomic Constraints ==========/% 
 % vim: set tw=80 ts=4 sw=4 sts=0 et ffs=unix :
