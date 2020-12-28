@@ -651,7 +651,7 @@ We assume this solution is contained in \(D\).
 Now consider the solution \(x(t,\eta_0,I)\) to ~\eqref{eqn:khalil-setup}.
 Performing a first-order Taylor series expansion at \(I = 0\), we get
 \(x(t,\eta_0,I) = x_0(t,\eta_0) + I x_1(t,\eta_0) + R(t,\eta_0,I)\),
-where the remainder term \(R(t,\eta_0,I)\) is smooth and \(O(I^2)\), \ie, 
+where the remainder term \(R(t,\eta_0,I)\) is smooth and \(O(I^2)\), \ie 
 \[
     \lim \limits_{I \to 0} \frac{R(t,\eta_0,I)}{I} = 0
     .
@@ -1006,7 +1006,7 @@ Therefore, the first-order Taylor approximation of \(\hat{\mu}(\alpha,\mu_0,I)\)
 
 Since \(\dot{\alpha} > 0\), there is a well-defined Poincar\'{e} map 
 describing how the pseudo-radius \(\mu\) changes each time the orbit of \((q_u(t),p_u(t))\)
-intersects the \(q_u\)-axis, \ie, when \(\alpha = 0\) or \(\alpha = \pi\).
+intersects the \(q_u\)-axis, \ie when \(\alpha = 0\) or \(\alpha = \pi\).
 Using our time-scaled system ~\eqref{eqn:muhat-dot}, we can define this
 Poincar\'{e} map as the change in \(\hat{\mu}\) when \(\alpha\) increases by
 \(\pi\):
@@ -1462,7 +1462,7 @@ One full rotation amounts to \(\beta\) traversing \(2\pi\) rad in a clockwise
 direction; that is, when \(\beta\) goes from \(0\) to \(\sign{\rho_0}2\pi\).
 Since \(\dot{\beta}\) does not change sign on \(\mathcal{R}\),
 there is a well-defined Poincar\'{e} map describing how the pseudo-radius
-\(\rho\) changes each time the orbit \((q(t),p(t))\) hits the \(p_u\) axis, \ie,
+\(\rho\) changes each time the orbit \((q(t),p(t))\) hits the \(p_u\) axis, \ie
 every time \(\beta\) changes by \(2\pi\).
 We define this Poincar\'{e} map as
 \[
@@ -1486,7 +1486,7 @@ the acrobot will gain energy on
     ,
 \]
 for some \(\bar{\rho} > \sqrt{60m^2gl^3}\).
-Recall from Section \ref{sec:acrobot-proof-o1} that any acrobot initialized in
+Recall from Chapter \ref{sec:acrobot-proof-o1} that any acrobot initialized in
 \(\mathcal{O}_1\) will eventually remain in the rotation region \(\mathcal{R}\).
 What remains, then, is to prove that the acrobot's orbits will also gain
 energy on
@@ -1516,7 +1516,7 @@ and the part contained in the positive \(p_u\)-axis as
 \]
 so that \(D = D^- \cup D^+\).
 If \(P_\mathcal{R}(\rho_0)\) is always further from the origin than 
-\(\rho_0\) (\ie~ it is ``expanding" on \(D\)), the acrobot will be gaining energy
+\(\rho_0\) (\ie it is ``expanding" on \(D\)), the acrobot will be gaining energy
 on \(\mathcal{O}_2(\bar{\rho})\).
 
 \begin{figure}
@@ -1671,7 +1671,7 @@ Here is a summary of the proof:
         (respectively), then found values \(I_3, I_5\) which drive all orbits of
         ~\eqref{eqn:rhohat-discrete} towards \(\abs{\rho} = \bar{\rho}\).
 \end{enumerate}
-Recall from Section \ref{sec:acrobot-proof-o1} that there exists \(I^\star > 0\)
+Recall from Chapter \ref{sec:acrobot-proof-o1} that there exists \(I^\star > 0\)
 making orbits escape \(\bar{\mathcal{O}}_1\) into 
 \(\mathcal{R}\). 
 Choosing \(I \in \,]0,\min\{I_3,I_5,I^\star\}]\)
@@ -1679,7 +1679,7 @@ guarantees energy injection on \(\mathcal{O}_2(\bar{\rho})\).
 Likewise, choosing \(I \in [-\min\{I_3,I_5,I^\star\},0[\) guarantees energy
 dissipation on \(\mathcal{O}_2(\bar{\rho})\).
 
-This analysis, together with that of section \ref{sec:acrobot-proof-o1},
+This analysis, together with that of Chapter \ref{sec:acrobot-proof-o1},
 completes the proof of Theorem \ref{thm:acrobot-energy-stabilization}.
 
 % Draw the proof square only

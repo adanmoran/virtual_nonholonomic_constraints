@@ -504,7 +504,7 @@ for the constrained dynamics in~\eqref{eqn:vlp-hamiltonian}.
 
 We now prove that almost all solutions of the reduced
 dynamics~\eqref{eqn:vlp-hamiltonian} escape compact sets in finite
-time, \ie, that for each compact subset \(K\) of 
+time, \ie that for each compact subset \(K\) of 
 \(\SxR\), and for almost every condition 
 \( (q_0,p_0) \in K \), there exists \( T > 0\) such that
 \( (q(t),p(t)) \notin K \) for all \( t > T \), where \( (q(t),p(t)) \)
@@ -694,13 +694,13 @@ VNHC \(L_T(\theta)\) from Equation \eqref{eqn:vlp-T-controller} with
 To do this comparison, we simulate an adult Estonian performing a Kiiking
 routine.
 
-The average weight of a 25 year old Estonian man is \(80.17\)kg
+The average weight of a 25-year-old Estonian man is \(80.17\)kg
 \cite{estonian-body-data}, so we set the VLP mass \(m\) to this value.
 To find our upper and lower bounds on length, we first need to choose the size
 of a swing.
 The common model of a Kiiking swing is between \(3-4\)m tall
 \cite{kiiking-sale}, so we take the length to be \(3\)m.
-The average 25 year old Estonian is \(1.8\)m tall \cite{estonian-body-data}, and
+The average 25-year-old Estonian is \(1.8\)m tall \cite{estonian-body-data}, and
 we assume their squat height is half that at \(0.9\)m tall.
 We further assume that their center of mass (COM) is always located at half
 their current height, which means their standing COM is \(0.9\)m from the ground
@@ -717,9 +717,9 @@ in Figure \ref{fig:vlp-sim-orbit}.
    \includegraphics[width=0.8\textwidth]{images/kiiking_orbits.png}
    \caption{The orbits of the time-optimal controller \(L^\star(\theta)\)
       (black), the differentiable controller \(L_T(\theta)\) (magenta),
-      and the smooth VNHC \(L_\frac{\pi}{2}(\theta)\) (cyan) employed by a 25
-      year old Estonian male on a 3m tall Kiiking swing. All the controllers are
-      initialized at \(q(0) = \frac{\pi}{32}\), and they each steadily gain
+      and the smooth VNHC \(L_\frac{\pi}{2}(\theta)\) (cyan) employed by a
+      25-year-old Estonian male on a 3m tall Kiiking swing. All the controllers
+      are initialized at \(q(0) = \frac{\pi}{32}\), and they each steadily gain
       energy until they reach a rotation.}
    \label{fig:vlp-sim-orbit}
 \end{figure}
@@ -736,7 +736,7 @@ shows the smooth VNHC steadily gaining energy over time.
 \begin{figure}
    \centering
    \includegraphics[width=0.9\textwidth]{images/E_kiiking_ltheta.png}
-   \caption{The energy \(E_\text{avg}(q,p)\) of a 25 year old Estonian male on a
+   \caption{The energy \(E_\text{avg}(q,p)\) of a 25-year-old Estonian male on a
       3m tall Kiiking swing who employs the smooth VNHC
    \(L_\frac{\pi}{2}(\theta)\).}
    \label{fig:vlp-sim-energy}
