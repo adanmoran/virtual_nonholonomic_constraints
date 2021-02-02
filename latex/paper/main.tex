@@ -1,15 +1,88 @@
 %! TEX program = lualatex
 
-\documentclass[]{}
+\documentclass[journal,twoside,web]{ieeecolor}
+\usepackage{generic}
 %/========== Preamble ==========/%
-\usepackage{adanstyle}
-
+\usepackage{cite}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{algorithmic}
+\usepackage{graphicx}
+\usepackage{textcomp}
 %---------- Bibliography Style ----------%
-
+\def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
+    T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
+%---------- Header ----------% 
+\newcommand*{\Title}{VNHC and Acrobot Title}
+\markboth{\journalname, VOL. XX, NO. XX, XXXX 2021}
+{Moran-MacDonald \MakeLowercase{\textit{et al.}}: \Title}
 %/========== /Preamble ==========/%
 
 %/========== Main Document ==========/%
 \begin{document}
+\title{\Title}
+\author{Adan Moran-MacDonald, \IEEEmembership{Member, IEEE}, Manfredi Maggiore
+\IEEEmembership{Fellow, IEEE}*, and Xingbo Wang
+\thanks{Manuscript submitted for review on \today.}
+\thanks{A. Moran-MacDonald is with the Department of Electrical and Computer
+    Engineering, University of Toronto, Toronto, ON, Canada (e-mail:
+adan.moran@mail.utoronto.ca).}
+\thanks{M. Maggiore is with the Department of Electrical and Computer
+Engineering, University of Toronto, ON, Canada (e-mail:
+maggiore@control.utoronto.ca).}
+\thanks{X. Wang is with ??? (e-mail: ???).}
+} %/author
+
+\maketitle
+
+%/========== Abstract ==========/%
+\begin{abstract}
+TODO: Abstract here.
+\end{abstract}
+
+\begin{IEEEkeywords}
+TODO: keywords in alphabetical order, separated by commas.
+\end{IEEEkeywords}
+
+%/========== Introduction ==========/%
+\section{Introduction}\label{sec:introduction}
+\IEEEPARstart{T}ODO: intro.
+
+\subsection{Notation}
+
+%/========== Problem Formulation ==========/%
+\section{Problem Formulation}\label{sec:problem-formulation}
+TODO: motivate injection/dissipation for energy regulation in an acrobot. Use
+this to lead into VNHCs. e.g. represent torso as chain of a swing, pivot as
+seat, and legs as human legs. Replicate fig3.3 from thesis but for acrobot: take
+(qu,pu)-plane and show how a person moves their legs wrt theta, qu, or pu. Leave
+the gymnast model until the end, or ignore it entirely.
+
+Alternatively, ff human movement journal says legs move wrt qu, we can use that
+as a foundation.
+
+%/========== VNHC ==========/%
+\section{Theory of VNHCs}\label{sec:vnhc}
+Just like in the thesis, cover the theory of VNHCs. Justify our results compared
+to those of Horn. Make it terse but legible. Cover simply actuated systems,
+vnhcs, regularity, the theorems, etc.
+
+%/========== Acrobot ==========/%
+\section{The Acrobot VNHC}\label{sec:acrobot}
+specialize the theory of VNHCs to the acrobot. consider constraints which depend
+only on pu, and show arctan vnhc and reduced dynamics. conclude with our
+theorem. Make this section short and sweet.
+
+%/========== Simulation ==========/%
+\section{Simulation Results}\label{sec:simulations}
+
+%/========== Experiments ==========/%
+\section{Experimental Results}\label{sec:experiments}
+
+%/========== Proof ==========/%
+\section{Proof of Theorem \textbf{TODO: ref theorem}}\label{sec:proof}
+
+%/========== Conclusion ==========/%
+\section{Conclusion}\label{sec:conclusion}
 
 \end{document}
 %/========== /Main Document ==========/%
