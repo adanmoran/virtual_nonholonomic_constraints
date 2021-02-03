@@ -8,13 +8,30 @@
 \usepackage{algorithmic}
 \usepackage{graphicx}
 \usepackage{textcomp}
+
 %---------- Bibliography Style ----------%
-\def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
-    T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
+\bibliographystyle{IEEEtranN}
+
 %---------- Header ----------% 
 \newcommand*{\Title}{VNHC and Acrobot Title}
 \markboth{\journalname, VOL. XX, NO. XX, XXXX 2021}
 {Moran-MacDonald \MakeLowercase{\textit{et al.}}: \Title}
+
+%---------- Special Commands ----------%
+\newcommand*{\tpose}{^\mathsf{T}} 
+\newcommand*{\inv}{^\mathsf{-1}}
+\newcommand*{\Rt}[1]{[\R]_{#1}}
+\newcommand*{\R}{\mathbb{R}}
+\newcommand*{\n}{\mathbf{n}}
+\newcommand*{\N}{\mathbb{N}}
+\newcommand*{\Sone}{\mathbb{S}^1}
+\newcommand*{\SxR}{\Sone \times \R}
+\newcommand*{\Minv}{M^\mathsf{-1}}
+\newcommand*{\Id}[1]{I_{#1}}
+\newcommand*{\Zmat}[1]{\bm{0}_{#1}}
+\newcommand*{\diff}[2]{\frac{d #1}{d #2}}
+\newcommand*{\ddiff}[3]{\frac{d^2 #1}{d #2 d #3}}
+\newcommand*{\pdiff}[2]{\frac{\partial #1}{\partial #2}}
 %/========== /Preamble ==========/%
 
 %/========== Main Document ==========/%
@@ -48,6 +65,24 @@ TODO: keywords in alphabetical order, separated by commas.
 \IEEEPARstart{T}ODO: intro.
 
 \subsection{Notation}
+We use the following notation in this paper. 
+For \(T > 0\), the set of real numbers modulo is denote \(\Rt{T}\), with
+\(\Rt{\infty} := \R\).
+The gradient of the matrix-valued function 
+\(A : \R^m \rightarrow \R^{n\times n}\) is the matrix of stacked partial
+derivatives, 
+\(\nabla_xA := (\pdiff{A}{x_1},\ldots,\pdiff{A}{x_m})\tpose \in \R^{nm \times n}\).
+Given two matrices \(A \in \R^{n \times m}\) and \(B \in \R^{r \times s}\), the
+Kronecker product \cite{kronprod} \(A \otimes B \in \R^{nr \times ms}\) is the
+matrix
+\[
+    A \otimes B = \begin{bmatrix}
+        A_{1,1}B & \cdots & A_{1,m} B \\
+        \vdots & \ddots & \vdots \\
+        A_{n,1} B & \cdots & A_{n,m} B
+    \end{bmatrix} 
+    .
+\]
 
 %/========== Problem Formulation ==========/%
 \section{Problem Formulation}\label{sec:problem-formulation}
@@ -62,9 +97,50 @@ as a foundation.
 
 %/========== VNHC ==========/%
 \section{Theory of VNHCs}\label{sec:vnhc}
-Just like in the thesis, cover the theory of VNHCs. Justify our results compared
+TODO: Just like in the thesis, cover the theory of VNHCs. Justify our results compared
 to those of Horn. Make it terse but legible. Cover simply actuated systems,
 vnhcs, regularity, the theorems, etc.
+
+
+\subsection{Simply Actuated Hamiltonian Systems}
+Take an underactuated mechanical system modelled with generalized coordinates 
+\(q = (q_1, \ldots, q_n)\) on the configuration manifold
+\(\mathcal{Q} = \Rt{T_1} \times \cdot \Rt{T_n}\), where
+\(T_i = 2\pi\) if \(q_i\) is an angle and \(T_i = \infty\) if \(q_i\) is a
+length. The corresponding velocities are 
+\(\dot{q} = (\dot{q}_1,\ldots,\dot{q}_n) \in \R^n\).
+
+Suppose this system has Lagrangian
+\(\mathcal{L}(q,\dot{q}) = 1/2 \dot{q}^T D(q) \dot{q} - P(q)\),
+where \(P : \mathcal{Q} \rightarrow \mathbb{R}\) is the potential energy, and
+the inertia matrix \(D : \mathcal{Q} \rightarrow \mathbb{R}^{n \times n}\)
+is positive definite for all \(q \in \mathcal{Q}\).
+By defining the \textit{conjugate of momentum} 
+\(p_i := \pdiff{\mathcal{L}}{\dot{q}_i}\) so that the vector 
+\(p = (p_1,\ldots,p_n) \in \R^n\) is given by \(p = D(q)\dot{q}\),
+we find the \textit{Hamiltonian} of the system in \((q,p)\) coordinates is
+\(\mathcal{H}(q,p) = 1/2 p\tpose D(q) p + P(q)\) \cite{landau_mechanics}.
+The dynamics of the system in Hamiltonian form are
+\begin{equation}\label{eqn:hamiltonian-eom-general}
+    \begin{cases}
+        \dot{q} = \nabla_p\mathcal{H} 
+        , \\
+        \dot{p} = -\nabla_q\mathcal{H} + \tau
+        ,
+    \end{cases}
+\end{equation}
+where \(\tau \in \R^k\) is a vector of generalized input forces and the input
+matrix \(B \in \R^{n \times k}\) is assumed to be full rank \(k < n\).
+
+It is easy to show that \eqref{eqn:hamiltonian-eom-general} reduces to
+\begin{equation}\label{eqn:hamiltonian-full-dynamics}
+     \begin{cases}
+        \dot{q} = D\inv(q)p \\
+        \dot{p} = -\frac{1}{2} (\Id{n} \otimes p\tpose) \nabla_q D\inv(q) p
+        - \nabla_q P(q) + B(q) \tau
+        . \\
+    \end{cases}
+\end{equation}
 
 %/========== Acrobot ==========/%
 \section{The Acrobot VNHC}\label{sec:acrobot}
@@ -84,6 +160,9 @@ theorem. Make this section short and sweet.
 %/========== Conclusion ==========/%
 \section{Conclusion}\label{sec:conclusion}
 
+
+%---------- Bibliography ----------%
+\bibliography{bib}
 \end{document}
 %/========== /Main Document ==========/%
 % vim: set tw=80 ts=4 sw=4 sts=0 et ffs=unix :
