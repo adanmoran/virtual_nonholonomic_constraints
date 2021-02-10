@@ -1,13 +1,22 @@
 %! TEX program = lualatex
 
 \documentclass[journal,twoside,web]{ieeecolor}
+
 \usepackage{generic}
 %/========== Preamble ==========/%
-\usepackage{cite}
-\usepackage{amsmath,amssymb,amsfonts}
+% Packages required by ieeecolor
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
 \usepackage{algorithmic}
 \usepackage{graphicx}
 \usepackage{textcomp}
+\usepackage{cite}
+
+%---------- More packages ----------%
+% NOTE: cannot use amsthm for some reason
+\usepackage{mathtools}
+\usepackage{bm}
 
 %---------- Bibliography Style ----------%
 \bibliographystyle{IEEEtran}
@@ -17,7 +26,20 @@
 \markboth{\journalname, VOL. XX, NO. XX, XXXX 2021}
 {Moran-MacDonald \MakeLowercase{\textit{et al.}}: \Title}
 
+%---------- Theorems ----------%
+\newtheorem{thm}{Theorem}% Uncomment: reset numbering at each chapter
+%\newtheorem{prop}[thm]{Proposition} % Propositions depend on Theorem number
+\newtheorem{lemma}[thm]{Lemma} % Same with lemmas
+\newtheorem{defn}[thm]{Definition} % Definitions depend on theorem number
+\newtheorem{assm}{Assumption} % Assumptions do not reset 
+
 %---------- Special Commands ----------%
+\DeclarePairedDelimiter{\norm}{\lVert}{\rVert}
+\DeclareMathOperator{\Rank}{rank}
+\DeclareMathOperator{\Sign}{sgn}
+\newcommand*{\rank}[1]{\Rank\left(#1\right)}
+\newcommand*{\sign}[1]{\Sign\left(#1\right)}
+
 \newcommand*{\tpose}{^\mathsf{T}} 
 \newcommand*{\inv}{^\mathsf{-1}}
 \newcommand*{\Rt}[1]{[\R]_{#1}}
@@ -32,6 +54,10 @@
 \newcommand*{\diff}[2]{\frac{d #1}{d #2}}
 \newcommand*{\ddiff}[3]{\frac{d^2 #1}{d #2 d #3}}
 \newcommand*{\pdiff}[2]{\frac{\partial #1}{\partial #2}}
+
+\newcommand*{\simpleB}{\begin{bmatrix}\Zmat{(n-k)\times k}\\ \Id{k}\end{bmatrix}}
+\newcommand*{\pdmat}{(\Id{n} \otimes p\tpose)\nabla_q\Minv(q)p}
+\newcommand*{\pudmat}{(\Id{n-k} \otimes p\tpose)\nabla_{q_u}\Minv(q)p}
 %/========== /Preamble ==========/%
 
 %/========== Main Document ==========/%
@@ -118,21 +144,26 @@ is positive definite for all \(q \in \mathcal{Q}\).
 By defining the \textit{conjugate of momentum} 
 \(p_i := \pdiff{\mathcal{L}}{\dot{q}_i}\) so that the vector 
 \(p = (p_1,\ldots,p_n) \in \R^n\) is given by \(p = D(q)\dot{q}\),
-we find the \textit{Hamiltonian} of the system in \((q,p)\) coordinates is
-\(\mathcal{H}(q,p) = 1/2 p\tpose D(q) p + P(q)\) \cite{landau_mechanics}.
+we find the \textit{Hamiltonian} of the system in \((q,p)\) coordinates
+is\cite{landau_mechanics}
+\begin{equation}\label{eqn:hamiltonian}
+    \mathcal{H}(q,p) = 1/2 p\tpose D(q) p + P(q).
+\end{equation}
 The dynamics of the system in Hamiltonian form are
 \begin{equation}\label{eqn:hamiltonian-eom-general}
     \begin{cases}
         \dot{q} = \nabla_p\mathcal{H} 
         , \\
-        \dot{p} = -\nabla_q\mathcal{H} + \tau
+        \dot{p} = -\nabla_q\mathcal{H} + B(q) \tau
         ,
     \end{cases}
 \end{equation}
 where \(\tau \in \R^k\) is a vector of generalized input forces and the input
-matrix \(B \in \R^{n \times k}\) is assumed to be full rank \(k < n\).
+matrix \(B : \mathcal{Q} \rightarrow \R^{n \times k}\) is full rank for all 
+\(q \in \mathcal{Q}\).
 
-It is easy to show that \eqref{eqn:hamiltonian-eom-general} reduces to
+It is easy to show using the matrix Kronecker product that
+\eqref{eqn:hamiltonian-eom-general} reduces to
 \begin{equation}\label{eqn:hamiltonian-full-dynamics}
      \begin{cases}
         \dot{q} = D\inv(q)p \\
@@ -141,6 +172,237 @@ It is easy to show that \eqref{eqn:hamiltonian-eom-general} reduces to
         . \\
     \end{cases}
 \end{equation}
+
+Because \(\tau\) is transformed by \(B(q)\), it is not in general clear how any
+particular input force \(\tau_i\) will affect the dynamics of the system. 
+The following definition provides a class of systems where the effect of input
+forces is made explicit.
+
+\begin{defn}
+    Let \(\mathcal{H}\) be an \(n\)-DOF Hamiltonian system 
+    with \(k \leq n\) actuators. 
+    A set of canonical coordinates \((q,p)\) for this system
+    are said to be \textit{simply actuated coordinates} if the
+    input matrix \(B(q) \in \R^{n \times k}\) is of the form
+    \[
+        B(q) = \simpleB    
+        .
+    \]
+
+\end{defn}
+
+The first \((n-k)\) coordinates, labelled \(q_u\), are called the
+\textit{unactuated coordinates}. The remaining \(k\) coordinates, labelled
+\(q_a\), are called the \textit{actuated coordinates}. When grouping them
+together, we will always put them in the order \((q_u, q_a)\) to fit with 
+the definition. 
+The corresponding \((p_u, p_a)\) are called the \textit{unactuated} and 
+\textit{actuated momenta}, respectively.
+
+Under the following assumptions on the input matrix, we will show that there is
+a canonical transformation of ~\eqref{eqn:hamiltonian} into simply actuated
+coordinates.
+
+\begin{assm}\label{assm:B-const}
+    The input matrix \(B(q) \equiv B \in \R^{n\times k}\) is constant,
+    full rank, and \(k < n\).
+\end{assm}
+
+\begin{assm}\label{assm:B-perp}
+    There exists a matrix 
+    \(B^\perp \in \R^{(n-k)\times n}\)
+    which is right semi-orthogonal 
+    \(\left(B^\perp(B^\perp)\tpose = \Id{(n-k)}\right)\)
+    and which is a left-annihilator for \(B\). 
+    That is, \(B^\perp B = \Zmat{(n-k) \times k}\).
+\end{assm}
+
+Assumption \ref{assm:B-perp} requires the rows of \(B^\perp\) to be unit vectors
+that are mutually orthogonal. 
+In the case that \(k = (n-1)\), the existence of any left annihilator 
+\(A^0 \in \R^{1\times n}\) implies the left annihilator 
+\(B^\perp := A^0/\norm{A^0}\) will be a unit vector satisfying Assumption \ref{assm:B-perp}.
+
+\begin{lemma}\label{lemma:B-orthogonal}
+    Suppose Assumption \ref{assm:B-const} holds. Then
+    there exists a nonsingular matrix \(\hat{T} \in \R^{k \times k}\) 
+    so that the regular feedback transformation 
+    \[
+        \tau = \hat{T} \hat{\tau}
+    \] 
+    has a new input matrix \(\hat{B}\) for \(\hat{\tau}\) which is left
+    semi-orthogonal.  
+    That is, \(\hat{B}\tpose \hat{B} = \Id{k}\).
+\end{lemma}
+\begin{proof}
+    \textbf{TODO: prove this in a terse way}.
+\end{proof}
+
+In light of Lemma \ref{lemma:B-orthogonal}, there is no loss of generality
+by making the following assumption.
+\begin{assm}\label{assm:B-orthogonal}
+    Assume that the input matrix \(B\) is
+    left semi-orthogonal, i.e.~\(B\tpose B = I_k\). 
+\end{assm}
+
+Let now \(\mathbf{B} \in \R^{n\times n}\) be the following matrix:
+\[
+    \mathbf{B} = 
+    \begin{bmatrix}
+        B^\perp \\
+        B\tpose \\
+    \end{bmatrix}
+    .
+\]
+Since \(B^\perp\) is a left annihilator of \(B\) and both \(B^\perp\) and
+\(B\tpose\) are right semi-orthogonal, it is easy to show that \(\mathbf{B}\) is
+orthogonal.
+\begin{proof}
+\[
+    \mathbf{B}\mathbf{B}\tpose = 
+    \begin{bmatrix}
+        B^\perp (B^\perp)\tpose & B^\perp B \\
+        (B^\perp B)\tpose & B\tpose B
+    \end{bmatrix} = \Id{n}
+    .
+\]
+Hence, \(\mathbf{B}\) is invertible with \(\mathbf{B}\inv = \mathbf{B}\tpose\).
+\end{proof}
+
+The following theorem shows that \(\mathbf{B}\) provides a canonical
+transformation into simply actuated coordinates, so that only the actuated momenta
+are affected by the input forces.
+
+\begin{thm}\label{thm:simply-actuated}
+    Under Assumptions \ref{assm:B-const},\ref{assm:B-perp}, and
+    \ref{assm:B-orthogonal}, the Hamiltonian system ~\eqref{eqn:hamiltonian}
+    has simply actuated canonical coordinates 
+    \(\left(\tilde{q} = \mathbf{B}q, \tilde{p} = \mathbf{B}p\right)\). 
+    The resulting dynamics are given by 
+    \begin{gather}\label{eqn:simple-hamiltonian}
+        \mathcal{H}(\tilde{q},\tilde{p}) = 
+        \frac{1}{2} \tilde{p}\tpose \Minv(\tilde{q}) \tilde{p} + V(\tilde{q})
+        , \\
+       \begin{cases}
+           \dot{\tilde{q}} = \Minv(\tilde{q})\tilde{p}
+           , \\
+           \dot{\tilde{p}} = -\frac{1}{2} (\Id{n} \otimes \tilde{p}\tpose)
+           \nabla_{\tilde{q}} \Minv(\tilde{q}) \tilde{p}
+           - \nabla_{\tilde{q}} V(\tilde{q}) + \simpleB \tau
+            ,
+        \end{cases} \nonumber
+    \end{gather}
+    where 
+    \(\Minv(\tilde{q}) := \mathbf{B}D^{-1}(\mathbf{B}\tpose
+    \tilde{q})\mathbf{B}\tpose\)
+    and
+    \(V(\tilde{q}) := P(\mathbf{B}\tpose \tilde{q})\).
+\end{thm}
+\begin{proof}
+    \textbf{TODO: prove this in a terse way.}
+\end{proof}
+Throughout the rest of this paper, we will assume the system we are studying is
+in simply actuated coordinates.
+
+\subsection{Virtual Nonholonomic Constraints}
+
+\begin{defn}
+    A \textit{virtual nonholonomic constraint} (VNHC) \textit{of order \(k\)} is a
+    relation \(h(q,p) = 0\) where \(h : \mathcal{Q}\times\R^n \rightarrow \R^k\) is
+    \(C^2\), \(\rank{\left[ dh_q,\, dh_p \right]} = k\) for all 
+    \((q,p) \in h\inv(0)\), and there exists a feedback controller \(\tau(q,p)\)
+    rendering the \textit{constraint manifold} \(\Gamma\) invariant,
+    where
+    \[
+        \Gamma = \left\{(q,p) \mid h(q,p) = 0, dh_q \dot{q} + dh_p \dot{p} = 0\right\}
+        .
+    \]
+\end{defn}
+
+From the definition of VNHCs, one finds that the constraint manifold \(\Gamma\)
+is a \(2(n-k)\)-dimensional closed embedded submanifold of 
+\(\mathcal{Q} \times \R^n\). 
+
+%TODO: tie this together 
+
+\begin{thm}\label{thm:vnhc-regularity}
+    A relation \(h(q,p) = 0\) for system ~\eqref{eqn:simply-actuated-hamiltonian}
+    is a regular VNHC of order \(k\) if and only if \(dh_{p_a} = 0\) 
+    and
+    \[
+        \rank{\left(dh_q \Minv(q) - 
+          dh_{p_u} (\Id{n-k} \otimes p\tpose)\nabla_{q_u}\Minv(q) 
+         \right)\simpleB} = k
+         ,
+    \]
+    everywhere on the constraint manifold \(\Gamma\).
+\end{thm}
+\begin{proof}
+    \textbf{TODO: prove this in a terse way}.
+\end{proof}
+
+The constrained dynamics for a general VNHC were derived by 
+Horn et. al \cite{nhvc_dynamic_walking}.
+In our case, we will be enforcing regular constraints where the actuators of the
+acrobot track a function of the unactuated variables. 
+Intuitively, the dynamics should be parameterized by \((q_u, p_u)\).
+Unfortunately, \(\dot{q}_u\) depends on \(p_a\), and for general systems one
+cannot solve explicitly for \(p_a\) in terms of \((q_u,p_u)\). 
+This is because the \(\dot{p}\) dynamics contains the coupling term 
+\((\Id{n} \otimes p\tpose)\nabla_{q_u}M(q)p\). 
+
+We now introduce an assumption so we can solve explicitly for the constrained
+dynamics.
+
+\begin{assm}\label{assm:inertially-actuated}
+    The Hamiltonian system has an inertia matrix that does not depend on the
+    unactuated coordinates:
+    \[
+        \nabla_{q_u}M(q) = \Zmat{n(n-k) \times n}
+        .
+    \]
+\end{assm}
+
+\begin{thm}\label{thm:zero-dynamics}
+    Let \(\mathcal{H}\) be a mechanical system in simply actuated
+    coordinates satisfying Assumption \ref{assm:inertially-actuated}. 
+    Let \(h(q,p_u) = 0\) be a regular VNHC of order \(k\) with constraint
+    manifold \(\Gamma\). Suppose that on \(\Gamma\) one can solve for
+    \(q_a\) as a function \(q_a = f(q_u,p_u)\).
+    Then the constrained dynamics are given by
+    \begin{equation}\label{eqn:qpu-dynamics}
+        \left.\begin{aligned}
+                \dot{q}_u &= \begin{bmatrix}
+                    \Id{(n-k)} & \Zmat{(n-k) \times k}
+                \end{bmatrix}\Minv(q)p \\
+            \dot{p}_u &= -\nabla_{q_u}V(q) \\
+            \end{aligned}{}\right|_{\begin{array}{c}
+                q_a = f(q_u,p_u) \\ 
+                p_a = g(q_u,p_u) \\
+            \end{array}}
+            ,
+    \end{equation}
+    where
+    \begin{equation}\label{eqn:g-qpu}
+    \begin{aligned}
+        &g(q_u,p_u) := \\
+           &\left(dh_q \Minv(q) \simpleB \right)\inv 
+               \\
+           &\left.\left(dh_{p_u} \nabla_{q_u}V(q) - dh_q \Minv(q)
+        \begin{bmatrix}
+            I_{n-k} \\
+            \Zmat{k \times (n-k)} \\
+    \end{bmatrix} p_u\right)\right|_{qa = f(q_u,p_u)}
+        .
+    \end{aligned}
+    \end{equation}
+\end{thm}
+\begin{proof}
+    This is a special case of Theorem 1 in \cite{nhvc_dynamic_walking} using
+    \(\theta_1 = q_u\) and \(\theta_2 = p_u\).
+    The proof is ommitted.
+\end{proof}
+
 
 %/========== Acrobot ==========/%
 \section{The Acrobot VNHC}\label{sec:acrobot}
