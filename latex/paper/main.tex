@@ -91,8 +91,8 @@ TODO: keywords in alphabetical order, separated by commas.
 \IEEEPARstart{T}ODO: intro.
 
 \subsection{Notation}
-We use the following notation in this paper. 
-For \(T > 0\), the set of real numbers modulo is denote \(\Rt{T}\), with
+We use the following notation.
+For \(T > 0\), the set of real numbers modulo \(T\) is denoted \(\Rt{T}\), with
 \(\Rt{\infty} := \R\).
 The gradient of the matrix-valued function 
 \(A : \R^m \rightarrow \R^{n\times n}\) is the matrix of stacked partial
@@ -133,23 +133,25 @@ Take an underactuated mechanical system modelled with generalized coordinates
 \(q = (q_1, \ldots, q_n)\) on the configuration manifold
 \(\mathcal{Q} = \Rt{T_1} \times \cdot \Rt{T_n}\), where
 \(T_i = 2\pi\) if \(q_i\) is an angle and \(T_i = \infty\) if \(q_i\) is a
-length. The corresponding velocities are 
+displacement. The corresponding velocities are 
 \(\dot{q} = (\dot{q}_1,\ldots,\dot{q}_n) \in \R^n\).
 
 Suppose this system has Lagrangian
 \(\mathcal{L}(q,\dot{q}) = 1/2 \dot{q}^T D(q) \dot{q} - P(q)\),
-where \(P : \mathcal{Q} \rightarrow \mathbb{R}\) is the potential energy, and
-the inertia matrix \(D : \mathcal{Q} \rightarrow \mathbb{R}^{n \times n}\)
+where the potential energy 
+\(P : \mathcal{Q} \rightarrow \mathbb{R}\) 
+is smooth, and the inertia matrix 
+\(D : \mathcal{Q} \rightarrow \mathbb{R}^{n \times n}\)
 is positive definite for all \(q \in \mathcal{Q}\).
-By defining the \textit{conjugate of momentum} 
-\(p_i := \pdiff{\mathcal{L}}{\dot{q}_i}\) so that the vector 
-\(p = (p_1,\ldots,p_n) \in \R^n\) is given by \(p = D(q)\dot{q}\),
-we find the \textit{Hamiltonian} of the system in \((q,p)\) coordinates
+Define the \textit{conjugate of momentum} 
+\(p_i := \partial\mathcal{L}/\partial\dot{q}_i\) so that the vector 
+\(p = (p_1,\ldots,p_n) \in \R^n\) is given by \(p = D(q)\dot{q}\).
+The \textit{Hamiltonian} of the system in \((q,p)\) coordinates
 is\cite{landau_mechanics}
 \begin{equation}\label{eqn:hamiltonian}
     \mathcal{H}(q,p) = 1/2 p\tpose D(q) p + P(q).
 \end{equation}
-The dynamics of the system in Hamiltonian form are
+with dynamics
 \begin{equation}\label{eqn:hamiltonian-eom-general}
     \begin{cases}
         \dot{q} = \nabla_p\mathcal{H} 
@@ -175,33 +177,9 @@ It is easy to show using the matrix Kronecker product that
 
 Because \(\tau\) is transformed by \(B(q)\), it is not in general clear how any
 particular input force \(\tau_i\) will affect the dynamics of the system. 
-The following definition provides a class of systems where the effect of input
-forces is made explicit.
-
-\begin{defn}
-    Let \(\mathcal{H}\) be an \(n\)-DOF Hamiltonian system 
-    with \(k \leq n\) actuators. 
-    A set of canonical coordinates \((q,p)\) for this system
-    are said to be \textit{simply actuated coordinates} if the
-    input matrix \(B(q) \in \R^{n \times k}\) is of the form
-    \[
-        B(q) = \simpleB    
-        .
-    \]
-
-\end{defn}
-
-The first \((n-k)\) coordinates, labelled \(q_u\), are called the
-\textit{unactuated coordinates}. The remaining \(k\) coordinates, labelled
-\(q_a\), are called the \textit{actuated coordinates}. When grouping them
-together, we will always put them in the order \((q_u, q_a)\) to fit with 
-the definition. 
-The corresponding \((p_u, p_a)\) are called the \textit{unactuated} and 
-\textit{actuated momenta}, respectively.
-
-Under the following assumptions on the input matrix, we will show that there is
-a canonical transformation of ~\eqref{eqn:hamiltonian} into simply actuated
-coordinates.
+Using the following assumptions on the input matrix, we will show there is
+a canonical coordinate transformation of ~\eqref{eqn:hamiltonian} 
+which makes explicit the effect of input forces.
 
 \begin{assm}\label{assm:B-const}
     The input matrix \(B(q) \equiv B \in \R^{n\times k}\) is constant,
@@ -238,13 +216,8 @@ In the case that \(k = (n-1)\), the existence of any left annihilator
     \textbf{TODO: prove this in a terse way}.
 \end{proof}
 
-In light of Lemma \ref{lemma:B-orthogonal}, there is no loss of generality
-by making the following assumption.
-\begin{assm}\label{assm:B-orthogonal}
-    Assume that the input matrix \(B\) is
-    left semi-orthogonal, i.e.~\(B\tpose B = I_k\). 
-\end{assm}
-
+In light of Lemma \ref{lemma:B-orthogonal}, there is no loss of generality in
+assuming that the input matrix is left semi-orthogonal.
 Let now \(\mathbf{B} \in \R^{n\times n}\) be the following matrix:
 \[
     \mathbf{B} = 
@@ -257,27 +230,13 @@ Let now \(\mathbf{B} \in \R^{n\times n}\) be the following matrix:
 Since \(B^\perp\) is a left annihilator of \(B\) and both \(B^\perp\) and
 \(B\tpose\) are right semi-orthogonal, it is easy to show that \(\mathbf{B}\) is
 orthogonal.
-\begin{proof}
-\[
-    \mathbf{B}\mathbf{B}\tpose = 
-    \begin{bmatrix}
-        B^\perp (B^\perp)\tpose & B^\perp B \\
-        (B^\perp B)\tpose & B\tpose B
-    \end{bmatrix} = \Id{n}
-    .
-\]
-Hence, \(\mathbf{B}\) is invertible with \(\mathbf{B}\inv = \mathbf{B}\tpose\).
-\end{proof}
-
-The following theorem shows that \(\mathbf{B}\) provides a canonical
-transformation into simply actuated coordinates, so that only the actuated momenta
-are affected by the input forces.
 
 \begin{thm}\label{thm:simply-actuated}
-    Under Assumptions \ref{assm:B-const},\ref{assm:B-perp}, and
-    \ref{assm:B-orthogonal}, the Hamiltonian system ~\eqref{eqn:hamiltonian}
-    has simply actuated canonical coordinates 
-    \(\left(\tilde{q} = \mathbf{B}q, \tilde{p} = \mathbf{B}p\right)\). 
+    Take the Hamiltonian system ~\eqref{eqn:hamiltonian}.
+    Under Assumptions \ref{assm:B-const} and \ref{assm:B-perp},
+    the coordinate transformation
+    \(\left(\tilde{q} = \mathbf{B}q, \tilde{p} = \mathbf{B}p\right)\)
+    is a canonical transformation.
     The resulting dynamics are given by 
     \begin{gather}\label{eqn:simple-hamiltonian}
         \mathcal{H}(\tilde{q},\tilde{p}) = 
@@ -301,12 +260,20 @@ are affected by the input forces.
 \begin{proof}
     \textbf{TODO: prove this in a terse way.}
 \end{proof}
+These new coordinates are called \textit{simply actuated coordinates}.
+The first \((n-k)\) coordinates of \(\tilde{q}\), labelled \(q_u\), are called
+the \textit{unactuated coordinates}. 
+The remaining \(k\) coordinates, labelled \(q_a\), are called the
+\textit{actuated coordinates}.
+The corresponding \((p_u, p_a)\) are called the \textit{unactuated} and 
+\textit{actuated momenta}, respectively.
+
 Throughout the rest of this paper, we will assume the system we are studying is
 in simply actuated coordinates.
 
 \subsection{Virtual Nonholonomic Constraints}
 
-\begin{defn}
+\begin{defn}\label{defn:vnhc}
     A \textit{virtual nonholonomic constraint} (VNHC) \textit{of order \(k\)} is a
     relation \(h(q,p) = 0\) where \(h : \mathcal{Q}\times\R^n \rightarrow \R^k\) is
     \(C^2\), \(\rank{\left[ dh_q,\, dh_p \right]} = k\) for all 
@@ -319,14 +286,16 @@ in simply actuated coordinates.
     \]
 \end{defn}
 
-From the definition of VNHCs, one finds that the constraint manifold \(\Gamma\)
+Definition \ref{defn:vnhc} implies that the constraint manifold \(\Gamma\)
 is a \(2(n-k)\)-dimensional closed embedded submanifold of 
 \(\mathcal{Q} \times \R^n\). 
 
+
+Define the error output \(e = h(q,p)\) 
 %TODO: tie this together 
 
 \begin{thm}\label{thm:vnhc-regularity}
-    A relation \(h(q,p) = 0\) for system ~\eqref{eqn:simply-actuated-hamiltonian}
+    A relation \(h(q,p) = 0\) for system ~\eqref{eqn:simple-hamiltonian}
     is a regular VNHC of order \(k\) if and only if \(dh_{p_a} = 0\) 
     and
     \[
