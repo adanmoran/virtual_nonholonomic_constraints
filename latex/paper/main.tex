@@ -268,8 +268,8 @@ orthogonal.
            \dot{\tilde{q}} = \Minv(\tilde{q})\tilde{p}
            , \\
            \dot{\tilde{p}} = -\frac{1}{2} (\Id{n} \otimes \tilde{p}\tpose)
-           \nabla_{\tilde{q}} \Minv(\tilde{q}) \tilde{p}
-           - \nabla_{\tilde{q}} V(\tilde{q}) + \simpleB \tau
+           \nabla_{\tilde{q}} \Minv(\tilde{q}) \tilde{p} \\
+           \phantom{---} - \nabla_{\tilde{q}} V(\tilde{q}) + \simpleB \tau
             ,
         \end{cases} \nonumber
     \end{gather}
@@ -313,10 +313,13 @@ the remaining \(k\) coordinates, labelled \(q_a\), are the
 The corresponding \((p_u, p_a)\) are the \textit{unactuated} and 
 \textit{actuated momenta}, respectively.
 
-Throughout the rest of this article, we will assume the system of inquiry is
-expressed in simply actuated coordinates.
-
 \subsection{Virtual Nonholonomic Constraints}
+
+In this section, we will take the system of inquiry to be a Hamiltonian
+mechanical system in simply actuated coordinates.
+We wish to find a controller which constraints the system according to a
+function of both the configuration \(q \in \mathcal{Q}\) and the conjugate of
+momentum \(p \in \R^n\).
 
 \begin{defn}\label{defn:vnhc}
     A \textit{virtual nonholonomic constraint} (VNHC) \textit{of order \(k\)} is a
@@ -331,29 +334,94 @@ expressed in simply actuated coordinates.
     \]
 \end{defn}
 
-Definition \ref{defn:vnhc} implies that the constraint manifold \(\Gamma\)
-is a \(2(n-k)\)-dimensional closed embedded submanifold of 
-\(\mathcal{Q} \times \R^n\). 
+The nonholonomic constraint \(h(q,p)\) is \textit{virtual} because it is
+enforced by the controller \(\tau(q,p)\), rather than arising from the physics
+of the system.
+The constraint manifold \(\Gamma\) is a \(2(n-k)\)-dimensional
+closed embedded submanifold of \(\mathcal{Q} \times \R^n\).
+Hence, the VNHC reduces the dimensionality of the dynamics from \(2n\) to
+\(2(n-k)\). 
+In particular, if \(k = (n-1)\), the constraint manifold is always
+2-dimensional. 
 
+We often want to stabilize the constraint within a neighbourhood of \(\Gamma\).
+To see when this is possible, let us define the error output \(e = h(q,p)\).
+Notice that if any component of \(e_i\) has relative degree 1, we may not be able
+to stabilize \(\Gamma\) -- we can always guarantee \(e_i \to 0\), but not
+necessarily \(\dot{e}_i \to 0\).
+It is for this reason that we define the following special type of VNHC.
 
-Define the error output \(e = h(q,p)\) 
-%TODO: tie this together 
+\begin{defn}
+    A VNHC \(h(q,p) = 0\) of order \(k\) is \textit{regular} if the output 
+    \(e = h(q,p)\) is of relative degree \(\{2,2.\ldots,2\}\) everywhere on the
+    constraint manifold \(\Gamma\).
+\end{defn}
+
+The authors of
+\cite{nhvc_dynamic_walking,hybrid_zero_dynamics_bipedal_nhvcs,nhvc_incline_walking}
+observed that a relation which uses only the unactuated conjugate of momentum
+will have vector relative degree \(\{2,\ldots,2\}\).
+In fact, this is a hard requirement: any VNHC which depends on the actuated
+momentum cannot be regular. 
+Before providing a characterization of regularity which proves this statement,
+we define the following matrices as shorthand:
+\begin{align}
+    \mathcal{M}(q,p) &:= (\Id{n-k} \otimes p\tpose)\nabla_{q_u}\Minv(q) 
+        ,\\
+    \mathcal{D}(q,p_u) &:= dh_q(q,p_u) \Minv(q) 
+    .
+\end{align}
 
 \begin{thm}\label{thm:vnhc-regularity}
     A relation \(h(q,p) = 0\) for system ~\eqref{eqn:simple-hamiltonian}
     is a regular VNHC of order \(k\) if and only if \(dh_{p_a} = 0\) 
     and
     \[
-        \rank{\left(dh_q \Minv(q) - 
-          dh_{p_u} (\Id{n-k} \otimes p\tpose)\nabla_{q_u}\Minv(q) 
-         \right)\simpleB} = k
+        \rank{\left(\mathcal{D}(q,p_u) - dh_{p_u}\mathcal{M}(q,p)\right)\simpleB} = k
          ,
     \]
     everywhere on the constraint manifold \(\Gamma\).
 \end{thm}
 \begin{proof}
-    \textbf{TODO: prove this in a terse way}.
+    Let \(e = h(q,p) \in \R^k\).
+    If \(dh_{p_a} \neq \Zmat{k\times k}\) for some \((q,p) \in \Gamma\), 
+    then \(\tau\) appears in \(\dot{e}\) and the VNHC is not of relative degree
+    \(\{2,\ldots,2\}\). Suppose now that \(dh_{p_a} = \Zmat{k\times k}\).
+    Then 
+    \[
+        \dot{e} = \mathcal{D}(q,p_u)p - 
+        dh_{p_u}\left(\frac{1}{2}\mathcal{M}(q,p)p + \nabla_{q_u}V(q)\right)
+        .
+    \]
+    Taking one further derivative provides
+    \begin{align*}
+        \ddot{e} &= (\star) - 
+        dh_{p_u}\left(\frac{1}{2}\diff{}{t}\left(\mathcal{M}(q,p)p\right)\right) 
+        \\
+                 &+\mathcal{D}(q,p_u)\simpleB \tau
+    \end{align*}
+    where \((\star)\) is a continuous function of \(q\) and \(p\).
+    One can show that
+    \begin{align*}
+        dh_{p_u}\left(\frac{1}{2}\diff{}{t}\left(\mathcal{M}(q,p)p\right)\right)
+        &= (\star) +\\
+        &dh_{p_u} \mathcal{M}(q,p)\simpleB \tau
+        .
+    \end{align*}
+    Hence,
+    \[
+       \ddot{e} = (\star) +
+       \left(\mathcal{D}(q,p_u) - dh_{p_u}\mathcal{M}(q,p)\right) \simpleB \tau
+        ,
+    \]
+    which we write as \( \ddot{e} = E(q,p) + H(q,p)\tau\) for appropriate \(E\)
+    and \(H\).
+    From the definition of regularity, the VNHC \(h\) is regular 
+    when \(e\) is of relative degree \(\{2,\ldots,2\}\), which is true 
+    if and only if the matrix premultiplying \(\tau\) is nonsingular, and hence
+    that \(H\) is invertible. This proves the theorem.
 \end{proof}
+
 
 The constrained dynamics for a general VNHC were derived by 
 Horn et. al \cite{nhvc_dynamic_walking}.
@@ -370,11 +438,8 @@ dynamics.
 
 \begin{assm}\label{assm:inertially-actuated}
     The Hamiltonian system has an inertia matrix that does not depend on the
-    unactuated coordinates:
-    \[
-        \nabla_{q_u}M(q) = \Zmat{n(n-k) \times n}
-        .
-    \]
+    unactuated coordinates, so that 
+    \(\nabla_{q_u}M(q) = \Zmat{n(n-k) \times n}\).
 \end{assm}
 
 \begin{thm}\label{thm:zero-dynamics}
@@ -400,9 +465,9 @@ dynamics.
     \begin{equation}\label{eqn:g-qpu}
     \begin{aligned}
         &g(q_u,p_u) := \\
-           &\left(dh_q \Minv(q) \simpleB \right)\inv 
+        &\left(\mathcal{D}(q,p_u) \simpleB \right)\inv 
                \\
-           &\left.\left(dh_{p_u} \nabla_{q_u}V(q) - dh_q \Minv(q)
+        &\left.\left(dh_{p_u} \nabla_{q_u}V(q) - \mathcal{D}(q,p_u)
         \begin{bmatrix}
             I_{n-k} \\
             \Zmat{k \times (n-k)} \\
