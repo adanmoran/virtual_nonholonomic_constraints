@@ -95,14 +95,14 @@ TODO: keywords in alphabetical order, separated by commas.
 \subsection{Notation}
 We use the following notation in this article.
 For \(A \in \R^{n\times m}\) and \(B \in \R^{p \times m}\),
-\((A,B)\tpose \in \R^{(n+p)\times m}\) is the matrix obtained by stacking \(A\)
+define \([A;B] \in \R^{(n+p)\times m}\) as the matrix obtained by stacking \(A\)
 on top of \(B\). 
 For \(T > 0\), the set of real numbers modulo \(T\) is denoted \(\Rt{T}\), with
 \(\Rt{\infty} := \R\).
 The gradient of the matrix-valued function 
 \(A : \R^m \rightarrow \R^{n\times n}\) is the block matrix of stacked partial
 derivatives, 
-\(\nabla_xA := (\pdiff{A}{x_1},\ldots,\pdiff{A}{x_m})\tpose \in \R^{nm \times n}\).
+\(\nabla_xA := [\pdiff{A}{x_1};\ldots;\pdiff{A}{x_m}] \in \R^{nm \times n}\).
 Given two matrices \(A \in \R^{n \times m}\) and \(B \in \R^{r \times s}\), the
 Kronecker product \cite{kronprod} \(A \otimes B \in \R^{nr \times ms}\) is the
 matrix
@@ -229,10 +229,10 @@ In the case that \(k = (n-1)\), the existence of any left annihilator
 \begin{proof}
     Since \(B\) is constant and full rank, it has a singular value decomposition 
     \(B = U\tpose \Sigma V\) where 
-    \(\Sigma = (\diag{\sigma_1,\ldots,\sigma_k}, \Zmat{(n-k)\times k})\tpose\),
+    \(\Sigma = [\diag{\sigma_1,\ldots,\sigma_k}; \Zmat{(n-k)\times k}]\),
     \(\sigma_i > 0\), and \(U \in R^{n \times n}\),
     \(V \in \R^{k \times k}\) are unitary matrices \cite{calculating_svd}.
-    Defining \(T = \diag{1/\sigma_1^2,\ldots,1/\sigma_n^2}\) and assigning the
+    Defining \(T = \diag{1/\sigma_1^2,\ldots,1/\sigma_k^2}\) and assigning the
     regular feedback transformation \(\tau = V T \hat{\tau}\) yields a new input
     matrix \(\hat{B} = B V T\) for \(\hat{\tau}\) such that
     \(\hat{B}\tpose \hat{B} = T\tpose \Sigma\tpose \Sigma T = \Id{k}\).
@@ -240,15 +240,7 @@ In the case that \(k = (n-1)\), the existence of any left annihilator
 
 In light of Lemma \ref{lemma:B-orthogonal}, there is no loss of generality in
 assuming that the input matrix is left semi-orthogonal.
-Let now \(\mathbf{B} \in \R^{n\times n}\) be the following matrix:
-\[
-    \mathbf{B} = 
-    \begin{bmatrix}
-        B^\perp \\
-        B\tpose \\
-    \end{bmatrix}
-    .
-\]
+Let now \(\mathbf{B} = [B^\perp; B^\tpose]\).
 Since \(B^\perp\) is a left annihilator of \(B\) and both \(B^\perp\) and
 \(B\tpose\) are right semi-orthogonal, it is easy to show that \(\mathbf{B}\) is
 orthogonal.
@@ -274,8 +266,8 @@ orthogonal.
         \end{cases} \nonumber
     \end{gather}
     where 
-    \(\Minv(\tilde{q}) := \mathbf{B}D^{-1}(\mathbf{B}\tpose
-    \tilde{q})\mathbf{B}\tpose\)
+    \(\Minv(\tilde{q}) := 
+    \mathbf{B}D^{-1}(\mathbf{B}\tpose \tilde{q})\mathbf{B}\tpose\)
     and
     \(V(\tilde{q}) := P(\mathbf{B}\tpose \tilde{q})\).
 \end{thm}
@@ -283,18 +275,20 @@ orthogonal.
     Since \(\mathbf{B}\) is constant, this transformation satisfies
     \(\pdiff{\tilde{q}_i}{p_m} = \pdiff{\tilde{p}_i}{q_m} = 0\) for all 
     \(i,m \in \{1,\ldots,n\}\).
-    Hence, \([\tilde{q}_i, \tilde{q}_j] = [\tilde{p}_i,\tilde{p}_j] = 0\).
+    This implies the Poisson brackets \([\tilde{q}_i, \tilde{q}_j]\)
+    and \([\tilde{p}_i,\tilde{p}_j]\) are both zero.
     Then, since \(\mathbf{B}\) is orthogonal, 
     \((\mathbf{B}_i)\tpose (\mathbf{B}\tpose)_j = \delta_i^j\).
-    Hence, the Poisson bracket between \(\tilde{p}_i\) and \(\tilde{q}_j\) is 
-    \begin{align*}
-        [\tilde{p}_i, \tilde{q}_j] &= \sum\limits_{m=1}^n A_{i,m}A_{j,m} 
-                                   = (\mathbf{B}_i)\tpose (\mathbf{B}\tpose)_j
-                                   = \delta_i^j
-                                   .
-    \end{align*}
-    By (45.10) in \cite{landau_mechanics}, this is a canonical transformation,
-    so the new Hamiltonian is
+    Hence, 
+    \begin{equation*}
+        [\tilde{p}_i, \tilde{q}_j]
+            = \sum\limits_{m=1}^n \mathbf{B}_{i,m}\mathbf{B}_{j,m} 
+            = (\mathbf{B}_i)\tpose (\mathbf{B}\tpose)_j
+            = \delta_i^j
+            .
+    \end{equation*}
+    By (45.10) in \cite{landau_mechanics}, this is a canonical transformation
+    with new Hamiltonian
     \(\mathcal{H}(\mathbf{B}\tpose q, \mathbf{B}\tpose p)\).
     Finally, since \(\dot{\tilde{p}} = \mathbf{B}\tpose \dot{p}\), the input
     matrix for the system in \((\tilde{q},\tilde{p})\) coordinates is
@@ -334,9 +328,9 @@ momentum \(p \in \R^n\).
     \]
 \end{defn}
 
-The nonholonomic constraint \(h(q,p)\) is \textit{virtual} because it is
-enforced by the controller \(\tau(q,p)\), rather than arising from the physics
-of the system.
+The nonholonomic constraint \(h(q,p)\) is called \textit{virtual} because it is
+enforced by the controller \(\tau(q,p)\), rather than being a constraint which
+arises from the physics of the system.
 The constraint manifold \(\Gamma\) is a \(2(n-k)\)-dimensional
 closed embedded submanifold of \(\mathcal{Q} \times \R^n\).
 Hence, the VNHC reduces the dimensionality of the dynamics from \(2n\) to
@@ -346,7 +340,7 @@ In particular, if \(k = (n-1)\), the constraint manifold is always
 
 We often want to stabilize the constraint within a neighbourhood of \(\Gamma\).
 To see when this is possible, let us define the error output \(e = h(q,p)\).
-Notice that if any component of \(e_i\) has relative degree 1, we may not be able
+If any component of \(e_i\) has relative degree 1, we may not be able
 to stabilize \(\Gamma\) -- we can always guarantee \(e_i \to 0\), but not
 necessarily \(\dot{e}_i \to 0\).
 It is for this reason that we define the following special type of VNHC.
@@ -357,13 +351,14 @@ It is for this reason that we define the following special type of VNHC.
     constraint manifold \(\Gamma\).
 \end{defn}
 
+
 The authors of
 \cite{nhvc_dynamic_walking,hybrid_zero_dynamics_bipedal_nhvcs,nhvc_incline_walking}
-observed that a relation which uses only the unactuated conjugate of momentum
-will have vector relative degree \(\{2,\ldots,2\}\).
-In fact, this is a hard requirement: any VNHC which depends on the actuated
-momentum cannot be regular. 
-Before providing a characterization of regularity which proves this statement,
+observed that only relations which use the unactuated conjugate of momentum
+have vector relative degree \(\{2,\ldots,2\}\).
+However, this is not enough to guarantee the 
+
+We now provide a computational characterization of regularity
 we define the following matrices as shorthand:
 \begin{align}
     \mathcal{M}(q,p) &:= (\Id{n-k} \otimes p\tpose)\nabla_{q_u}\Minv(q) 
@@ -371,6 +366,7 @@ we define the following matrices as shorthand:
     \mathcal{D}(q,p_u) &:= dh_q(q,p_u) \Minv(q) 
     .
 \end{align}
+
 
 \begin{thm}\label{thm:vnhc-regularity}
     A relation \(h(q,p) = 0\) for system ~\eqref{eqn:simple-hamiltonian}
