@@ -240,7 +240,7 @@ In the case that \(k = (n-1)\), the existence of any left annihilator
 
 In light of Lemma \ref{lemma:B-orthogonal}, there is no loss of generality in
 assuming that the input matrix is left semi-orthogonal.
-Let now \(\mathbf{B} = [B^\perp; B^\tpose]\).
+Let now \(\mathbf{B} = [B^\perp; B\tpose]\).
 Since \(B^\perp\) is a left annihilator of \(B\) and both \(B^\perp\) and
 \(B\tpose\) are right semi-orthogonal, it is easy to show that \(\mathbf{B}\) is
 orthogonal.
@@ -354,19 +354,18 @@ It is for this reason that we define the following special type of VNHC.
 
 The authors of
 \cite{nhvc_dynamic_walking,hybrid_zero_dynamics_bipedal_nhvcs,nhvc_incline_walking}
-observed that only relations which use the unactuated conjugate of momentum
-have vector relative degree \(\{2,\ldots,2\}\).
-However, this is not enough to guarantee the 
+observed that relations which use only the unactuated conjugate of momentum
+often have vector relative degree \(\{2,\ldots,2\}\).
+Indeed, we shall now provide a characterization of regularity which shows that
+regular constraints cannot use the actuated momentum at all.
 
-We now provide a computational characterization of regularity
-we define the following matrices as shorthand:
+To ease notation in the rest of this section, we use the following shorthand:
 \begin{align}
     \mathcal{M}(q,p) &:= (\Id{n-k} \otimes p\tpose)\nabla_{q_u}\Minv(q) 
         ,\\
     \mathcal{D}(q,p_u) &:= dh_q(q,p_u) \Minv(q) 
     .
 \end{align}
-
 
 \begin{thm}\label{thm:vnhc-regularity}
     A relation \(h(q,p) = 0\) for system ~\eqref{eqn:simple-hamiltonian}
@@ -391,10 +390,11 @@ we define the following matrices as shorthand:
     \]
     Taking one further derivative provides
     \begin{align*}
-        \ddot{e} &= (\star) - 
-        dh_{p_u}\left(\frac{1}{2}\diff{}{t}\left(\mathcal{M}(q,p)p\right)\right) 
-        \\
-                 &+\mathcal{D}(q,p_u)\simpleB \tau
+        \ddot{e} 
+            &= (\star) - 
+            dh_{p_u}\left(\frac{1}{2}\diff{}{t}\left(\mathcal{M}(q,p)p\right)\right) 
+                \\
+            &+ \mathcal{D}(q,p_u)\simpleB \tau
     \end{align*}
     where \((\star)\) is a continuous function of \(q\) and \(p\).
     One can show that
@@ -418,24 +418,32 @@ we define the following matrices as shorthand:
     that \(H\) is invertible. This proves the theorem.
 \end{proof}
 
+Under additional mild conditions (see \cite{vhcs_for_el_systems}), a regular VNHC of
+order \(k\) can be stabilized by the output-linearizing phase-feedback
+controller
+\begin{equation}
+    \tau(q,p) = -H\inv(q,p)\left(E(q,p) + k_p e + k_d \dot{e}\right)
+    ,
+\end{equation}
+where \(k_p, k_d > 0\) are control parameters which can be tuned on the
+resulting error dynamices \(\ddot{e} = -k_p e - k_d \dot{e}\).
 
-The constrained dynamics for a general VNHC were derived by 
-Horn et. al \cite{nhvc_dynamic_walking}.
-In our case, we will be enforcing regular constraints where the actuators of the
-acrobot track a function of the unactuated variables. 
-Intuitively, the dynamics should be parameterized by \((q_u, p_u)\).
+In Section \ref{sec:acrobot} we will enforce a regular constraint on the
+acrobot of the form \(h(q,p) = q_a - f(q_u,p_u)\), where the actuators track a
+function of the unactuated variables.
+Intuitively then, the constrained dynamics should be parameterized by \((q_u, p_u)\).
 Unfortunately, \(\dot{q}_u\) depends on \(p_a\), and for general systems one
-cannot solve explicitly for \(p_a\) in terms of \((q_u,p_u)\). 
-This is because the \(\dot{p}\) dynamics contains the coupling term 
+cannot solve explicitly for \(p_a\) in terms of \((q_u,p_u)\) because
+the \(\dot{p}\) dynamics contains the coupling term 
 \((\Id{n} \otimes p\tpose)\nabla_{q_u}M(q)p\). 
 
-We now introduce an assumption so we can solve explicitly for the constrained
+We now introduce an assumption which allows us to solve for \(p_a\) as a
+function of \((q_u,p_u)\), which in turn allows us to find the constrained
 dynamics.
 
 \begin{assm}\label{assm:inertially-actuated}
-    The Hamiltonian system has an inertia matrix that does not depend on the
-    unactuated coordinates, so that 
-    \(\nabla_{q_u}M(q) = \Zmat{n(n-k) \times n}\).
+The inertia matrix does not depend on the unactuated coordinates, so that 
+\(\nabla_{q_u}M(q) = \Zmat{n(n-k) \times n}\).
 \end{assm}
 
 \begin{thm}\label{thm:zero-dynamics}
@@ -473,11 +481,30 @@ dynamics.
     \end{equation}
 \end{thm}
 \begin{proof}
-    This is a special case of Theorem 1 in \cite{nhvc_dynamic_walking} using
-    \(\theta_1 = q_u\) and \(\theta_2 = p_u\).
-    The proof is ommitted.
+    Setting \(e = h(q,p_u)\) and using Assumption
+    \ref{assm:inertially-actuated}, we find that
+    \(\dot{e} = \mathcal{D}(q,p_u)p - dh_{p_u}\nabla_{q_u}V(q)\).
+    Notice that
+    \(\mathcal{D}(q,p_u)p = \mathcal{D}(q,p_u)[\Zmat{(n-k)\times k}; \Id{k}]p_a
+    + \mathcal{D}(q,p_u)[\Id{n-k};\Zmat{k \times (n-k)}] p_u\).
+    Since \(h(q,p_u)\) is regular, \(\mathcal{D}(q,p_u)\) is invertible.
+    Taking \(e = \dot{e} = 0\), solving for \(p_a\), and setting 
+    \(q_a = f(q_u,p_u)\) completes the proof.
 \end{proof}
 
+\textbf{Comparison with existing literature}: Horn et.al. provide constrained
+dynamics for VNHCs in \cite{nhvc_incline_walking}.
+In fact, our constrained dynamics \eqref{eqn:qpu-dynamics} coincide with their
+system (17) when one chooses the special case \(\theta_1 = q_u\) and 
+\(\theta_2 = p_u\).
+Other than this distinction, our assumptions are identical to theirs.
+In particular, their assumption \textbf{H2} is what we call
+regularity.
+The only real distinction is that our constrained dynamics
+are explicit functions of the Hamiltonian phase coordinates
+\((q_u,p_u)\).
+This representation will be beneficial when we apply the theory of VNHCs to the
+acrobot.
 
 %/========== Acrobot ==========/%
 \section{The Acrobot VNHC}\label{sec:acrobot}
