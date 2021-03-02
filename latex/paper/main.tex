@@ -143,11 +143,11 @@ vnhcs, regularity, the theorems, etc.
 
 
 \subsection{Simply Actuated Hamiltonian Systems}
-Take an underactuated mechanical system modelled with generalized coordinates 
+Take a mechanical system modelled with generalized coordinates 
 \(q = (q_1, \ldots, q_n)\) on the configuration manifold
 \(\mathcal{Q} = \Rt{T_1} \times \cdot \Rt{T_n}\), where
 \(T_i = 2\pi\) if \(q_i\) is an angle and \(T_i = \infty\) if \(q_i\) is a
-displacement. The corresponding velocities are 
+displacement. The corresponding generalized velocities are 
 \(\dot{q} = (\dot{q}_1,\ldots,\dot{q}_n) \in \R^n\).
 
 Suppose this system has Lagrangian
@@ -157,13 +157,15 @@ where the potential energy
 is smooth, and the inertia matrix 
 \(D : \mathcal{Q} \rightarrow \mathbb{R}^{n \times n}\)
 is positive definite for all \(q \in \mathcal{Q}\).
-Define the \textit{conjugate of momentum} 
+The \textit{conjugate of momentum} to \(q\) is the vector
 \(p_i := \partial\mathcal{L}/\partial\dot{q}_i\) so that the vector 
-\(p = (p_1,\ldots,p_n) \in \R^n\) is given by \(p = D(q)\dot{q}\).
-The \textit{Hamiltonian} of the system in \((q,p)\) coordinates
-is\cite{landau_mechanics}
+\(p = D(q)\dot{q} \in \R^n\).
+As per \cite{landau_mechanics}, 
+the \textit{Hamiltonian} of the system in \((q,p)\) coordinates
+is
 \begin{equation}\label{eqn:hamiltonian}
-    \mathcal{H}(q,p) = 1/2 p\tpose D(q) p + P(q).
+    \mathcal{H}(q,p) = 1/2 p\tpose D(q) p + P(q)
+    ,
 \end{equation}
 with dynamics
 \begin{equation}\label{eqn:hamiltonian-eom-general}
@@ -177,9 +179,11 @@ with dynamics
 where \(\tau \in \R^k\) is a vector of generalized input forces and the input
 matrix \(B : \mathcal{Q} \rightarrow \R^{n \times k}\) is full rank for all 
 \(q \in \mathcal{Q}\).
+If \(k < n\), we say the system is \textit{underactuated} with degree of
+underactuation \((n-k)\).
 
 It is easy to show using the matrix Kronecker product that
-\eqref{eqn:hamiltonian-eom-general} reduces to
+\eqref{eqn:hamiltonian-eom-general} expands to
 \begin{equation}\label{eqn:hamiltonian-full-dynamics}
      \begin{cases}
         \dot{q} = D\inv(q)p \\
@@ -189,11 +193,9 @@ It is easy to show using the matrix Kronecker product that
     \end{cases}
 \end{equation}
 
-Because \(\tau\) is transformed by \(B(q)\), it is not in general clear how any
-particular input force \(\tau_i\) will affect the dynamics of the system. 
-Using the following assumptions on the input matrix, we will show there is
-a canonical coordinate transformation of ~\eqref{eqn:hamiltonian} 
-which makes explicit the effect of input forces.
+Because \(\tau\) is transformed by \(B(q)\), it is not obvious how any
+particular input force \(\tau_i\) affects the system.
+To address this problem, we make the following assumptions.
 
 \begin{assm}\label{assm:B-const}
     The input matrix \(B(q) \equiv B \in \R^{n\times k}\) is constant,
@@ -201,19 +203,21 @@ which makes explicit the effect of input forces.
 \end{assm}
 
 \begin{assm}\label{assm:B-perp}
-    There exists a matrix 
+    There exists a right semi-orthogonal matrix 
     \(B^\perp \in \R^{(n-k)\times n}\)
-    which is right semi-orthogonal 
-    \(\left(B^\perp(B^\perp)\tpose = \Id{(n-k)}\right)\)
-    and which is a left-annihilator for \(B\). 
-    That is, \(B^\perp B = \Zmat{(n-k) \times k}\).
+    which is a left-annihilator for \(B\). 
 \end{assm}
 
-Assumption \ref{assm:B-perp} requires the rows of \(B^\perp\) to be unit vectors
+Note that Assumption \ref{assm:B-perp} requires the rows of \(B^\perp\) be unit vectors
 that are mutually orthogonal. 
 In the case that \(k = (n-1)\), the existence of any left annihilator 
 \(A^0 \in \R^{1\times n}\) implies the left annihilator 
-\(B^\perp := A^0/\norm{A^0}\) will be a unit vector satisfying Assumption \ref{assm:B-perp}.
+\(B^\perp := A^0/\norm{A^0}\) will be a unit vector satisfying this assumption.
+
+The above assumptions allow us to define a
+canonical coordinate transformation of ~\eqref{eqn:hamiltonian} 
+which decouples the input forces.
+To define this transformation we will make use of the following lemma.
 
 \begin{lemma}\label{lemma:B-orthogonal}
     Suppose Assumption \ref{assm:B-const} holds. Then
@@ -273,34 +277,24 @@ orthogonal.
 \end{thm}
 \begin{proof}
     Since \(\mathbf{B}\) is constant, this transformation satisfies
-    \(\pdiff{\tilde{q}_i}{p_m} = \pdiff{\tilde{p}_i}{q_m} = 0\) for all 
+    \(\partial\tilde{q}_i/\partial p_m = \partial\tilde{p}_i/\partial q_m = 0\) for all 
     \(i,m \in \{1,\ldots,n\}\).
     This implies the Poisson brackets \([\tilde{q}_i, \tilde{q}_j]\)
     and \([\tilde{p}_i,\tilde{p}_j]\) are both zero.
     Then, since \(\mathbf{B}\) is orthogonal, 
-    \((\mathbf{B}_i)\tpose (\mathbf{B}\tpose)_j = \delta_i^j\).
-    Hence, 
-    \begin{equation*}
-        [\tilde{p}_i, \tilde{q}_j]
-            = \sum\limits_{m=1}^n \mathbf{B}_{i,m}\mathbf{B}_{j,m} 
-            = (\mathbf{B}_i)\tpose (\mathbf{B}\tpose)_j
-            = \delta_i^j
-            .
-    \end{equation*}
-    By (45.10) in \cite{landau_mechanics}, this is a canonical transformation
-    with new Hamiltonian
-    \(\mathcal{H}(\mathbf{B}\tpose q, \mathbf{B}\tpose p)\).
-    Finally, since \(\dot{\tilde{p}} = \mathbf{B}\tpose \dot{p}\), the input
+    \([\tilde{p}_i, \tilde{q}_j] = (\mathbf{B}_i)\tpose (\mathbf{B}\tpose)_j
+        = \delta_i^j\).
+    By (45.10) in \cite{landau_mechanics}, this transformation is canonical and
+    the new Hamiltonian is
+    \(\mathcal{H}(\mathbf{B}\tpose \tilde{q}, \mathbf{B}\tpose \tilde{p})\).
+    Finally, since \(\dot{\tilde{p}} = \mathbf{B} \dot{p}\), the input
     matrix for the system in \((\tilde{q},\tilde{p})\) coordinates is
-    \[
-        \mathbf{B}B = \simpleB
-        ,
-    \]
-    which proves the theorem.
+    \(\mathbf{B}B = [\Zmat{(n-k)\times k}; \Id{k}]\), which proves the theorem.
 \end{proof}
+
 These new coordinates are called 
 \textit{simply actuated coordinates}.
-The first \((n-k)\) coordinates, labelled \(q_u\), are named
+The first \((n-k)\) coordinates, labelled \(q_u\), are
 the \textit{unactuated coordinates}; 
 the remaining \(k\) coordinates, labelled \(q_a\), are the
 \textit{actuated coordinates}.
