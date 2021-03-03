@@ -144,27 +144,26 @@ vnhcs, regularity, the theorems, etc.
 
 \subsection{Simply Actuated Hamiltonian Systems}
 Take a mechanical system modelled with generalized coordinates 
-\(q = (q_1, \ldots, q_n)\) on the configuration manifold
+\(q = (q_1, \ldots, q_n)\) on a configuration manifold
 \(\mathcal{Q} = \Rt{T_1} \times \cdot \Rt{T_n}\), where
 \(T_i = 2\pi\) if \(q_i\) is an angle and \(T_i = \infty\) if \(q_i\) is a
 displacement. The corresponding generalized velocities are 
 \(\dot{q} = (\dot{q}_1,\ldots,\dot{q}_n) \in \R^n\).
 
 Suppose this system has Lagrangian
-\(\mathcal{L}(q,\dot{q}) = 1/2 \dot{q}^T D(q) \dot{q} - P(q)\),
+\(\mathcal{L}(q,\dot{q}) = 1/2~\dot{q}^T D(q) \dot{q} - P(q)\),
 where the potential energy 
 \(P : \mathcal{Q} \rightarrow \mathbb{R}\) 
 is smooth, and the inertia matrix 
 \(D : \mathcal{Q} \rightarrow \mathbb{R}^{n \times n}\)
-is positive definite for all \(q \in \mathcal{Q}\).
+is smooth and positive definite for all \(q \in \mathcal{Q}\).
 The \textit{conjugate of momentum} to \(q\) is the vector
-\(p_i := \partial\mathcal{L}/\partial\dot{q}_i\) so that the vector 
-\(p = D(q)\dot{q} \in \R^n\).
+\(p := \partial\mathcal{L}/\partial\dot{q} = D(q) \dot{q} \in \R^n\).
 As per \cite{landau_mechanics}, 
 the \textit{Hamiltonian} of the system in \((q,p)\) coordinates
 is
 \begin{equation}\label{eqn:hamiltonian}
-    \mathcal{H}(q,p) = 1/2 p\tpose D(q) p + P(q)
+    \mathcal{H}(q,p) = \frac{1}{2} p\tpose D\inv(q) p + P(q)
     ,
 \end{equation}
 with dynamics
@@ -228,7 +227,6 @@ To define this transformation we will make use of the following lemma.
     \] 
     has a new input matrix \(\hat{B}\) for \(\hat{\tau}\) which is left
     semi-orthogonal.  
-    That is, \(\hat{B}\tpose \hat{B} = \Id{k}\).
 \end{lemma}
 \begin{proof}
     Since \(B\) is constant and full rank, it has a singular value decomposition 
@@ -244,9 +242,9 @@ To define this transformation we will make use of the following lemma.
 
 In light of Lemma \ref{lemma:B-orthogonal}, there is no loss of generality in
 assuming that the input matrix is left semi-orthogonal.
-Let now \(\mathbf{B} = [B^\perp; B\tpose]\).
+Now, let \(\mathbf{B} := [B^\perp; B\tpose]\).
 Since \(B^\perp\) is a left annihilator of \(B\) and both \(B^\perp\) and
-\(B\tpose\) are right semi-orthogonal, it is easy to show that \(\mathbf{B}\) is
+\(B\tpose\) are right semi-orthogonal, one can easily show that \(\mathbf{B}\) is
 orthogonal.
 
 \begin{thm}\label{thm:simply-actuated}
@@ -277,8 +275,8 @@ orthogonal.
 \end{thm}
 \begin{proof}
     Since \(\mathbf{B}\) is constant, this transformation satisfies
-    \(\partial\tilde{q}_i/\partial p_m = \partial\tilde{p}_i/\partial q_m = 0\) for all 
-    \(i,m \in \{1,\ldots,n\}\).
+    \(\partial\tilde{q}_i/\partial p_j = \partial\tilde{p}_i/\partial q_j = 0\) for all 
+    \(i,j \in \{1,\ldots,n\}\).
     This implies the Poisson brackets \([\tilde{q}_i, \tilde{q}_j]\)
     and \([\tilde{p}_i,\tilde{p}_j]\) are both zero.
     Then, since \(\mathbf{B}\) is orthogonal, 
@@ -292,22 +290,26 @@ orthogonal.
     \(\mathbf{B}B = [\Zmat{(n-k)\times k}; \Id{k}]\), which proves the theorem.
 \end{proof}
 
-These new coordinates are called 
+We call these new coordinates 
 \textit{simply actuated coordinates}.
-The first \((n-k)\) coordinates, labelled \(q_u\), are
+The first \((n-k)\) configuration variables, labelled \(q_u\), are
 the \textit{unactuated coordinates}; 
-the remaining \(k\) coordinates, labelled \(q_a\), are the
+the remaining \(k\) configuration variables, labelled \(q_a\), are the
 \textit{actuated coordinates}.
 The corresponding \((p_u, p_a)\) are the \textit{unactuated} and 
 \textit{actuated momenta}, respectively.
 
 \subsection{Virtual Nonholonomic Constraints}
 
-In this section, we will take the system of inquiry to be a Hamiltonian
+The notion of an enforcable virtual holonomic constraint was first described by
+Griffin and Grizzle in \cite{nhvc_dynamic_walking}.
+Horn et. al later extended their results in
+\cite{hybrid_zero_dynamics_bipedal_nhvcs} and
+derived the dynamics of a constrained system.
+In this section, We will reformulate their work in the Hamiltonian framework
+because the results play nicely with unactuated and actuated momenta.
+For this reason, we take the system of inquiry to be a Hamiltonian
 mechanical system in simply actuated coordinates.
-We wish to find a controller which constraints the system according to a
-function of both the configuration \(q \in \mathcal{Q}\) and the conjugate of
-momentum \(p \in \R^n\).
 
 \begin{defn}\label{defn:vnhc}
     A \textit{virtual nonholonomic constraint} (VNHC) \textit{of order \(k\)} is a
@@ -316,23 +318,20 @@ momentum \(p \in \R^n\).
     \((q,p) \in h\inv(0)\), and there exists a feedback controller \(\tau(q,p)\)
     rendering the \textit{constraint manifold} \(\Gamma\) invariant,
     where
-    \[
+    \begin{equation}
         \Gamma = \left\{(q,p) \mid h(q,p) = 0, dh_q \dot{q} + dh_p \dot{p} = 0\right\}
         .
-    \]
+    \end{equation}
 \end{defn}
 
-The nonholonomic constraint \(h(q,p)\) is called \textit{virtual} because it is
-enforced by the controller \(\tau(q,p)\), rather than being a constraint which
-arises from the physics of the system.
-The constraint manifold \(\Gamma\) is a \(2(n-k)\)-dimensional
+The constraint manifold is a \(2(n-k)\)-dimensional
 closed embedded submanifold of \(\mathcal{Q} \times \R^n\).
-Hence, the VNHC reduces the dimensionality of the dynamics from \(2n\) to
-\(2(n-k)\). 
-In particular, if \(k = (n-1)\), the constraint manifold is always
-2-dimensional. 
+A VNHC thereby allows us to study a reduced-order model of the system: it reduces
+the original \(2n\) differential equations to \(2(n-k)\) equations.
+In particular, if \(k = (n-1)\), the constraint manifold is \textit{always}
+2-dimensional and its dynamics can easily be plotted on a plane. 
 
-We often want to stabilize the constraint within a neighbourhood of \(\Gamma\).
+We often want to stabilize a constraint within some neighbourhood of \(\Gamma\).
 To see when this is possible, let us define the error output \(e = h(q,p)\).
 If any component of \(e_i\) has relative degree 1, we may not be able
 to stabilize \(\Gamma\) -- we can always guarantee \(e_i \to 0\), but not
@@ -345,9 +344,8 @@ It is for this reason that we define the following special type of VNHC.
     constraint manifold \(\Gamma\).
 \end{defn}
 
-
 The authors of
-\cite{nhvc_dynamic_walking,hybrid_zero_dynamics_bipedal_nhvcs,nhvc_incline_walking}
+\cite{nhvc_dynamic_walking,hybrid_zero_dynamics_bipedal_nhvcs}
 observed that relations which use only the unactuated conjugate of momentum
 often have vector relative degree \(\{2,\ldots,2\}\).
 Indeed, we shall now provide a characterization of regularity which shows that
@@ -355,18 +353,19 @@ regular constraints cannot use the actuated momentum at all.
 
 To ease notation in the rest of this section, we use the following shorthand:
 \begin{align}
-    \mathcal{M}(q,p) &:= (\Id{n-k} \otimes p\tpose)\nabla_{q_u}\Minv(q) 
+    \mathcal{A}(q,p_u) &:= dh_q(q,p_u) \Minv(q) 
         ,\\
-    \mathcal{D}(q,p_u) &:= dh_q(q,p_u) \Minv(q) 
+    \mathcal{M}(q,p) &:= (\Id{n-k} \otimes p\tpose)\nabla_{q_u}\Minv(q) 
     .
 \end{align}
 
 \begin{thm}\label{thm:vnhc-regularity}
     A relation \(h(q,p) = 0\) for system ~\eqref{eqn:simple-hamiltonian}
-    is a regular VNHC of order \(k\) if and only if \(dh_{p_a} = 0\) 
+    is a regular VNHC of order \(k\) if and only if 
+    \(dh_{p_a} = \Zmat{k \times k}\) 
     and
     \[
-        \rank{\left(\mathcal{D}(q,p_u) - dh_{p_u}\mathcal{M}(q,p)\right)\simpleB} = k
+        \rank{\left(\mathcal{A}(q,p_u) - dh_{p_u}\mathcal{M}(q,p)\right)\simpleB} = k
          ,
     \]
     everywhere on the constraint manifold \(\Gamma\).
@@ -377,31 +376,21 @@ To ease notation in the rest of this section, we use the following shorthand:
     then \(\tau\) appears in \(\dot{e}\) and the VNHC is not of relative degree
     \(\{2,\ldots,2\}\). Suppose now that \(dh_{p_a} = \Zmat{k\times k}\).
     Then 
-    \[
-        \dot{e} = \mathcal{D}(q,p_u)p - 
-        dh_{p_u}\left(\frac{1}{2}\mathcal{M}(q,p)p + \nabla_{q_u}V(q)\right)
-        .
-    \]
+    \(\dot{e} = \mathcal{A}(q,p_u)p - 
+     dh_{p_u}\left(1/2~\mathcal{M}(q,p)p + \nabla_{q_u}V(q)\right)\).
     Taking one further derivative provides
-    \begin{align*}
-        \ddot{e} 
-            &= (\star) - 
-            dh_{p_u}\left(\frac{1}{2}\diff{}{t}\left(\mathcal{M}(q,p)p\right)\right) 
-                \\
-            &+ \mathcal{D}(q,p_u)\simpleB \tau
-    \end{align*}
+    \( \ddot{e} = (\star) - 
+        dh_{p_u}\left(1/2~d/dt~\left(\mathcal{M}(q,p)p\right)\right) 
+        + \mathcal{A}(q,p_u)[\Zmat{(n-k)\times k};\Id{k}] \tau\),
     where \((\star)\) is a continuous function of \(q\) and \(p\).
-    One can show that
-    \begin{align*}
-        dh_{p_u}\left(\frac{1}{2}\diff{}{t}\left(\mathcal{M}(q,p)p\right)\right)
-        &= (\star) +\\
-        &dh_{p_u} \mathcal{M}(q,p)\simpleB \tau
-        .
-    \end{align*}
+    One can further show that
+    \(dh_{p_u}\left(1/2~d/dt~\left(\mathcal{M}(q,p)p\right)\right)
+        = (\star) + dh_{p_u}\mathcal{M}(q,p)[\Zmat{(n-k)\times k};
+        \Id{k}]\tau\).
     Hence,
     \[
        \ddot{e} = (\star) +
-       \left(\mathcal{D}(q,p_u) - dh_{p_u}\mathcal{M}(q,p)\right) \simpleB \tau
+       \left(\mathcal{A}(q,p_u) - dh_{p_u}\mathcal{M}(q,p)\right) \simpleB \tau
         ,
     \]
     which we write as \( \ddot{e} = E(q,p) + H(q,p)\tau\) for appropriate \(E\)
@@ -449,9 +438,9 @@ The inertia matrix does not depend on the unactuated coordinates, so that
     Then the constrained dynamics are given by
     \begin{equation}\label{eqn:qpu-dynamics}
         \left.\begin{aligned}
-                \dot{q}_u &= \begin{bmatrix}
-                    \Id{(n-k)} & \Zmat{(n-k) \times k}
-                \end{bmatrix}\Minv(q)p \\
+                \dot{q}_u &= 
+                \left[\Id{(n-k)} ~ \Zmat{(n-k) \times k}\right]
+                \Minv(q)p \\
             \dot{p}_u &= -\nabla_{q_u}V(q) \\
             \end{aligned}{}\right|_{\begin{array}{c}
                 q_a = f(q_u,p_u) \\ 
@@ -460,28 +449,24 @@ The inertia matrix does not depend on the unactuated coordinates, so that
             ,
     \end{equation}
     where
-    \begin{equation}\label{eqn:g-qpu}
-    \begin{aligned}
-        &g(q_u,p_u) := \\
-        &\left(\mathcal{D}(q,p_u) \simpleB \right)\inv 
-               \\
-        &\left.\left(dh_{p_u} \nabla_{q_u}V(q) - \mathcal{D}(q,p_u)
-        \begin{bmatrix}
-            I_{n-k} \\
-            \Zmat{k \times (n-k)} \\
-    \end{bmatrix} p_u\right)\right|_{qa = f(q_u,p_u)}
+    \begin{align}\label{eqn:g-qpu}
+        &g(q_u,p_u) := 
+        \left(\mathcal{A}(q,p_u)[\Zmat{(n-k)\times k};\Id{k}] \right)\inv 
+        (dh_{p_u} \nabla_{q_u}V(q) \nonumber
+        \\
+        &- \mathcal{A}(q,p_u)[\Id{(n-k)};\Zmat{k \times(n-k)}]p_u
+        \left.)\right|_{qa = f(q_u,p_u)}
         .
-    \end{aligned}
-    \end{equation}
+    \end{align}
 \end{thm}
 \begin{proof}
     Setting \(e = h(q,p_u)\) and using Assumption
     \ref{assm:inertially-actuated}, we find that
-    \(\dot{e} = \mathcal{D}(q,p_u)p - dh_{p_u}\nabla_{q_u}V(q)\).
+    \(\dot{e} = \mathcal{A}(q,p_u)p - dh_{p_u}\nabla_{q_u}V(q)\).
     Notice that
-    \(\mathcal{D}(q,p_u)p = \mathcal{D}(q,p_u)[\Zmat{(n-k)\times k}; \Id{k}]p_a
-    + \mathcal{D}(q,p_u)[\Id{n-k};\Zmat{k \times (n-k)}] p_u\).
-    Since \(h(q,p_u)\) is regular, \(\mathcal{D}(q,p_u)\) is invertible.
+    \(\mathcal{A}(q,p_u)p = \mathcal{A}(q,p_u)[\Zmat{(n-k)\times k}; \Id{k}]p_a
+    + \mathcal{A}(q,p_u)[\Id{n-k};\Zmat{k \times (n-k)}] p_u\).
+    Since \(h(q,p_u)\) is regular, \(\mathcal{A}(q,p_u)\) is invertible.
     Taking \(e = \dot{e} = 0\), solving for \(p_a\), and setting 
     \(q_a = f(q_u,p_u)\) completes the proof.
 \end{proof}
