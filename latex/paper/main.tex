@@ -489,6 +489,46 @@ only on pu, and show arctan vnhc and reduced dynamics.
 give definition of energy injection/dissipation. conclude with our
 theorem. Make this section short and sweet.
 
+TODO: after writing S2, re-introduce what we want to do with acrobot (energy
+injection for giant stabilization)
+
+For our model of the acrobot, we assume the acrobot iscomprised of two massless
+rods of equal length \(l\), with equal point masses \(m\) at the tips.
+We call this a \textit{simple} acrobot, which is displayed in Figure
+\ref{fig:simple-acrobot-model}.
+We will also ignore any frictional forces at both the hip and shoulder joints. 
+Finally, it is important to note that a real gymnast cannot swing their legs in
+full circles, though they are usually flexible enough to raise them parallel to
+the floor; 
+for this reason, we assume that \(q_a \in [-Q_a, Q_a]\) where 
+\(Q_a \in [\frac{\pi}{2}, \pi[\). 
+
+\begin{figure}
+    \centering
+    %\includegraphics[width=0.5\textwidth]{images/simple_acrobot_model}
+    \caption{A simple acrobot has massless rods of equal length \(l\) and 
+    equal masses \(m\) at the tips.}
+    \label{fig:simple-acrobot-model}
+\end{figure}
+
+This system has inertia matrix 
+\(D\), potential function \(P\) (with respect to
+the horizontal bar), and input matrix \(B\) given as follows:
+\begin{align}\label{eqn:acrobot-inertia}
+    D_s(q) &= \begin{bmatrix}
+        ml^2\left(3+2\cos(q_a)\right) & 
+        ml^2\left(1+\cos(q_a)\right) \\
+        ml^2\left(1+\cos(q_a)\right) &
+        ml^2
+    \end{bmatrix} 
+    , \\
+    \label{eqn:acrobot-potential}
+    P_s(q) &= -mgl\left(2\cos(q_u)+\cos(q_u+q_a)\right)
+    , \\
+    \label{eqn:acrobot-B}
+    B &= [0;1]
+    .
+\end{align}
 %/========== Simulation ==========/%
 \section{Simulation Results}\label{sec:simulations}
 
