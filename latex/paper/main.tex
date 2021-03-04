@@ -99,7 +99,7 @@ define \([A;B] \in \R^{(n+p)\times m}\) as the matrix obtained by stacking \(A\)
 on top of \(B\). 
 For \(T > 0\), the set of real numbers modulo \(T\) is denoted \(\Rt{T}\), with
 \(\Rt{\infty} := \R\).
-The gradient of the matrix-valued function 
+The gradient of a matrix-valued function 
 \(A : \R^m \rightarrow \R^{n\times n}\) is the block matrix of stacked partial
 derivatives, 
 \(\nabla_xA := [\pdiff{A}{x_1};\ldots;\pdiff{A}{x_m}] \in \R^{nm \times n}\).
@@ -137,10 +137,6 @@ as a foundation.
 
 %/========== VNHC ==========/%
 \section{Theory of VNHCs}\label{sec:vnhc}
-TODO: Just like in the thesis, cover the theory of VNHCs. Justify our results compared
-to those of Horn. Make it terse but legible. Cover simply actuated systems,
-vnhcs, regularity, the theorems, etc.
-
 
 \subsection{Simply Actuated Hamiltonian Systems}
 Take a mechanical system modelled with generalized coordinates 
@@ -185,7 +181,8 @@ It is easy to show using the matrix Kronecker product that
 \eqref{eqn:hamiltonian-eom-general} expands to
 \begin{equation}\label{eqn:hamiltonian-full-dynamics}
      \begin{cases}
-        \dot{q} = D\inv(q)p \\
+        \dot{q} = D\inv(q)p 
+        , \\
         \dot{p} = -\frac{1}{2} (\Id{n} \otimes p\tpose) \nabla_q D\inv(q) p
         - \nabla_q P(q) + B(q) \tau
         . \\
@@ -194,7 +191,7 @@ It is easy to show using the matrix Kronecker product that
 
 Because \(\tau\) is transformed by \(B(q)\), it is not obvious how any
 particular input force \(\tau_i\) affects the system.
-To address this problem, we make the following assumptions.
+As a first step in addressing this problem, we make the following assumptions.
 
 \begin{assm}\label{assm:B-const}
     The input matrix \(B(q) \equiv B \in \R^{n\times k}\) is constant,
@@ -245,7 +242,7 @@ assuming that the input matrix is left semi-orthogonal.
 Now, let \(\mathbf{B} := [B^\perp; B\tpose]\).
 Since \(B^\perp\) is a left annihilator of \(B\) and both \(B^\perp\) and
 \(B\tpose\) are right semi-orthogonal, one can easily show that \(\mathbf{B}\) is
-orthogonal.
+an orthogonal matrix.
 
 \begin{thm}\label{thm:simply-actuated}
     Take the Hamiltonian system ~\eqref{eqn:hamiltonian}.
@@ -301,13 +298,13 @@ The corresponding \((p_u, p_a)\) are the \textit{unactuated} and
 
 \subsection{Virtual Nonholonomic Constraints}
 
-The notion of an enforcable virtual holonomic constraint was first described by
-Griffin and Grizzle in \cite{nhvc_dynamic_walking}.
+The notion of a nonholonomic constraint which can be stabilized via state feedback
+was first described by Griffin and Grizzle in \cite{nhvc_dynamic_walking}.
 Horn et. al later extended their results in
 \cite{hybrid_zero_dynamics_bipedal_nhvcs} and
-derived the dynamics of a constrained system.
-In this section, We will reformulate their work in the Hamiltonian framework
-because the results play nicely with unactuated and actuated momenta.
+derived the dynamics of constrained systems.
+In this section we reformulate these ideas for the Hamiltonian framework,
+because the theory is cleaner when using unactuated and actuated momenta.
 For this reason, we take the system of inquiry to be a Hamiltonian
 mechanical system in simply actuated coordinates.
 
@@ -329,7 +326,7 @@ closed embedded submanifold of \(\mathcal{Q} \times \R^n\).
 A VNHC thereby allows us to study a reduced-order model of the system: it reduces
 the original \(2n\) differential equations to \(2(n-k)\) equations.
 In particular, if \(k = (n-1)\), the constraint manifold is \textit{always}
-2-dimensional and its dynamics can easily be plotted on a plane. 
+2-dimensional and its dynamics can be plotted on a plane. 
 
 We often want to stabilize a constraint within some neighbourhood of \(\Gamma\).
 To see when this is possible, let us define the error output \(e = h(q,p)\).
@@ -418,7 +415,7 @@ Intuitively then, the constrained dynamics should be parameterized by \((q_u, p_
 Unfortunately, \(\dot{q}_u\) depends on \(p_a\), and for general systems one
 cannot solve explicitly for \(p_a\) in terms of \((q_u,p_u)\) because
 the \(\dot{p}\) dynamics contains the coupling term 
-\((\Id{n} \otimes p\tpose)\nabla_{q_u}M(q)p\). 
+\((\Id{n} \otimes p\tpose)\nabla_{q}M(q)p\). 
 
 We now introduce an assumption which allows us to solve for \(p_a\) as a
 function of \((q_u,p_u)\), which in turn allows us to find the constrained
@@ -455,7 +452,7 @@ The inertia matrix does not depend on the unactuated coordinates, so that
         (dh_{p_u} \nabla_{q_u}V(q) \nonumber
         \\
         &- \mathcal{A}(q,p_u)[\Id{(n-k)};\Zmat{k \times(n-k)}]p_u
-        \left.)\right|_{qa = f(q_u,p_u)}
+        \left.)\right|_{q_a = f(q_u,p_u)}
         .
     \end{align}
 \end{thm}
@@ -471,24 +468,25 @@ The inertia matrix does not depend on the unactuated coordinates, so that
     \(q_a = f(q_u,p_u)\) completes the proof.
 \end{proof}
 
-\textbf{Comparison with existing literature}: Horn et.al. provide constrained
+\textbf{Comparison with existing literature}: Horn et.al. provide the constrained
 dynamics for VNHCs in \cite{nhvc_incline_walking}.
+Their assumption \textbf{H2} is what we call regularity, and our requirement
+that one can solve for \(q_a = f(q_u,p_u)\) on \(\Gamma\) implies their
+assumption \textbf{H3} holds true.
+The only real distinction between this section and their work
+is that our constrained dynamics are explicit functions of the Hamiltonian phase
+coordinates \((q_u,p_u)\).
 In fact, our constrained dynamics \eqref{eqn:qpu-dynamics} coincide with their
 system (17) when one chooses the special case \(\theta_1 = q_u\) and 
 \(\theta_2 = p_u\).
-Other than this distinction, our assumptions are identical to theirs.
-In particular, their assumption \textbf{H2} is what we call
-regularity.
-The only real distinction is that our constrained dynamics
-are explicit functions of the Hamiltonian phase coordinates
-\((q_u,p_u)\).
-This representation will be beneficial when we apply the theory of VNHCs to the
-acrobot.
+This explicit representation will be beneficial when we apply the theory of
+VNHCs to the acrobot.
 
 %/========== Acrobot ==========/%
 \section{The Acrobot VNHC}\label{sec:acrobot}
 specialize the theory of VNHCs to the acrobot. consider constraints which depend
-only on pu, and show arctan vnhc and reduced dynamics. conclude with our
+only on pu, and show arctan vnhc and reduced dynamics. 
+give definition of energy injection/dissipation. conclude with our
 theorem. Make this section short and sweet.
 
 %/========== Simulation ==========/%
