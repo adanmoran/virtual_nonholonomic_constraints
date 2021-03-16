@@ -28,7 +28,7 @@
 
 %---------- Theorems ----------%
 \newtheorem{thm}{Theorem}% Uncomment: reset numbering at each chapter
-%\newtheorem{prop}[thm]{Proposition} % Propositions depend on Theorem number
+\newtheorem{prop}[thm]{Proposition} % Propositions depend on Theorem number
 \newtheorem{lemma}[thm]{Lemma} % Same with lemmas
 \newtheorem{defn}[thm]{Definition} % Definitions depend on theorem number
 \newtheorem{assm}{Assumption} % Assumptions do not reset 
@@ -126,14 +126,108 @@ otherwise.
 
 %/========== Problem Formulation ==========/%
 \section{Problem Formulation}\label{sec:problem-formulation}
-TODO: motivate injection/dissipation for energy regulation in an acrobot. Use
-this to lead into VNHCs. e.g. represent torso as chain of a swing, pivot as
-seat, and legs as human legs. Replicate fig3.3 from thesis but for acrobot: take
-(qu,pu)-plane and show how a person moves their legs wrt theta, qu, or pu. Leave
-the gymnast model until the end, or ignore it entirely.
+%TODO: motivate injection/dissipation for energy regulation in an acrobot. Use
+%this to lead into VNHCs. e.g. represent torso as chain of a swing, pivot as
+%seat, and legs as human legs. Replicate fig3.3 from thesis but for acrobot: take
+%(qu,pu)-plane and show how a person moves their legs wrt theta, qu, or pu. Leave
+%the gymnast model until the end, or ignore it entirely.
+%
+%Alternatively, ff human movement journal says legs move wrt qu, we can use that
+%as a foundation.
+%Ideas: Human movement says appropriate regulation of pendulum allows energy to
+%be pumped into system. Pendulum length rapidly increased on downward swing, then
+%rapidly decreased on upward swing (I think these mean backward and forward).
+%They plot pendulum length rdot/r vs "body angle" theta to determine energy
+%injection, which hints at some relationship between (r,rdot) and (theta,thetad).
+%Indeed, the peak value of rdot/r did not occur at a fixed value of theta, nor
+%once anyone reached a particular speed; it occured at the same thetadot/theta for all
+%participants of the study. This perfectly motivates VNHCs for robots, because we
+%can shape (r,rtdot) as functions of (theta,thetad).
+%Start motivation from energy injection - how do humans inject energy? How does
+%acrobot model gymnast? use human movement to motivate tracking functions of both
+%position and velocity rather than time.
 
-Alternatively, ff human movement journal says legs move wrt qu, we can use that
-as a foundation.
+In gymnastics terminology, a ``giant" is the motion a gymnast performs to
+achieve full rotations around a horizontal bar \cite{usagym_giant}. 
+A gymnast will begin (at rest) by hanging on a bar, then swing their legs
+appropriately to gain energy over time.
+The authors of \cite{pendulum_length_giant_gymnastics} modelled the gymnast as a
+variable length pendulum, and studied how the pendulum's length changes as a
+function of the orientation of a gymnast's joints.
+Labeling the pendulum length by \(r\) and the gymnast's body orientation
+by \(\theta\), they discovered experimentally that the value \(\dot{r}/r\) has
+the highest impact on the magintude of energy injection; they also discovered
+that the peak value of \(\dot{r}/r\) occured at the same value of
+\(\dot{\theta}/\theta\) for all gymnasts.
+In other words, gymnasts were moving their legs as a function of their body's
+angle and their angular velocity around the bar, not as functions of time.
+
+Typically as control theorists we like our system's actuatiors to track a fixed
+trajectory over time; but if we were attempting design a gymnastics robot that
+could replicate human behaviour, the results of
+\cite{pendulum_length_giant_gymnastics} indicate that we should not use this
+standard approach.
+Instead, we should have our robot's legs follow a function of its
+body angle and angular velocity.
+That is exactly what we set out to do in this article.
+
+The simplest way to model the gymnast is as a variable-length pendulum, but a
+more realistic model is that of a two-link acrobot (Figure \ref{fig:acrobot}).
+The acrobot's first link represents the gymnast's torso, the bottom link represents
+their legs, and it is actuated at the center joint (the hips).
+
+\begin{figure}
+    \centering
+    %\includegraphics[width=\textwidth]{images/acrobot.png}
+    \caption{The two-link acrobot.}
+    \label{fig:acrobot}
+\end{figure}
+
+In this article, our goal is to design a leg controller for the acrobot so that
+the resulting motion mimics that of a human performing a giant.
+Previous approaches to solve this problem used
+trajectory tracking, set-point tracking, or energy
+pumping regulation (see
+\cite{energy_pumping_robotic_swinging,swingup_giant_acrobot,dynamical_servo_acrobot_vc,control_giant_two_link_gymnastic_robot}
+).
+While they all result in the acrobot performing rotations on the bar, none of
+the are particularly human-like.
+The most realistic controller to date was designed by Wang \cite{xingbo_thesis}; it
+forces the hips to track a function of the torso angle.
+However, a truly human-like controller would force
+the hips to track a function involving the torso velocity.
+These kinds of controllers are known as ``virtual nonholonomic constraints", and
+they have been used for human-robot interaction
+\cite{vnhc_human_robot_cooperation,psd_based_vnhc_redundant_manipulator,haptic_vnhc},
+error-reduction on time-delayed systems \cite{vnhc_time_delay_teleop},
+and they have shown marked improvements to the field of bipedal locomotion 
+\cite{nhvc_dynamic_walking,
+hybrid_zero_dynamics_bipedal_nhvcs,output_nhvc_bipedal_control}.
+Indeed, virtual nonholonomic constraints produce more robust bipedal motion than
+controllers which do not depend on velocity \cite{nhvc_incline_walking}.
+In particular, virtual nonholonomic constraints may be capable of injecting and
+dissipating energy from a system in a robust manner, all while producing
+realistic biological motion. 
+Hence, we will design one of these to achieve stable giant motion on the
+acrobot.
+
+Here then is the problem we will solve: design a virtual nonholonomic constraint
+for the acrobot, so that the acrobot provably gains energy over time
+(as per Definition \ref{defn:energy-gain}).
+
+\begin{defn}\label{defn:energy-gain}
+    Let \(\mathcal{Q}\) be an
+    \(n\)-dimensional generalized cylinder.
+    Let \(f : \mathcal{Q} \rightarrow \mathcal{Q}\times\R^n\) be a smoth vector
+    field and let \(D \subset M\) be open.
+    The system described by \(\dot{x} = f(x)\) 
+    \textit{gains energy on \(D\)} if, 
+    for all compact sets \(K \subset D\) and for almost every initial
+    condition \(x(0) \in K\), there exists \(T > 0\) such
+    that \(x(t) \notin K \, (\forall t > T)\).
+    The system \textit{loses energy on \(D\)} if it gains energy in
+    negative-time.
+\end{defn}
 
 %/========== VNHC ==========/%
 \section{Theory of VNHCs}\label{sec:vnhc}
@@ -512,10 +606,10 @@ for this reason, we assume that \(q_a \in [-Q_a, Q_a]\) where
 \end{figure}
 
 This system has inertia matrix 
-\(D\), potential function \(P\) (with respect to
+\(M\), potential function \(V\) (with respect to
 the horizontal bar), and input matrix \(B\) given as follows:
 \begin{align}\label{eqn:acrobot-inertia}
-    D_s(q) &= \begin{bmatrix}
+    M(q) &= \begin{bmatrix}
         ml^2\left(3+2\cos(q_a)\right) & 
         ml^2\left(1+\cos(q_a)\right) \\
         ml^2\left(1+\cos(q_a)\right) &
@@ -523,12 +617,55 @@ the horizontal bar), and input matrix \(B\) given as follows:
     \end{bmatrix} 
     , \\
     \label{eqn:acrobot-potential}
-    P_s(q) &= -mgl\left(2\cos(q_u)+\cos(q_u+q_a)\right)
+    V(q) &= -mgl\left(2\cos(q_u)+\cos(q_u+q_a)\right)
     , \\
     \label{eqn:acrobot-B}
     B &= [0;1]
     .
 \end{align}
+The conjugate of momenta is \(p = (p_u,p_a) = M(q)\dot{q}\).
+The dynamics of the acrobot in \((q,p)\) coordinates are given in
+~\eqref{eqn:acrobot-hamiltonian}, where
+for shorthand, we write \(c_u := \cos(q_u)\), \(c_a := \cos(q_a)\), and 
+\(c_{ua} := \cos(q_u + q_a)\); likewise, \(s_u := \sin(q_u)\), 
+\(s_a := \sin(q_a)\), and \(s_{ua} := \sin(q_u + q_a)\).
+\begin{align}\label{eqn:acrobot-hamiltonian}
+    \mathcal{H}(q,p) &= \frac{1}{2}p\tpose \Minv(q) p -
+    mgl\left(2 c_u + c_{ua}\right)
+    , \\
+     &\begin{cases}
+        \dot{q} = \Minv(q) p 
+        ,\\
+        \dot{p}_u = -mgl\left(2s_u + s_{ua}\right) 
+        ,\\
+        \dot{p}_a =-\frac{1}{2}p\tpose \nabla_{q_a}\Minv(q) p
+        - mgl s_{ua} + \tau,
+    \end{cases} \nonumber
+\end{align}
+The control input is a force \(\tau \in \R\) affecting only the dynamics of
+\(p_a\), representing a torque acting on the hip joint.
+This means \((q,p)\) are simply actuated coordinates inside the phase space
+\(\mathcal{Q} \times \mathcal{P}\) where
+\(\mathcal{Q} = \mathcal{Q}_u \times \mathcal{Q}_a 
+:= \Sone \times \Sone\), and
+\(\mathcal{P} = \mathcal{P}_u \times \mathcal{P}_a
+:= \R \times \R\).
+Hence, we can apply the theory of VNHCs from Section \ref{sec:vnhc} to design an
+energy-injecting controller.
+Since we need our VNHC to be regular, the following proposition will prove
+useful.
+\begin{prop}\label{prop:acrobot-fpu-regular}
+    A relation \(h(q,p) = q_a - f(p_u) = 0\) 
+    with \(f \in C^2\left(\mathcal{P}_u; \mathcal{Q}_a\right)\) is a regular
+    VNHC of order 1 for the simple acrobot.
+\end{prop}
+\begin{proof}
+    The regularity matrix for this VNHC evaluates to
+    \(\frac{(1+c_a)\partial_{q_u}f(q_u,p_u) + (3+2c_a)}{ml^2(2-c_a^2)}\).
+    Since \(\partial_{q_u} f = 0\), this matrix is strictly positive for all values
+    of \(q_a\), and hence is full rank everywhere on the constraint manifold.
+\end{proof}
+
 %/========== Simulation ==========/%
 \section{Simulation Results}\label{sec:simulations}
 
