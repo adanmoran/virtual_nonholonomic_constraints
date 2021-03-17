@@ -216,8 +216,8 @@ The following is a rigorous definition of ``energy gain".
 
 \begin{defn}\label{defn:energy-gain}
     Let \(\mathcal{Q}\) be an
-    \(n\)-dimensional generalized cylinder.
-    Let \(f : \mathcal{Q} \rightarrow \mathcal{Q}\times\R^n\) be a smoth vector
+    \(n\)-dimensional smooth manifold.
+    Let \(f : \mathcal{Q} \rightarrow \mathcal{Q}\times\R^n\) be a smooth vector
     field and let \(D \subset M\) be open.
     The system described by \(\dot{x} = f(x)\) 
     \textit{gains energy on \(D\)} if, 
@@ -403,7 +403,7 @@ For this reason, we take the system of inquiry to be a Hamiltonian
 mechanical system in simply actuated coordinates, as in
 \eqref{eqn:simple-hamiltonian}.
 For simplicity of notation, we relabel \((\tilde{q},\tilde{p})\) as \((q,p)\),
-where we now have \((q,p) = (q_u,q_a,p_u,p_a)\).
+where we now have \((q,p) = (q_u,q_a,p_u,p_a) \in \mathcal{Q}\times \R^n\).
 
 \begin{defn}\label{defn:vnhc}
     A \textit{virtual nonholonomic constraint} (VNHC) \textit{of order \(k\)} is a
@@ -581,15 +581,15 @@ VNHCs to the acrobot.
 
 %/========== Acrobot ==========/%
 \section{The Acrobot VNHC}\label{sec:acrobot}
-specialize the theory of VNHCs to the acrobot. consider constraints which depend
-only on pu, and show arctan vnhc and reduced dynamics. 
-give definition of energy injection/dissipation. conclude with our
-theorem. Make this section short and sweet.
+%specialize the theory of VNHCs to the acrobot. consider constraints which depend
+%only on pu, and show arctan vnhc and reduced dynamics. 
+%give definition of energy injection/dissipation. conclude with our
+%theorem. Make this section short and sweet.
+%
+%TODO: after writing S2, re-introduce what we want to do with acrobot (energy
+%injection for giant stabilization)
 
-TODO: after writing S2, re-introduce what we want to do with acrobot (energy
-injection for giant stabilization)
-
-For our model of the acrobot, we assume the acrobot iscomprised of two massless
+For our model of the acrobot, we assume the acrobot is comprised of two massless
 rods of equal length \(l\), with equal point masses \(m\) at the tips.
 We call this a \textit{simple} acrobot, which is displayed in Figure
 \ref{fig:simple-acrobot-model}.
