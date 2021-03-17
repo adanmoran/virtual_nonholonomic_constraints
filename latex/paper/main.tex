@@ -159,27 +159,21 @@ variable length pendulum, and studied how the pendulum's length changes as a
 function of the orientation of a gymnast's joints.
 Labeling the pendulum length by \(r\) and the gymnast's body orientation
 by \(\theta\), they discovered experimentally that the value \(\dot{r}/r\) has
-the highest impact on the magintude of energy injection; they also discovered
-that the peak value of \(\dot{r}/r\) occured at the same value of
-\(\dot{\theta}/\theta\) for all gymnasts.
+the highest impact on the magintude of energy injection. 
+After testing several gymnasts under a variety of experimental conditions, 
+they discovered that the peak value of \(\dot{r}/r\) occured at the same fixed
+value of \(\dot{\theta}/\theta\) for all gymnasts.
 In other words, gymnasts appear to move their legs as a function of their body
-angle and velocity; this is the mechanism by which they gain enough energy to
-rotate around the bar.
+angle and velocity when performing giants, not as functions of time. 
+Doing so allows them to gain energy and rotate around the bar.
 
-Control theorists typically want a system's actuators to track a fixed
-trajectory over time. 
-If we were attempting design a gymnastics robot which
-could replicate human behaviour, the results of
-\cite{pendulum_length_giant_gymnastics} indicate that we should not use this
-standard approach.
-Instead, we should have our robot's legs follow a function of its
-body angle and angular velocity.
-That is exactly what we set out to do in this article.
-
-The simplest way to model the gymnast is as a variable-length pendulum, but a
+The simplest way to model a gymnast is as a variable-length pendulum, but a
 more realistic model is that of a two-link acrobot (Figure \ref{fig:acrobot}).
 The acrobot's first link represents the gymnast's torso, the bottom link represents
 their legs, and it is actuated at the center joint (the hips).
+In this article, our goal is to design a leg controller which provably injects
+energy into the acrobot, so that the resulting motion mimics that of a human
+performing a giant.
 
 \begin{figure}
     \centering
@@ -189,21 +183,19 @@ their legs, and it is actuated at the center joint (the hips).
     \label{fig:acrobot}
 \end{figure}
 
-In this article, our goal is to design a leg controller for the acrobot so that
-the resulting motion mimics that of a human performing a giant.
 Previous attempts at solving this problem have involved
-trajectory tracking, set-point tracking, or energy
-pumping regulation (see
+trajectory tracking, or other feedback methods to stabilize
+certain energy levels (see
 \cite{energy_pumping_robotic_swinging,swingup_giant_acrobot,dynamical_servo_acrobot_vc,control_giant_two_link_gymnastic_robot}
 ).
-While these approaches all result in the acrobot performing rotations on the
-bar, none of the are particularly human-like.
-Wang designed a controller which
-forces the hips to track a function of the torso angle using virtual holonomic
-constraints \cite{xingbo_thesis};
-however, truly human-like hip motion would also take into account the torso velocity.
-This style of control action is captured by the method of virtual nonholonomic
-constraints.
+While all these approaches result in the acrobot rotating around the
+bar, none of them are particularly human-like.
+After all, the results of \cite{pendulum_length_giant_gymnastics} indicate that
+a robot's legs should track a function of its body angle and velocity.
+In 2016, Wang attempted to design a controller with this in mind \cite{xingbo_thesis}
+but was unable to prove the acrobot would gain energy over time.
+His approach was a rudimentary version of a recent technique know as the method
+of virtual nonholonomic constraint.
 
 Virtual nonholonomic constraints (VNHCs) have been used for human-robot interaction
 \cite{vnhc_human_robot_cooperation,psd_based_vnhc_redundant_manipulator,haptic_vnhc},
@@ -217,10 +209,10 @@ In particular, VNHCs may be capable of injecting and
 dissipating energy from a system in a robust manner, all while producing
 realistic biological motion. 
 
-Here then is the problem we will solve: design a virtual nonholonomic constraint
-so that the acrobot performs giant-like motion.
-We will rigorously prove the acrobot ``gains energy" according to the following
-definition.
+Here then is the problem we will solve in this article: design a virtual
+nonholonomic constraint so that the acrobot provably gains energy while
+performing giant-like motion.
+The following is a rigorous definition of ``energy gain".
 
 \begin{defn}\label{defn:energy-gain}
     Let \(\mathcal{Q}\) be an
@@ -236,7 +228,7 @@ definition.
     negative-time.
 \end{defn}
 
-Before embarking on this design problem, let us summarize the relevant theory of
+Before embarking on our design problem, let us summarize the relevant theory of
 VNHCs.
 
 %/========== VNHC ==========/%
@@ -473,7 +465,6 @@ To ease notation in the rest of this section, we use the following shorthand:
     everywhere on the constraint manifold \(\Gamma\).
 \end{thm}
 \begin{proof}
-    \textbf{TODO: should we make this a ``proof sketch"?}
     Let \(e = h(q,p) \in \R^k\).
     If \(dh_{p_a} \neq \Zmat{k\times k}\) for some \((q,p) \in \Gamma\), 
     then \(\tau\) appears in \(\dot{e}\) and the VNHC is not of relative degree
