@@ -93,9 +93,12 @@ TODO: keywords in alphabetical order, separated by commas.
 \IEEEPARstart{T}ODO: intro.
 
 \subsection{Notation}
-We use the following notation in this article.
+We use the following notation and terminology in this article.
+A matrix \(A \in \R^{n \times m}\) is \textit{right semi-orthogonal} if
+\(A A\tpose = \Id{m}\) and is \textit{left semi-orthogonal} if 
+\(A\tpose A = \Id{n}\).
 For \(A \in \R^{n\times m}\) and \(B \in \R^{p \times m}\),
-define \([A;B] \in \R^{(n+p)\times m}\) as the matrix obtained by stacking \(A\)
+we define \([A;B] \in \R^{(n+p)\times m}\) as the matrix obtained by stacking \(A\)
 on top of \(B\). 
 For \(T > 0\), the set of real numbers modulo \(T\) is denoted \(\Rt{T}\), with
 \(\Rt{\infty} := \R\).
@@ -149,7 +152,7 @@ otherwise.
 
 In gymnastics terminology, a ``giant" is the motion a gymnast performs to
 achieve full rotations around a horizontal bar \cite{usagym_giant}. 
-A gymnast will begin (at rest) by hanging on a bar, then swing their legs
+A gymnast will begin by hanging at rest, then swing their legs
 appropriately to gain energy over time.
 The authors of \cite{pendulum_length_giant_gymnastics} modelled the gymnast as a
 variable length pendulum, and studied how the pendulum's length changes as a
@@ -159,11 +162,13 @@ by \(\theta\), they discovered experimentally that the value \(\dot{r}/r\) has
 the highest impact on the magintude of energy injection; they also discovered
 that the peak value of \(\dot{r}/r\) occured at the same value of
 \(\dot{\theta}/\theta\) for all gymnasts.
-In other words, gymnasts were moving their legs as a function of their body's
-angle and their angular velocity around the bar, not as functions of time.
+In other words, gymnasts appear to move their legs as a function of their body
+angle and velocity; this is the mechanism by which they gain enough energy to
+rotate around the bar.
 
-Typically as control theorists we like our system's actuatiors to track a fixed
-trajectory over time; but if we were attempting design a gymnastics robot that
+Control theorists typically want a system's actuators to track a fixed
+trajectory over time. 
+If we were attempting design a gymnastics robot which
 could replicate human behaviour, the results of
 \cite{pendulum_length_giant_gymnastics} indicate that we should not use this
 standard approach.
@@ -178,42 +183,44 @@ their legs, and it is actuated at the center joint (the hips).
 
 \begin{figure}
     \centering
-    %\includegraphics[width=\textwidth]{images/acrobot.png}
-    \caption{The two-link acrobot.}
+    \includegraphics[width=\linewidth]{acrobot_gymnast.png}
+    \caption{The two-link acrobot as a model for a gymnast.
+    Image modified from \cite{xingbo_thesis}.}
     \label{fig:acrobot}
 \end{figure}
 
 In this article, our goal is to design a leg controller for the acrobot so that
 the resulting motion mimics that of a human performing a giant.
-Previous approaches to solve this problem used
+Previous attempts at solving this problem have involved
 trajectory tracking, set-point tracking, or energy
 pumping regulation (see
 \cite{energy_pumping_robotic_swinging,swingup_giant_acrobot,dynamical_servo_acrobot_vc,control_giant_two_link_gymnastic_robot}
 ).
-While they all result in the acrobot performing rotations on the bar, none of
-the are particularly human-like.
-The most realistic controller to date was designed by Wang \cite{xingbo_thesis}; it
-forces the hips to track a function of the torso angle.
-However, a truly human-like controller would force
-the hips to track a function involving the torso velocity.
-These kinds of controllers are known as ``virtual nonholonomic constraints", and
-they have been used for human-robot interaction
+While these approaches all result in the acrobot performing rotations on the
+bar, none of the are particularly human-like.
+Wang designed a controller which
+forces the hips to track a function of the torso angle using virtual holonomic
+constraints \cite{xingbo_thesis};
+however, truly human-like hip motion would also take into account the torso velocity.
+This style of control action is captured by the method of virtual nonholonomic
+constraints.
+
+Virtual nonholonomic constraints (VNHCs) have been used for human-robot interaction
 \cite{vnhc_human_robot_cooperation,psd_based_vnhc_redundant_manipulator,haptic_vnhc},
 error-reduction on time-delayed systems \cite{vnhc_time_delay_teleop},
 and they have shown marked improvements to the field of bipedal locomotion 
 \cite{nhvc_dynamic_walking,
 hybrid_zero_dynamics_bipedal_nhvcs,output_nhvc_bipedal_control}.
-Indeed, virtual nonholonomic constraints produce more robust bipedal motion than
+Indeed, they produce more robust bipedal motion than
 controllers which do not depend on velocity \cite{nhvc_incline_walking}.
-In particular, virtual nonholonomic constraints may be capable of injecting and
+In particular, VNHCs may be capable of injecting and
 dissipating energy from a system in a robust manner, all while producing
 realistic biological motion. 
-Hence, we will design one of these to achieve stable giant motion on the
-acrobot.
 
 Here then is the problem we will solve: design a virtual nonholonomic constraint
-for the acrobot, so that the acrobot provably gains energy over time
-(as per Definition \ref{defn:energy-gain}).
+so that the acrobot performs giant-like motion.
+We will rigorously prove the acrobot ``gains energy" according to the following
+definition.
 
 \begin{defn}\label{defn:energy-gain}
     Let \(\mathcal{Q}\) be an
@@ -228,6 +235,9 @@ for the acrobot, so that the acrobot provably gains energy over time
     The system \textit{loses energy on \(D\)} if it gains energy in
     negative-time.
 \end{defn}
+
+Before embarking on this design problem, let us summarize the relevant theory of
+VNHCs.
 
 %/========== VNHC ==========/%
 \section{Theory of VNHCs}\label{sec:vnhc}
@@ -300,9 +310,8 @@ As a first step in addressing this problem, we make the following assumptions.
 
 Note that Assumption \ref{assm:B-perp} requires the rows of \(B^\perp\) be unit vectors
 that are mutually orthogonal. 
-In the case that \(k = (n-1)\), the existence of any left annihilator 
-\(A^0 \in \R^{1\times n}\) implies the left annihilator 
-\(B^\perp := A^0/\norm{A^0}\) will be a unit vector satisfying this assumption.
+When \(k = (n-1)\), Assumption \ref{assm:B-perp} can be removed because it is
+automatically implied by Assumption \ref{assm:B-const}.
 
 The above assumptions allow us to define a
 canonical coordinate transformation of ~\eqref{eqn:hamiltonian} 
@@ -339,12 +348,11 @@ Since \(B^\perp\) is a left annihilator of \(B\) and both \(B^\perp\) and
 an orthogonal matrix.
 
 \begin{thm}\label{thm:simply-actuated}
-    Take the Hamiltonian system ~\eqref{eqn:hamiltonian}.
-    Under Assumptions \ref{assm:B-const} and \ref{assm:B-perp},
-    the coordinate transformation
+    Take the Hamiltonian system ~\eqref{eqn:hamiltonian} and suppose
+    Assumptions \ref{assm:B-const} and \ref{assm:B-perp} hold.
+    The coordinate transformation
     \(\left(\tilde{q} = \mathbf{B}q, \tilde{p} = \mathbf{B}p\right)\)
-    is a canonical transformation.
-    The resulting dynamics are given by 
+    is a canonical transformation and the resulting dynamics are given by 
     \begin{gather}\label{eqn:simple-hamiltonian}
         \mathcal{H}(\tilde{q},\tilde{p}) = 
         \frac{1}{2} \tilde{p}\tpose \Minv(\tilde{q}) \tilde{p} + V(\tilde{q})
@@ -381,14 +389,14 @@ an orthogonal matrix.
     \(\mathbf{B}B = [\Zmat{(n-k)\times k}; \Id{k}]\), which proves the theorem.
 \end{proof}
 
-We call these new coordinates 
+We call the \((\tilde{q},\tilde{p})\) coordinates
 \textit{simply actuated coordinates}.
-The first \((n-k)\) configuration variables, labelled \(q_u\), are
-the \textit{unactuated coordinates}; 
+The first \((n-k)\) configuration variables in \(\tilde{q}\), labelled \(q_u\),
+are the \textit{unactuated coordinates}; 
 the remaining \(k\) configuration variables, labelled \(q_a\), are the
 \textit{actuated coordinates}.
-The corresponding \((p_u, p_a)\) are the \textit{unactuated} and 
-\textit{actuated momenta}, respectively.
+The corresponding \((p_u, p_a)\) in \(\tilde{p}\) are the \textit{unactuated}
+and \textit{actuated momenta}, respectively.
 
 \subsection{Virtual Nonholonomic Constraints}
 
@@ -400,7 +408,10 @@ derived the dynamics of constrained systems.
 In this section we reformulate these ideas for the Hamiltonian framework,
 because the theory is cleaner when using unactuated and actuated momenta.
 For this reason, we take the system of inquiry to be a Hamiltonian
-mechanical system in simply actuated coordinates.
+mechanical system in simply actuated coordinates, as in
+\eqref{eqn:simple-hamiltonian}.
+For simplicity of notation, we relabel \((\tilde{q},\tilde{p})\) as \((q,p)\),
+where we now have \((q,p) = (q_u,q_a,p_u,p_a)\).
 
 \begin{defn}\label{defn:vnhc}
     A \textit{virtual nonholonomic constraint} (VNHC) \textit{of order \(k\)} is a
@@ -462,6 +473,7 @@ To ease notation in the rest of this section, we use the following shorthand:
     everywhere on the constraint manifold \(\Gamma\).
 \end{thm}
 \begin{proof}
+    \textbf{TODO: should we make this a ``proof sketch"?}
     Let \(e = h(q,p) \in \R^k\).
     If \(dh_{p_a} \neq \Zmat{k\times k}\) for some \((q,p) \in \Gamma\), 
     then \(\tau\) appears in \(\dot{e}\) and the VNHC is not of relative degree
