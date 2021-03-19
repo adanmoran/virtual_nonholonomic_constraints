@@ -554,6 +554,34 @@ The inertia matrix does not depend on the unactuated coordinates, so that
     \(q_a = f(q_u,p_u)\) completes the proof.
 \end{proof}
 
+We conclude this section by formalizing the notion of energy injection for
+VNHCs.
+
+\begin{defn}\label{defn:energy-gain}
+    Let \(\mathcal{Q}\) be an
+    \(n\)-dimensional smooth manifold.
+    Let \(f : \mathcal{Q} \rightarrow \mathcal{Q}\times\R^n\) be a smooth vector
+    field and let \(D \subset M\) be open.
+    The system described by \(\dot{x} = f(x)\) 
+    \textit{gains energy on \(D\)} if, 
+    for all compact sets \(K \subset D\) and for almost every initial
+    condition \(x(0) \in K\), there exists \(T > 0\) such
+    that \(x(t) \notin K \, (\forall t > T)\).
+    The system \textit{loses energy on \(D\)} if it gains energy in
+    negative-time.
+\end{defn}
+
+Any system satisfying Definition \ref{defn:energy-gain}
+can have unstable equilibria on \(D\), but not limit cycles nor closed orbits.
+The next definition ties this notion of energy gain to VNHCs.
+
+\begin{defn}\label{defn:energy-injection}
+    A regular VNHC \(h(q, p) = 0\) with constraint manifold \(\Gamma\)
+    \textit{injects (dissipates) energy on \(D \subset \Gamma\)} if the
+    constrained dynamics gain (lose) energy everywhere on \(D\), except possibly
+    on a set of measure zero.
+\end{defn}
+
 \textbf{Comparison with existing literature}: Horn et.al. provide the constrained
 dynamics for VNHCs in \cite{nhvc_incline_walking}.
 Their assumption \textbf{H2} is what we call regularity, and our requirement
@@ -589,7 +617,7 @@ We also ignore any frictional forces at both the hip and shoulder joints.
 
 \begin{figure}
     \centering
-    %\includegraphics[width=0.5\textwidth]{images/simple_acrobot_model}
+    \includegraphics[width=0.7\linewidth]{simple_acrobot_model.pdf}
     \caption{A simple acrobot has massless rods of equal length \(l\) and 
     equal masses \(m\) at the tips.}
     \label{fig:simple-acrobot-model}
@@ -655,23 +683,6 @@ useful.
     Since \(\partial_{q_u} f = 0\), this matrix is strictly positive for all values
     of \(q_a\), and hence is full rank everywhere on the constraint manifold.
 \end{proof}
-
-
-
-\textbf{TODO: Where does this go?}
-\begin{defn}\label{defn:energy-gain}
-    Let \(\mathcal{Q}\) be an
-    \(n\)-dimensional smooth manifold.
-    Let \(f : \mathcal{Q} \rightarrow \mathcal{Q}\times\R^n\) be a smooth vector
-    field and let \(D \subset M\) be open.
-    The system described by \(\dot{x} = f(x)\) 
-    \textit{gains energy on \(D\)} if, 
-    for all compact sets \(K \subset D\) and for almost every initial
-    condition \(x(0) \in K\), there exists \(T > 0\) such
-    that \(x(t) \notin K \, (\forall t > T)\).
-    The system \textit{loses energy on \(D\)} if it gains energy in
-    negative-time.
-\end{defn}
 
 
 %/========== Simulation ==========/%
