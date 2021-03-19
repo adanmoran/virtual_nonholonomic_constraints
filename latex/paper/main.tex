@@ -95,8 +95,8 @@ TODO: keywords in alphabetical order, separated by commas.
 \subsection{Notation}
 We use the following notation and terminology in this article.
 A matrix \(A \in \R^{n \times m}\) is \textit{right semi-orthogonal} if
-\(A A\tpose = \Id{m}\) and is \textit{left semi-orthogonal} if 
-\(A\tpose A = \Id{n}\).
+\(A A\tpose = \Id{n}\) and is \textit{left semi-orthogonal} if 
+\(A\tpose A = \Id{m}\).
 For \(A \in \R^{n\times m}\) and \(B \in \R^{p \times m}\),
 we define \([A;B] \in \R^{(n+p)\times m}\) as the matrix obtained by stacking \(A\)
 on top of \(B\). 
@@ -156,24 +156,27 @@ A gymnast will begin by hanging at rest, then swing their legs
 appropriately to gain energy over time.
 The authors of \cite{pendulum_length_giant_gymnastics} modelled the gymnast as a
 variable length pendulum, and studied how the pendulum's length changes as a
-function of the orientation of a gymnast's joints.
+function of the gymnast's limb angle.
 Labeling the pendulum length by \(r\) and the gymnast's body orientation
-by \(\theta\), they discovered experimentally that the value \(\dot{r}/r\) has
+by \(\theta\), they observed experimentally that the value \(\dot{r}/r\) has
 the highest impact on the magintude of energy injection. 
 After testing several gymnasts under a variety of experimental conditions, 
 they discovered that the peak value of \(\dot{r}/r\) occured at the same fixed
 value of \(\dot{\theta}/\theta\) for all gymnasts.
 In other words, gymnasts appear to move their legs as a function of their body
-angle and velocity when performing giants, not as functions of time. 
-Doing so allows them to gain energy and rotate around the bar.
+angle and velocity when performing giants; 
+doing so allows them to gain energy and rotate around the bar.
 
-The simplest way to model a gymnast is as a variable-length pendulum, but a
-more realistic model is that of a two-link acrobot (Figure \ref{fig:acrobot}).
-The acrobot's first link represents the gymnast's torso, the bottom link represents
-their legs, and it is actuated at the center joint (the hips).
-In this article, our goal is to design a leg controller which provably injects
-energy into the acrobot, so that the resulting motion mimics that of a human
-performing a giant.
+While the simplest model of a gymnast is the variable-length pendulum, a
+more realistic model is the two-link acrobot (Figure \ref{fig:acrobot}).
+Here, the top link represents the torso, while the bottom link represents
+the legs. 
+The acrobot is actuated exclusively at the center joint (the hips)
+Controlling the acrobot is a nontrivial task because it is not feedback
+linearizable \cite{nonlinear_controllers_nonintegrable_acrobot}. 
+To solve the swingup problem, one might begin by designing a leg controller
+which provably injects energy into the acrobot, so that the resulting motion
+mimics that of a human performing a giant.
 
 \begin{figure}
     \centering
@@ -183,19 +186,20 @@ performing a giant.
     \label{fig:acrobot}
 \end{figure}
 
-Previous attempts at solving this problem have involved
-trajectory tracking, or other feedback methods to stabilize
-certain energy levels (see
+Previous attempts at acrobot giant generation have involved
+trajectory tracking, partial feedback linearization, or other energy-based
+methods
+( see
 \cite{energy_pumping_robotic_swinging,swingup_giant_acrobot,dynamical_servo_acrobot_vc,control_giant_two_link_gymnastic_robot}
 ).
-While all these approaches result in the acrobot rotating around the
-bar, none of them are particularly human-like.
-After all, the results of \cite{pendulum_length_giant_gymnastics} indicate that
-a robot's legs should track a function of its body angle and velocity.
+While all these approaches succeed at making the acrobot rotate around the
+bar, none of them use the results of \cite{pendulum_length_giant_gymnastics}.
+That is, none of these leg controllers track a function of the acrobot's body
+angle and velocity.
 In 2016, Wang attempted to design a controller with this in mind \cite{xingbo_thesis}
 but was unable to prove the acrobot would gain energy over time.
 His approach was a rudimentary version of a recent technique know as the method
-of virtual nonholonomic constraint.
+of virtual nonholonomic constraints.
 
 Virtual nonholonomic constraints (VNHCs) have been used for human-robot interaction
 \cite{vnhc_human_robot_cooperation,psd_based_vnhc_redundant_manipulator,haptic_vnhc},
@@ -209,24 +213,9 @@ In particular, VNHCs may be capable of injecting and
 dissipating energy from a system in a robust manner, all while producing
 realistic biological motion. 
 
-Here then is the problem we will solve in this article: design a virtual
-nonholonomic constraint so that the acrobot provably gains energy while
-performing giant-like motion.
-The following is a rigorous definition of ``energy gain".
-
-\begin{defn}\label{defn:energy-gain}
-    Let \(\mathcal{Q}\) be an
-    \(n\)-dimensional smooth manifold.
-    Let \(f : \mathcal{Q} \rightarrow \mathcal{Q}\times\R^n\) be a smooth vector
-    field and let \(D \subset M\) be open.
-    The system described by \(\dot{x} = f(x)\) 
-    \textit{gains energy on \(D\)} if, 
-    for all compact sets \(K \subset D\) and for almost every initial
-    condition \(x(0) \in K\), there exists \(T > 0\) such
-    that \(x(t) \notin K \, (\forall t > T)\).
-    The system \textit{loses energy on \(D\)} if it gains energy in
-    negative-time.
-\end{defn}
+In this article, we will design a virtual
+nonholonomic constraint which provably injects energy into the acrobot through 
+human-like giant motion.
 
 Before embarking on our design problem, let us summarize the relevant theory of
 VNHCs.
@@ -590,15 +579,13 @@ VNHCs to the acrobot.
 %injection for giant stabilization)
 
 For our model of the acrobot, we assume the acrobot is comprised of two massless
-rods of equal length \(l\), with equal point masses \(m\) at the tips.
-We call this a \textit{simple} acrobot, which is displayed in Figure
+rods of equal length \(l\), with equal point masses \(m\) at the tips, as in Figure
 \ref{fig:simple-acrobot-model}.
-We will also ignore any frictional forces at both the hip and shoulder joints. 
-Finally, it is important to note that a real gymnast cannot swing their legs in
-full circles, though they are usually flexible enough to raise them parallel to
-the floor; 
+Note that a real gymnast cannot swing their legs in full circles, though they
+are usually flexible enough to raise them parallel to the floor; 
 for this reason, we assume that \(q_a \in [-Q_a, Q_a]\) where 
 \(Q_a \in [\frac{\pi}{2}, \pi[\). 
+We also ignore any frictional forces at both the hip and shoulder joints. 
 
 \begin{figure}
     \centering
@@ -668,6 +655,24 @@ useful.
     Since \(\partial_{q_u} f = 0\), this matrix is strictly positive for all values
     of \(q_a\), and hence is full rank everywhere on the constraint manifold.
 \end{proof}
+
+
+
+\textbf{TODO: Where does this go?}
+\begin{defn}\label{defn:energy-gain}
+    Let \(\mathcal{Q}\) be an
+    \(n\)-dimensional smooth manifold.
+    Let \(f : \mathcal{Q} \rightarrow \mathcal{Q}\times\R^n\) be a smooth vector
+    field and let \(D \subset M\) be open.
+    The system described by \(\dot{x} = f(x)\) 
+    \textit{gains energy on \(D\)} if, 
+    for all compact sets \(K \subset D\) and for almost every initial
+    condition \(x(0) \in K\), there exists \(T > 0\) such
+    that \(x(t) \notin K \, (\forall t > T)\).
+    The system \textit{loses energy on \(D\)} if it gains energy in
+    negative-time.
+\end{defn}
+
 
 %/========== Simulation ==========/%
 \section{Simulation Results}\label{sec:simulations}
