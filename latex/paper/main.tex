@@ -171,7 +171,7 @@ While the simplest model of a gymnast is the variable-length pendulum, a
 more realistic model is the two-link acrobot (Figure \ref{fig:acrobot}).
 Here, the top link represents the torso, while the bottom link represents
 the legs. 
-The acrobot is actuated exclusively at the center joint (the hips)
+The acrobot is actuated exclusively at the center joint (the hips).
 Controlling the acrobot is a nontrivial task because it is not feedback
 linearizable \cite{nonlinear_controllers_nonintegrable_acrobot}. 
 To solve the swingup problem, one might begin by designing a leg controller
@@ -207,8 +207,8 @@ error-reduction on time-delayed systems \cite{vnhc_time_delay_teleop},
 and they have shown marked improvements to the field of bipedal locomotion 
 \cite{nhvc_dynamic_walking,
 hybrid_zero_dynamics_bipedal_nhvcs,output_nhvc_bipedal_control}.
-Indeed, they produce more robust bipedal motion than
-controllers which do not depend on velocity \cite{nhvc_incline_walking}.
+Indeed, they produce more robust walking motion in biped robots than
+other controllers which do not depend on velocity \cite{nhvc_incline_walking}.
 In particular, VNHCs may be capable of injecting and
 dissipating energy from a system in a robust manner, all while producing
 realistic biological motion. 
@@ -391,8 +391,7 @@ because the theory is cleaner when using unactuated and actuated momenta.
 For this reason, we take the system of inquiry to be a Hamiltonian
 mechanical system in simply actuated coordinates, as in
 \eqref{eqn:simple-hamiltonian}.
-For simplicity of notation, we relabel \((\tilde{q},\tilde{p})\) as \((q,p)\),
-where we now have \((q,p) = (q_u,q_a,p_u,p_a) \in \mathcal{Q}\times \R^n\).
+For simplicity of notation, we relabel \((\tilde{q},\tilde{p})\) as \((q,p)\).
 
 \begin{defn}\label{defn:vnhc}
     A \textit{virtual nonholonomic constraint} (VNHC) \textit{of order \(k\)} is a
@@ -559,7 +558,7 @@ VNHCs.
 
 \begin{defn}\label{defn:energy-gain}
     Let \(\mathcal{Q}\) be an
-    \(n\)-dimensional smooth manifold.
+    \(n\)-dimensional smooth generalized cylinder.
     Let \(f : \mathcal{Q} \rightarrow \mathcal{Q}\times\R^n\) be a smooth vector
     field and let \(D \subset M\) be open.
     The system described by \(\dot{x} = f(x)\) 
@@ -605,9 +604,10 @@ VNHCs to the acrobot.
 %
 %TODO: after writing S2, re-introduce what we want to do with acrobot (energy
 %injection for giant stabilization)
-
-For our model of the acrobot, we assume the acrobot is comprised of two massless
-rods of equal length \(l\), with equal point masses \(m\) at the tips, as in Figure
+Recall that we wish to design a VNHC which injects energy into the acrobot
+through giant-like motion.
+For our model of the acrobot, we assume the torso and leg rods are of equal
+length \(l\) with equal point masses \(m\) at the tips, as in Figure
 \ref{fig:simple-acrobot-model}.
 Note that a real gymnast cannot swing their legs in full circles, though they
 are usually flexible enough to raise them parallel to the floor; 
@@ -664,17 +664,15 @@ The control input is a force \(\tau \in \R\) affecting only the dynamics of
 \(p_a\), representing a torque acting on the hip joint.
 This means \((q,p)\) are simply actuated coordinates inside the phase space
 \(\mathcal{Q} \times \mathcal{P}\) where
-\(\mathcal{Q} = \mathcal{Q}_u \times \mathcal{Q}_a 
-:= \Sone \times \Sone\), and
-\(\mathcal{P} = \mathcal{P}_u \times \mathcal{P}_a
-:= \R \times \R\).
+\(\mathcal{Q} = \Sone \times \Sone\), and
+\(\mathcal{P} = \R \times \R\).
 Hence, we can apply the theory of VNHCs from Section \ref{sec:vnhc} to design an
 energy-injecting controller.
 Since we need our VNHC to be regular, the following proposition will prove
 useful.
 \begin{prop}\label{prop:acrobot-fpu-regular}
     A relation \(h(q,p) = q_a - f(p_u) = 0\) 
-    with \(f \in C^2\left(\mathcal{P}_u; \mathcal{Q}_a\right)\) is a regular
+    with \(f \in C^2\left(\R; \Sone\right)\) is a regular
     VNHC of order 1 for the simple acrobot.
 \end{prop}
 \begin{proof}
@@ -684,6 +682,62 @@ useful.
     of \(q_a\), and hence is full rank everywhere on the constraint manifold.
 \end{proof}
 
+To design our VNHC, we begin by examining a person on a
+seated swing.
+The person extends their legs when the swing moves forwards, and retracts them
+when the swing moves backwards.
+As the swing gains speed, the person leans their body back while
+extending their legs higher, thereby shortening the distance
+from their center of mass to the pivot and adding more energy to the swing
+\cite{how_to_pump_a_swing}.
+
+Now imagine the person's torso is affixed to the swing's rope so they are
+always upright. 
+Imagine further that the swing has no seat at all, allowing the person to extend
+their legs beneath them. 
+This position is identical to that of a gymnast on a bar, which is why we can
+use leg motion from the seated swing to design a controller for the acrobot.
+
+The acrobot's legs are rigid rods which cannot retract, so we emulate the person
+on a swing by pivoting the legs toward the direction of motion. 
+To account for how a person leans back at higher speeds, the legs should pivot to an
+angle proportional to the swing's speed.
+Since the direction of motion is entirely determined by \(p_u\), 
+one such VNHC which emulates this process is \(q_a = \bar{q}_a\arctan( I p_u)\),
+displayed in Figure \ref{fig:qa-arctan}.
+Here, \(\bar{q}_a \in ]0,\frac{2 Q_a}{\pi}]\) and \(I \in \R\) is a fixed
+control parameter.
+
+This constraint does not perfectly recreate giant motion, during which
+the gymnast's legs are almost completely extended \cite{usagym_giant}
+-- it instead pivots the legs partially during rotations.
+However, the behaviour looks similar enough that the constraint should provide a
+reasonable foundation for injecting energy into the acrobot.
+Hence, our VNHC is
+\begin{equation}\label{eqn:acrobot-constraint}
+    h(q,p) = q_a - \bar{q}_a \arctan(I p_u)
+    .
+\end{equation}
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.7\linewidth]{qa_arctan.pdf}
+    \caption{The acrobot constraint \(q_a = \bar{q}_a \arctan(I p_u)\).}
+    \label{fig:qa-arctan}
+\end{figure}
+
+It is not hard to show that the constrained dynamics for the acrobot under
+~\eqref{eqn:acrobot-constraint} are
+\begin{equation}\label{eqn:acrobot-constrained-dynamics}
+    \begin{cases}
+    \dot{q}_u &= \frac{(1+I^2 p_u^2)p_u + m^2gl^3\bar{q}_a I(2s_u + s_{ua})(1+c_a) }
+            {ml^2(1+I^2 p_u^2)(3+2c_a)}
+    ,    \\
+    \dot{p}_u &= - m g l (2s_u + s_{ua})
+    ,
+    \end{cases}
+\end{equation}
+subject to \(q_a = \bar{q}_a \arctan(I p_u)\).
 
 %/========== Simulation ==========/%
 \section{Simulation Results}\label{sec:simulations}
