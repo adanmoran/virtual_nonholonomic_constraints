@@ -10,6 +10,7 @@
 \usepackage{amssymb}
 \usepackage{algorithmic}
 \usepackage{graphicx}
+\usepackage{subcaption}
 \usepackage{textcomp}
 \usepackage{cite}
 
@@ -159,7 +160,7 @@ variable length pendulum, and studied how the pendulum's length changes as a
 function of the gymnast's limb angle.
 Labeling the pendulum length by \(r\) and the gymnast's body orientation
 by \(\theta\), they observed experimentally that the value \(\dot{r}/r\) has
-the highest impact on the magintude of energy injection. 
+the biggest impact on the magnitude of energy injection. 
 After testing several gymnasts under a variety of experimental conditions, 
 they discovered that the peak value of \(\dot{r}/r\) occured at the same fixed
 value of \(\dot{\theta}/\theta\) for all gymnasts.
@@ -196,7 +197,7 @@ While all these approaches succeed at making the acrobot rotate around the
 bar, none of them use the results of \cite{pendulum_length_giant_gymnastics}.
 That is, none of these leg controllers track a function of the acrobot's body
 angle and velocity.
-In 2016, Wang attempted to design a controller with this in mind \cite{xingbo_thesis}
+In 2016, Wang attempted to design a controller which does this \cite{xingbo_thesis}
 but was unable to prove the acrobot would gain energy over time.
 His approach was a rudimentary version of a recent technique know as the method
 of virtual nonholonomic constraints.
@@ -705,7 +706,7 @@ angle proportional to the swing's speed.
 Since the direction of motion is entirely determined by \(p_u\), 
 one such VNHC which emulates this process is \(q_a = \bar{q}_a\arctan( I p_u)\),
 displayed in Figure \ref{fig:qa-arctan}.
-Here, \(\bar{q}_a \in ]0,\frac{2 Q_a}{\pi}]\) and \(I \in \R\) is a fixed
+Here, \(\bar{q}_a \in ]0,2 Q_a/\pi]\) and \(I \in \R\) is a fixed
 control parameter.
 
 This constraint does not perfectly recreate giant motion, during which
@@ -726,8 +727,10 @@ Hence, our VNHC is
     \label{fig:qa-arctan}
 \end{figure}
 
-It is not hard to show that the constrained dynamics for the acrobot under
-~\eqref{eqn:acrobot-constraint} are
+Recall that \((q_u, p_u)\) denote the angle and momentum of the acrobot's torso. 
+Hence, the constrained dynamics are the torso dynamics when one swings the legs
+according to \eqref{eqn:acrobot-constraint}.
+It is not hard to show that the constrained dynamics are
 \begin{equation}\label{eqn:acrobot-constrained-dynamics}
     \begin{cases}
     \dot{q}_u &= \frac{(1+I^2 p_u^2)p_u + m^2gl^3\bar{q}_a I(2s_u + s_{ua})(1+c_a) }
@@ -738,6 +741,118 @@ It is not hard to show that the constrained dynamics for the acrobot under
     \end{cases}
 \end{equation}
 subject to \(q_a = \bar{q}_a \arctan(I p_u)\).
+
+One can study the constrained system by examining solely the motion of 
+\((q_u,p_u) \in \SxR\).
+Suppose for a moment that \(I = 0\) -- that is, the legs stay fully extended.
+The acrobot becomes a pendulum with two masses, whose total mechanical
+energy is
+\begin{equation}\label{eqn:acrobot-energy}
+    E(q_u,p_u) := \frac{p_u^2}{10ml^2} + 3mgl(1 - \cos(q_u))
+    .
+\end{equation}
+If the pendulum is oscillating, its phase lies in the domain
+\begin{equation}\label{eqn:oscillation-domain}
+    \mathcal{O}_1 := \left\{(q_u,p_u) \in \SxR 
+    \mid E(q_u,p_u) < E(\pi,0) \right\}
+    ,
+\end{equation}
+which is shown on the \((q_u,p_u)\)-plane in Figure 
+\ref{fig:acrobot-oscillation-domain}.
+If for some \(I \neq 0\) our VNHC injects energy into the acrobot on 
+\(\mathcal{O}_1\), and additionally the constrained dynamics escape
+\(\mathcal{O}_1\) in finite time, then we can guarantee the acrobot will perform
+giant-like motion and begin rotating around the bar.
+
+The upright equilibrium of the pendulum is at \((q_u,p_u) = (\pi,0)\).
+If the pendulum were initialized at \(q_u = 0\), the minimum initial momentum
+required to reach the upright equilibrium would be
+\(p_u = \sqrt{60m^2gl^3}\), since \(E(\pi,0) = E(0,\sqrt{60m^2gl^3})\).
+Hence, if the pendulum is rotating with momentum 
+\(\sqrt{60m^2gl^3} < p_u < \bar{\rho}\),
+the pendulum phase must lie inside
+\begin{equation}\label{eqn:rotation-domain}
+    \mathcal{R}(\rho) := \left\{
+        (q_u,p_u) \in \SxR \mid E(\pi,0) < E(q_u,p_u) < E(0,\rho)
+    \right\}
+    .
+\end{equation}
+Connecting the regions \eqref{eqn:oscillation-domain} and
+\eqref{eqn:rotation-domain} yields the set
+\begin{equation}\label{eqn:o-rhobar}
+    \mathcal{O}_2(\bar{\rho}) := \left\{(q_u,p_u) \in \SxR
+        \mid E(q_u,p_u) < E(0,\bar{\rho}) \right\}
+    ,
+\end{equation}
+as in Figure \ref{fig:acrobot-o2}
+If the VNHC injects energy on \(\mathcal{O}_2(\bar{\rho})\) for some 
+\(I \neq 0\), then the acrobot will swing up, begin rotating, and eventually
+rotate with a momentum of at least \(\bar{\rho}\).
+
+\begin{figure}
+    \centering
+    \begin{subfigure}[t]{0.45\linewidth}
+        \includegraphics[width=\linewidth]{acrobot_oscillation_domain.pdf}
+        \caption{The set \(\mathcal{O}_1\). An orbit starting in this set (blue)
+            will pass through the level set \(E(\pi,0)\) of the nominal pendulum.}
+        \label{fig:acrobot-oscillation-domain}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[t]{0.45\linewidth}
+        \includegraphics[width=\linewidth]{acrobot_omega.pdf}
+        \caption{The set \(\mathcal{O}_2(\bar{\rho})\). Orbits starting in this
+            set are guaranteed to reach the level set \(E(0,\bar{\rho})\) of the
+            nominal pendulum.}
+            \label{fig:acrobot-o2}
+    \end{subfigure}
+    \caption{The sets on which the acrobot gains energy, according to Theorem
+        \ref{thm:acrobot-energy-stabilization}.}
+\end{figure}
+
+Unfortunately, the constrained dynamics do not always gain energy on
+\(\mathcal{O}_1\) and \(\mathcal{O}_2(\bar{\rho})\);
+energy gain is only guaranteed under certain conditions on the size of \(I\).
+If \(I\) is too large, the leg controller saturates (i.e. the legs swing up too
+quickly) and the body does not swing faster nor higher. 
+However, choosing \(I\) small enough guarantees the legs will synchronize
+properly with the body, and the acrobot will begin doing backflips on the bar.
+The following theorem provides conditions under which such an \(I\) exists.
+
+\begin{thm}\label{thm:acrobot-energy-stabilization}
+    Consider the acrobot ~\eqref{eqn:acrobot-hamiltonian}.
+\begin{enumerate}
+    \item For any \(m\), \(g\), \(l\), \(\bar{q}_a\), there exists
+        \(I^\star > 0\) such that, for all \(I \in \, ]0,I^\star]\), the VNHC
+        ~\eqref{eqn:acrobot-constraint} injects energy into the acrobot on
+        \(\mathcal{O}_1\).
+        Moreover, almost every orbit will escape the closure of
+        \(\mathcal{O}_1\) in finite time.
+        If instead \(I \in [-I^\star,0[\), the VNHC dissipates energy.
+    \item Let \(C = m^2gl^3\) and 
+        define \(b : \SxR_{> 0} \rightarrow \R\) by
+    \[
+        b(\beta,\rho_0) := 
+        \frac{5C\bar{q}_a \left(
+            C\left(18s_\beta^2 + 30c_\beta(1 - c_\beta)\right)
+            - c_\beta\rho_0^2
+        \right)}{
+        |\rho_0|\sqrt{\rho_0^2 - 30m^2gl^3(1 - c_\beta)}
+        }
+        .
+    \]
+        Define 
+        \(S(\rho_0) := \int \limits_{0}^{2\pi} b(\sigma,\rho_0)d\sigma\).
+        Fix \(\bar{\rho} > \sqrt{60m^2gl^3}\) and
+        suppose there exists \(\epsilon > 0\) so that 
+        \(S(\rho_0) \geq \epsilon\) for all 
+        \(\rho_0 \in \, \left]\sqrt{60m^2gl^3}, \bar{\rho}\right]\).
+        Then there exists \(I^{\star\star} \in \, ]0, I^\star]\) such that, for all 
+        \(I \in \, ]0,I^{\star\star}]\), the VNHC
+        ~\eqref{eqn:acrobot-constraint} injects energy into the acrobot on
+        \(\mathcal{O}_2(\bar{\rho})\).
+        If instead \(I \in [-I^{\star\star},0[\), the VNHC dissipates energy.
+\end{enumerate}
+\end{thm}
 
 %/========== Simulation ==========/%
 \section{Simulation Results}\label{sec:simulations}
