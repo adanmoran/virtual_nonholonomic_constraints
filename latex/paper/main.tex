@@ -834,12 +834,12 @@ The following theorem provides conditions under which such an \(I\) exists.
         Moreover, almost every orbit will escape the closure of
         \(\mathcal{O}_1\) in finite time.
         If instead \(I \in [-I^\star,0[\), the VNHC dissipates energy.
-    \item Let \(C = m^2gl^3\) and 
+    \item Let \(C = m^2gl^3\bar{q}_a\) and 
         define \(b : \SxR_{> 0} \rightarrow \R\) by
     \[
         b(\beta,\rho_0) := 
-        \frac{5C\bar{q}_a \left(
-            C\left(18s_\beta^2 + 30c_\beta(1 - c_\beta)\right)
+        \frac{5C \left(
+        \frac{C}{\bar{q}_a}\left(18s_\beta^2 + 30c_\beta(1 - c_\beta)\right)
             - c_\beta\rho_0^2
         \right)}{
         |\rho_0|\sqrt{\rho_0^2 - 30m^2gl^3(1 - c_\beta)}
@@ -884,10 +884,31 @@ achieve rotations with a momentum of at least \(\bar{\rho}\).
 
 %/========== Simulation ==========/%
 \section{Simulation Results}\label{sec:simulations}
-
+\textbf{Run a sim of a simplfied acrobot model of a human}
 %/========== Experiments ==========/%
 \section{Experimental Results}\label{sec:experiments}
+In this section, we test our VNHC on the physical acrobot built by
+Xingbo Wang \cite{xingbo_thesis} (Figure \ref{fig:xingbo-acrobot}).
+The torso and leg rods on this robot have unequal mass and differ in length, so
+its inertia matrix and potential function are not described correctly by 
+~\eqref{eqn:acrobot-inertia}-\eqref{eqn:acrobot-potential}.
+These experiments will therefore show that VNHCs are robust to model mismatch.
 
+\begin{figure}
+    \centering
+    %\includegraphics[width=0.5\linewidth]{}
+    \caption{\textbf{TODO: take a square photo of the acrobot}The acrobot built by Wang \cite{xingbo_thesis}.}
+    \label{fig:xingbo-acrobot}
+\end{figure}
+
+The leg actuator is a servo motor with a built-in PID controller, so we
+can directly assign \(q_a = \arctan\left(I p_u\right)\).
+The control parameter \(I\) must be small to satisfy Theorem
+\ref{thm:acrobot-energy-stabilization}, but it must also be large enough to
+overcome friction in the servo motor.
+We experimentally determined that \(I = 10\) is sufficient to
+ensure the actuator can fully rotate in its allowable range
+\(q_a \in \left[ -\frac{\pi}{2}, \frac{\pi}{2}\right]\).
 %/========== Proof ==========/%
 \section{Proof of Theorem \ref{thm:acrobot-energy-stabilization}}\label{sec:proof}
 
