@@ -882,9 +882,6 @@ If the assumption holds, there is some control value \(I > 0\)
 (which depends on \(\bar{\rho}\)) for which the acrobot will 
 achieve rotations with a momentum of at least \(\bar{\rho}\).
 
-%/========== Simulation ==========/%
-\section{Simulation Results}\label{sec:simulations}
-\textbf{Run a sim of a simplfied acrobot model of a human}
 %/========== Experiments ==========/%
 \section{Experimental Results}\label{sec:experiments}
 In this section, we test our VNHC on the physical acrobot built by
@@ -901,19 +898,155 @@ These experiments will therefore show that VNHCs are robust to model mismatch.
     \label{fig:xingbo-acrobot}
 \end{figure}
 
-The leg actuator is a servo motor with a built-in PID controller, so we
-can directly assign \(q_a = \arctan\left(I p_u\right)\).
+
 The control parameter \(I\) must be small to satisfy Theorem
 \ref{thm:acrobot-energy-stabilization}, but it must also be large enough to
 overcome friction in the servo motor.
 We experimentally determined that \(I = 10\) is sufficient to
 ensure the actuator can fully rotate in its allowable range
 \(q_a \in \left[ -\frac{\pi}{2}, \frac{\pi}{2}\right]\).
+
+\subsection{Simulations Results}
+Evaluating the true mechanical energy of Wang's acrobot at the VNHC
+\(q_a = 0\) yields the energy of the nominal pendulum,
+\[
+    E(q_u,p_u) \approx 396.5501 p_u^2 + 0.5997(1 - \cos(q_u))
+    .
+\]
+We simulated Wang's acrobot starting at 
+\((q_u,p_u) = \left(\frac{\pi}{32},0 \right)\) and plotted the resulting orbit
+in Figure \ref{fig:acrobot-orbit}.
+
+The set \(E_\pi := E(\pi,0)\) is outlined in black. 
+Because of model mismatch, \(E_\pi\) is no longer the boundary between
+rotations and oscillations.
+The oscillation domain is actually much larger: orbits rotate once they hit the
+\(p_u\)-axis at \(\abs{p_u} \approx 0.15\), while \(E_\pi\) intersects the
+\(p_u\)-axis at \(\abs{p_u} \approx 0.055\).
+Despite this, the VNHC still injects energy into the acrobot.
+The points where the orbit exits \(E_\pi\) are marked with black stars,
+with the final departure marked with a red star.
+After this final departure, the acrobot begins rotating and continues to gain
+energy over time.
+
+\begin{figure}[h]
+    \centering
+    \begin{subfigure}[t]{0.45\linewidth}
+        \includegraphics[width=\linewidth]{acrobot_orbit.png}
+        \caption{Orbit initialized at \((q_u,p_u) = (\pi/32,0)\).}
+        \label{fig:acrobot-orbit}
+    \end{subfigure}
+    \begin{subfigure}[t]{0.45\linewidth}
+        \includegraphics[width=\linewidth]{acrobot_mc.png}
+        \caption{Monte Carlo results.}
+        \label{fig:acrobot-mc}
+    \end{subfigure}
+    \caption{Simulations using Wang's acrobot \cite{xingbo_thesis}.}
+\end{figure}
+
+
+To verify that the acrobot would always achieve rotations, we ran a
+Monte-Carlo simulation \cite{montecarlo}:
+we initialized the acrobot randomly inside the sublevel set
+\[
+    \left\{(q_u,p_u) \in \SxR \mid
+    E(q_u,p_u) \leq E\left(\frac{\pi}{32},0\right)\right\}
+    ,
+\] 
+and measured the how long it took to begin rotating.
+The results in Figure \ref{fig:acrobot-mc} show that
+the acrobot always rotated within 10--35 seconds.
+
+\subsection{Physical Experiments}
+Wang's acrobot has an encoder at the pivot which measures \(q_u\) and
+\(\dot{q}_u\).
+The leg actuator is a servo motor with a built-in PID controller, which provides
+measurements of \(q_a\).
+We estimate \(\dot{q}_a\) through sequential values of \(q_a\) and
+compute \(p_u\) through \(p_u = e_1^T M(q) \dot{q}\).
+We then assign the actuator value at iteration \(k \in \mathbb{Z}_{> 0}\)
+via \(q_a^{k} = \arctan(I p_u^{k-1})\).
+
+\textbf{Baseline Test:} 
+for this test, we initialized the acrobot at 
+\((q_u,p_u) \approx \left(\frac{\pi}{8},0\right)\). 
+The resulting orbit is shown in Figure \ref{fig:acrobot-unperturbed-orbit};
+the acrobot is clearly gaining energy over time.
+
+\begin{figure}
+    \centering
+    \begin{subfigure}[t]{0.45\linewidth}
+        \includegraphics[width=\linewidth]{acrobot_unperturbed_orbit.png}
+        \caption{The baseline test.}
+        \label{fig:acrobot-unperturbed-orbit}
+    \end{subfigure}
+    \begin{subfigure}[t]{0.45\linewidth}
+        \includegraphics[width=\linewidth]{acrobot_stopped_orbit.png}
+        \caption{Acrobot orbit before (blue) and after (red) stopping.}
+        \label{fig:acrobot-stopped-orbit}
+    \end{subfigure}
+    \caption{The physical acrobot's orbit during baseline and stop tests.}
+\end{figure}
+
+\textbf{Stop Test:}
+for this test we initialized the acrobot at 
+\((q_u,p_u) \approx \left(\pi,0\right)\), let it run for 15
+seconds, then stopped it at the bottom of its arc.
+The resulting orbit is shown in Figure \ref{fig:acrobot-stopped-orbit}.
+The blue curves correspond to the orbit before the disturbance, while the red
+spiral confirms that the acrobot begins oscillating after it is stopped.
+Despite the disturbance, it gains energy and eventually starts rotating
+again.
+
+\textbf{Push Test:}
+to see how the acrobot responds when pushed, we allowed
+the acrobot to rotate undisturbed for 15 seconds and then pushed it in its
+direction of motion.
+The orbit in Figure \ref{fig:acrobot-fpush-orbit} shows that the acrobot speeds
+up to rotate with energy \(E(0,0.22)\), but then slows down until it reaches a
+stable rotation with energy \(E(0,-0.195)\).
+We repeated this test by pushing the acrobot against its direction of motion.
+The orbit in Figure \ref{fig:acrobot-rpush-orbit} demonstrates that the acrobot
+responds by readily changing direction, and quickly achieves its maximum speed
+with energy \(E(0,0.195)\).
+
+These push tests suggest that our VNHC injects energy into Wang's acrobot on
+\(\mathcal{O}_2(0.195)\).
+
+
+\begin{figure}
+    \centering
+    \begin{subfigure}[ht]{0.45\linewidth}
+        \includegraphics[width=\linewidth]{acrobot_fpush_orbit.png}
+        \caption{The forwards push test.}
+        \label{fig:acrobot-fpush-orbit}
+    \end{subfigure}
+    \begin{subfigure}[ht]{0.45\linewidth}
+        \includegraphics[width=\linewidth]{acrobot_rpush_orbit.png}
+        \caption{The reverse push test.}
+        \label{fig:acrobot-rpush-orbit}
+    \end{subfigure}
+    \caption{The acrobot orbit before (blue) and after (red) pushing.}
+\end{figure}
+
+\subsection{Summary of Experiments}
+These simulations and experiments demonstrate that VNHCs are excellent
+tools for injecting energy, even with significant model mismatch.
+In particular, energy injection through VNHCs appears to be robust against a
+variety of disturbances.
+
 %/========== Proof ==========/%
 \section{Proof of Theorem \ref{thm:acrobot-energy-stabilization}}\label{sec:proof}
 
 %/========== Conclusion ==========/%
 \section{Conclusion}\label{sec:conclusion}
+In this article we summarized the existing theory of virtual nonholonomic
+constraints (VNHCs) ........
+\textbf{TODO conclude nicely}
+In the end, we demonstrated that virtual nonholonomic constraints are capable of
+injecting and dissipating energy in a robust manner, all while producing
+realistic biological motion.
+
 
 
 %---------- Bibliography ----------%
