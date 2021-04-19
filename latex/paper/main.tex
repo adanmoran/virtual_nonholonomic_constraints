@@ -109,8 +109,8 @@ The gradient of a matrix-valued function
 derivatives, 
 \(\nabla_xA := [\pdiff{A}{x_1};\ldots;\pdiff{A}{x_m}] \in \R^{nm \times n}\).
 Given two matrices \(A \in \R^{n \times m}\) and \(B \in \R^{r \times s}\), the
-Kronecker product \cite{kronprod} \(A \otimes B \in \R^{nr \times ms}\) is the
-matrix
+Kronecker product \(A \otimes B \in \R^{nr \times ms}\) (see \cite{kronprod}) is
+the matrix
 \begin{equation}\label{eqn:kronprod}
     A \otimes B = \begin{bmatrix}
         A_{1,1}B & \cdots & A_{1,m} B \\
@@ -198,7 +198,7 @@ While all these approaches succeed at making the acrobot rotate around the
 bar, none of them use the results of \cite{pendulum_length_giant_gymnastics}.
 That is, none of these leg controllers track a function of the acrobot's body
 angle and velocity.
-In 2016, Wang attempted to design a controller which does this \cite{xingbo_thesis}
+In 2016, Wang attempted to design such a controller \cite{xingbo_thesis}
 but was unable to prove the acrobot would gain energy over time.
 His approach was a rudimentary version of a recent technique know as the method
 of virtual nonholonomic constraints.
@@ -218,6 +218,9 @@ realistic biological motion.
 In this article, we will design a virtual
 nonholonomic constraint which provably injects energy into the acrobot through 
 human-like giant motion.
+
+\textbf{MANFREDI: This section feels more like an intro than a problem
+formulation. Thoughts?}
 
 Before embarking on our design problem, let us summarize the relevant theory of
 VNHCs.
@@ -317,7 +320,7 @@ To define this transformation we will make use of the following lemma.
     \(\Sigma = [\diag{\sigma_1,\ldots,\sigma_k}; \Zmat{(n-k)\times k}]\),
     \(\sigma_i > 0\), and \(U \in R^{n \times n}\),
     \(V \in \R^{k \times k}\) are unitary matrices \cite{calculating_svd}.
-    Defining \(T = \diag{1/\sigma_1^2,\ldots,1/\sigma_k^2}\) and assigning the
+    Defining \(T = \diag{1/\sigma_1,\ldots,1/\sigma_k}\) and assigning the
     regular feedback transformation \(\tau = V T \hat{\tau}\) yields a new input
     matrix \(\hat{B} = B V T\) for \(\hat{\tau}\) such that
     \(\hat{B}\tpose \hat{B} = T\tpose \Sigma\tpose \Sigma T = \Id{k}\).
@@ -364,8 +367,8 @@ an orthogonal matrix.
     Then, since \(\mathbf{B}\) is orthogonal, 
     \([\tilde{p}_i, \tilde{q}_j] = (\mathbf{B}_i)\tpose (\mathbf{B}\tpose)_j
         = \delta_i^j\).
-    By (45.10) in \cite{landau_mechanics}, this transformation is canonical and
-    the new Hamiltonian is
+    By (45.10) in \cite{landau_mechanics}, this is a canonical transformation
+    and the new Hamiltonian is
     \(\mathcal{H}(\mathbf{B}\tpose \tilde{q}, \mathbf{B}\tpose \tilde{p})\).
     Finally, since \(\dot{\tilde{p}} = \mathbf{B} \dot{p}\), the input
     matrix for the system in \((\tilde{q},\tilde{p})\) coordinates is
@@ -383,17 +386,27 @@ and \textit{actuated momenta}, respectively.
 
 \subsection{Virtual Nonholonomic Constraints}
 
-The notion of a nonholonomic constraint which can be stabilized via state feedback
-was first described by Griffin and Grizzle in \cite{nhvc_dynamic_walking}.
-Horn et. al later extended their results in
-\cite{hybrid_zero_dynamics_bipedal_nhvcs} and
-derived the dynamics of constrained systems.
-In this section we reformulate these ideas for the Hamiltonian framework,
-because the theory is cleaner when using unactuated and actuated momenta.
-For this reason, we take the system of inquiry to be a Hamiltonian
-mechanical system in simply actuated coordinates, as in
+Griffin and Grizzle \cite{nhvc_dynamic_walking} were the first to define
+relative degree two nonholonomic constraints which can be enforced
+through state feedback.
+Horn et. al later extended their results
+\cite{hybrid_zero_dynamics_bipedal_nhvcs} to derive the constrained dynamics for
+a certain class of mechanical systems.
+
+These researchers made use of the unactuated conjugate of momentum, but they
+developed their results in the Lagrangian framework.
+In particular, they focused on Lagrangian systems with degree of underactuation
+one.
+In this section we reformulate their ideas into the Hamiltonian framework and
+extend the definition of a virtual nonholonomic constraint to systems with
+higher degree of underactuation.
+This reformulation will provide us with better intuition and a more explicit form of the
+constrained dynamics.
+
+For the rest of this section we take the system of inquiry to be a
+Hamiltonian mechanical system in simply actuated coordinates, as in
 \eqref{eqn:simple-hamiltonian}.
-For simplicity of notation, we relabel \((\tilde{q},\tilde{p})\) as \((q,p)\).
+For simplicity of notation, we relabel \((\tilde{q},\tilde{p})\) to \((q,p)\).
 
 \begin{defn}\label{defn:vnhc}
     A \textit{virtual nonholonomic constraint} (VNHC) \textit{of order \(k\)} is a
@@ -670,7 +683,7 @@ This means \((q,p)\) are simply actuated coordinates in the phase space
 \(\mathcal{P} = \R \times \R\).
 We can therefore apply the theory from Section \ref{sec:vnhc} to design
 a VNHC of the form \(q_a = f(q_u,p_u)\). 
-Since we need the VNHC to be regular, the following proposition will prove
+Since we need the VNHC to be regular, the following proposition will be
 useful.
 \begin{prop}\label{prop:acrobot-fpu-regular}
     A relation \(h(q,p) = q_a - f(p_u) = 0\) 
@@ -710,9 +723,9 @@ Here, \(\bar{q}_a \in \, ]0,2 Q_a/\pi]\) is constant and \(I \in \R\) is a fixed
 control parameter.
 
 This constraint does not perfectly recreate giant motion, during which
-the gymnast's legs are almost completely extended \cite{usagym_giant}:
-it instead pivots the legs partially during rotations.
-However, the behaviour looks similar enough that this constraint should 
+the gymnast's legs are almost completely extended \cite{usagym_giant}.
+It instead pivots the legs partially during rotations.
+However, the behaviour looks similar enough that this constraint will
 still inject energy into the acrobot.
 Our final VNHC is
 \begin{equation}\label{eqn:acrobot-constraint}
@@ -732,7 +745,7 @@ By Theorem \ref{thm:zero-dynamics}, the constrained acrobot is parameterized
 fully by \((q_u,p_u) \in \SxR\).
 It is easy to show that the constrained dynamics are
 just the torso dynamics obtained when one swings the legs
-according to \eqref{eqn:acrobot-constraint}; that is, they are
+according to \eqref{eqn:acrobot-constraint}:
 \begin{equation}\label{eqn:acrobot-constrained-dynamics}
     \begin{cases}
     \dot{q}_u &= \frac{(1+I^2 p_u^2)p_u + m^2gl^3\bar{q}_a I(2s_u + s_{ua})(1+c_a) }
@@ -869,14 +882,14 @@ In other words, the first result of Theorem
 \ref{thm:acrobot-energy-stabilization} states that all acrobots constrained by
 ~\eqref{eqn:acrobot-constraint} will gain enough energy to begin rotating around
 the bar.
-In the worst case, the acrobot will at least perform a swing-up routine to reach
-the unstable equilibrium at \((q_u,p_u) = (\pi,0)\).
+%In the worst case, the acrobot will at least perform a swing-up routine to reach
+%the unstable equilibrium at \((q_u,p_u) = (\pi,0)\).
 
 For the acrobot to achieve giants with energy
 \(E(0,\bar{\rho})\), it must satisfy the assumption on the integral
 of \(b(\beta,\rho_0)\). 
 The value of this integral depends on the acrobot's physical parameters.
-If the assumption holds, there is some control value
+If the assumption holds, there is some control value \(I\)
 (which depends on \(\bar{\rho}\)) for which the acrobot will 
 achieve rotations with a momentum of at least \(\bar{\rho}\).
 
@@ -903,7 +916,7 @@ large enough to overcome friction in leg motor.
 Setting \(\bar{q}_a = 1\), we experimentally determined that \(I = 10\) is
 sufficient to ensure the actuator can fully rotate in its allowable range \(q_a
 \in \left[ -\frac{\pi}{2}, \frac{\pi}{2}\right]\). 
-Rhis is the value of \(I\) we used in all simulations and experiments.
+This is the value of \(I\) we used in all simulations and experiments.
 
 \subsection{Simulations Results}
 Evaluating the true mechanical energy of Wang's acrobot at the VNHC
@@ -924,7 +937,7 @@ The oscillation domain is actually much larger: orbits rotate once they hit the
 \(p_u\)-axis at \(\abs{p_u} \approx 0.055\).
 Despite this, the VNHC still injects energy into the acrobot.
 The points where the orbit exits \(E_\pi\) are marked with black stars,
-with the final departure marked with a red star.
+with the final departure marked by a red star.
 After this final departure, the acrobot begins rotating and continues to gain
 energy over time.
 
@@ -1002,7 +1015,7 @@ We then performed the following tests.
     the acrobot to rotate undisturbed for 15 seconds and then pushed it in its
     direction of motion.
     The orbit in Figure \ref{fig:acrobot-fpush-orbit} shows that the acrobot speeds
-    up to rotate with energy \(E(0,0.22)\), but then slows down until it reaches a
+    up to rotate with energy \(E(0,-0.22)\), but then slows down until it reaches a
     rotation with energy \(E(0,-0.195)\).
     We repeated this test by pushing the acrobot against its direction of motion.
     The orbit in Figure \ref{fig:acrobot-rpush-orbit} demonstrates that the acrobot
