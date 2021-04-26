@@ -45,7 +45,7 @@ public:
         g_),
       in_(xingbot_,qmax_,I_),
       diss_(xingbot_,qmax_,-I_),
-      sup_() // Todo: implement this correctly
+      sup_(in_,diss_) // Todo: implement this correctly
     {}
 protected:
     void SetUp() override 
@@ -87,6 +87,22 @@ protected:
     // Define our supervisor, which takes in the two VNHCs
     Supervisor sup_;
 }; // class VNHCTest
+
+// Make sure if abs(value - des) <= hys, that the supervisor returns qa = 0
+TEST_F(SupervisorTest, ZERO_WITHIN_HYS)
+{
+    double des = M_PI/2;
+    double hys = 0.2;
+    // check that if value is in [des-hys, des+hys] that we get qa = 0
+    EXPECT_EQ(sup_.stabilize(des-hys,des,hys),0);
+    EXPECT_EQ(sup_.stabilize(des,des,hys),0);
+    EXPECT_EQ(sup_.stabilize(des+hys,des,hys),0);
+
+    // Check that if value is in [-des-hys,-des+hys] that we get qa = 0
+    EXPECT_EQ(sup_.stabilize(-des-hys,des,hys),0);
+    EXPECT_EQ(sup_.stabilize(-des,des,hys),0);
+    EXPECT_EQ(sup_.stabilize(-des+hys,des,hys),0);
+}
 
 int main(int argc, char** argv)
 {
