@@ -11,6 +11,7 @@ target_include_directories(PhaseLib PUBLIC
 
 add_library(VNHCLib
     VNHC.cpp
+    Supervisor.cpp
 )
 target_include_directories(VNHCLib PUBLIC
     ${CMAKE_SOURCE_DIR}
