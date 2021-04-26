@@ -58,6 +58,49 @@ private:
 
 }; // class Supervisor
 
+/*****************************************************************************/
+
+class OscillationSupervisor
+{
+public:
+    /**
+     * @brief: Create a meta-supervisor which tracks the value qu = qudes using the given supervisor.
+     */
+    OscillationSupervisor(const Supervisor& sup);
+
+    /**
+      * @brief: Set qa to stabilize a desired qu in ]-pi,pi[. This updates an
+      * internal state which keeps track of the injection/dissipation process;
+      * if this fails, simply input a (qu,pu)=(0,0) into the unactuated phase to
+      * reset.
+      * @param: const UnactuatedPhase&. The current phase of the acrobot.
+      * @param: double. The desired angle qu, in ]-pi,pi[. If it is out of
+      * range, we set the desired angle to -pi+hys or pi-hys depending on the
+      * sign of the input.
+      * @param: double. The hysteresis.
+      *
+      * @return: double. The value of qa.
+      */
+    auto stabilize(const UnactuatedPhase& qpu,
+                   double qudes,
+                   double hys) const -> double;
+
+private:
+    // The sign function
+    auto sign(double x) const -> double
+    {
+        return (x > 0) - (x < 0);
+    }
+    // The supervisor we are using
+    const Supervisor& sup_;
+
+    // The last peak value of qpu that we reached.
+    // this is modified by stabilize(), which is a const-correct function, so we
+    // define this as mutable.
+    mutable  UnactuatedPhase prevPeak_;
+
+}; // class OscillationSupervisor
+
 } // namespace SUGAR
 
 #endif // __SUPERVISOR_H__
