@@ -86,6 +86,8 @@ protected:
 
     // Define our supervisor, which takes in the two VNHCs
     Supervisor sup_;
+    // A default unactuated phase for testing
+    UnactuatedPhase qpu;
 }; // class VNHCTest
 
 // Make sure if abs(value - des) <= hys, that the supervisor returns qa = 0
@@ -94,14 +96,79 @@ TEST_F(SupervisorTest, ZERO_WITHIN_HYS)
     double des = M_PI/2;
     double hys = 0.2;
     // check that if value is in [des-hys, des+hys] that we get qa = 0
-    EXPECT_EQ(sup_.stabilize(des-hys,des,hys),0);
-    EXPECT_EQ(sup_.stabilize(des,des,hys),0);
-    EXPECT_EQ(sup_.stabilize(des+hys,des,hys),0);
+    EXPECT_EQ(sup_.stabilize(qpu_,des-hys,des,hys),0);
+    EXPECT_EQ(sup_.stabilize(qpu_,des,des,hys),0);
+    EXPECT_EQ(sup_.stabilize(qpu_,des+hys,des,hys),0);
 
     // Check that if value is in [-des-hys,-des+hys] that we get qa = 0
-    EXPECT_EQ(sup_.stabilize(-des-hys,des,hys),0);
-    EXPECT_EQ(sup_.stabilize(-des,des,hys),0);
-    EXPECT_EQ(sup_.stabilize(-des+hys,des,hys),0);
+    EXPECT_EQ(sup_.stabilize(qpu_,-des-hys,des,hys),0);
+    EXPECT_EQ(sup_.stabilize(qpu_,-des,des,hys),0);
+    EXPECT_EQ(sup_.stabilize(qpu_,-des+hys,des,hys),0);
+
+    // If the desried value is negative, it should be the same as it being
+    // positive.
+    EXPECT_EQ(sup_.stabilize(qpu_,des-hys,-des,hys),0);
+    EXPECT_EQ(sup_.stabilize(qpu_,des,-des,hys),0);
+    EXPECT_EQ(sup_.stabilize(qpu_,des+hys,-des,hys),0);
+
+    // If the hysteresis is negative, it should be the same as it being
+    // positive.
+    EXPECT_EQ(sup_.stabilize(qpu_,des-hys,des,-hys),0);
+    EXPECT_EQ(sup_.stabilize(qpu_,des,des,-hys),0);
+    EXPECT_EQ(sup_.stabilize(qpu_,des+hys,-des,-hys),0);
+
+    // Changing qpu should do nothing
+    qpu_.qu = M_PI/2;
+    qpu_.pu = 100;
+    EXPECT_EQ(sup_.stabilize(qpu_,des-hys,des,hys),0);
+    EXPECT_EQ(sup_.stabilize(qpu_,des,des,hys),0);
+    EXPECT_EQ(sup_.stabilize(qpu_,des+hys,des,hys),0);
+}
+
+// If the current value is above the desired value, the supervisor should return
+// the injection VNHC
+TEST_F(SupervisorTest, INJECTION)
+{
+    double des = M_PI/2;
+
+    // If our actual value is below the desired value, then we should return the
+    // injection VNHC
+    EXPECT_EQ(sup_.stabilize(qpu_, des/2,des,0),in_.qa(qpu_));
+    EXPECT_EQ(sup_.stabilize(qpu_, des-0.1,des,0),in_.qa(qpu_));
+    EXPECT_EQ(sup_.stabilize(qpu_, 0,des,0),in_.qa(qpu_));
+
+    // Changing qpu should do nothing
+    qpu_.qu = M_PI/4;
+    qpu_.pu = 100;
+    EXPECT_EQ(sup_.stabilize(qpu_,des/2,des,0),in_.qa(qpu_));
+    EXPECT_EQ(sup_.stabilize(qpu_,des-0.1,des,0),in_.qa(qpu_));
+    EXPECT_EQ(sup_.stabilize(qpu_,0,des,0),in_.qa(qpu_));
+
+    // Changing the sign of value should not change the result
+    EXPECT_EQ(sup_.stabilize(qpu_,-des/2,des,0),in_.qa(qpu_));
+    EXPECT_EQ(sup_.stabilize(qpu_,-des+0.1,des,0),in_.qa(qpu_));
+}
+
+// If the current value is below the desired value, the supervisor should return
+// the dissipation VNHC
+TEST_F(SupervisorTest, DISSIPATION)
+{
+    double des = M_PI/2;
+
+    // If our actual value is below the desired value, then we should return the
+    // injection VNHC
+    EXPECT_EQ(sup_.stabilize(qpu_, des*2,des,0),diss_.qa(qpu_));
+    EXPECT_EQ(sup_.stabilize(qpu_, des+0.1,des,0),diss_.qa(qpu_));
+
+    // Changing qpu should not change the result
+    qpu_.qu = M_PI/4;
+    qpu_.pu = 100;
+    EXPECT_EQ(sup_.stabilize(qpu_,des*2,des,0),diss_.qa(qpu_));
+    EXPECT_EQ(sup_.stabilize(qpu_,des+0.1,des,0),diss_.qa(qpu_));
+
+    // Changing the sign of value should not change the result
+    EXPECT_EQ(sup_.stabilize(qpu_, -des*2,des,0),diss_.qa(qpu_));
+    EXPECT_EQ(sup_.stabilize(qpu_, -des-0.1,des,0),diss_.qa(qpu_));
 }
 
 int main(int argc, char** argv)

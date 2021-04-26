@@ -32,18 +32,24 @@ public:
 	virtual ~Supervisor ();
 
     /**
-     * @brief: Function to stabilize a given nonnegative value.
+     * @brief: Function to stabilize a given nonnegative value to a desired
+     * nonnegative value, within some hysteresis.
      *
+     * @param: const UnactuatedPhase&. The current unactuated phase for the
+     * acrobot.
      * @param: double the current value of the acrobot that you are trying to
      * stabilize (examples are qu, pu, or E)
      * @param: double the desired value of the acrobot which you want the first
      * input to reach. This must be >= 0.
-     * @param: double the hysteresis; the supervisor will set qa = 0 whenever
-     * abs(abs(value) - value_des) <= hys.
+     * @param: double the hysteresis. This must be >= 0. the supervisor will set
+     * qa = 0 whenever abs(abs(value) - value_des) <= hys.
      *
      * @return: double the value of qa associated with the correct VNHC
      */
-    auto stabilize(double val, double des, double hys) const -> double;
+    auto stabilize( const UnactuatedPhase& qpu, 
+                    double value, 
+                    double des, 
+                    double hys) const -> double;
 
 private:
     // The injection and dissipation VNHCs

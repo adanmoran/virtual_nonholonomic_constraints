@@ -27,14 +27,28 @@ Supervisor::Supervisor(const AcrobotVNHC& in, const AcrobotVNHC& diss)
 Supervisor::~Supervisor()
 {}
 
-auto Supervisor::stabilize(double value, double des, double hys) const -> double
+auto Supervisor::stabilize(const UnactuatedPhase& qpu, 
+                           double value, 
+                           double des, 
+                           double hys) const -> double
 {
-    if(fabs(fabs(value)-des) <= hys)
-    {
-        return 0;
-    }
+    // Make sure everything is positive.
+    des = fabs(des);
+    value = fabs(value);
+    hys = fabs(hys);
 
-    return 1.0;
+    // injection
+    if (value < des - hys)
+    {
+        return in_.qa(qpu);
+    }
+    // dissipation
+    else if (value > des + hys)
+    {
+        return diss_.qa(qpu);
+    }
+    // stability
+    return 0;
 }
 
 }; // namespace SUGAR
