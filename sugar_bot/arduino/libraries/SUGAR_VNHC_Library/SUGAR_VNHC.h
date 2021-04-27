@@ -8,7 +8,7 @@
 * Department of Electrical and Computer Engineering
 * University of Toronto
 *
-* Last Modified: 06/Feb/20
+* Last Modified: 27/Apr/21
 * Last Editor:   Adan Moran-Macdonald
 * Description:   Header file to include to use this library in the arduino. It
 * simply includes all the relevant headers here.
@@ -21,6 +21,7 @@
 #include "include/AcrobotDynamics.h"
 #include "include/Phase.h"
 #include "include/VNHC.h"
+#include "include/Supervisor.h"
 
 #endif
 /* vim: set tw=80 ts=4 sw=4 sts=0 et ffs=unix : */
