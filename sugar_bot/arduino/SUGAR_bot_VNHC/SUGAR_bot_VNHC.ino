@@ -29,8 +29,6 @@ using namespace SUGAR;
 // PARAMETERS ------------------------------------------------------------------
 // Default configuration object
 Configuration configuration;
-// Default compensator object
-Compensator compensator;
 
 // Sampling period
 // We want this to be at most 5 ms, pushing for 2 ms
@@ -84,11 +82,38 @@ SinuVNHC sinu_vnhc(acrobot, qa_max);
 // Since qmax = pi/2, qa=arctan(Ipu) can never reach pi/2,
 // we want qa ~ pi/3 at pu = 0.1866.
 // i.e we need pi/3 = arctan(I*0.1866) <-> I = tan(pi/3)/0.1866 ~ 10.
-ScalingFactor arctan_scale = 10;
-ArctanVNHC arctan_vnhc(acrobot, qa_max, arctan_scale);
+ScalingFactor I = 10;
+ScalingFactor I_diss = -3;
+ArctanVNHC arctan_in(acrobot, qa_max, I);
+ArctanVNHC arctan_diss(acrobot,qa_max, I_diss);
 
-// Assign the VNHC pointer
-AcrobotVNHC* pVNHC = &arctan_vnhc;
+// Assign the VNHC pointers
+AcrobotVNHC* pVNHCin = &arctan_in;
+AcrobotVNHC* pVNHCdiss = &arctan_diss;
+
+// Define the supervisor
+Supervisor sup(arctan_in, arctan_diss);
+OscillationSupervisor osup(sup);
+RotationSupervisor rsup(sup);
+
+enum MetaSupervisor
+{
+  INJECTION,
+  DISSIPATION,
+  OSCILLATION,
+  ROTATION
+};
+MetaSupervisor supervisor = INJECTION;
+
+// Set the parameters for oscillation supervisors
+double qu_des = PI/2; // the desired oscillation value. Must be in [0,pi].
+double osc_hys = 0.1; // hysteresis on oscillation angle, in rad.
+bool overcompensate = false; // if true, set qa = 0 any time we go within range of qu_des
+
+// Set the parameters for rotation supervisors
+//NOTE: for arctan and I = 10, rotations occur at (0,pu) for pu in [0.15, 0.195], as per Adan's thesis.
+double pu_des = 0.16; // the desired rotation value.
+double rot_hys = 0.05; // hysteresis on rotation momentum
 
 // HARDWARE CONSTANTS ----------------------------------------------------------
 
@@ -222,11 +247,28 @@ void rtloop() {
     // get its unactuated component
     Phase phase(acrobot.M(), configuration);
     
-    // Set the servo_goal_rad with the vnhc update function.
-    servo_goal_rad = pVNHC->qa(phase.unactuatedPhase());
+    // Set the servo_goal_rad with the supervisor.
+    switch(supervisor) {
+      case INJECTION:
+        servo_goal_rad = pVNHCin->qa(phase.unactuatedPhase());
+        break;
+      case DISSIPATION:
+        servo_goal_rad = pVNHCdiss->qa(phase.unactuatedPhase());
+        break;
+      case OSCILLATION:
+        servo_goal_rad = osup.stabilize(phase.unactuatedPhase(), qu_des, osc_hys, overcompensate);
+        break;
+      case ROTATION:
+        servo_goal_rad = rsup.stabilize(phase.unactuatedPhase(), pu_des, rot_hys);
+        break;
+    }
+
+    // TODO: The above isn't working so we're temporarily just using the injection VNHC
+    servo_goal_rad = pVNHCin->qa(phase.unactuatedPhase());
     
     // Send it off to the servo
     int pos = radiansToServo(servo_goal_rad);
+    
 #if DEBUG_ENABLE
     Serial.print("qu = ");
     Serial.print(phase.qu);
@@ -236,12 +278,14 @@ void rtloop() {
     Serial.print(phase.pu);
     Serial.print(" | qa_des = ");
     Serial.println(servo_goal_rad);
-  } else {
+  } // if (switch_on)
+  else {
   }
 #else // ~DEBUG_ENABLE
     RX24F.torqueStatus(SERVO_ID, true);
     RX24F.move(1, pos);
-  } else {
+  } // if (switch_on)
+  else {
     RX24F.torqueStatus(SERVO_ID, false);
   }
 #endif // ifdef DEBUG_ENABLE
@@ -384,7 +428,6 @@ void send_wire_data()
 
   // Report the estimated energy
   temp_data.d = energy;
-//  temp_data.d = compensator.s;
   for (int i = 0; i < 4; i++)
     data_buffer[13 + i] = temp_data.b[i];
 
