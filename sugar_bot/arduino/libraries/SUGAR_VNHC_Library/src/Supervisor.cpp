@@ -135,10 +135,6 @@ auto RotationSupervisor::stabilize(
         prevBottom_ = qpu;
     }
 
-//    std::cout << "pu = " << prevBottom_.pu;
-//    std::cout << "| pudes = " << pudes;
-//    std::cout << "| stab = " << sup_.stabilize(qpu,prevBottom_.pu,pudes,hys) << std::endl;
-
     // If we are within range of pudes, fix qa to the value of the injection
     // mechanism at (0,pudes).
     // Otherwise, update qa using the supervisor.
@@ -147,15 +143,16 @@ auto RotationSupervisor::stabilize(
     // Make sure everything is in absolutes
     pudes = fabs(pudes);
     hys = fabs(hys);
+    double prevPu = fabs(prevBottom_.pu);
     // If we are in range, we actually want qa to be fixed as the inejction for
     // (qu,pu) = (0,pudes)
-    if (fabs(pudes - prevBottom_.pu) <= hys)
+    if (fabs(pudes - prevPu) <= hys)
     {
         UnactuatedPhase qpudes;
         qpudes.pu = pudes;
         qa = sup_.stabilize(qpudes,0,pudes,hys);
     }
-    
+
     return qa;
 }
 

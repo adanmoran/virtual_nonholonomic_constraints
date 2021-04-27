@@ -611,45 +611,137 @@ TEST_F(RotationSupervisorTest, INJECTION)
 
 TEST_F(RotationSupervisorTest, DISSIPATE)
 {
-    EXPECT_FALSE(true);
     // Initialized at (0,pu), should dissipate if |pu| > pudes + hys
-    
+    qpu_.pu = pudes_+2*hys_;
+    EXPECT_EQ(rsup_.stabilize(qpu_,pudes_,hys_),diss_.qa(qpu_));
     // Initialized at (0,-pu), should dissipate if |pu| > pudes+hys
+    qpu_.pu = -2*pudes_;
+    EXPECT_EQ(rsup_.stabilize(qpu_,pudes_,hys_),diss_.qa(qpu_));
 
     // Swing up to (-qu,0), still dissipating 
+    qpu_.qu = -M_PI/2; qpu_.pu = 0;
+    EXPECT_EQ(rsup_.stabilize(qpu_,pudes_,hys_),diss_.qa(qpu_));
 
     // Pushed up through qu = -pi, dissipating even though pu > pudes
-    //
+     qpu_.qu = -M_PI; qpu_.pu = 2*pudes_;
+    EXPECT_EQ(rsup_.stabilize(qpu_,pudes_,hys_),diss_.qa(qpu_));
+   
     // Cross over to qu = pi, dissipating even though pu < pudes
+    qpu_.qu = M_PI; qpu_.pu = pudes_/2;
+    EXPECT_EQ(rsup_.stabilize(qpu_,pudes_,hys_),diss_.qa(qpu_));
 
     // Continue back to qu ~ 4deg, should dissipate when pu > pudes
+    qpu_.qu = 4*(M_PI/180); qpu_.pu = -pudes_-1.1*hys_;
+    EXPECT_EQ(rsup_.stabilize(qpu_,pudes_,hys_),diss_.qa(qpu_));
 
     // Sign of pudes and hys don't matter
+    EXPECT_EQ(rsup_.stabilize(qpu_,-pudes_,hys_),diss_.qa(qpu_));
+    EXPECT_EQ(rsup_.stabilize(qpu_,pudes_,-hys_),diss_.qa(qpu_));
+
 }
 
 TEST_F(RotationSupervisorTest, FIXED_QA)
 {
-    // TODO:
-    EXPECT_FALSE(true);
+    // The phase of (0,pudes)
+    UnactuatedPhase qu0pudes;
+    qu0pudes.pu = pudes_;
     // Initialized at (0,pudes), qa = injection of pudes
-
+    qpu_.pu = pudes_;
+    EXPECT_EQ(rsup_.stabilize(qpu_,pudes_,hys_),in_.qa(qu0pudes));
     // Go up to some (-qu,-pu) with |pu| < pudes, qa hasn't changed
+    qpu_.qu = -M_PI/4; qpu_.pu = -pudes_/2;
+    EXPECT_EQ(rsup_.stabilize(qpu_,pudes_,hys_),in_.qa(qu0pudes));
     // Stop at (-qu,0), qa has not changed.
+    qpu_.qu = -M_PI/4; qpu_.pu = 0;
+    EXPECT_EQ(rsup_.stabilize(qpu_,pudes_,hys_),in_.qa(qu0pudes));
     // Swing forward at some (-qu/2,pu), qa has not changed
+    qpu_.qu = -M_PI/8; qpu_.pu = pudes_/2;
+    EXPECT_EQ(rsup_.stabilize(qpu_,pudes_,hys_),in_.qa(qu0pudes));
+
+    // Hit (-5_deg,pudes-hys), qa hasn't changed
+    qpu_.qu = -5*M_PI/180; qpu_.pu = pudes_-hys_;
+    EXPECT_EQ(rsup_.stabilize(qpu_,pudes_,hys_),in_.qa(qu0pudes));
+    // Hit (-5_deg,pudes), qa hasn't changed
+    qpu_.qu = -5*M_PI/180; qpu_.pu = pudes_;
+    EXPECT_EQ(rsup_.stabilize(qpu_,pudes_,hys_),in_.qa(qu0pudes));
+    // Hit (-5_deg,pudes+hys), qa hasn't changed
+    qpu_.qu = -5*M_PI/180; qpu_.pu = pudes_+hys_;
+    EXPECT_EQ(rsup_.stabilize(qpu_,pudes_,hys_),in_.qa(qu0pudes));
+
+
     // Hit (0,pudes-hys), qa hasn't changed
+    qpu_.qu = 0; qpu_.pu = pudes_-hys_;
+    EXPECT_EQ(rsup_.stabilize(qpu_,pudes_,hys_),in_.qa(qu0pudes));
     // Hit (0,pudes+hys), qa hasn't changed
+    qpu_.qu = 0; qpu_.pu = pudes_+hys_;
+    EXPECT_EQ(rsup_.stabilize(qpu_,pudes_,hys_),in_.qa(qu0pudes));
+
+    // Hit (5deg,pudes-hys), qa hasn't changed
+    qpu_.qu = 5*M_PI/180; qpu_.pu = pudes_-hys_;
+    EXPECT_EQ(rsup_.stabilize(qpu_,pudes_,hys_),in_.qa(qu0pudes));
+    // Hit (5deg,pudes), qa hasn't changed
+    qpu_.qu = 5*M_PI/180; qpu_.pu = pudes_;
+    EXPECT_EQ(rsup_.stabilize(qpu_,pudes_,hys_),in_.qa(qu0pudes));
+    // Hit (5deg,pudes+hys), qa hasn't changed
+    qpu_.qu = 5*M_PI/180; qpu_.pu = pudes_+hys_;
+    EXPECT_EQ(rsup_.stabilize(qpu_,pudes_,hys_),in_.qa(qu0pudes));
+
     // Go up to (pi,0), qa hasn't changed
+    qpu_.qu = M_PI; qpu_.pu = 0;
+    EXPECT_EQ(rsup_.stabilize(qpu_,pudes_,hys_),in_.qa(qu0pudes));
     // Swing through to (-pi/2,pu > pudes), qa hasn't changed
-    
-    
+     qpu_.qu = M_PI/2; qpu_.pu = 2*pudes_;
+    EXPECT_EQ(rsup_.stabilize(qpu_,pudes_,hys_),in_.qa(qu0pudes));   
 }
 
 TEST_F(RotationSupervisorTest, ROTATION_ROUTINE)
 {
-    EXPECT_FALSE(true);
-    // TODO: Start at (0,0), inject until we go past pudes, then dissipate, then
-    // hit pudes and qa stays fixed, then slow down and inject again, then hit
-    // pudes and qa stays fixed.
+    // The phase of (0,pudes)
+    UnactuatedPhase qu0pudes;
+    qu0pudes.pu = pudes_;
+
+    // Start at (0,0) and inject
+    qpu_.qu = 0; qpu_.pu = 0;
+    EXPECT_EQ(rsup_.stabilize(qpu_,pudes_,hys_),in_.qa(qpu_));   
+
+    // Go up to (qu,0) and inject
+    qpu_.qu = M_PI/6; 
+    EXPECT_EQ(rsup_.stabilize(qpu_,pudes_,hys_),in_.qa(qpu_));   
+
+    // Hit (0,-pu) with |pu| < pudes and inject
+    qpu_.qu = 0; qpu_.pu = pudes_/2;
+    EXPECT_EQ(rsup_.stabilize(qpu_,pudes_,hys_),in_.qa(qpu_));   
+
+    // Hit (-pi,0) and inject
+    qpu_.qu = -M_PI, qpu_.pu = 0;
+    EXPECT_EQ(rsup_.stabilize(qpu_,pudes_,hys_),in_.qa(qpu_));   
+
+    // Hit (0,-pu) with |pu| > pudes and dissipate
+    qpu_.qu = 0; qpu_.pu = 2*pudes_;
+    EXPECT_EQ(rsup_.stabilize(qpu_,pudes_,hys_),diss_.qa(qpu_));   
+
+    // Hit (pi/2,-pu) with |pu| = pudes and dissipate
+    qpu_.qu = M_PI/2; qpu_.pu = -pudes_;
+    EXPECT_EQ(rsup_.stabilize(qpu_,pudes_,hys_),diss_.qa(qpu_));   
+
+    // Keep going around, hit (0,-pudes-hys) and stay at qa(pudes)
+    qpu_.qu = 0; qpu_.pu = -pudes_-hys_;
+    EXPECT_EQ(rsup_.stabilize(qpu_,pudes_,hys_),in_.qa(qu0pudes));   
+    // Turn around at (-pi/2,0) and stay at qa(pudes)
+qpu_.qu = -M_PI/2; qpu_.pu = 0;
+    EXPECT_EQ(rsup_.stabilize(qpu_,pudes_,hys_),in_.qa(qu0pudes));   
+
+    // Hit (-5deg,pudes/2) and inject
+    qpu_.qu = -5*M_PI/180; qpu_.pu = pudes_/2;
+    EXPECT_EQ(rsup_.stabilize(qpu_,pudes_,hys_),in_.qa(qpu_));   
+
+    // Hit (pi,0.001) and inject
+    qpu_.qu = M_PI; qpu_.pu = 0.001;
+    EXPECT_EQ(rsup_.stabilize(qpu_,pudes_,hys_),in_.qa(qpu_));   
+
+    // Hit (0,pudes) and set qa(pudes)
+    qpu_.qu = 0; qpu_.pu = pudes_;
+    EXPECT_EQ(rsup_.stabilize(qpu_,pudes_,hys_),in_.qa(qu0pudes));   
 }
 
 
