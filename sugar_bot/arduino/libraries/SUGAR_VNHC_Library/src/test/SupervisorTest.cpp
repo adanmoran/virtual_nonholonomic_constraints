@@ -213,7 +213,67 @@ protected:
     double hys_ = 0.1;
 }; // class OscillationSupervisorTest
 
- 
+/**
+ * The maximum qudes is M_PI-hys, which is then reset to M_PI-hys if it is above
+ * this value.
+ */
+TEST_F(OscillationSupervisorTest, QUDES_BELOW_PI)
+{
+    // If qudes > M_PI, we should get qa = 0 if 
+    // |qu| in [M_PI - hys, M_PI]
+    // i.e. setting qudes > M_PI resets it to M_PI.
+
+    double qudes = M_PI;
+    qpu_.qu = M_PI-hys_;
+    EXPECT_EQ(osup_.stabilize(qpu_,qudes,hys_),0);
+
+    // Increase qudes above pi
+    qudes = M_PI + 2*hys_;
+    qpu_.qu = M_PI-hys_;
+    EXPECT_EQ(osup_.stabilize(qpu_,qudes,hys_),0);
+    qpu_.qu = M_PI;
+    EXPECT_EQ(osup_.stabilize(qpu_,qudes,hys_),0);
+    qpu_.qu = -M_PI + hys_;
+    EXPECT_EQ(osup_.stabilize(qpu_,qudes,hys_),0);
+    qpu_.qu = -M_PI;
+    EXPECT_EQ(osup_.stabilize(qpu_,qudes,hys_),0);
+
+    // Increase qudes well above pi
+    qudes = 3*M_PI/2;
+    qpu_.qu = M_PI-hys_;
+    EXPECT_EQ(osup_.stabilize(qpu_,qudes,hys_),0);
+    qpu_.qu = M_PI;
+    EXPECT_EQ(osup_.stabilize(qpu_,qudes,hys_),0);
+    qpu_.qu = -M_PI + hys_;
+    EXPECT_EQ(osup_.stabilize(qpu_,qudes,hys_),0);
+    qpu_.qu = -M_PI;
+    EXPECT_EQ(osup_.stabilize(qpu_,qudes,hys_),0);
+
+    // negative qudes shouldn't affect this
+    qudes = -M_PI - 2*hys_;
+    qpu_.qu = M_PI-hys_;
+    EXPECT_EQ(osup_.stabilize(qpu_,qudes,hys_),0);
+    qpu_.qu = M_PI;
+    EXPECT_EQ(osup_.stabilize(qpu_,qudes,hys_),0);
+    qpu_.qu = -M_PI + hys_;
+    EXPECT_EQ(osup_.stabilize(qpu_,qudes,hys_),0);
+    qpu_.qu = -M_PI;
+    EXPECT_EQ(osup_.stabilize(qpu_,qudes,hys_),0);
+
+    // Any value of pu shouldn't affect this
+    // range.
+    qudes = 3*M_PI/2;
+    qpu_.pu = 1;
+    qpu_.qu = M_PI-hys_;
+    EXPECT_EQ(osup_.stabilize(qpu_,qudes,hys_),0);
+    qpu_.qu = M_PI;
+    EXPECT_EQ(osup_.stabilize(qpu_,qudes,hys_),0);
+    qpu_.qu = -M_PI + hys_;
+    EXPECT_EQ(osup_.stabilize(qpu_,qudes,hys_),0);
+    qpu_.qu = -M_PI;
+    EXPECT_EQ(osup_.stabilize(qpu_,qudes,hys_),0);
+}
+
 /**
  * The oscillation supervisor should return 0 if qu is within range of qudes.
  */
@@ -283,13 +343,13 @@ TEST_F(OscillationSupervisorTest, OSCILLATION_DISSIPATION)
     // Initialize the acrobot at (qu,pu)=(qudes_*2,0). This should dissipate energy.
     qpu_.qu = qudes_*2;
     EXPECT_EQ(osup_.stabilize(qpu_,qudes_,hys_),in_.qa(qpu_));
-    // Do the same for (qu,pu) = (-qudes_*2,0)
+    // Initialize at (qu,pu) = (-qudes_*2,0)
      qpu_.qu = -qudes_*2;
     EXPECT_EQ(osup_.stabilize(qpu_,qudes_,hys_),in_.qa(qpu_));
-    // Do the same for (qu,pu) = (pi,0)
+    // Initialize at (qu,pu) = (pi,0)
      qpu_.qu = M_PI;
     EXPECT_EQ(osup_.stabilize(qpu_,qudes_,hys_),in_.qa(qpu_));
-    // Do the same for (qu,pu) > (qudes_+hys_,0)
+    // Initialize at (qu,pu) > (qudes_+hys_,0)
      qpu_.qu = qudes_ + hys_ + 0.001;
     EXPECT_EQ(osup_.stabilize(qpu_,qudes_,hys_),in_.qa(qpu_));
 
@@ -303,7 +363,7 @@ TEST_F(OscillationSupervisorTest, TOGGLE_IN_DISS)
     // We start with injection at (qu,pu) = (0,0)
     EXPECT_EQ(osup_.stabilize(qpu_,qudes_,hys_),in_.qa(qpu_));
 
-    // Now if the next (qu,pu) has positive pu, we should remain injecting when
+    // Now if the next (qu,pu) has nonzero pu, we should remain injecting when
     // qu < qudes_.
     qpu_.qu = qudes_-2*hys_;
     qpu_.pu = 1;
@@ -331,13 +391,14 @@ TEST_F(OscillationSupervisorTest, TOGGLE_IN_DISS)
     qpu_.pu = -0.5;
     EXPECT_EQ(osup_.stabilize(qpu_,qudes_,hys_),diss_.qa(qpu_));
 
-    // We swing down to the bottom, should still be dissipating.
+    // We swing down to the bottom without measuring in qudes range, should
+    // still be dissipating.
     qpu_.qu = 0;
     qpu_.pu = -10;
     EXPECT_EQ(osup_.stabilize(qpu_,qudes_,hys_),diss_.qa(qpu_));
 
-    // We swing up to the other side, should still be dissipating even though we
-    // switched signs of pu.
+    // We swing up to the other side without measuring qudes range, should still
+    // be dissipating even though we switched signs of pu.
     qpu_.qu = -qudes_-2*hys_;
     qpu_.pu = 1;
     EXPECT_EQ(osup_.stabilize(qpu_,qudes_,hys_),diss_.qa(qpu_));
@@ -422,12 +483,174 @@ TEST_F(OscillationSupervisorTest, OSCILLATION_STAYS_STABLE)
     EXPECT_EQ(osup_.stabilize(qpu_,qudes_,hys_),0);
 }
 
+/**
+ * Test the flag for stabilize: if false, we do not set qa = 0 unless we hit a
+ * peak within range of qudes.
+ */
+TEST_F(OscillationSupervisorTest, TOGGLE_ZERO)
+{
+    // Start in range, qa = 0
+    qpu_.qu = qudes_;
+    qpu_.pu = -0.0001;
+    EXPECT_EQ(osup_.stabilize(qpu_,qudes_,hys_,false),0);
+
+    // Bottom of the swing, qa = 0
+    qpu_.qu = 0; 
+    qpu_.pu = -10;
+    EXPECT_EQ(osup_.stabilize(qpu_,qudes_,hys_,false),0);
+
+    // Swing to the back, go too low, switch to injection.
+    qpu_.qu = -qudes_+2*hys_; 
+    qpu_.pu = 1;
+    EXPECT_EQ(osup_.stabilize(qpu_,qudes_,hys_,false),in_.qa(qpu_));
+
+    // Bottom of the swing, should still be injecting.
+    qpu_.qu = 0;
+    qpu_.qu = 10;
+    EXPECT_EQ(osup_.stabilize(qpu_,qudes_,hys_,false),in_.qa(qpu_));
+
+    // Swing to the front and go within range, still injecting because we did
+    // not change sign of pu.
+    qpu_.qu = qudes_;
+    qpu_.pu = 1;
+    EXPECT_EQ(osup_.stabilize(qpu_,qudes_,hys_,false),in_.qa(qpu_));
+
+    // Switch sign outside of range, dissipate
+    qpu_.qu = qudes_+2*hys_;
+    qpu_.pu = -1;
+    EXPECT_EQ(osup_.stabilize(qpu_,qudes_,hys_,false),diss_.qa(qpu_));
+
+    // Go through range again, still dissipating
+    qpu_.qu = qudes_; 
+    qpu_.pu = -10;
+    EXPECT_EQ(osup_.stabilize(qpu_,qudes_,hys_,false),diss_.qa(qpu_));
+
+    // Swing to the back and go in range, qa = 0
+    qpu_.qu = -qudes_-hys_; 
+    qpu_.pu = 0.1;
+    EXPECT_EQ(osup_.stabilize(qpu_,qudes_,hys_,false),0);
+
+    // Bottom of the swing, qa should remain zero.
+    qpu_.qu = 0;
+    qpu_.pu = 5;
+    EXPECT_EQ(osup_.stabilize(qpu_,qudes_,hys_,false),0);
+}
+
 
 /*****************************************************************************/
 /////////////////////////
 // Rotation Supervisor //
 /////////////////////////
+class RotationSupervisorTest : public ::testing::Test
+{
+public:
+    RotationSupervisorTest()
+    : bot_(1,1,1,1,1,1,1,0,0),
+      in_(bot_,qmax_,I_),
+      diss_(bot_,qmax_,-I_),
+      sup_(in_,diss_),
+      rsup_(sup_)
+    {}
+protected:
+    void SetUp() override 
+    {
 
+    }
+
+    void TearDown() override
+    {}
+
+    // The acrobot
+    Acrobot bot_;
+    // Constants for our VNHCs
+    double qmax_ = 1;
+    double I_ = 1;
+
+    // Define our injection and dissipation VNHCs
+    ArctanVNHC in_;
+    ArctanVNHC diss_;
+
+    // Define our supervisors, which take in the two VNHCs
+    Supervisor sup_;
+    RotationSupervisor rsup_;
+
+    // Define an unactuatedPhase for testing the objects
+    UnactuatedPhase qpu_;
+
+    // The desired angle and hysteresis
+    double pudes_ = 5;
+    double hys_ = 0.1;
+}; // class OscillationSupervisorTest
+
+// We should always be injecting if |pu| < pudes
+TEST_F(RotationSupervisorTest, INJECTION)
+{
+    // Initialized at (0,0), should inject
+    EXPECT_EQ(rsup_.stabilize(qpu_,pudes_,hys_),in_.qa(qpu_));
+
+    // Initialized at (0,-pu), should inject if |pu| < pudes-hys
+    qpu_.pu = -pudes_/2;
+    EXPECT_EQ(rsup_.stabilize(qpu_,pudes_,hys_),in_.qa(qpu_));
+
+    // Swing up to (-qu,0), still injecting
+    qpu_.qu = -M_PI/2; qpu_.pu = 0;
+    EXPECT_EQ(rsup_.stabilize(qpu_,pudes_,hys_),in_.qa(qpu_));
+    // Swing down to (0, pu), should inject if |pu| < pudes-hys
+    qpu_.qu = 0; qpu_.pu = pudes_-2*hys_;
+    EXPECT_EQ(rsup_.stabilize(qpu_,pudes_,hys_),in_.qa(qpu_));
+    // Pushed up through qu = pi, injecting even though pu > pudes
+    qpu_.qu = M_PI; qpu_.pu = 3*pudes_;
+    EXPECT_EQ(rsup_.stabilize(qpu_,pudes_,hys_),in_.qa(qpu_));
+    // Continue back to qu ~ 4deg, should inject when pu < pudes
+    qpu_.qu = 4*(M_PI/180); qpu_.pu = pudes_-1.1*hys_;
+    EXPECT_EQ(rsup_.stabilize(qpu_,pudes_,hys_),in_.qa(qpu_));
+    // Sign of pudes and hys don't matter
+    EXPECT_EQ(rsup_.stabilize(qpu_,-pudes_,hys_),in_.qa(qpu_));
+    EXPECT_EQ(rsup_.stabilize(qpu_,pudes_,-hys_),in_.qa(qpu_));
+}
+
+TEST_F(RotationSupervisorTest, DISSIPATE)
+{
+    EXPECT_FALSE(true);
+    // Initialized at (0,pu), should dissipate if |pu| > pudes + hys
+    
+    // Initialized at (0,-pu), should dissipate if |pu| > pudes+hys
+
+    // Swing up to (-qu,0), still dissipating 
+
+    // Pushed up through qu = -pi, dissipating even though pu > pudes
+    //
+    // Cross over to qu = pi, dissipating even though pu < pudes
+
+    // Continue back to qu ~ 4deg, should dissipate when pu > pudes
+
+    // Sign of pudes and hys don't matter
+}
+
+TEST_F(RotationSupervisorTest, FIXED_QA)
+{
+    // TODO:
+    EXPECT_FALSE(true);
+    // Initialized at (0,pudes), qa = injection of pudes
+
+    // Go up to some (-qu,-pu) with |pu| < pudes, qa hasn't changed
+    // Stop at (-qu,0), qa has not changed.
+    // Swing forward at some (-qu/2,pu), qa has not changed
+    // Hit (0,pudes-hys), qa hasn't changed
+    // Hit (0,pudes+hys), qa hasn't changed
+    // Go up to (pi,0), qa hasn't changed
+    // Swing through to (-pi/2,pu > pudes), qa hasn't changed
+    
+    
+}
+
+TEST_F(RotationSupervisorTest, ROTATION_ROUTINE)
+{
+    EXPECT_FALSE(true);
+    // TODO: Start at (0,0), inject until we go past pudes, then dissipate, then
+    // hit pudes and qa stays fixed, then slow down and inject again, then hit
+    // pudes and qa stays fixed.
+}
 
 
 /*****************************************************************************/

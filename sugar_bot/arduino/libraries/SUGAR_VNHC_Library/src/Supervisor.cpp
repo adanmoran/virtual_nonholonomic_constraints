@@ -15,6 +15,8 @@
 
 #include "include/Supervisor.h"
 #include <math.h>
+// TODO: remove
+#include <iostream>
 
 namespace SUGAR
 {
@@ -51,6 +53,8 @@ auto Supervisor::stabilize(const UnactuatedPhase& qpu,
     return 0;
 }
 
+/*****************************************************************************/
+
 ///////////////////////////
 // OscillationSupervisor //
 ///////////////////////////
@@ -63,9 +67,23 @@ auto OscillationSupervisor::stabilize(const UnactuatedPhase& qpu,
                                       double qudes,
                                       double hys) const -> double
 {
+    return stabilize(qpu,qudes,hys,true);
+}
+
+auto OscillationSupervisor::stabilize(const UnactuatedPhase& qpu,
+                                      double qudes,
+                                      double hys,
+                                      bool qaZeroInRange) const -> double
+{
     // Make sure qudes and hys are positive.
     qudes = fabs(qudes);
     hys = fabs(hys);
+
+    // Make sure qudes <= M_PI
+    if (qudes > M_PI)
+    {
+        qudes = M_PI;
+    }
 
     // Extract qu. We don't care about its sign.
     double qu = fabs(qpu.qu);
@@ -74,8 +92,7 @@ auto OscillationSupervisor::stabilize(const UnactuatedPhase& qpu,
     // (even though this is not a peak) so that we maintain our qa = 0.
     // This means that dissipation only occurs when we are outside the range;
     // as soon as we hit the range again, we go back to qa = 0.
-    // TODO: If this doesn't work in experiments, remove it.
-    if (fabs(qudes - qu) <= hys)
+    if (qaZeroInRange && fabs(qudes - qu) <= hys)
     {
         prevPeak_ = qpu;
     }
@@ -95,6 +112,53 @@ auto OscillationSupervisor::stabilize(const UnactuatedPhase& qpu,
     // Return the appropriate injection mechanism for this value qpu, based on the previous peak.
     return sup_.stabilize(qpu,prevPeak_.qu,qudes,hys);
 }
+
+/*****************************************************************************/
+
+/////////////////////////
+// Rotation Supervisor //
+/////////////////////////
+
+RotationSupervisor::RotationSupervisor(const Supervisor& sup)
+: sup_(sup)
+{}
+
+auto RotationSupervisor::stabilize(
+        const UnactuatedPhase& qpu,
+        double pudes,
+        double hys) const -> double
+{
+
+    // Determine if we are at the bottom of the swing
+    if (fabs(qpu.qu) <= EPS)
+    {
+        prevBottom_ = qpu;
+    }
+
+//    std::cout << "pu = " << prevBottom_.pu;
+//    std::cout << "| pudes = " << pudes;
+//    std::cout << "| stab = " << sup_.stabilize(qpu,prevBottom_.pu,pudes,hys) << std::endl;
+
+    // If we are within range of pudes, fix qa to the value of the injection
+    // mechanism at (0,pudes).
+    // Otherwise, update qa using the supervisor.
+    double qa = sup_.stabilize(qpu,prevBottom_.pu,pudes,hys);
+
+    // Make sure everything is in absolutes
+    pudes = fabs(pudes);
+    hys = fabs(hys);
+    // If we are in range, we actually want qa to be fixed as the inejction for
+    // (qu,pu) = (0,pudes)
+    if (fabs(pudes - prevBottom_.pu) <= hys)
+    {
+        UnactuatedPhase qpudes;
+        qpudes.pu = pudes;
+        qa = sup_.stabilize(qpudes,0,pudes,hys);
+    }
+    
+    return qa;
+}
+
 
 }; // namespace SUGAR
 /* vim: set tw=80 ts=4 sw=4 sts=0 et ffs=unix : */
