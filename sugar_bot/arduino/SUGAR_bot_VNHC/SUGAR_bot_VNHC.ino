@@ -92,16 +92,17 @@ AcrobotVNHC* pVNHCin = &arctan_in;
 AcrobotVNHC* pVNHCdiss = &arctan_diss;
 
 // Define the supervisor
-Supervisor sup(arctan_in, arctan_diss);
-OscillationSupervisor osup(sup);
-RotationSupervisor rsup(sup);
+//Supervisor sup(arctan_in, arctan_diss);
+//OscillationSupervisor osup(sup);
+//RotationSupervisor rsup(sup);
 
 enum MetaSupervisor
 {
   INJECTION,
   DISSIPATION,
-  OSCILLATION,
-  ROTATION
+//  OSCILLATION,
+//  ROTATION,
+  ENERGIZATION
 };
 MetaSupervisor supervisor = INJECTION;
 
@@ -113,7 +114,11 @@ bool overcompensate = false; // if true, set qa = 0 any time we go within range 
 // Set the parameters for rotation supervisors
 //NOTE: for arctan and I = 10, rotations occur at (0,pu) for pu in [0.15, 0.195], as per Adan's thesis.
 double pu_des = 0.16; // the desired rotation value.
-double rot_hys = 0.05; // hysteresis on rotation momentum
+double rot_hys = pu_des/20; // hysteresis on rotation momentum
+
+// Set the parameter for the energization controller, which is to inject below some E and dissipate above
+double E_des = 0.5997*(1-cos(qu_des)); // nominal energy of pendulum at (qu_des,0)
+double E_hys = E_des/20; // 5% error for hysteresis
 
 // HARDWARE CONSTANTS ----------------------------------------------------------
 
@@ -246,25 +251,30 @@ void rtloop() {
     // Convert the current configuration object to a phase object, then
     // get its unactuated component
     Phase phase(acrobot.M(), configuration);
+    UnactuatedPhase qpu = phase.unactuatedPhase();
     
     // Set the servo_goal_rad with the supervisor.
-    switch(supervisor) {
-      case INJECTION:
-        servo_goal_rad = pVNHCin->qa(phase.unactuatedPhase());
-        break;
-      case DISSIPATION:
-        servo_goal_rad = pVNHCdiss->qa(phase.unactuatedPhase());
-        break;
-      case OSCILLATION:
-        servo_goal_rad = osup.stabilize(phase.unactuatedPhase(), qu_des, osc_hys, overcompensate);
-        break;
-      case ROTATION:
-        servo_goal_rad = rsup.stabilize(phase.unactuatedPhase(), pu_des, rot_hys);
-        break;
+    // For some reason switch-case breaks this, so use if-statements.
+    if(supervisor == INJECTION)
+    {
+      servo_goal_rad = pVNHCin->qa(qpu);
+    } 
+    else if (supervisor == DISSIPATION)
+    {
+      servo_goal_rad = pVNHCdiss->qa(qpu);
     }
-
-    // TODO: The above isn't working so we're temporarily just using the injection VNHC
-    servo_goal_rad = pVNHCin->qa(phase.unactuatedPhase());
+    else if (supervisor == ENERGIZATION)
+    {
+      // Inject below desired energy, dissipate above,
+      // do nothing in between.
+      if (energy <= E_des - E_hys){
+        servo_goal_rad = pVNHCin->qa(qpu);
+      } else if ( energy >= E_des + E_hys) {
+        servo_goal_rad = pVNHCdiss->qa(qpu);
+      } else {
+        servo_goal_rad = servo_goal_rad;
+      }
+    } // if (supervisor)
     
     // Send it off to the servo
     int pos = radiansToServo(servo_goal_rad);
