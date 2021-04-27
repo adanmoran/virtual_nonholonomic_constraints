@@ -14,6 +14,7 @@ SET SUGAR_ROOT=%CD%
 COPY /Y "%SUGAR_ROOT%\src\VNHC.cpp" "%SUGAR_ROOT%\VNHC.cpp"
 COPY /Y "%SUGAR_ROOT%\src\Phase.cpp" "%SUGAR_ROOT%\Phase.cpp"
 COPY /Y "%SUGAR_ROOT%\src\AcrobotDynamics.cpp" "%SUGAR_ROOT%\AcrobotDynamics.cpp"
+COPY /Y "%SUGAR_ROOT%\src\Supervisor.cpp" "%SUGAR_ROOT%\Supervisor.cpp"
 DIR
-ECHO Please verify VNHC.cpp, Phase.cpp, and AcrobotDynamics.cpp were copied correctly.
+ECHO Please verify Supervisor.cpp, VNHC.cpp, Phase.cpp, and AcrobotDynamics.cpp were copied correctly.
 PAUSE
