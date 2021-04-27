@@ -92,6 +92,7 @@ AcrobotVNHC* pVNHCin = &arctan_in;
 AcrobotVNHC* pVNHCdiss = &arctan_diss;
 
 // Define the supervisor
+// TODO: These don't work with the robot, even though they work in code :(
 //Supervisor sup(arctan_in, arctan_diss);
 //OscillationSupervisor osup(sup);
 //RotationSupervisor rsup(sup);
@@ -100,25 +101,15 @@ enum MetaSupervisor
 {
   INJECTION,
   DISSIPATION,
-//  OSCILLATION,
-//  ROTATION,
   ENERGIZATION
 };
 MetaSupervisor supervisor = INJECTION;
 
-// Set the parameters for oscillation supervisors
-double qu_des = PI/2; // the desired oscillation value. Must be in [0,pi].
-double osc_hys = 0.1; // hysteresis on oscillation angle, in rad.
-bool overcompensate = false; // if true, set qa = 0 any time we go within range of qu_des
-
-// Set the parameters for rotation supervisors
-//NOTE: for arctan and I = 10, rotations occur at (0,pu) for pu in [0.15, 0.195], as per Adan's thesis.
-double pu_des = 0.16; // the desired rotation value.
-double rot_hys = pu_des/20; // hysteresis on rotation momentum
-
 // Set the parameter for the energization controller, which is to inject below some E and dissipate above
-double E_des = 0.5997*(1-cos(qu_des)); // nominal energy of pendulum at (qu_des,0)
-double E_hys = E_des/20; // 5% error for hysteresis
+double qu_des = PI/2;
+double pu_des = 0;
+double E_des = 396.5501*pu_des*pu_des + 0.5997*(1-cos(qu_des)); // nominal energy of pendulum at (qu_des,pu_des)
+double E_hys = E_des * 5/100; // 5% error as our hysteresis
 
 // HARDWARE CONSTANTS ----------------------------------------------------------
 
