@@ -15,8 +15,6 @@
 
 #include "include/Supervisor.h"
 #include <math.h>
-// TODO: remove
-#include <iostream>
 
 namespace SUGAR
 {
