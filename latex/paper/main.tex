@@ -70,12 +70,9 @@
 \author{Adan Moran-MacDonald, \IEEEmembership{Member, IEEE}, Manfredi Maggiore,
 \IEEEmembership{Member, IEEE}*, and Xingbo Wang
 \thanks{Manuscript submitted for review on \today.}
-\thanks{A. Moran-MacDonald is with the Department of Electrical and Computer
-    Engineering, University of Toronto, Toronto, ON, Canada (e-mail:
-adan.moran@mail.utoronto.ca).}
-\thanks{M. Maggiore is with the Department of Electrical and Computer
-Engineering, University of Toronto, ON, Canada (e-mail:
-maggiore@control.utoronto.ca).}
+\thanks{A. Moran-MacDonald (e-mail: adan.moran@mail.utoronto.ca) and
+M. Maggiore (e-mail: maggiore@control.utoronto.ca) are with the Department of
+Electrical and Computer Engineering, University of Toronto, ON, Canada.}
 \thanks{X. Wang is with ??? (e-mail: ???).}
 } %/author
 
@@ -92,65 +89,6 @@ TODO: keywords in alphabetical order, separated by commas.
 
 %/========== Introduction ==========/%
 \section{Introduction}\label{sec:introduction}
-\IEEEPARstart{T}ODO: intro.
-
-\subsection{Notation}
-We use the following notation and terminology in this article.
-A matrix \(A \in \R^{n \times m}\) is \textit{right semi-orthogonal} if
-\(A A\tpose = \Id{n}\) and is \textit{left semi-orthogonal} if 
-\(A\tpose A = \Id{m}\).
-For \(A \in \R^{n\times m}\) and \(B \in \R^{p \times m}\),
-we define \([A;B] \in \R^{(n+p)\times m}\) as the matrix obtained by stacking \(A\)
-on top of \(B\). 
-For \(T > 0\), the set of real numbers modulo \(T\) is denoted \(\Rt{T}\), with
-\(\Rt{\infty} := \R\).
-The gradient of a matrix-valued function 
-\(A : \R^m \rightarrow \R^{n\times n}\) is the block matrix of stacked partial
-derivatives, 
-\(\nabla_xA := [\pdiff{A}{x_1};\ldots;\pdiff{A}{x_m}] \in \R^{nm \times n}\).
-Given two matrices \(A \in \R^{n \times m}\) and \(B \in \R^{r \times s}\), the
-Kronecker product \(A \otimes B \in \R^{nr \times ms}\) (see \cite{kronprod}) is
-the matrix
-\begin{equation}\label{eqn:kronprod}
-    A \otimes B = \begin{bmatrix}
-        A_{1,1}B & \cdots & A_{1,m} B \\
-        \vdots & \ddots & \vdots \\
-        A_{n,1} B & \cdots & A_{n,m} B
-    \end{bmatrix} 
-    .
-\end{equation}
-The Poisson bracket \cite{landau_mechanics} between the functions
-\(f(q,p)\) and \(g(q,p)\) is
-\begin{equation}\label{eqn:poisson-bracket}
-    [f,g] := \sum \limits_{i=1}^n \pdiff{f}{p_i}\pdiff{g}{q_i} - 
-        \pdiff{f}{q_i}\pdiff{g}{p_i}
-    .
-\end{equation}
-Finally, the Kronecker delta \(\delta_i^j = 1\) if \(i = j\) and \(0\)
-otherwise.
-
-%/========== Problem Formulation ==========/%
-\section{Problem Formulation}\label{sec:problem-formulation}
-%TODO: motivate injection/dissipation for energy regulation in an acrobot. Use
-%this to lead into VNHCs. e.g. represent torso as chain of a swing, pivot as
-%seat, and legs as human legs. Replicate fig3.3 from thesis but for acrobot: take
-%(qu,pu)-plane and show how a person moves their legs wrt theta, qu, or pu. Leave
-%the gymnast model until the end, or ignore it entirely.
-%
-%Alternatively, ff human movement journal says legs move wrt qu, we can use that
-%as a foundation.
-%Ideas: Human movement says appropriate regulation of pendulum allows energy to
-%be pumped into system. Pendulum length rapidly increased on downward swing, then
-%rapidly decreased on upward swing (I think these mean backward and forward).
-%They plot pendulum length rdot/r vs "body angle" theta to determine energy
-%injection, which hints at some relationship between (r,rdot) and (theta,thetad).
-%Indeed, the peak value of rdot/r did not occur at a fixed value of theta, nor
-%once anyone reached a particular speed; it occured at the same thetadot/theta for all
-%participants of the study. This perfectly motivates VNHCs for robots, because we
-%can shape (r,rtdot) as functions of (theta,thetad).
-%Start motivation from energy injection - how do humans inject energy? How does
-%acrobot model gymnast? use human movement to motivate tracking functions of both
-%position and velocity rather than time.
 
 In gymnastics terminology, a ``giant" is the motion a gymnast performs to
 achieve full rotations around a horizontal bar \cite{usagym_giant}. 
@@ -215,12 +153,129 @@ In particular, VNHCs may be capable of injecting and
 dissipating energy from a system in a robust manner, all while producing
 realistic biological motion. 
 
-In this article, we will design a virtual
-nonholonomic constraint which provably injects energy into the acrobot through 
-human-like giant motion.
+In this article, we will design a virtual nonholonomic constraint which provably
+injects energy into the acrobot through human-like giant motion.
 
-\textbf{MANFREDI: This section feels more like an intro than a problem
-formulation. Thoughts?}
+\subsection{Notation}
+We use the following notation and terminology in this article.
+A matrix \(A \in \R^{n \times m}\) is \textit{right semi-orthogonal} if
+\(A A\tpose = \Id{n}\) and is \textit{left semi-orthogonal} if 
+\(A\tpose A = \Id{m}\).
+For \(A \in \R^{n\times m}\) and \(B \in \R^{p \times m}\),
+we define \([A;B] \in \R^{(n+p)\times m}\) as the matrix obtained by stacking \(A\)
+on top of \(B\). 
+For \(T > 0\), the set of real numbers modulo \(T\) is denoted \(\Rt{T}\), with
+\(\Rt{\infty} := \R\).
+The gradient of a matrix-valued function 
+\(A : \R^m \rightarrow \R^{n\times n}\) is the block matrix of stacked partial
+derivatives, 
+\(\nabla_xA := [\pdiff{A}{x_1};\ldots;\pdiff{A}{x_m}] \in \R^{nm \times n}\).
+Given two matrices \(A \in \R^{n \times m}\) and \(B \in \R^{r \times s}\), the
+Kronecker product \(A \otimes B \in \R^{nr \times ms}\) (see \cite{kronprod}) is
+the matrix
+\begin{equation}\label{eqn:kronprod}
+    A \otimes B = \begin{bmatrix}
+        A_{1,1}B & \cdots & A_{1,m} B \\
+        \vdots & \ddots & \vdots \\
+        A_{n,1} B & \cdots & A_{n,m} B
+    \end{bmatrix} 
+    .
+\end{equation}
+The Poisson bracket \cite{landau_mechanics} between the functions
+\(f(q,p)\) and \(g(q,p)\) is
+\begin{equation}\label{eqn:poisson-bracket}
+    [f,g] := \sum \limits_{i=1}^n \pdiff{f}{p_i}\pdiff{g}{q_i} - 
+        \pdiff{f}{q_i}\pdiff{g}{p_i}
+    .
+\end{equation}
+Finally, the Kronecker delta \(\delta_i^j = 1\) if \(i = j\) and \(0\)
+otherwise.
+
+%/========== Problem Formulation ==========/%
+\section{Problem Formulation}\label{sec:problem-formulation}
+We will use the simplified acrobot model in Figure
+\ref{fig:simple-acrobot-model}, where we assume the torso and leg rods are of
+equal length \(l\) with equal point masses \(m\) at the tips.
+A real gymnast cannot swing their legs in full circles, though they
+are usually flexible enough to raise them parallel to the floor;
+hence, we assume the leg angle \(q_a\) lies in \([-Q_a, Q_a]\) for some
+\(Q_a \in [\frac{\pi}{2}, \pi[\). 
+We also ignore any frictional forces.
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.8\linewidth]{simple_acrobot_model.pdf}
+    \caption{A simple acrobot has massless rods of equal length \(l\) and 
+    equal masses \(m\) at the tips.}
+    \label{fig:simple-acrobot-model}
+\end{figure}
+
+The acrobot has inertia matrix 
+\(M\), potential function \(V\) (with respect to
+the horizontal bar), and input matrix \(B\) given as follows:
+\begin{align}\label{eqn:acrobot-inertia}
+    M(q) &= \begin{bmatrix}
+        ml^2\left(3+2\cos(q_a)\right) & 
+        ml^2\left(1+\cos(q_a)\right) \\
+        ml^2\left(1+\cos(q_a)\right) &
+        ml^2
+    \end{bmatrix} 
+    , \\
+    \label{eqn:acrobot-potential}
+    V(q) &= -mgl\left(2\cos(q_u)+\cos(q_u+q_a)\right)
+    , \\
+    \label{eqn:acrobot-B}
+    B &= [0;1]
+    .
+\end{align}
+For reasons that will become clear in later sections of this article, we will
+use Hamiltonian mechanics to derive the dynamics of the acrobot. 
+For this we require the conjugate of momenta, \(p = (p_u,p_a) = M(q)\dot{q}\).
+The dynamics of the acrobot in \((q,p)\) coordinates are given in
+~\eqref{eqn:acrobot-hamiltonian}.
+For shorthand, we write \(c_u := \cos(q_u)\), \(c_a := \cos(q_a)\), and 
+\(c_{ua} := \cos(q_u + q_a)\); likewise, \(s_u := \sin(q_u)\), 
+\(s_a := \sin(q_a)\), and \(s_{ua} := \sin(q_u + q_a)\).
+\begin{align}\label{eqn:acrobot-hamiltonian}
+    \mathcal{H}(q,p) &= \frac{1}{2}p\tpose \Minv(q) p -
+    mgl\left(2 c_u + c_{ua}\right)
+    , \\
+     &\begin{cases}
+        \dot{q} = \Minv(q) p 
+        ,\\
+        \dot{p}_u = -mgl\left(2s_u + s_{ua}\right) 
+        ,\\
+        \dot{p}_a =-\frac{1}{2}p\tpose \nabla_{q_a}\Minv(q) p
+        - mgl s_{ua} + \tau.
+    \end{cases} \nonumber
+\end{align}
+The control input is a force \(\tau \in \R\) affecting only the dynamics of
+\(p_a\), representing a torque acting on the hip joint.
+
+Our goal is to design a smooth function \(f : \Sone \times \R\) such that the
+relation \(q_a = f(q_u,p_u)\) is a regular VNHC, where the constrained dynamics
+of the acrobot (under this constraint) gain energy on some set \(D\)
+in the sense of Definition \ref{defn:energy-gain}.
+We will formally define regularity in the next section.
+Essentially, if the constraint meets some regularity conditions then it can be
+stabilized via feedback.
+
+\begin{defn}\label{defn:energy-gain}
+    Let \(\mathcal{Q}\) be an
+    \(n\)-dimensional smooth generalized cylinder.
+    Let \(f : \mathcal{Q} \rightarrow \mathcal{Q}\times\R^n\) be a smooth vector
+    field and let \(D \subset M\) be open.
+    The system described by \(\dot{x} = f(x)\) 
+    \textit{gains energy on \(D\)} if, 
+    for all compact sets \(K \subset D\) and for almost every initial
+    condition \(x(0) \in K\), there exists \(T > 0\) such
+    that \(x(t) \notin K \, (\forall t > T)\).
+    The system \textit{loses energy on \(D\)} if it gains energy in
+    negative-time.
+\end{defn}
+
+Note that any system satisfying Definition \ref{defn:energy-gain}
+can have unstable equilibria on \(D\), but not limit cycles nor closed orbits.
 
 Before embarking on our design problem, let us summarize the relevant theory of
 VNHCs.
@@ -228,7 +283,7 @@ VNHCs.
 %/========== VNHC ==========/%
 \section{Theory of VNHCs}\label{sec:vnhc}
 
-\subsection{Simply Actuated Hamiltonian Systems}
+\subsection{Simply Actuated Hamiltonian Systems} \label{sec:vnhc-sah}
 Take a mechanical system modelled with generalized coordinates 
 \(q = (q_1, \ldots, q_n)\) on a configuration manifold
 \(\mathcal{Q} = \Rt{T_1} \times \cdot \Rt{T_n}\), where
@@ -269,7 +324,7 @@ underactuation \((n-k)\).
 
 It is easy to show using the matrix Kronecker product that
 \eqref{eqn:hamiltonian-eom-general} expands to
-\begin{equation}\label{eqn:hamiltonian-full-dynamics}
+\begin{equation*}\label{eqn:hamiltonian-full-dynamics}
      \begin{cases}
         \dot{q} = D\inv(q)p 
         , \\
@@ -277,7 +332,14 @@ It is easy to show using the matrix Kronecker product that
         - \nabla_q P(q) + B(q) \tau
         . \\
     \end{cases}
-\end{equation}
+\end{equation*}
+%\begin{align*}
+%    \dot{q} &= D\inv(q)p 
+%    ,\\
+%    \dot{p} &= -\frac{1}{2} (\Id{n} \otimes p\tpose) \nabla_q D\inv(q) p
+%        - \nabla_q P(q) + B(q) \tau
+%    .
+%\end{align*}
 
 Because \(\tau\) is transformed by \(B(q)\), it is not obvious how any
 particular input force \(\tau_i\) affects the system.
@@ -384,7 +446,7 @@ the remaining \(k\) configuration variables, labelled \(q_a\), are the
 The corresponding \((p_u, p_a)\) in \(\tilde{p}\) are the \textit{unactuated}
 and \textit{actuated momenta}, respectively.
 
-\subsection{Virtual Nonholonomic Constraints}
+\subsection{Virtual Nonholonomic Constraints}\label{sec:vnhc-vnhc}
 
 Griffin and Grizzle \cite{nhvc_dynamic_walking} were the first to define
 relative degree two nonholonomic constraints which can be enforced
@@ -568,32 +630,15 @@ The inertia matrix does not depend on the unactuated coordinates, so that
     \(q_a = f(q_u,p_u)\) completes the proof.
 \end{proof}
 
-We conclude this section by formalizing the notion of energy injection for
-VNHCs.
-
-\begin{defn}\label{defn:energy-gain}
-    Let \(\mathcal{Q}\) be an
-    \(n\)-dimensional smooth generalized cylinder.
-    Let \(f : \mathcal{Q} \rightarrow \mathcal{Q}\times\R^n\) be a smooth vector
-    field and let \(D \subset M\) be open.
-    The system described by \(\dot{x} = f(x)\) 
-    \textit{gains energy on \(D\)} if, 
-    for all compact sets \(K \subset D\) and for almost every initial
-    condition \(x(0) \in K\), there exists \(T > 0\) such
-    that \(x(t) \notin K \, (\forall t > T)\).
-    The system \textit{loses energy on \(D\)} if it gains energy in
-    negative-time.
-\end{defn}
-
-Any system satisfying Definition \ref{defn:energy-gain}
-can have unstable equilibria on \(D\), but not limit cycles nor closed orbits.
-The next definition ties this notion of energy gain to VNHCs.
+We conclude this section by formalizing the notion of energy
+injection/dissipation for VNHCs.
 
 \begin{defn}\label{defn:energy-injection}
     A regular VNHC \(h(q, p) = 0\) with constraint manifold \(\Gamma\)
     \textit{injects (dissipates) energy on \(D \subset \Gamma\)} if the
-    constrained dynamics gain (lose) energy everywhere on \(D\), except possibly
-    on a set of measure zero.
+    constrained dynamics gain (lose) energy everywhere on \(D\) according to
+    Definition \ref{defn:energy-gain}, except possibly on a set of measure
+    zero.
 \end{defn}
 
 \textbf{Comparison with existing literature}: Horn et.al. provide the constrained
@@ -621,48 +666,10 @@ VNHCs to the acrobot.
 %injection for giant stabilization)
 Our goal in this article is to design a VNHC which injects energy into the
 acrobot through giant-like motion.
-We will use the simplified acrobot model in Figure
-\ref{fig:simple-acrobot-model}, where we assume the torso and leg rods are of
-equal length \(l\) with equal point masses \(m\) at the tips.
-A real gymnast cannot swing their legs in full circles, though they
-are usually flexible enough to raise them parallel to the floor;
-hence, we assume the leg angle \(q_a\) lies in \([-Q_a, Q_a]\) for some
-\(Q_a \in [\frac{\pi}{2}, \pi[\). 
-We also ignore any frictional forces.
-
-\begin{figure}
-    \centering
-    \includegraphics[width=0.7\linewidth]{simple_acrobot_model.pdf}
-    \caption{A simple acrobot has massless rods of equal length \(l\) and 
-    equal masses \(m\) at the tips.}
-    \label{fig:simple-acrobot-model}
-\end{figure}
-
-The acrobot has inertia matrix 
-\(M\), potential function \(V\) (with respect to
-the horizontal bar), and input matrix \(B\) given as follows:
-\begin{align}\label{eqn:acrobot-inertia}
-    M(q) &= \begin{bmatrix}
-        ml^2\left(3+2\cos(q_a)\right) & 
-        ml^2\left(1+\cos(q_a)\right) \\
-        ml^2\left(1+\cos(q_a)\right) &
-        ml^2
-    \end{bmatrix} 
-    , \\
-    \label{eqn:acrobot-potential}
-    V(q) &= -mgl\left(2\cos(q_u)+\cos(q_u+q_a)\right)
-    , \\
-    \label{eqn:acrobot-B}
-    B &= [0;1]
-    .
-\end{align}
-The conjugate of momenta is \(p = (p_u,p_a) = M(q)\dot{q}\).
-The dynamics of the acrobot in \((q,p)\) coordinates are given in
-~\eqref{eqn:acrobot-hamiltonian}, where
-for shorthand, we write \(c_u := \cos(q_u)\), \(c_a := \cos(q_a)\), and 
-\(c_{ua} := \cos(q_u + q_a)\); likewise, \(s_u := \sin(q_u)\), 
-\(s_a := \sin(q_a)\), and \(s_{ua} := \sin(q_u + q_a)\).
-\begin{align}\label{eqn:acrobot-hamiltonian}
+Recall that the acrobot in Figure \ref{fig:simple-acrobot-model} has dynamics given by
+~\eqref{eqn:acrobot-hamiltonian}, which are
+repeated here:
+\begin{align*}
     \mathcal{H}(q,p) &= \frac{1}{2}p\tpose \Minv(q) p -
     mgl\left(2 c_u + c_{ua}\right)
     , \\
@@ -672,12 +679,12 @@ for shorthand, we write \(c_u := \cos(q_u)\), \(c_a := \cos(q_a)\), and
         \dot{p}_u = -mgl\left(2s_u + s_{ua}\right) 
         ,\\
         \dot{p}_a =-\frac{1}{2}p\tpose \nabla_{q_a}\Minv(q) p
-        - mgl s_{ua} + \tau,
-    \end{cases} \nonumber
-\end{align}
-The control input is a force \(\tau \in \R\) affecting only the dynamics of
-\(p_a\), representing a torque acting on the hip joint.
-This means \((q,p)\) are simply actuated coordinates in the phase space
+        - mgl s_{ua} + \tau.
+    \end{cases}
+\end{align*}
+
+Since the control input \(\tau\) only affects the actuated momentum,
+\((q,p)\) are simply actuated coordinates in the phase space
 \(\mathcal{Q} \times \mathcal{P}\) where
 \(\mathcal{Q} = \Sone \times \Sone\), and
 \(\mathcal{P} = \R \times \R\).
@@ -743,9 +750,9 @@ Our final VNHC is
 Recall that \((q_u, p_u)\) denote the angle and momentum of the acrobot's torso.
 By Theorem \ref{thm:zero-dynamics}, the constrained acrobot is parameterized
 fully by \((q_u,p_u) \in \SxR\).
-It is easy to show that the constrained dynamics are
-just the torso dynamics obtained when one swings the legs
-according to \eqref{eqn:acrobot-constraint}:
+It is easy to show that the constrained dynamics are just the torso dynamics
+obtained when one swings the legs according to \eqref{eqn:acrobot-constraint}.
+That is, the constrained dynamics are
 \begin{equation}\label{eqn:acrobot-constrained-dynamics}
     \begin{cases}
     \dot{q}_u &= \frac{(1+I^2 p_u^2)p_u + m^2gl^3\bar{q}_a I(2s_u + s_{ua})(1+c_a) }
@@ -893,8 +900,31 @@ If the assumption holds, there is some control value \(I\)
 (which depends on \(\bar{\rho}\)) for which the acrobot will 
 achieve rotations with a momentum of at least \(\bar{\rho}\).
 
+The results of Theorem \ref{thm:acrobot-energy-stabilization} lead naturally to
+the idea of energy regulation: one could employ a supervisor which switches
+between injection and dissipation constraints to stabilize a desired energy
+level \(\bar{E}\).
+For instance, the supervisor could inject energy when \(E(q_u,p_u) < \bar{E}\) 
+and dissipate energy when \(E(q_u,p_u) > \bar{E}\), with some hysteresis to
+avoid infinite switching.
+As we shall see, such a simple supervisor will not produce human-like
+oscillations or rotations.
+However, it will allow the acrobot to stabilize some peak angle of oscillation
+\(\bar{q}_u \in \, ]0,\pi[\) so that \(E(\pm \bar{q}_u,0) = \bar{E}\),
+or some peak rotational momentum
+\(\bar{p}_u \in \, ]\sqrt{60m^2gl^3}, \bar{\rho}[\) where
+\(E(0,\pm \bar{p}_u) = \bar{E}\).
+
 %/========== Experiments ==========/%
+\section{Simulation Results}\label{sec:simulations}
+\textbf{TODO: simulation parameters in a table, show results for injection,
+dissipation, and regulation along with existing simulations. Ample commentary.}
+
 \section{Experimental Results}\label{sec:experiments}
+\textbf{TODO: 2 sections. a) is hardware description, paraphrasing Xingbo.
+    Should be brief but detailed (eg 2 arduinos, 3d printed, battery in the leg,
+    parameters of the system, etc). b) is
+experimental results, same as simulation section.}
 We tested our VNHC on the physical acrobot built by
 Xingbo Wang \cite{xingbo_thesis} (Figure \ref{fig:xingbo-acrobot}).
 The torso and legs on this robot have differing masses and lengths, so
@@ -905,7 +935,7 @@ VNHCs are robust to model mismatch.
 
 \begin{figure}
     \centering
-    \includegraphics[width=0.6\linewidth]{xingbo_acrobot.jpg}
+    \includegraphics[width=0.9\linewidth]{xingbo_acrobot.jpg}
     \caption{The acrobot built by Wang \cite{xingbo_thesis}.}
     \label{fig:xingbo-acrobot}
 \end{figure}
@@ -943,7 +973,7 @@ energy over time.
 
 \begin{figure}[]
     \centering
-    \includegraphics[width=0.7\linewidth]{acrobot_orbit.png}
+    \includegraphics[width=0.8\linewidth]{acrobot_orbit.png}
     \caption{A simulated orbit of Wang's acrobot.}
     \label{fig:acrobot-orbit}
 \end{figure}
@@ -961,7 +991,7 @@ the acrobot always rotated within 10--35 seconds.
 
 \begin{figure}[]
     \centering
-    \includegraphics[width=0.7\linewidth]{acrobot_mc.png}
+    \includegraphics[width=0.8\linewidth]{acrobot_mc.png}
     \caption{Monte Carlo simulation results.}
     \label{fig:acrobot-mc}
 \end{figure}
@@ -987,12 +1017,12 @@ We then performed the following tests.
 
 \begin{figure}
     \centering
-    \begin{subfigure}[t]{0.45\linewidth}
+    \begin{subfigure}[t]{0.49\linewidth}
         \includegraphics[width=\linewidth]{acrobot_unperturbed_orbit.png}
         \caption{The baseline test.}
         \label{fig:acrobot-unperturbed-orbit}
     \end{subfigure}
-    \begin{subfigure}[t]{0.45\linewidth}
+    \begin{subfigure}[t]{0.49\linewidth}
         \includegraphics[width=\linewidth]{acrobot_stopped_orbit.png}
         \caption{Acrobot orbit before (blue) and after (red) stopping.}
         \label{fig:acrobot-stopped-orbit}
@@ -1029,12 +1059,12 @@ We then performed the following tests.
 
 \begin{figure}
     \centering
-    \begin{subfigure}[ht]{0.45\linewidth}
+    \begin{subfigure}[ht]{0.49\linewidth}
         \includegraphics[width=\linewidth]{acrobot_fpush_orbit.png}
         \caption{The forwards push test.}
         \label{fig:acrobot-fpush-orbit}
     \end{subfigure}
-    \begin{subfigure}[ht]{0.45\linewidth}
+    \begin{subfigure}[ht]{0.49\linewidth}
         \includegraphics[width=\linewidth]{acrobot_rpush_orbit.png}
         \caption{The reverse push test.}
         \label{fig:acrobot-rpush-orbit}
@@ -1046,10 +1076,11 @@ We then performed the following tests.
 These simulations and experiments demonstrate that VNHCs are excellent
 tools for injecting energy.
 In particular, energy injection through VNHCs appears to be robust against a
-variety of disturbances, including significant model mismatch.
+variety of disturbances, including significant model mismatch and sensor noise.
 
 %/========== Proof ==========/%
 \section{Proof of Theorem \ref{thm:acrobot-energy-stabilization}}\label{sec:proof}
+\textbf{TODO: prove Thm 10}
 
 %/========== Conclusion ==========/%
 \section{Conclusion}\label{sec:conclusion}
