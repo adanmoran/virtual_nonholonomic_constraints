@@ -106,7 +106,7 @@ enum MetaSupervisor
 MetaSupervisor supervisor = INJECTION;
 
 // Set the parameter for the energization controller, which is to inject below some E and dissipate above
-double qu_des = PI/2;
+double qu_des = 3*PI/4;
 double pu_des = 0;
 double E_des = 396.5501*pu_des*pu_des + 0.5997*(1-cos(qu_des)); // nominal energy of pendulum at (qu_des,pu_des)
 double E_hys = E_des * 5/100; // 5% error as our hysteresis
@@ -182,7 +182,7 @@ void setup() {
   Serial.println(" Debug Enabled ");
   Serial.println("---------------");
   
-#else // DEBUG_ENABLE
+#else // if !DEBUG_ENABLE
   // The Dynamixel RX-24F servo uses RS485 protocol
   // 500kHz should be fast enough for a loop rate of 500Hz
   // 2 is the direction pin, as required by RS485
@@ -193,7 +193,7 @@ void setup() {
   RX24F.setCSlope(SERVO_ID, 0x02, 0x02);
   RX24F.setCMargin(SERVO_ID, 0x00, 0x00);
   RX24F.setAngleLimit(SERVO_ID, 512 + 308, 512 - 308);
-#endif // ifdef DEBUG_ENABLE
+#endif // if DEBUG_ENABLE
   
   // A real-time loop that executes once every Ts_ms (2) milliseconds
   // NOTE after further investigation into the timer library, this is NOT
@@ -236,7 +236,7 @@ void rtloop() {
   bool switch_on = (main_switch_state == 1);
 #if !DEBUG_ENABLE
   RX24F.ledStatus(SERVO_ID, switch_on);
-#endif // ifdef DEBUG_ENABLE
+#endif // if !DEBUG_ENABLE
   
   if (switch_on) {
     // Convert the current configuration object to a phase object, then
@@ -282,14 +282,14 @@ void rtloop() {
   } // if (switch_on)
   else {
   }
-#else // ~DEBUG_ENABLE
+#else // if !DEBUG_ENABLE
     RX24F.torqueStatus(SERVO_ID, true);
     RX24F.move(1, pos);
   } // if (switch_on)
   else {
     RX24F.torqueStatus(SERVO_ID, false);
   }
-#endif // ifdef DEBUG_ENABLE
+#endif // if DEBUG_ENABLE
   
   // Send data back to the other box
   send_wire_data();
