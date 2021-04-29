@@ -18,6 +18,7 @@
 % NOTE: cannot use amsthm for some reason
 \usepackage{mathtools}
 \usepackage{bm}
+\usepackage{booktabs}
 
 %---------- Bibliography Style ----------%
 \bibliographystyle{IEEEtran}
@@ -657,13 +658,7 @@ VNHCs to the acrobot.
 
 %/========== Acrobot ==========/%
 \section{The Acrobot VNHC}\label{sec:acrobot}
-%specialize the theory of VNHCs to the acrobot. consider constraints which depend
-%only on pu, and show arctan vnhc and reduced dynamics. 
-%give definition of energy injection/dissipation. conclude with our
-%theorem. Make this section short and sweet.
-%
-%TODO: after writing S2, re-introduce what we want to do with acrobot (energy
-%injection for giant stabilization)
+
 Our goal in this article is to design a VNHC which injects energy into the
 acrobot through giant-like motion.
 Recall that the acrobot in Figure \ref{fig:simple-acrobot-model} has dynamics given by
@@ -917,47 +912,72 @@ or some peak rotational momentum
 
 %/========== Experiments ==========/%
 \section{Simulation Results}\label{sec:simulations}
-\textbf{TODO: simulation parameters in a table, show results for injection,
-dissipation, and regulation along with existing simulations. Ample commentary.}
-
-\section{Experimental Results}\label{sec:experiments}
-\textbf{TODO: 2 sections. a) is hardware description, paraphrasing Xingbo.
-    Should be brief but detailed (eg 2 arduinos, 3d printed, battery in the leg,
-    parameters of the system, etc). b) is
-experimental results, same as simulation section.}
-We tested our VNHC on the physical acrobot built by
-Xingbo Wang \cite{xingbo_thesis} (Figure \ref{fig:xingbo-acrobot}).
-The torso and legs on this robot have differing masses and lengths, so
-its inertia matrix and potential function are \textbf{not} described by 
-~\eqref{eqn:acrobot-inertia}-\eqref{eqn:acrobot-potential}.
-If our VNHC injects energy into this acrobot, then we can infer that
-VNHCs are robust to model mismatch.
+In Section \ref{sec:experiments} we will test our VNHC on the physical acrobot
+built by Xingbo Wang \cite{xingbo_thesis} (Figure \ref{fig:xingbo-acrobot}).
+To compare apples to apples, we will simulate our VNHC using the parameters of
+the physical system (Table \ref{tab:acrobot-parameters}).
 
 \begin{figure}
     \centering
-    \includegraphics[width=0.9\linewidth]{xingbo_acrobot.jpg}
-    \caption{The acrobot built by Wang \cite{xingbo_thesis}.}
-    \label{fig:xingbo-acrobot}
+    \includegraphics[width=0.8\linewidth]{acrobot_model.pdf}
+    \caption{The general acrobot model, represented by two weighted rods
+    differing in both length and mass.}%
+    \label{fig:acrobot-model}
 \end{figure}
 
-For our VNHC to inject energy, we know the control parameter \(I\) must be small
-(as per Theorem \ref{thm:acrobot-energy-stabilization}), but it must also be
-large enough to overcome friction in leg motor.
-Setting \(\bar{q}_a = 1\), we experimentally determined that \(I = 10\) is
-sufficient to ensure the actuator can fully rotate in its allowable range \(q_a
-\in \left[ -\frac{\pi}{2}, \frac{\pi}{2}\right]\). 
-This is the value of \(I\) we used in all simulations and experiments.
+\begin{table}
+    \centering
+    \caption{Physical parameters for the real acrobot.}
+    \label{tab:acrobot-parameters}
+    \resizebox{\columnwidth}{!}{%
+    \begin{tabular}{ccccccccc}
+        \toprule
+        $m_u$ & $m_a$ & $l_u$ & $l_a$ & $l_{c_u}$ & $l_{c_a}$ & $J_u$ & $J_a$ & $g$ \\
+        \midrule
+        0.2112 & 0.1979 & % mass
+        0.148 & 0.145 & % total length
+        0.073 & 0.083 & % COM distance
+        0.00129 & 0.00075 & % moment of inertia
+        9.81 \\ % gravity
+        \bottomrule
+    \end{tabular}
+    } % resizebox
+\end{table}
 
-\subsection{Simulations Results}
-Evaluating the true mechanical energy of Wang's acrobot at the VNHC
+Note that these parameters do not correspond to our simplified acrobot in Figure
+\ref{fig:simple-acrobot-model}, but rather to the more general acrobot model in
+Figure \ref{fig:acrobot-model}.
+In particular, the inertia matrix and potential function are \textbf{not}
+described by ~\eqref{eqn:acrobot-inertia}-\eqref{eqn:acrobot-potential}.
+The correct \(M(q)\) and \(V(q)\) can be found in Wang's thesis
+\cite{xingbo_thesis}.
+If our VNHC injects energy into this acrobot, then we can infer that
+VNHCs are robust to model mismatch.
+
+Evaluating the true mechanical energy of this acrobot at the VNHC
 \(q_a = 0\) yields the energy of the nominal pendulum,
 \[
     E(q_u,p_u) \approx 396.5501 p_u^2 + 0.5997(1 - \cos(q_u))
     .
 \]
-We simulated Wang's acrobot with initial condition
-\((q_u,p_u) = \left(\pi/32,0 \right)\) and plotted the resulting orbit
-in Figure \ref{fig:acrobot-orbit}.
+
+According to Theorem \ref{thm:acrobot-energy-stabilization}, the control
+parameter \(I\) must be small.
+While we could choose \(I\) arbitrarily small in simulations, we will eventually
+compare these simulations with the physical experiments where \(I\) must be
+large enough to overcome friction in leg motor.
+Setting \(\bar{q}_a = 1\), we experimentally determined that \(I = 10\) is a
+viable control value.
+This is the value of \(I\) we used in all simulations and experiments.
+
+\textbf{TODO: the injection and dissipation I is different, so we might not use
+I = 10 for dissipation.}
+
+\subsection{Energy Injection}
+
+To validate the energy injection property of our VNHC, we simulated the acrobot
+with initial condition \((q_u,p_u) = \left(\pi/32,0 \right)\) and plotted the
+resulting orbit in Figure \ref{fig:acrobot-orbit}.
 
 The set \(E_\pi := E(\pi,0)\) is outlined in black. 
 Due to the model mismatch, \(E_\pi\) is no longer the boundary between
@@ -974,9 +994,10 @@ energy over time.
 \begin{figure}[]
     \centering
     \includegraphics[width=0.8\linewidth]{acrobot_orbit.png}
-    \caption{A simulated orbit of Wang's acrobot.}
+    \caption{A simulation of the acrobot gaining energy.}
     \label{fig:acrobot-orbit}
 \end{figure}
+
 To verify numerically that the acrobot would consistently achieve rotations, we
 ran a Monte-Carlo simulation \cite{montecarlo} where we initialized the acrobot
 randomly inside the sublevel set
@@ -996,8 +1017,28 @@ the acrobot always rotated within 10--35 seconds.
     \label{fig:acrobot-mc}
 \end{figure}
 
-\subsection{Physical Experiments}
+\subsection{Energy Dissipation}
 
+\subsection{Energy Regulation}
+
+\section{Physical Experiments}\label{sec:experiments}
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.9\linewidth]{xingbo_acrobot.jpg}
+    \caption{The acrobot built by Wang \cite{xingbo_thesis}.}
+    \label{fig:xingbo-acrobot}
+\end{figure}
+
+
+\subsection{Hardware Description}
+\textbf{TODO: paraphrase xingbo. 2 arduinos, 3d printed, battery in leg,
+parameters of system, etc}
+
+\subsection{Experimental Results}
+
+\textbf{TODO: rework this section. In simulation we showed that we gain energy
+continuously. Here we only gain energy up to speed 0.195 because of friction.}
 Wang's acrobot has an encoder which measures \(q_u\) and
 \(\dot{q}_u\).
 Additionally, the leg actuator is a servo motor with a built-in PID controller
