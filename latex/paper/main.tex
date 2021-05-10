@@ -913,9 +913,31 @@ or some peak rotational momentum
 %/========== Experiments ==========/%
 \section{Simulation Results}\label{sec:simulations}
 In Section \ref{sec:experiments} we will test our VNHC on the physical acrobot
-built by Xingbo Wang \cite{xingbo_thesis} (Figure \ref{fig:xingbo-acrobot}).
-To compare apples to apples, we will simulate our VNHC using the parameters of
-the physical system (Table \ref{tab:acrobot-parameters}).
+built by Xingbo Wang \cite{xingbo_thesis}.
+
+Note that this acrobt does not correspond to the simple acrobot in Figure
+\ref{fig:simple-acrobot-model}, but rather to the more general acrobot model in
+Figure \ref{fig:acrobot-model}.
+If we define 
+\begin{align*}
+    m_{11}(q) := &m_a l_u^2 + 2m_al_ul_{c_a}\cos(q_a) + m_al_{c_a}^2 +
+    m_ul_{c_u}^2 \\
+                 &+ J_u + J_a
+                 , \\
+    m_{12}(q) := &m_al_{c_a}^2 + m_al_ul_{c_a}\cos(q_a) + J_a
+    , \\
+    m_{22}(q) := &m_al_{c_a}^2 + J_a,
+\end{align*}
+then the inertia matrix and potential for the physical acrobot are
+\begin{align*}
+    M(q) &= \begin{bmatrix}
+        m_{11}(q) & m_{12}(q) \\
+        m_{12}(q) & m_{22}(q)
+    \end{bmatrix}
+    , \\
+    V(q) &= g\big(m_al_{c_a}(1-c_{ua})
+    + (m_al_u + m_ul_{c_u})(1-c_u)\big).
+\end{align*}
 
 \begin{figure}
     \centering
@@ -924,6 +946,18 @@ the physical system (Table \ref{tab:acrobot-parameters}).
     differing in both length and mass.}%
     \label{fig:acrobot-model}
 \end{figure}
+
+Evaluating the true mechanical energy of this acrobot at the VNHC
+\(q_a = 0\) yields the energy of the nominal pendulum,
+\[
+    E(q_u,p_u) \approx 396.5501 p_u^2 + 0.5997(1 - \cos(q_u))
+    .
+\]
+
+We will simulate our VNHC using the parameters of
+this physical robot, which can be found in Table \ref{tab:acrobot-parameters}.
+If our VNHC injects energy into this acrobot, then we can infer that
+VNHCs are robust to model mismatch.
 
 \begin{table}
     \centering
@@ -943,24 +977,6 @@ the physical system (Table \ref{tab:acrobot-parameters}).
     \end{tabular}
     } % resizebox
 \end{table}
-
-Note that these parameters do not correspond to our simplified acrobot in Figure
-\ref{fig:simple-acrobot-model}, but rather to the more general acrobot model in
-Figure \ref{fig:acrobot-model}.
-In particular, the inertia matrix and potential function are \textbf{not}
-described by ~\eqref{eqn:acrobot-inertia}-\eqref{eqn:acrobot-potential}.
-The correct \(M(q)\) and \(V(q)\) can be found in Wang's thesis
-\cite{xingbo_thesis}.
-\textbf{TODO: put them here if there is space}.
-If our VNHC injects energy into this acrobot, then we can infer that
-VNHCs are robust to model mismatch.
-
-Evaluating the true mechanical energy of this acrobot at the VNHC
-\(q_a = 0\) yields the energy of the nominal pendulum,
-\[
-    E(q_u,p_u) \approx 396.5501 p_u^2 + 0.5997(1 - \cos(q_u))
-    .
-\]
 
 \subsection{Energy Injection}
 
@@ -1141,6 +1157,12 @@ works even for acrobots whose limbs have differing masses and lengths.
 
 \section{Physical Experiments}\label{sec:experiments}
 
+\subsection{Hardware Description}
+In this section we will demonstrate that our VNHC is robust to friction, sensor
+noise, and other real-world considerations by testing it on the physical
+acrobot built by Xingbo Wang \cite{xingbo_thesis} 
+(Figure \ref{fig:xingbo-acrobot}.
+
 \begin{figure}
     \centering
     \includegraphics[width=0.9\linewidth]{xingbo_acrobot.jpg}
@@ -1148,24 +1170,56 @@ works even for acrobots whose limbs have differing masses and lengths.
     \label{fig:xingbo-acrobot}
 \end{figure}
 
+This acrobot is comprised of two 3D-printed links: a torso and a leg.
+The torso link houses an Arduino Nano microcontroller unit (MCU) which controls
+a Dynamixel RX24F servo motor between the torso and the leg.
+The MCU and the motor are powered by a 12V battery held in a compartment
+in the leg.
 
-\subsection{Hardware Description}
-\textbf{TODO: paraphrase xingbo. 2 arduinos, 3d printed, battery in leg,
-parameters of system, etc}
+The torso is rigidly attached to a metal bar, which is held up by two wooden
+posts.
+On the exterior of one post is a control box with a power switch and a second
+Arduino Nano 328.
+The purpose of this control box is to read measurements from a rotary
+encoder connected to the metal bar, and to transmit these measurements to the
+MCU.
+The two Arduinos communicate through wires attached to a slip ring on the metal
+bar, and the signals are transmitted via I2C.
+The control box also provides a USB interface which allows the user to read the
+data from the acrobot in real time.
+
+VNHC implementation requires full knowledge of the acrobot's phase. 
+The rotary encoder directly measures \(q_u\), and the Dynamixel servo
+motor provides measurements of \(q_a\).
+However, there are no sensors measuring the velocity \(\dot{q}\), which means we cannot
+directly evaluate \(p_u\) and \(p_a\).
+To resolve this issue, the MCU estimates \(\dot{q}\) using sequential measurements of \(q\)
+and a washout filter.
+We then compute \(p = M(q)\dot{q}\) for use in the VNHC controller.
+
+Communication between the Arduinos restricts the sampling rate of \(p\) to
+500Hz.
+This low sampling rate results in a noisy momentum signal, which suffers
+from noticeable phase lag.
+This also rate-limits the control signal to \(500\)Hz, which impacts any control
+implementation.
+
+Finally, The Dynamixel servo motor does not have a torque control mode; instead,
+we can assign the servo setpoint at iteration \(k \in \mathbb{Z}_{> 0}\)
+via \(q_a^{k} = \arctan(10 p_u^{k-1})\).
+Unfortunately, this negatively affects the stabilization to the constraint
+manifold because we are introducing timing errors from the servo's built-in PID
+controller.
+
+The system was given the name SUGAR: Simple Underactuated Gymnastics and
+Acrobatics Robot.
+Its dynamic parameters are outlined in Table \ref{tab:acrobot-parameters}.
 
 \subsection{Experimental Results}
 
 \textbf{TODO: rework this section. In simulation we showed that we gain energy
 everywhere. Here we only gain energy up to speed 0.195 because of friction.}
-Wang's acrobot has an encoder which measures \(q_u\) and
-\(\dot{q}_u\).
-Additionally, the leg actuator is a servo motor with a built-in PID controller
-which provides measurements of \(q_a\).
-To implement our VNHC, we estimated \(\dot{q}_a\) through sequential values of
-\(q_a\) and computed \(p_u\) through \(p_u = e_1^T M(q) \dot{q}\).
-We directly assigned the actuator setpoint at iteration \(k \in \mathbb{Z}_{> 0}\)
-via \(q_a^{k} = \arctan(10 p_u^{k-1})\).
-We then performed the following tests.
+We performed the following tests.
 
 \begin{enumerate}
     \item \textbf{Baseline Test:} 
