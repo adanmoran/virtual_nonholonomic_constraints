@@ -902,13 +902,6 @@ level \(\bar{E}\).
 For instance, the supervisor could inject energy when \(E(q_u,p_u) < \bar{E}\) 
 and dissipate energy when \(E(q_u,p_u) > \bar{E}\), with some hysteresis to
 avoid infinite switching.
-As we shall see, such a simple supervisor will not produce human-like
-oscillations or rotations.
-However, it will allow the acrobot to stabilize some peak angle of oscillation
-\(\bar{q}_u \in \, ]0,\pi[\) so that \(E(\pm \bar{q}_u,0) = \bar{E}\),
-or some peak rotational momentum
-\(\bar{p}_u \in \, ]\sqrt{60m^2gl^3}, \bar{\rho}[\) where
-\(E(0,\pm \bar{p}_u) = \bar{E}\).
 
 %/========== Experiments ==========/%
 \section{Simulation Results}\label{sec:simulations}
@@ -1217,30 +1210,27 @@ Its dynamic parameters are outlined in Table \ref{tab:acrobot-parameters}.
 
 \subsection{Experimental Results}
 
-\textbf{TODO: rework this section. In simulation we showed that we gain energy
-everywhere. Here we only gain energy up to speed 0.195 because of friction.}
+In Section \ref{sec:simulations} we showed that VNHCs can be used for energy
+injection, dissipation, and regulation. 
+We will now demonstrate that VNHC-based giant motion is robust to external
+disturbances by implementing our VNHC on the SUGAR system.
 We performed the following tests.
 
 \begin{enumerate}
     \item \textbf{Baseline Test:} 
     we initialized the acrobot at 
-    \((q_u,p_u) \approx \left(\frac{\pi}{8},0\right)\). 
-    The resulting orbit is shown in Figure \ref{fig:acrobot-unperturbed-orbit};
-    the acrobot is clearly gaining energy over time.
+    \((q_u,p_u) \approx \left(\pi/8,0\right)\). 
+    The resulting orbit in Figure \ref{fig:acrobot-unperturbed-orbit} shows
+    the acrobot clearly gaining energy over time.
+    Its motion looks similar to that of the energy injection simulation (Figure
+    \ref{fig:acrobot-in-orbit}), though the acrobot appears to stop gaining
+    energy once it reaches a rotation with energy \(E(0,0.195)\).
 
 \begin{figure}
     \centering
-    \begin{subfigure}[t]{0.49\linewidth}
-        \includegraphics[width=\linewidth]{acrobot_unperturbed_orbit.png}
-        \caption{The baseline test.}
-        \label{fig:acrobot-unperturbed-orbit}
-    \end{subfigure}
-    \begin{subfigure}[t]{0.49\linewidth}
-        \includegraphics[width=\linewidth]{acrobot_stopped_orbit.png}
-        \caption{Acrobot orbit before (blue) and after (red) stopping.}
-        \label{fig:acrobot-stopped-orbit}
-    \end{subfigure}
-    \caption{The physical acrobot's orbit during baseline and stop tests.}
+    \includegraphics[width=0.8\linewidth]{acrobot_unperturbed_orbit.png}
+    \caption{The physical acrobot's orbit during the baseline energy injection test.}
+    \label{fig:acrobot-unperturbed-orbit}
 \end{figure}
 
 \item \textbf{Stop Test:}
@@ -1248,27 +1238,39 @@ We performed the following tests.
     \((q_u,p_u) \approx \left(\pi,0\right)\), let it run for 15
     seconds, then stopped it at the bottom of its arc.
     The resulting orbit is shown in Figure \ref{fig:acrobot-stopped-orbit}.
-    The blue curves correspond to the orbit before the disturbance, while the red
-    spiral confirms that the acrobot begins oscillating after it is stopped.
+    The blue rotation curve corresponds to the orbit before the disturbance,
+    while the red spiral confirms that the acrobot begins oscillating after it
+    is stopped.  
     Despite the disturbance, it gains energy and eventually starts rotating
     again.
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.8\linewidth]{acrobot_stopped_orbit.png}
+    \caption{The physical acrobot's orbit before (blue) and after (red) stopping.}
+    \label{fig:acrobot-stopped-orbit}
+\end{figure}
+
 
 \item \textbf{Push Test:}
     to see how the acrobot responds when pushed, we allowed
     the acrobot to rotate undisturbed for 15 seconds and then pushed it in its
     direction of motion.
-    The orbit in Figure \ref{fig:acrobot-fpush-orbit} shows that the acrobot speeds
-    up to rotate with energy \(E(0,-0.22)\), but then slows down until it reaches a
-    rotation with energy \(E(0,-0.195)\).
+    The orbit in Figure \ref{fig:acrobot-fpush-orbit} shows that the acrobot,
+    when pushed, rotates with energy \(E(0,-0.22)\), but then slows down until
+    it reaches a rotation with energy \(E(0,-0.195)\).
     We repeated this test by pushing the acrobot against its direction of motion.
     The orbit in Figure \ref{fig:acrobot-rpush-orbit} demonstrates that the acrobot
-    responds by readily changing direction, and quickly achieves its maximum speed
+    readily changes direction, and quickly achieves its maximum speed
     with energy \(E(0,0.195)\).
-
-    These push tests suggest that our VNHC injects energy into Wang's acrobot on
-    \(\mathcal{O}_2(0.195)\).
 \end{enumerate}
 
+In simulation, the acrobot was able to gain energy even when initialized
+with energy \(E(q_u,p_u) > E(0,0.195)\). 
+The baseline and push tests suggest that our VNHC injects energy into the SUGAR
+system only on \(\mathcal{O}_2(0.195)\).
+This difference between simulation and implementation is likely due to
+friction.
 
 \begin{figure}
     \centering
@@ -1285,12 +1287,19 @@ We performed the following tests.
     \caption{The acrobot orbit before (blue) and after (red) pushing.}
 \end{figure}
 
+We had hoped to show experimental results for dissipation and
+oscillation/rotation regulation, but unfortunately our Dynamixel RX24F servo
+motor broke before we could perform these experiments.
+These motors are no longer in production at the time of writing, so the SUGAR
+system has been retired for the time being.
+
 \subsection{Summary of Results} 
-These experiments demonstrate that VNHCs are excellent tools for injecting
-energy.
-In particular, energy injection through VNHCs appears to be robust against a
-variety of disturbances, including significant model mismatch, friction, and
-sensor noise.
+We performed three tests on the SUGAR system: a baseline energy injection test,
+a stop test, and a push test.
+These experiments demonstrate that VNHC-based energy injection is robust to
+significant model mismatch, friction, sensor noise, discretized control
+implementation, rate-limited measurement and control signals, and dramatic
+external disturbances.
 
 %/========== Proof ==========/%
 \section{Proof of Theorem \ref{thm:acrobot-energy-stabilization}}\label{sec:proof}
