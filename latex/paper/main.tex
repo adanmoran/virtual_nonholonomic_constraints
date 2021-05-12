@@ -81,11 +81,19 @@ Electrical and Computer Engineering, University of Toronto, ON, Canada.}
 
 %/========== Abstract ==========/%
 \begin{abstract}
-TODO: Abstract here.
+    In this article we study virtual nonholonomic constraints, which are
+    relations between the generalized coordinates and generalized momenta of a
+    mechanical system that can be enforced via feedback control.
+    We design a constraint which emulates gymnastics giant motion in an
+    acrobot, and prove rigorously that this constraint will inject or dissipate
+    energy.
+    This constraint is tested on a real-world acrobot, demonstrating highly
+    effective energy regulation properties and robustness to a variety of
+    disturbances.
 \end{abstract}
 
 \begin{IEEEkeywords}
-TODO: keywords in alphabetical order, separated by commas.
+    energy regulation, virtual nonholonomic constraints, acrobot, gymnastics.
 \end{IEEEkeywords}
 
 %/========== Introduction ==========/%
@@ -1322,14 +1330,17 @@ external disturbances.
 
 %/========== Conclusion ==========/%
 \section{Conclusion}\label{sec:conclusion}
-In this article we summarized the existing theory of virtual nonholonomic
-constraints (VNHCs) ........
-\textbf{TODO conclude nicely}
-In the end, we demonstrated that virtual nonholonomic constraints are capable of
+
+In this article we redeveloped the framework of virtual nonholonomic
+constraints for underactuated mechanical systems.
+We applied this framework towards the acrobot, and designed a constraint which
+emulates giant motion from gymnastics.
+We proved this constraint will inject energy into the simplified acrobot whose
+limbs are massless rods of equal length, with equal masses at the tips.
+Then we performed simulations of this VNHC, as well as physical experiments.
+These demonstrated that virtual nonholonomic constraints are capable of
 injecting and dissipating energy in a robust manner, all while producing
 realistic biological motion.
-
-
 
 %---------- Bibliography ----------%
 \bibliography{bib}
