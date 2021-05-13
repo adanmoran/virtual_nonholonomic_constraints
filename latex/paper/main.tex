@@ -85,7 +85,7 @@ Electrical and Computer Engineering, University of Toronto, ON, Canada.}
     relations between the generalized coordinates and generalized momenta of a
     mechanical system that can be enforced via feedback control.
     We design a constraint which emulates gymnastics giant motion in an
-    acrobot, and prove rigorously that this constraint will inject or dissipate
+    acrobot, and rigorously prove that this constraint will inject or dissipate
     energy.
     This constraint is tested on a real-world acrobot, demonstrating highly
     effective energy regulation properties and robustness to a variety of
@@ -118,7 +118,7 @@ doing so allows them to gain energy and rotate around the bar.
 
 While the simplest model of a gymnast is the variable-length pendulum, a
 more realistic model is the two-link acrobot (Figure \ref{fig:acrobot}).
-Here, the top link represents the torso, while the bottom link represents
+Here, the top link represents the torso while the bottom link represents
 the legs. 
 The acrobot is actuated exclusively at the center joint (the hips).
 Controlling the acrobot is a nontrivial task because it is not feedback
@@ -157,7 +157,8 @@ and they have shown marked improvements to the field of bipedal locomotion
 \cite{nhvc_dynamic_walking,
 hybrid_zero_dynamics_bipedal_nhvcs,output_nhvc_bipedal_control}.
 Indeed, they produce more robust walking motion in biped robots than
-other controllers which do not depend on velocity \cite{nhvc_incline_walking}.
+other virtual constraints which do not depend on velocity
+\cite{nhvc_incline_walking}.
 In particular, VNHCs may be capable of injecting and
 dissipating energy from a system in a robust manner, all while producing
 realistic biological motion. 
@@ -167,12 +168,17 @@ injects energy into the acrobot through human-like giant motion.
 
 \subsection{Notation}
 We use the following notation and terminology in this article.
+The \(n \times n\) identity matrix is denoted \(\Id{n}\), and the \(n \times m\)
+matrix of zeros is denoted \(\Zmat{n\times m}\).
 A matrix \(A \in \R^{n \times m}\) is \textit{right semi-orthogonal} if
 \(A A\tpose = \Id{n}\) and is \textit{left semi-orthogonal} if 
 \(A\tpose A = \Id{m}\).
 For \(A \in \R^{n\times m}\) and \(B \in \R^{p \times m}\),
 we define \([A;B] \in \R^{(n+p)\times m}\) as the matrix obtained by stacking \(A\)
 on top of \(B\). 
+Given \(\sigma_1,\ldots,\sigma_n \in \R\), we define 
+\(\diag{\sigma_1,\ldots,\sigma_n} \in \R^{n \times n}\) as the diagonal matrix
+whose value at row \(i\), column \(i\) is \(\sigma_i\).
 For \(T > 0\), the set of real numbers modulo \(T\) is denoted \(\Rt{T}\), with
 \(\Rt{\infty} := \R\).
 The gradient of a matrix-valued function 
@@ -209,7 +215,7 @@ A real gymnast cannot swing their legs in full circles, though they
 are usually flexible enough to raise them parallel to the floor;
 hence, we assume the leg angle \(q_a\) lies in \([-Q_a, Q_a]\) for some
 \(Q_a \in [\frac{\pi}{2}, \pi[\). 
-We also ignore any frictional forces.
+We also ignore any dissipative forces.
 
 \begin{figure}
     \centering
@@ -273,7 +279,7 @@ stabilized via feedback.
     Let \(\mathcal{Q}\) be an
     \(n\)-dimensional smooth generalized cylinder.
     Let \(f : \mathcal{Q} \rightarrow \mathcal{Q}\times\R^n\) be a smooth vector
-    field and let \(D \subset M\) be open.
+    field and let \(D \subset \mathcal{Q}\) be open.
     The system described by \(\dot{x} = f(x)\) 
     \textit{gains energy on \(D\)} if, 
     for all compact sets \(K \subset D\) and for almost every initial
@@ -331,7 +337,7 @@ matrix \(B : \mathcal{Q} \rightarrow \R^{n \times k}\) is full rank for all
 If \(k < n\), we say the system is \textit{underactuated} with degree of
 underactuation \((n-k)\).
 
-It is easy to show using the matrix Kronecker product that
+Using the matrix Kronecker product, it is easy to show that
 \eqref{eqn:hamiltonian-eom-general} expands to
 \begin{equation*}\label{eqn:hamiltonian-full-dynamics}
      \begin{cases}
@@ -460,7 +466,7 @@ and \textit{actuated momenta}, respectively.
 Griffin and Grizzle \cite{nhvc_dynamic_walking} were the first to define
 relative degree two nonholonomic constraints which can be enforced
 through state feedback.
-Horn et. al later extended their results
+Horn et. al later extended their results in
 \cite{hybrid_zero_dynamics_bipedal_nhvcs} to derive the constrained dynamics for
 a certain class of mechanical systems.
 
@@ -502,7 +508,7 @@ In particular, if \(k = (n-1)\), the constraint manifold is \textit{always}
 We often want to stabilize a constraint within some neighbourhood of \(\Gamma\).
 To see when this is possible, let us define the error output \(e = h(q,p)\).
 If any component of \(e_i\) has relative degree 1, we may not be able
-to stabilize \(\Gamma\) -- we can always guarantee \(e_i \to 0\), but not
+to stabilize \(\Gamma\): we can always guarantee \(e_i \to 0\), but not
 necessarily \(\dot{e}_i \to 0\).
 It is for this reason that we define the following special type of VNHC.
 
@@ -572,7 +578,7 @@ To ease notation in the rest of this section, we use the following shorthand:
 Under additional mild conditions (see \cite{vhcs_for_el_systems}), a regular VNHC of
 order \(k\) can be stabilized by the output-linearizing phase-feedback
 controller
-\begin{equation}
+\begin{equation}\label{eqn:stabilizing-controller}
     \tau(q,p) = -H\inv(q,p)\left(E(q,p) + k_p e + k_d \dot{e}\right)
     ,
 \end{equation}
@@ -582,15 +588,20 @@ resulting error dynamices \(\ddot{e} = -k_p e - k_d \dot{e}\).
 In Section \ref{sec:acrobot} we will enforce a regular constraint on the
 acrobot of the form \(h(q,p) = q_a - f(q_u,p_u)\), where the actuators track a
 function of the unactuated variables.
-Intuitively then, the constrained dynamics should be parameterized by \((q_u, p_u)\).
+Regular constraints of this form always meet the mild conditions from
+\cite{vhcs_for_el_systems}, and hence we can stabilize the constraint manifold
+using ~\eqref{eqn:stabilizing-controller}.
+Since \(q_a\) is constrained to be a function of the unactuated phase variables,
+intuition tells us the constrained dynamics should be parameterized by 
+\((q_u, p_u)\).
 Unfortunately, \(\dot{q}_u\) depends on \(p_a\), and for general systems one
 cannot solve explicitly for \(p_a\) in terms of \((q_u,p_u)\) because
-the \(\dot{p}\) dynamics contains the coupling term 
+the \(\dot{p}\) dynamics contain the coupling term 
 \((\Id{n} \otimes p\tpose)\nabla_{q}M(q)p\). 
 
 We now introduce an assumption which allows us to solve for \(p_a\) as a
-function of \((q_u,p_u)\), which in turn allows us to find the constrained
-dynamics.
+function of \((q_u,p_u)\), which in turn allows us to explicitly solve 
+for the constrained dynamics.
 
 \begin{assm}\label{assm:inertially-actuated}
 The inertia matrix does not depend on the unactuated coordinates, so that 
@@ -617,15 +628,26 @@ The inertia matrix does not depend on the unactuated coordinates, so that
             ,
     \end{equation}
     where
-    \begin{align}\label{eqn:g-qpu}
-        &g(q_u,p_u) := 
-        \left(\mathcal{A}(q,p_u)[\Zmat{(n-k)\times k};\Id{k}] \right)\inv 
-        (dh_{p_u} \nabla_{q_u}V(q) \nonumber
+    \begin{multline}\label{eqn:g-qpu}
+        g(q,p_u) := \left( \mathcal{A}(q,p_u)
+        \begin{bmatrix} \Zmat{(n-k)\times k} \\ \Id{k} \end{bmatrix}\right)\inv 
+        \cdot
+        \Big(dh_{p_u}\nabla_{q_u}(V(q) -
         \\
-        &- \mathcal{A}(q,p_u)[\Id{(n-k)};\Zmat{k \times(n-k)}]p_u
-        \left.)\right|_{q_a = f(q_u,p_u)}
-        .
-    \end{align}
+        \mathcal{A}(q,p_u)
+        \begin{bmatrix} \Id{(n-k)} \\ \Zmat{k \times (n-k)} \end{bmatrix} p_u
+        \left.\Big)\right|_{q_a = f(q_u,p_u)}
+    \end{multline}
+
+%    \begin{align}\label{eqn:g-qpu}
+%        &g(q_u,p_u) := 
+%        \left(\mathcal{A}(q,p_u)[\Zmat{(n-k)\times k};\Id{k}] \right)\inv 
+%        (dh_{p_u} \nabla_{q_u}V(q) \nonumber
+%        \\
+%        &- \mathcal{A}(q,p_u)[\Id{(n-k)};\Zmat{k \times(n-k)}]p_u
+%        \left.)\right|_{q_a = f(q_u,p_u)}
+%        .
+%    \end{align}
 \end{thm}
 \begin{proof}
     Setting \(e = h(q,p_u)\) and using Assumption
@@ -655,9 +677,9 @@ dynamics for VNHCs in \cite{nhvc_incline_walking}.
 Their assumption \textbf{H2} is what we call regularity, and our requirement
 that one can solve for \(q_a = f(q_u,p_u)\) on \(\Gamma\) implies their
 assumption \textbf{H3} holds true.
-The only real distinction between this section and their work
-is that our constrained dynamics are explicit functions of the Hamiltonian phase
-coordinates \((q_u,p_u)\).
+The only real distinction between this section and their work is that we allow
+for higher degrees of underactuation, and our constrained dynamics are explicit
+functions of the Hamiltonian phase coordinates \((q_u,p_u)\).
 In fact, our constrained dynamics \eqref{eqn:qpu-dynamics} coincide with their
 system (17) when one chooses the special case \(\theta_1 = q_u\) and 
 \(\theta_2 = p_u\).
@@ -724,7 +746,7 @@ This position is identical to that of a gymnast on a bar.
 
 The acrobot's legs are rigid rods which cannot retract, so we emulate the person
 on a swing by pivoting the legs toward the direction of motion. 
-Since a person lifts their legs higher at higher speeds, the acrobot's legs should
+Since a person lifts their legs higher at faster speeds, the acrobot's legs should
 pivot to an angle proportional to the swing's speed.
 Because the direction of motion is entirely determined by \(p_u\), 
 one VNHC which emulates this process is \(q_a = \bar{q}_a\arctan( I p_u)\),
@@ -735,7 +757,7 @@ control parameter.
 This constraint does not perfectly recreate giant motion, during which
 the gymnast's legs are almost completely extended \cite{usagym_giant}.
 It instead pivots the legs partially during rotations.
-However, the behaviour looks similar enough that this constraint will
+However, the behaviour is similar enough that this constraint will
 still inject energy into the acrobot.
 Our final VNHC is
 \begin{equation}\label{eqn:acrobot-constraint}
@@ -903,8 +925,8 @@ If the assumption holds, there is some control value \(I\)
 (which depends on \(\bar{\rho}\)) for which the acrobot will 
 achieve rotations with a momentum of at least \(\bar{\rho}\).
 
-One can use the results of Theorem \ref{thm:acrobot-energy-stabilization} 
-for energy regulation.
+One can apply the results of Theorem \ref{thm:acrobot-energy-stabilization} 
+towards energy regulation.
 For example, one might employ a supervisor which switches
 between injection and dissipation VNHCs to stabilize a desired energy
 level \(E_\text{des}\), with some hysteresis to avoid infinite switching.
@@ -919,7 +941,7 @@ This physical acrobot cannot be modelled by the simplified setup in Figure
 distributed mass. 
 We must therefore use the more general acrobot model in Figure
 \ref{fig:acrobot-model} to represent this system.
-If we define 
+Let us define 
 \begin{align*}
     m_{11}(q) := &m_a l_u^2 + 2m_al_ul_{c_a}\cos(q_a) + m_al_{c_a}^2 +
     m_ul_{c_u}^2 \\
@@ -930,7 +952,8 @@ If we define
     m_{22}(q) := &m_al_{c_a}^2 + J_a,
 \end{align*}
 where \(J_u\) and \(J_a\) are the moments of inertia of the torso and leg links
-respectively, then the inertia matrix becomes
+respectively. 
+The general acrobot has inertia matrix
 \begin{equation*}
     M(q) = \begin{bmatrix}
         m_{11}(q) & m_{12}(q) \\
@@ -938,7 +961,7 @@ respectively, then the inertia matrix becomes
     \end{bmatrix}
     ,
 \end{equation*}
-and the potential function is
+and potential function
 \begin{equation*}
     V(q) = g\big(m_al_{c_a}(1-c_{ua})
     + (m_al_u + m_ul_{c_u})(1-c_u)\big)
@@ -971,7 +994,7 @@ into the simplified acrobot.
 Unfortunately, the Theorem does not specify how small \(|I|\) must be;
 while we could make it arbitrarily small in simulations, we will eventually
 implement this VNHC on a physical testbed where \(|I|\) must be large enough to
-overcome friction in the leg motor.
+overcome friction.
 
 Setting \(\bar{q}_a = 1\), we experimentally determined that \(|I| = 10\) is a
 viable control parameter, so this is the value we will use for all simulations
@@ -1053,8 +1076,8 @@ The resulting orbit is plotted in Figure \ref{fig:acrobot-diss-orbit}.
 As expected, the acrobot slows down over time.
 We highlight the locations where the orbit crossed the set \(E_\pi\) by
 black stars, with the final crossing in red.
-After this crossing, the acrobot ceased rotating and its oscillations decayed to
-zero.
+After this final crossing, the acrobot ceased rotating and its oscillations
+decayed to zero.
 
 \begin{figure}
     \centering
@@ -1138,7 +1161,7 @@ In Figure \ref{fig:acrobot-rot-reg-in} the acrobot was initialized at
 \((q_u,p_u) = (\pi/2,0)\); here the supervisor injected energy until
 the orbit hit the \(p_u\)-axis near \(p_\text{des}\).
 In Figure \ref{fig:acrobot-rot-reg-diss} the acrobot was initialized at the
-faster rotation \((q_u,p_u) = (0, 0.23)\); the supervisor dissipated energy.
+faster rotation \((q_u,p_u) = (0, 0.23)\); here the supervisor dissipated energy.
 In both cases, the desired rotation was stabilized correctly.
 
 \begin{figure}
@@ -1217,27 +1240,27 @@ The rotary encoder directly measures \(q_u\), and the Dynamixel servo
 motor provides measurements of \(q_a\).
 However, there are no sensors measuring the velocity \(\dot{q}\), which means we cannot
 directly evaluate \(p_u\) and \(p_a\).
-To resolve this issue, the MCU estimates \(\dot{q}\) using sequential measurements of \(q\)
-and a washout filter.
+To resolve this issue, the MCU estimates \(\dot{q}\) by applying a washout
+filter to sequential measurements of \(q\).
 We then compute \(p = M(q)\dot{q}\) for use in the VNHC controller.
 
 Communication between the Arduinos restricts the sampling rate of \(p\) to
 500Hz.
-This low sampling rate results in a noisy momentum signal, which suffers
+This low sampling rate results in a noisy momentum signal which suffers
 from noticeable phase lag.
 This also rate-limits the control signal to \(500\)Hz, which impacts any control
 implementation.
 
 Finally, The Dynamixel servo motor does not have a torque control mode; instead,
 we can assign the servo setpoint at iteration \(k \in \mathbb{Z}_{> 0}\)
-via \(q_a^{k} = \arctan(10 p_u^{k-1})\).
+via \(q_a^{k} = \arctan(I p_u^{k-1})\).
 Unfortunately, this negatively affects the stabilization to the constraint
 manifold because we are introducing timing errors from the servo's built-in PID
 controller.
 
 \subsection{Experimental Results}
 
-We performed the following tests on SUGAR.
+We performed the following tests on SUGAR with the energy injection VNHC.
 
 \begin{enumerate}
     \item \textbf{Baseline Test:} 
@@ -1310,11 +1333,12 @@ friction.
     \caption{SUGAR's orbit before (blue) and after (red) pushing.}
 \end{figure}
 
-We had hoped to show more experimental results for dissipation and
-oscillation/rotation regulation, but unfortunately the Dynamixel RX24F servo
-motor broke before we could perform these experiments.
+We had hoped to show experimental results for dissipation and
+oscillation/rotation regulation. 
+Unfortunately the Dynamixel RX24F servo motor broke before we could perform
+these experiments.
 These motors are no longer in production at the time of writing this article, so
-SUGAR met an untimely end to its career. 
+SUGAR has been retired from service.
 
 \subsection{Summary of Results} 
 We performed three tests on SUGAR: a baseline energy injection test,
@@ -1337,7 +1361,7 @@ We applied this framework towards the acrobot, and designed a constraint which
 emulates giant motion from gymnastics.
 We proved this constraint will inject energy into the simplified acrobot whose
 limbs are massless rods of equal length, with equal masses at the tips.
-Then we performed simulations of this VNHC, as well as physical experiments.
+We then performed simulations and physical experiments of this VNHC.
 These demonstrated that virtual nonholonomic constraints are capable of
 injecting and dissipating energy in a robust manner, all while producing
 realistic biological motion.
