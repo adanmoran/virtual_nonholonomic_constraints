@@ -1,6 +1,7 @@
 %! TEX program = lualatex
 
-\documentclass[journal,twoside,web]{ieeecolor}
+% TODO: remove onecolumn and draftcls formatting
+\documentclass[journal,twoside,onecolumn,draftclsnofoot,web]{ieeecolor}
 
 \usepackage{generic}
 %/========== Preamble ==========/%
@@ -1356,7 +1357,8 @@ external disturbances.
 \section{Conclusion}\label{sec:conclusion}
 
 In this article we redeveloped the framework of virtual nonholonomic
-constraints for underactuated mechanical systems.
+constraints for underactuated mechanical systems with arbitrary degree of
+underactuation.
 We applied this framework towards the acrobot, and designed a constraint which
 emulates giant motion from gymnastics.
 We proved this constraint will inject energy into the simplified acrobot whose
