@@ -289,6 +289,7 @@ For shorthand, we write \(c_u := \cos(q_u)\), \(c_a := \cos(q_a)\), and
 \end{align}
 The control input is a force \(\tau \in \R\) affecting only the dynamics of
 \(p_a\), representing a torque acting on the hip joint.
+Let us now define what it means for a mechanical system to gain or lose energy.
 
 \begin{defn}\label{defn:energy-gain}
     Let \(\mathcal{Q}\) be an
@@ -307,8 +308,9 @@ The control input is a force \(\tau \in \R\) affecting only the dynamics of
 Our goal is to design a smooth function \(f : \Sone \times \R\) such that the
 relation \(q_a = f(q_u,p_u)\) can be enforced asymptotically via feedback
 control (in Section \ref{sec:vnhc} we call this a regular virtual
-nonholonomic constraint), and the dynamics of the acrobot when the relation
-holds gain energy on some set \(D\) in the sense of Definition
+nonholonomic constraint).  
+We will further require that the dynamics of the acrobot, when the relation
+holds, gain or lose energy on some set \(D\) in the sense of Definition
 \ref{defn:energy-gain}. 
 
 Note that any system satisfying Definition \ref{defn:energy-gain}
@@ -961,15 +963,36 @@ If the assumption holds, there is some control value \(I\)
 (which depends on \(\bar{\rho}\)) for which the acrobot will 
 achieve rotations with a momentum of at least \(\bar{\rho}\).
 
-\subsection{Energy Regulation}
+\subsection{Energy Regulation}\label{sec:energy-reg}
 One can apply the results of Theorem \ref{thm:acrobot-energy-stabilization} 
-towards energy regulation.
+towards energy regulation;
+that is, one can stabilize oscillations or rotations by appropriately toggling
+between injection and dissipation VNHCs.
 
-\textbf{TODO: move energy regulation theory from sims to here}
-%For example, one might employ a supervisor which switches
-%between injection and dissipation VNHCs to stabilize a desired energy
-%level \(E_\text{des}\), with some hysteresis to avoid infinite switching.
-%We will explore this idea in Section \ref{sec:simulations}.
+\textbf{Oscillation Regulation}: one chooses a desired oscillation angle 
+\(q_\text{des} \in \, ]0,\pi[\) and, to avoid infinite switching, a
+hysteresis value \(\delta \in [0,1]\).
+Each time the orbit crosses the \(q_u\)-axis (i.e. when \(p_u = 0\)) or 
+when \(|q_u| = \pi\), the supervisor does the following: 
+\begin{itemize}
+    \item If \(|q_u| < (1-\delta)q_\text{des}\), enable the injection VNHC.
+    \item If \(|q_u| > (1+\delta)q_\text{des}\), enable the dissipation VNHC.
+    \item If \((1-\delta)q_\text{des} \leq |q_u| \leq (1+\delta)q_\text{des}\),
+        keep the leg extended at \(q_a = 0\). This can be done continously since
+        \(q_a = 0\) when \(p_u = 0\).
+\end{itemize}
+
+\textbf{Rotation Regulation}: one chooses a desired rotation rate 
+\(p_\text{des} > 0\) and a hysteresis value \(\delta \in [0,1]\).
+Each time the orbit crosses the \(p_u\)-axis (i.e. when \(q_u = 0\)), the
+supervisor changes which VNHC is enforced as follows:
+\begin{itemize}
+    \item If \(|p_u| < (1-\delta)p_\text{des}\), enable the injection VNHC.
+    \item If \(|p_u| > (1+\delta)p_\text{des}\), enable the dissipation VNHC.
+    \item If \((1-\delta)p_\text{des} \leq |p_u| \leq (1+\delta)p_\text{des}\),
+        extend the leg fully by setting \(q_a = 0\).
+        For these simulations, we assume this can be done instantaneously.
+\end{itemize}
 
 %/========== Experiments ==========/%
 \section{Simulation Results}\label{sec:simulations}
@@ -1015,16 +1038,30 @@ and potential function
     \label{fig:acrobot-model}
 \end{figure}
 
-The dynamic parameters of Wang's acrobot can be found in Table
+Recall that we defined the sets \(\mathcal{O}_1\) and
+\(\mathcal{O}_2(\bar{\rho})\) used in Theorem \ref{thm:acrobot-energy-stabilization}
+via the mechanical energy \eqref{eqn:acrobot-energy} of the nominal
+pendulum associated with a simplified acrobot.
+We obtained this nominal pendulum by setting \(I = 0\) in
+\eqref{eqn:acrobot-constraint}.
+Recall that the boundary between oscillations and rotations of the nominal
+pendulum is obtained by finding the level set \(E_\pi\) of the nominal energy
+corresponding to the upright equilibrium \((q_u,p_u) = (\pi,0)\).
+
+We can extend this idea to find the nominal pendulum associated with Wang's
+acrobot, whose physical parameters are provided in Table
 \ref{tab:acrobot-parameters}.
-Evaluating the mechanical energy of an acrobot with these parameters
-at the VNHC \(q_a = 0\) yields the mechanical energy of the nominal pendulum,
+Setting \(I = 0\) in \eqref{eqn:acrobot-constraint} for this acrobot
+yields the following mechanical energy of the nominal pendulum:
 \[
     E(q_u,p_u) \approx 396.5501 p_u^2 + 0.5997(1 - \cos(q_u))
     .
 \]
+Despite the change in acrobot model, the level set \(E_\pi\) with energy 
+\(E(\pi,0)\) remains the boundary between oscillations and rotations
+for the nominal pendulum.
 
-We will now simulate the effects of constraining Wang's acrobot with
+We will now simulate the effects of constraining Wang's acrobot with the VNHC
 \eqref{eqn:acrobot-constraint}, thereby demonstrating that VNHCs are robust to
 model mismatch.
 According to Theorem \ref{thm:acrobot-energy-stabilization}, the control
@@ -1068,8 +1105,8 @@ with initial condition \((q_u,p_u) = \left(\pi/32,0 \right)\) for \(30\)
 seconds, and plotted the resulting orbit in Figure \ref{fig:acrobot-in-orbit}.
 
 The level set \(E_\pi\) with energy \(E(\pi,0)\) is outlined in black.
-Despite the change in acrobot model, this level set remains the boundary
-between oscillations and rotations for the nominal pendulum.
+Recall that this marks the boundary between oscillations and rotations of the
+nominal pendulum.
 The points where the orbit exits \(E_\pi\) are marked with black stars,
 with the final departure marked by a red star.
 Interestingly, our choice of \(I\) is large enough that we observe significant
@@ -1127,22 +1164,9 @@ decayed to zero.
 
 \subsection{Oscillation Regulation}
 
-Once can use a supervisor to stabilize oscillations by appropriately
-toggling between injection and dissipation VNHCs.
-Specifically, one chooses a desired oscillation angle 
-\(q_\text{des} \in \, ]0,\pi[\) and, to avoid infinite switching, a
-hysteresis value \(\delta \in [0,1]\).
-Each time the orbit crosses the \(q_u\)-axis (i.e. when \(p_u = 0\)) or 
-when \(|q_u| = \pi\), the supervisor does the following: 
-\begin{itemize}
-    \item If \(|q_u| < (1-\delta)q_\text{des}\), enable the injection VNHC.
-    \item If \(|q_u| > (1+\delta)q_\text{des}\), enable the dissipation VNHC.
-    \item If \((1-\delta)q_\text{des} \leq |q_u| \leq (1+\delta)q_\text{des}\),
-        keep the leg extended at \(q_a = 0\). This can be done continously since
-        \(q_a = 0\) when \(p_u = 0\).
-\end{itemize}
-
-Figure \ref{fig:acrobot-osc-reg} shows the supervisor stabilizing an
+Recall from \ref{sec:energy-reg} that one can use a supervisor to stabilize
+oscillations by appropriately toggling between injection and dissipation VNHCs.
+Figure \ref{fig:acrobot-osc-reg} shows  stabilizing an
 oscillation with body angle \(q_\text{des} = \pi/2\) and a 
 \(5\%\) hysteresis, meaning \(\delta = 0.05\).
 The supervisor reevaluated its choice of VNHC at each black star;  
@@ -1177,22 +1201,11 @@ In both cases, the supervisor stabilized the desired oscillation.
 \end{figure}
 
 \subsection{Rotation Regulation}
-One can also use a supervisor to stabilize rotations.
-In this case, one chooses a desired rotation rate \(p_\text{des} > 0\) and a
-hysteresis value \(\delta \in [0,1]\).
-Each time the orbit crosses the \(p_u\)-axis (i.e. when \(q_u = 0\)), the
-supervisor changes which VNHC is enforced as follows:
-\begin{itemize}
-    \item If \(|p_u| < (1-\delta)p_\text{des}\), enable the injection VNHC.
-    \item If \(|p_u| > (1+\delta)p_\text{des}\), enable the dissipation VNHC.
-    \item If \((1-\delta)p_\text{des} \leq |p_u| \leq (1+\delta)p_\text{des}\),
-        extend the leg fully by setting \(q_a = 0\).
-        For these simulations, we assume this can be done instantaneously.
-\end{itemize}
-
-Rotation regulation is demonstrated in Figure \ref{fig:acrobot-rot-reg}, where
-the supervisor stabilizes \(p_\text{des} = 0.19\) with a \(2\%\) hysteresis 
-\(\delta = 0.02\).
+One can also use a supervisor to stabilize rotations through the mechanism
+described in Section \ref{sec:energy-reg}.
+Rotation regulation for the acrobot is demonstrated in 
+Figure \ref{fig:acrobot-rot-reg}, where the supervisor stabilizes 
+\(p_\text{des} = 0.19\) with a \(2\%\) hysteresis \(\delta = 0.02\).
 The supervisor changed its choice of VNHC at each black star until it was within
 range of \(p_\text{des}\), at which point it extended the leg (shown in red).
 
@@ -1227,7 +1240,6 @@ This difference arises because of the size of \(I\):
 if \(|I|\) were smaller, the blue rotations would be more similar in shape to the
 red one because the constrained dynamics for the dissipation VNHC would be
 well approximated by the nominal pendulum.
-
 
 \subsection{Summary of Results}
 The simulation results in this section demonstrate the energy regulation
