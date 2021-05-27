@@ -1057,9 +1057,9 @@ yields the following mechanical energy of the nominal pendulum:
     E(q_u,p_u) \approx 396.5501 p_u^2 + 0.5997(1 - \cos(q_u))
     .
 \]
-Despite the change in acrobot model, the level set \(E_\pi\) with energy 
+Despite the change in model, the level set \(E_\pi\) with energy 
 \(E(\pi,0)\) remains the boundary between oscillations and rotations
-for the nominal pendulum.
+for this nominal pendulum.
 
 We will now simulate the effects of constraining Wang's acrobot with the VNHC
 \eqref{eqn:acrobot-constraint}, thereby demonstrating that VNHCs are robust to
@@ -1075,8 +1075,8 @@ overcome friction.
 Setting \(\bar{q}_a = 1\), we experimentally determined that \(|I| = 10\) is a
 viable control parameter, so this is the value we will use for all simulations
 and experiments.
-In other words, our injection VNHC is \eqref{eqn:acrobot-constraint} with 
-\(I = 10\) while our dissipation VNHC is \eqref{eqn:acrobot-constraint} with 
+In other words, our \textit{injection VNHC} is \eqref{eqn:acrobot-constraint} with 
+\(I = 10\) while our \textit{dissipation VNHC} is \eqref{eqn:acrobot-constraint} with 
 \(I = -10\).
 
 \begin{table}
@@ -1087,6 +1087,8 @@ In other words, our injection VNHC is \eqref{eqn:acrobot-constraint} with
     \begin{tabular}{ccccccccc}
         \toprule
         $m_u$ & $m_a$ & $l_u$ & $l_a$ & $l_{c_u}$ & $l_{c_a}$ & $J_u$ & $J_a$ & $g$ \\
+        (kg) & (kg) & (m) & (m) & (m) & (m) & (kg\(\cdot\)m\(^2\)) &
+        (kg\(\cdot\)m\(^2\)) & (m/s\(^2\)) \\
         \midrule
         0.2112 & 0.1979 & % mass
         0.148 & 0.145 & % total length
@@ -1100,12 +1102,16 @@ In other words, our injection VNHC is \eqref{eqn:acrobot-constraint} with
 
 \subsection{Energy Injection}
 
-We simulated the acrobot constrained by our injection VNHC
-with initial condition \((q_u,p_u) = \left(\pi/32,0 \right)\) for \(30\)
-seconds, and plotted the resulting orbit in Figure \ref{fig:acrobot-in-orbit}.
+In simulation, we stabilized the injection VNHC for the acrobot using the
+controller \eqref{eqn:stabilizing-controller}.
+We initialized the acrobot on the constraint manifold
+with initial condition \((q_u,p_u) = \left(\pi/32,0 \right)\) and simulated the
+constrained system for \(30\) seconds.
+The resulting orbit (on the constraint manifold) is plotted in Figure
+\ref{fig:acrobot-in-orbit}.
 
 The level set \(E_\pi\) with energy \(E(\pi,0)\) is outlined in black.
-Recall that this marks the boundary between oscillations and rotations of the
+Recall that this level set is the boundary between oscillations and rotations of the
 nominal pendulum.
 The points where the orbit exits \(E_\pi\) are marked with black stars,
 with the final departure marked by a red star.
@@ -1145,10 +1151,10 @@ the acrobot always rotated within 20--40 seconds.
 
 \subsection{Energy Dissipation}
 
-We initialized our acrobot with a rotation at \((q_u,p_u) = (0,0.18)\) and
-simulated the constrained dynamics (under the dissipation VNHC) for \(30\)
-seconds.
-The resulting orbit is plotted in Figure \ref{fig:acrobot-diss-orbit}. 
+In simulation, we stabilized the dissipation VNHC and initialized the acrobot on
+the constraint manifold with a rotation \((q_u,p_u) = (0,0.18)\).
+We simulated the constrained system for \(30\) seconds and plotted the
+resulting orbit in Figure \ref{fig:acrobot-diss-orbit}. 
 As expected, the acrobot slows down over time.
 We highlight the locations where the orbit crossed the set \(E_\pi\) by
 black stars, with the final crossing in red.
@@ -1165,8 +1171,9 @@ decayed to zero.
 \subsection{Oscillation Regulation}
 
 Recall from \ref{sec:energy-reg} that one can use a supervisor to stabilize
-oscillations by appropriately toggling between injection and dissipation VNHCs.
-Figure \ref{fig:acrobot-osc-reg} shows  stabilizing an
+oscillations by appropriately toggling between injection and dissipation VNHCs
+whenever the orbit of the acrobot crosses the \(q_u\)-axis.
+Figure \ref{fig:acrobot-osc-reg} shows the supervisor stabilizing an
 oscillation with body angle \(q_\text{des} = \pi/2\) and a 
 \(5\%\) hysteresis, meaning \(\delta = 0.05\).
 The supervisor reevaluated its choice of VNHC at each black star;  
@@ -1196,24 +1203,27 @@ In both cases, the supervisor stabilized the desired oscillation.
         \label{fig:acrobot-osc-reg-diss}
     \end{subfigure}
     \caption{Using a supervisor to stabilize the oscillation with peak angle
-    \(q_\text{des} = \pi/2\).}
+    \(q_\text{des} = \pi/2\). The desired oscillation is depicted with a solid
+    black line.}
     \label{fig:acrobot-osc-reg}
 \end{figure}
 
 \subsection{Rotation Regulation}
 One can also use a supervisor to stabilize rotations through the mechanism
-described in Section \ref{sec:energy-reg}.
+described in Section \ref{sec:energy-reg}, where the supervisor toggles between
+injection and dissipation VNHCs at each crossing of the \(p_u\)-axis.
 Rotation regulation for the acrobot is demonstrated in 
 Figure \ref{fig:acrobot-rot-reg}, where the supervisor stabilizes 
 \(p_\text{des} = 0.19\) with a \(2\%\) hysteresis \(\delta = 0.02\).
-The supervisor changed its choice of VNHC at each black star until it was within
-range of \(p_\text{des}\), at which point it extended the leg (shown in red).
+The supervisor evaluated its choice of VNHC at each black star.
+Once it was within range of \(p_\text{des}\) it extended the legs completely,
+the orbit of which is shown in red.
 
 In Figure \ref{fig:acrobot-rot-reg-in} the acrobot was initialized at 
-\((q_u,p_u) = (\pi/2,0)\); here the supervisor injected energy until
-the orbit hit the \(p_u\)-axis near \(p_\text{des}\).
+the oscillation \((q_u,p_u) = (\pi/2,0)\); here the supervisor injected energy
+until the orbit hit the \(p_u\)-axis near \(p_\text{des}\).
 In Figure \ref{fig:acrobot-rot-reg-diss} the acrobot was initialized at the
-faster rotation \((q_u,p_u) = (0, 0.23)\); here the supervisor dissipated energy.
+(fast) rotation \((q_u,p_u) = (0, 0.23)\); here the supervisor dissipated energy.
 In both cases, the desired rotation was stabilized correctly.
 
 \begin{figure}
@@ -1229,7 +1239,8 @@ In both cases, the desired rotation was stabilized correctly.
         \label{fig:acrobot-rot-reg-diss}
     \end{subfigure}
     \caption{Using a supervisor to stabilize the rotation with maximal momentum
-    \(p_\text{des} = 0.23\).}
+    \(p_\text{des} = 0.23\). The desired rotation is depicted with a solid black
+    line.}
     \label{fig:acrobot-rot-reg}
 \end{figure}
 
@@ -1315,49 +1326,55 @@ We performed the following tests on SUGAR with the energy injection VNHC.
 
 \begin{enumerate}
     \item \textbf{Baseline Test:} 
-    we initialized the acrobot at 
+    we initialized SUGAR at 
     \((q_u,p_u) \approx \left(\pi/8,0\right)\). 
     The resulting orbit in Figure \ref{fig:acrobot-unperturbed-orbit} shows
     that SUGAR clearly gaining energy over time.
     Its motion looks similar to that of the energy injection simulation (Figure
     \ref{fig:acrobot-in-orbit}), though its energy gain ceases once it reaches a
     rotation with energy \(E(0,0.195)\).
+    The energy gain likely ceases because of friction at the pivot, which was
+    not modelled in simulation.
 
 \begin{figure}
     \centering
     \includegraphics[width=0.8\linewidth]{acrobot_unperturbed_orbit.png}
-    \caption{SUGAR's orbit during the baseline energy injection test.}
+    \caption{Baseline Test: SUGAR's baseline energy injection orbit.}
     \label{fig:acrobot-unperturbed-orbit}
 \end{figure}
 
-\item \textbf{Stop Test:}
+\item \textbf{Perturbation Test 1:}
     we initialized SUGAR at 
     \((q_u,p_u) \approx \left(\pi,0\right)\), let it run for 15
-    seconds, then stopped it at the bottom of its arc.
+    seconds, then introduced a rod as it passed through the bottom of
+    its arc.
+    This caused a collision which stopped SUGAR in its tracks, at which
+    point we immediately removed the rod so SUGAR could continue
+    unperturbed.
     The resulting orbit is shown in Figure \ref{fig:acrobot-stopped-orbit}.
     The blue rotation curve corresponds to the orbit before the disturbance,
-    while the red spiral confirms that the acrobot begins oscillating after it
-    is stopped.  
-    Despite the disturbance, it gains energy and eventually starts rotating
-    again.
+    while the red spiral confirms that SUGAR begins oscillating after it
+    was stopped.  
+    After the collision, SUGAR gains energy and eventually starts
+    rotating again.
 
 \begin{figure}
     \centering
     \includegraphics[width=0.8\linewidth]{acrobot_stopped_orbit.png}
-    \caption{SUGAR's orbit before (blue) and after (red) stopping.}
+    \caption{Perturbation Test 1: SUGAR's orbit before (blue) and after (red) stopping.}
     \label{fig:acrobot-stopped-orbit}
 \end{figure}
 
 
-\item \textbf{Push Test:}
+\item \textbf{Perturbation Test 2:}
     to see how SUGAR responds when pushed, we allowed
-    it to rotate undisturbed for 15 seconds and then pushed it in its
+    it to rotate unperturbed for 15 seconds and then pushed it in its
     direction of motion.
-    The orbit in Figure \ref{fig:acrobot-fpush-orbit} shows that the acrobot,
+    The orbit in Figure \ref{fig:acrobot-fpush-orbit} shows that SUGAR,
     when pushed, rotates with energy \(E(0,-0.22)\), but then slows down until
     it reaches a rotation with energy \(E(0,-0.195)\).
     We repeated this test by pushing SUGAR against its direction of motion.
-    The orbit in Figure \ref{fig:acrobot-rpush-orbit} demonstrates that the acrobot
+    The orbit in Figure \ref{fig:acrobot-rpush-orbit} demonstrates that it
     readily changes direction, and quickly achieves its maximum speed
     with energy \(E(0,0.195)\).
 \end{enumerate}
@@ -1367,7 +1384,8 @@ with energy \(E(q_u,p_u) > E(0,0.195)\).
 The baseline and push tests suggest that our VNHC injects energy into SUGAR
 only on \(\mathcal{O}_2(0.195)\).
 This difference between simulation and implementation is likely due to
-friction.
+friction, as well as timing errors incurred by the PID controller in the servo
+motor.
 
 \begin{figure}
     \centering
@@ -1381,7 +1399,7 @@ friction.
         \caption{The reverse push test.}
         \label{fig:acrobot-rpush-orbit}
     \end{subfigure}
-    \caption{SUGAR's orbit before (blue) and after (red) pushing.}
+    \caption{Perturbation Test 2: SUGAR's orbit before (blue) and after (red) pushing.}
 \end{figure}
 
 We had hoped to show experimental results for dissipation and
@@ -1406,17 +1424,15 @@ external disturbances.
 %/========== Conclusion ==========/%
 \section{Conclusion}\label{sec:conclusion}
 
-In this article we redeveloped the framework of virtual nonholonomic
-constraints for underactuated mechanical systems with arbitrary degree of
-underactuation.
-We applied this framework towards the acrobot, and designed a constraint which
-emulates giant motion from gymnastics.
+In this article we apply the framework of virtual nonholonomic constraints
+towards the acrobot, and designed a constraint which emulates giant motion from
+gymnastics.
 We proved this constraint will inject energy into the simplified acrobot whose
 limbs are massless rods of equal length, with equal masses at the tips.
-We then performed simulations and physical experiments of this VNHC.
+We then performed simulations and physical experiments on a real acrobot robot.
 These demonstrated that virtual nonholonomic constraints are capable of
 injecting and dissipating energy in a robust manner, all while producing
-realistic biological motion.
+realistic biologically-inspired motion.
 
 %---------- Bibliography ----------%
 \bibliography{bib}
