@@ -1419,18 +1419,18 @@ external disturbances.
 
 %/========== Proof ==========/%
 \section{Proof of Theorem \ref{thm:acrobot-energy-stabilization}}\label{sec:proof}
-\textbf{TODO: prove Thm 10}
-The sets \(\mathcal{O}_1\) and \(\mathcal{O}_2(\bar{\rho}\) are sublevel sets of
-the nominal energy \(E(q_u,p_u)\) defined by \eqref{eqn:acrobot-energy}.
+The sets \(\mathcal{O}_1\) and \(\mathcal{O}_2(\bar{\rho})\) are sublevel sets of
+the nominal pendulum's energy \(E(q_u,p_u)\) described in
+\eqref{eqn:acrobot-energy}.
 To prove Theorem \ref{thm:acrobot-energy-stabilization}, we will find conditions
 under which the acrobot gains energy on an open ``energy annulus".
 That is, given two energy levels \(E_0 \geq 0\) and \(E_1 > E_0\), we define the
 energy annulus to be the domain
-\[
+\begin{equation*}
     \mathcal{D} := \{(q_u,p_u) \in \SxR \mid \\
     E_0 < E(q_u,p_u) < E_1\}
     .
-\]
+\end{equation*}
 The only condition we place on \(E_0\) and \(E_1\) is that they both correspond
 to oscillations or both to rotations; that is, if \(E_0 < E(\pi,0)\), then 
 \(E_1 \leq E(\pi,0)\).
@@ -1443,16 +1443,16 @@ a diffeomorphism \(T(q_u,p_u) = (r,\theta)\), where \(r\)
 chooses a level set of \(E\) and \(\theta\) chooses a point on that level set.
 
 We will describe the explicit forms of these transformations later. 
-Thanks to the shape of a pendulum's orbits, we will show that (at \(I = 0\)) the
-dynamics of \((r,\theta)\) satisfy \(\dot{r} = 0\) and \(\dot{\theta} > 0\).
+Importantly, we will show that the dynamics of \((r,\theta)\) satisfy 
+\(\dot{r} = 0\) and \(\dot{\theta} > 0\) for the nominal pendulum (i.e., when
+\(I = 0\)).
 By continuity of the constrained dynamics with respect to \(I\), we can find a
 small enough \(I > 0\) so that \(\dot{\theta} > 0\) for the acrobot.
 This property will enable us to perform a time-scaling transformation 
-\(t = t(\theta)\) to eliminate the dynamics of \(\theta\), and study how 
-the pseudo-radius \(r\) evolves as a function of the pseudo-angle \(\theta\),
-rather than as a function of time.
-If it increases ``on average" , then \(E\) must also be increasing ``on average"
-and the constrained dynamics must be gaining energy on \(D\).
+\(t = t(\theta)\), and study how the pseudo-radius \(r\) evolves as a function
+of the pseudo-angle \(\theta\), rather than as a function of time.
+If \(r(\theta)\) increases on average, then \(E\) must also be increasing
+on average and the constrained dynamics must be gaining energy on \(D\).
 
 We formalize this idea in the following lemma.
 Then we will find the relevant subset \(D \subset \mathcal{D}\)
@@ -1469,11 +1469,12 @@ each set.
     \(\underline{r} < \overline{r}\).
     Suppose there exists a diffeomorphism 
     \begin{align*}
-        T : D &\to ]\underline{r},\overline{r}[ \, \times \Sone \\
+        T : D &\to T(D) = ]\underline{r},\overline{r}[ \, \times \Sone \\
         (q_u,p_u) &\mapsto (r,\theta)
         ,
     \end{align*}
-    satisfying \(\dot{r} = 0\) and \(\dot{\theta} > 0\) at \(I = 0\).
+    satisfying \(\dot{r} = 0\) and \(\dot{\theta} > 0\) on \(T(D)\) when 
+    \(I = 0\).
     Let \(g(\theta,r,I) = \dot{r}/\dot{\theta}\) and assume that 
     \((\partial g/\partial I)(\theta,r,0) = 0\).
     Define \(b(\theta,r_0) = g(\theta,r_0,0)\) and assume there exists
@@ -1487,6 +1488,36 @@ each set.
     gain energy on \(D\) for all \(0 < I \leq I^\star\), and lose energy on \(D\)
     for all \(-I^\star \leq I < 0\).
 \end{lemma}
+\begin{proof}
+    Since \(\dot{\theta} > 0\) when \(I = 0\) and the constrained dynamics 
+    in \((r,\theta)\) coordinates are continuous in \(I\), there exists 
+    \(I_1 > 0\) small enough that \(\dot{\theta} > 0\) for all
+    \(I \in \, ]0,I_1]\).
+    Hence, we can perform a time reparameterization \(t = t(\theta)\) to get a
+    time-scaled pseudo-radius \(\hat{r}(\theta) := r(t(\theta))\).
+    This reduces the system \((\dot{r},\dot{\theta})\) into the scalar
+    time-varying ODE 
+    \begin{equation}\label{eqn:rhat-ode}
+        \begin{cases}
+            \hat{r}^\prime= \frac{\dot{r}}{\dot{\theta}} =
+            g(\theta,\hat{r},I)
+            , \\
+            \hat{r}(0) = r_0
+            ,
+        \end{cases}
+    \end{equation}
+    where the prime denotes differentiation by \(\theta\) and 
+    \(r_0 \in \, ]\underline{r},\overline{r}[\) is the initial condition.
+
+    Let \(\hat{r}(\theta,r_0,I)\) be the solution to \eqref{eqn:rhat-ode}.
+    Taking the Taylor expansion of this solution around \(I = 0\) we get
+    \(\hat{r}(\theta,r_0,I) = \hat{r}(\theta,r_0,0) + I\hat{r}_1(\theta,r_0,0) 
+    + R(\theta,r_0,I)\) where 
+
+    \textbf{TODO: finish the proof}
+\end{proof}
+\textbf{TODO: Prove origin is unstable, then apply lemma to O1 and O2 and show
+that orbits go through Epi}
 %/========== Conclusion ==========/%
 \section{Conclusion}\label{sec:conclusion}
 
