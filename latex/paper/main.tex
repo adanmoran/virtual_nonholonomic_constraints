@@ -834,7 +834,7 @@ Suppose for a moment that \(I = 0\) in \eqref{eqn:acrobot-constraint}, i.e.,
 that the legs stay fully extended.
 The acrobot becomes a nominal pendulum with two masses, whose total mechanical
 energy is
-\begin{equation}\label{eqn:acrobot-energy}
+\begin{equation}\label{eqn:nominal-energy}
     E(q_u,p_u) := \frac{p_u^2}{10ml^2} + 3mgl(1 - \cos(q_u))
     .
 \end{equation}
@@ -1046,7 +1046,7 @@ and potential function
 
 Recall that we defined the sets \(\mathcal{O}_1\) and
 \(\mathcal{O}_2(\bar{\rho})\) used in Theorem \ref{thm:acrobot-energy-stabilization}
-via the mechanical energy \eqref{eqn:acrobot-energy} of the nominal
+via the mechanical energy \eqref{eqn:nominal-energy} of the nominal
 pendulum associated with a simplified acrobot.
 We obtained this nominal pendulum by setting \(I = 0\) in
 \eqref{eqn:acrobot-constraint}.
@@ -1425,48 +1425,40 @@ external disturbances.
 
 %/========== Proof ==========/%
 \section{Proof of Theorem \ref{thm:acrobot-energy-stabilization}}\label{sec:proof}
-The sets \(\mathcal{O}_1\) and \(\mathcal{O}_2(\bar{\rho})\) are sublevel sets of
-the nominal pendulum's energy \(E(q_u,p_u)\) described in
-\eqref{eqn:acrobot-energy}.
-To prove Theorem \ref{thm:acrobot-energy-stabilization}, we will find conditions
-under which the acrobot gains energy on an open ``energy annulus".
-That is, given two energy levels \(E_0 \geq 0\) and \(E_1 > E_0\), we define the
-energy annulus to be the domain
-\begin{equation*}
-    \mathcal{D} := \{(q_u,p_u) \in \SxR \mid \\
-    E_0 < E(q_u,p_u) < E_1\}
-    .
-\end{equation*}
-The only condition we place on \(E_0\) and \(E_1\) is that they both correspond
-to oscillations or both to rotations; that is, if \(E_0 < E(\pi,0)\), then 
-\(E_1 \leq E(\pi,0)\).
+Theorem \ref{thm:acrobot-energy-stabilization} proves that the acrobot gains
+energy on \(\mathcal{O}_1\) and \(\mathcal{O}_2(\bar{\rho})\), which are
+sublevel sets of the nominal pendulum's energy \eqref{eqn:nominal-energy}.
+%To prove Theorem \ref{thm:acrobot-energy-stabilization}, we will find conditions
+%under which the acrobot gains energy on an open ``energy annulus",
+%\begin{equation*}
+%    \mathcal{D} := \{(q_u,p_u) \in \SxR \mid \\
+%    E_0 < E(q_u,p_u) < E_1\}
+%    ,
+%\end{equation*}
+%where \(E_1 > E_0\) are energy values, which we will choose later.
 
-Here is the fundamental idea of the proof: for certain open subsets
-\(D \subset \mathcal{D}\), one can find a change of coordinates into 
-pseudo-polar coordinates adapted to level sets of \(E\).
+Here is the fundamental idea of this proof: for certain subsets
+\(D \subset \SxR\), one can find a change of coordinates into 
+pseudo-polar coordinates adapted to level sets of \(E\) 
+(see Mohammadi \etal \cite{dynamic_vhcs_stabilize_closed_orbits}).
 In other words, when \(I = 0\) in \eqref{eqn:acrobot-constraint}, one can find
 a diffeomorphism \(T(q_u,p_u) = (r,\theta)\), where \(r\)
 chooses a level set of \(E\) and \(\theta\) chooses a point on that level set.
 
-We will describe the explicit forms of these transformations later. 
-Importantly, we will show that the dynamics of \((r,\theta)\) satisfy 
-\(\dot{r} = 0\) and \(\dot{\theta} > 0\) for the nominal pendulum (i.e., when
-\(I = 0\)).
-By continuity of the constrained dynamics with respect to \(I\), we can find a
-small enough \(I > 0\) so that \(\dot{\theta} > 0\) for the acrobot.
+We will explicitly calculate these transformations later;
+what matters is that the dynamics of \((r,\theta)\) will satisfy 
+\(\dot{r} = 0\) and \(\dot{\theta} > 0\) when \(I = 0\).
+By continuity of the constrained dynamics with respect to \(I\), this implies 
+there exists a small enough value \(I > 0\) so that \(\dot{\theta} > 0\) for the
+acrobot.
 This property will enable us to perform a time-scaling transformation 
 \(t = t(\theta)\), and study how the pseudo-radius \(r\) evolves as a function
 of the pseudo-angle \(\theta\), rather than as a function of time.
 If \(r(\theta)\) increases on average, then \(E\) must also be increasing
 on average and the constrained dynamics must be gaining energy on \(D\).
+This idea is formalized in the following lemma.
 
-We formalize this idea in the following lemma.
-Then we will find the relevant subset \(D \subset \mathcal{D}\)
-and the coordinate transformations \((q_u,p_u) \mapsto (r,\theta)\) which
-satisfy the conditions of the lemma, thereby proving the acrobot gains energy on
-each set.
-
-\begin{lemma}
+\begin{lemma}\label{lemma:energy-regulation-D}
     Consider the simplified acrobot \eqref{eqn:acrobot-hamiltonian} constrained
     by the VNHC \eqref{eqn:acrobot-constraint}, whose constrained dynamics are
     parameterized by \((q_u,p_u) \in \SxR\).
@@ -1585,6 +1577,7 @@ each set.
     Changing the sign of \(I\) means \(r_{n+1} \leq r_n - n\gamma\), in which
     case the constrained dynamics lose energy on \(D\).
 \end{proof}
+
 \textbf{TODO: Prove origin is unstable, then apply lemma to O1 and O2 and show
 that orbits go through Epi}
 %/========== Conclusion ==========/%
