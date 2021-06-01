@@ -1473,12 +1473,12 @@ This idea is formalized in the following lemma.
     satisfying \(\dot{r} \equiv 0\) and \(\dot{\theta} > 0\) when
     \(I = 0\).
     Let \(g(\theta,r,I) = \dot{r}/\dot{\theta}\) and assume that 
-    \((\partial g/\partial I)(\theta,r,0) \equiv 0\).
-    Define \(b(\theta,r_0) = (\partial g/\partial r)(\theta,r_0,0)\);
-    assume it is \(2\pi\)-periodic in \(\theta\) for fixed \(r_0\),
+    \((\partial g/\partial r)(\theta,r,0) \equiv 0\).
+    Define \(b(\theta,r_0) = (\partial g/\partial I)(\theta,r_0,0)\);
+    assume it is \(2\pi\)-periodic in \(\theta\) for any fixed \(r_0\),
     and that there exists \(\epsilon > 0\) such that 
     \[
-        \int \limits_0^{2\pi} b(\sigma,r_0)d\sigma \geq \epsilon
+        S(r_0) := \int \limits_0^{2\pi} b(\sigma,r_0)d\sigma \geq \epsilon
         ,
     \]
     for all \(r_0 \in \, ]\underline{r},\overline{r}[\).
@@ -1513,7 +1513,7 @@ This idea is formalized in the following lemma.
     + R(\theta,r_0,I)\). 
     Here, \(\hat{r}(\theta,r_0,0) \equiv r_0\) for all \(\theta\),
     the function \(\hat{r}_1(\theta,r_0)\) is the solution to
-    \begin{equation}
+    \begin{equation}\label{eqn:r1-hat-prime}
         \begin{cases}
         \hat{r}_1^\prime = 
         \frac{\partial g}{\partial \hat{r}}(\theta,r_0,0)\hat{r}_1 +
@@ -1525,24 +1525,25 @@ This idea is formalized in the following lemma.
     \end{equation}
     and the remainder \(R(\theta,r_0,I)\) is \(O(I^2)\).
 
-    By assumption, \((\partial g/\partial I)(\theta,r_0,0) \equiv 0\) and
-    \(b(\theta,r_0) := (\partial g/\partial \hat{r})(\theta,r_0,0)\). 
-    Hence, one can compute
+    Our assumption that \((\partial g/\partial r)(\theta,r_0,0) \equiv 0\)
+    implies that \((\partial g/\partial \hat{r})(\theta,r_0,0) \equiv 0\).
+    The solution of \ref{eqn:r1-hat-prime} can be obtained by quadrature, giving
     \[
         \hat{r}_1(\theta,r_0) = \int\limits_0^\theta b(\sigma,r_0)d\sigma
-        .
+        ,
     \]
+    with \(b(\theta,r_0) := (\partial g/\partial I)(\theta,r_0,0)\). 
     Since and \(\dot{\theta} > 0\) and \(b(\theta,r_0)\) is \(2\pi\)-periodic in
     \(\theta\), there is a well-defined Poincar\'{e} map describing
-    how \(\hat{r}\) changes each time \(\theta\) increases by \(2\pi\);
-    this map is 
+    how \(\hat{r}\) changes each time \(\theta\) increases by \(2\pi\).
+    This map is 
     \begin{align*}
         P : \, ]\underline{r},\overline{r}[ &\to \mathbb{R}_{\geq 0} \\
         r_0 &\mapsto \hat{r}(2\pi,r_0,I)
-        .
+        ,
     \end{align*}
-    This map expands to \(P(r_0) = r_0 + IS(r_0) + R(2\pi,r_0,I)\), which
-    means we can understand the evolution of \(\hat{r}\) by studying
+    which expands to \(P(r_0) = r_0 + IS(r_0) + R(2\pi,r_0,I)\).
+    Hence, we can understand the evolution of \(\hat{r}\) by studying
     the dynamics of the discrete-time system
     \begin{equation}\label{eqn:r-discrete}
         r_{n+1} = r_n + IS(r_n) + R(2\pi,r_n,I)
@@ -1551,13 +1552,12 @@ This idea is formalized in the following lemma.
     with initial condition \(r_0\).
     Here, \(r_n\) corresponds to the distance along the line segment
     \(L := ]\underline{r},\overline{r}[ \, \times \{0\}\)
-    when an orbit of the constrained dynamics hits \(L\) for the
-    the \(n^\text{th}\) time, assuming the orbit was initialized at
-    \((r,\theta) = (r_0,0)\).
+    when an orbit of \((r,\theta)\) hits \(L\) for the the \(n^\text{th}\) time,
+    assuming the orbit was initialized at \((r,\theta) = (r_0,0)\).
 
     Proving the constrained dynamics gain energy on \(D\) is equivalent to
     proving \(\hat{r}_{n}\) eventually reaches \(\overline{r}\).
-    Thanks to a perturbation analysis from \cite[Theorem 10.1]{khalil_nonlinear}, 
+    Thanks to \cite[Theorem 10.1]{khalil_nonlinear}, 
     we know there exists some \(I_2 \in ]0,I_1]\) and \(\delta > 0\)
     such that \(\left|R(2\pi,r_n,I)\right| \leq \delta I^2\) for all 
     \(I \in [-I_2,I_2]\).
@@ -1578,8 +1578,77 @@ This idea is formalized in the following lemma.
     case the constrained dynamics lose energy on \(D\).
 \end{proof}
 
-\textbf{TODO: Prove origin is unstable, then apply lemma to O1 and O2 and show
-that orbits go through Epi}
+We will now prove the first part of Theorem
+\ref{thm:acrobot-energy-stabilization}.
+To apply Lemma \ref{lemma:energy-regulation-D}, we choose \(D\) to be the
+annulus \(\mathcal{O}_1 \backslash \{(0,0)\}\) consisting of all oscillations of
+the nominal pendulum.
+Using the procedure described by Mohammadi \etal 
+\cite{dynamic_vhcs_stabilize_closed_orbits} for finding pseudo-polar
+coordinates adapted to level sets of \(E\), we compute
+\begin{align}
+    \label{eqn:r-osc}
+    r &= \arccos\left(\cos(q_u) - \frac{p_u^2}{30m^2gl^3}\right)
+    , \\
+    \label{eqn:theta-osc}
+    \theta &=
+    \left.\arctan_2\left(-\sign{p_u}\sqrt{1-\frac{q_u^2}{r^2}},\frac{q_u}{r}\right)
+    \right|_{r = r(q_u,p_u)}
+    ,
+\end{align}
+where \(r \in \, ]0,\pi[\).
+We now verify these coordinates satisfy the requirements of 
+Lemma \ref{lemma:energy-regulation-D}.
+When \(I = 0\) we have \(\dot{r} = 0\) and
+\begin{equation} \label{eqn:theta-dot-nom-osc}
+    \dot{\theta} = \sqrt{\frac{6g}{5l}} 
+        \sqrt{\frac{\cos(r\cos(\theta)) - \cos(r)}
+            {r^2 \sin(\theta)^2}}
+    .
+\end{equation}
+Note that ~\eqref{eqn:theta-dot-nom-osc} has removable singularities at
+\(\theta \in \{0,\pi\}\).
+Taking the limit as \(\theta\) approaches these points yields
+\begin{equation*}
+    \lim\limits_{\theta \to 0}\dot{\theta} 
+    = \lim\limits_{\theta \to \pi} \dot{\theta}
+    = \sqrt{\frac{6g \sin(r)}{10lr}}
+    , 
+\end{equation*}
+which is smooth and well-defined for all
+\(r \in \, ]0,\pi[\).
+Taking these removable singularities into account,
+one can verify that \(\dot{\theta} > 0\) for every \(r \in \, ]0,\pi[\).
+Setting \(g(\theta,r,I) = \dot{r}/\dot{\theta}\), MATLAB symbolic computations
+confirm that \((\partial g/\partial r)(\theta,r,0) \equiv 0\) as required.
+Next, we compute
+\begin{equation*}
+    b(\theta,r_0) = 
+    \frac{\partial g}{\partial I}(\theta, r_0, 0) = K a(\theta,r_0)
+    ,
+\end{equation*}
+where
+\begin{align*}
+    K &:= \frac{\bar{q}_a \sqrt{30m^2g l^3}}{15}
+    , \\
+    a(\theta,r_0) &:= \frac{
+        r_0 |\sin(\theta)| \left(
+        5 c_{r_0} \cos(r_0 c_\theta) - 8 \cos(r_0c_\theta)^2 + 3
+    \right)
+    }{
+    \sin(r_0)\sqrt{\cos(r_0c_\theta) - c_{r_0}}
+    }
+    .
+\end{align*}
+Notice that \(a(\theta,r_0)\) does not depend on the physical parameters of the
+acrobot.
+
+\textbf{TODO: write about Qro, show the figure, apply lemma to D,
+    prove origin is unstable, show orbits will go through Epi, 
+    then derive the constrained dynamics for the rotation domain and apply lemma
+    there, concluding that O2 is O1 U Epi U rotation domain and is therefore
+    also gaining energy.}
+
 %/========== Conclusion ==========/%
 \section{Conclusion}\label{sec:conclusion}
 
