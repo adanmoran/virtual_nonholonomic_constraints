@@ -1586,9 +1586,9 @@ This idea is formalized in the following lemma.
 \subsection{Energy gain on \(\mathcal{O}_1\)}
 We will now prove the first part of Theorem
 \ref{thm:acrobot-energy-stabilization}.
-We choose \(D\) in Lemma \ref{lemma:energy-regulation-D} to be the
-annulus \(\mathcal{O}_1 \backslash \{(0,0)\}\) consisting of all oscillations of
-the nominal pendulum.
+We begin by studying the punctured open set
+\(\mathcal{O}_1 \backslash \{(0,0)\}\) consisting of all (nonzero) oscillations
+of the nominal pendulum.
 Using the procedure described by Mohammadi \etal 
 \cite{dynamic_vhcs_stabilize_closed_orbits} for finding pseudo-polar
 coordinates adapted to level sets of \(E\), we compute
@@ -1654,7 +1654,8 @@ where
     .
 \end{align*}
 Notice that \(K\) is a positive constant which depends only on
-\(m\),\(g\),\(l\), and \(\bar{q}_a\).
+\(m\),\(g\),\(l\), and \(\bar{q}_a\), and \(a(\theta,r_0)\) is \(2\pi\)-periodic
+in \(\theta\).
 This means that there exists \(\epsilon > 0\) such that 
 \(S(r_0) := \int_0^{2\pi} b(\sigma,r_0)d\sigma \geq \epsilon\)
 if and only if \(Q(r_0) := \int_0^{2\pi} a(\sigma,r_0) d\sigma\) is strictly
@@ -1668,7 +1669,6 @@ asymptote at \(r_0 = \pi\).
 Simulations with smaller \(r_0\) result in an infinite integral error due to a
 division by zero, yet we believe the \(Q(r_0)\) is in fact positive for all 
 \(r_0 \in \, ]0,\pi[\).
-
 \begin{figure}
     \centering
     % TODO: Show this plot
@@ -1677,14 +1677,23 @@ division by zero, yet we believe the \(Q(r_0)\) is in fact positive for all
     \label{fig:acrobot-Q}
 \end{figure}
 
-Finally, \(a(\theta,r_0)\) is clearly \(2\pi\)-periodic in \(\theta\),
-which means all conditions of Lemma \ref{lemma:energy-regulation-D}
-are satisfied. 
-Therefore, the acrobot is gaining energy everywhere on
-\(D = \mathcal{O}_1 \backslash \{(0,0)\}\).
-The origin must be a repeller (otherwise Lemma
-\ref{lemma:energy-regulation-D} would fail), so we conclude that the acrobot
-is gaining energy on \(\mathcal{O}_1\).
+While \(Q(r_0) \not \geq \epsilon\) on \(]0,\pi[\), it is certainly bounded
+below on \(]\omega,\pi[\) for each fixed \(\omega > 0\).
+This means all conditions of Lemma \ref{lemma:energy-regulation-D}
+are satisfied on the set 
+\[
+    D_\omega = \mathcal{O}_1 \backslash 
+    \{(q_u,p_u) \in \SxR \mid E(q_u,p_u) \leq E(\omega,0)\}
+    .
+\]
+Therefore, for each \(\omega \in \, ]0,\pi[\) there exists some \(I_1^\star\)
+such that the acrobot gains/loses energy everywhere on \(D_\omega\).
+To prove energy gain on all of \(\mathcal{O}_1\), we will show the origin is a
+repeller if \(I > 0\), and that it is an asymptotically stable equilibrium
+if \(I < 0\).
+Recall the Poincar\'{e} section used in the proof of Lemama
+\ref{lemma:energy-regulation-D}.
+\textbf{TODO: Show the origin is a repeller/stable eqm via the poincare map}.
 
 Before moving on to the second part of Theorem
 \ref{thm:acrobot-energy-stabilization}, we must first confirm that any acrobot
