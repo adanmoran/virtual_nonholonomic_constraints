@@ -1603,6 +1603,14 @@ coordinates adapted to level sets of \(E\), we compute
     ,
 \end{align}
 where \(r \in \, ]0,\pi[\).
+This has inverse
+\begin{align*}
+    q_u &= r\cos(\theta)
+    , \\
+    p_u &= -\sign{\sin(\theta)}
+    \sqrt{30m^2gl^3(\cos(rc_\theta - c_r)}
+    .
+\end{align*}
 We now verify these coordinates satisfy the requirements of 
 Lemma \ref{lemma:energy-regulation-D}.
 
@@ -1625,7 +1633,8 @@ Taking the limit as \(\theta\) approaches these points yields
 which is smooth and well-defined for all
 \(r \in \, ]0,\pi[\).
 From \eqref{eqn:theta-dot-nom-osc}-\eqref{eqn:theta-dot-limit},
-one can verify that \(\dot{\theta} > 0\) for every \(r \in \, ]0,\pi[\).
+one can verify that \(\dot{\theta} > 0\) when \(I = 0\), for every 
+\(r \in \, ]0,\pi[\).
 Defining \(g(\theta,r,I) = \dot{r}/\dot{\theta}\), MATLAB symbolic computations
 confirm that \((\partial g/\partial r)(\theta,r,0) \equiv 0\) as required.
 
@@ -1677,11 +1686,139 @@ The origin must be a repeller (otherwise Lemma
 \ref{lemma:energy-regulation-D} would fail), so we conclude that the acrobot
 is gaining energy on \(\mathcal{O}_1\).
 
+Before moving on to the second part of Theorem
+\ref{thm:acrobot-energy-stabilization}, we must first confirm that any acrobot
+constrained by \eqref{eqn:acrobot-constraint} will eventually start rotating.
+The definition of energy gain states that all orbits initialized in
+\(\mathcal{O}_1\) will escape compact subsets of \(\mathcal{O}_1\) in finite time. 
+This is not enough to prove that all orbits will escape the boundary of
+\(\mathcal{O}_1\). 
 
-\textbf{TODO: show orbits will go through Epi, 
-    then derive the constrained dynamics for the rotation domain and apply lemma
-    there, concluding that O2 is O1 U Epi U rotation domain and is therefore
-    also gaining energy.}
+Let \(E_\pi\) be the level set with energy \(E(\pi,0)\), 
+which forms the boundary of \(\mathcal{O}_1\). 
+Define \(\bar{\mathcal{O}}_1 = \mathcal{O}_1 \cup E_\pi\) to be the closure of
+\(\mathcal{O}_1\).
+An orbit of the acrobot will only begin rotating if it escapes
+\(\bar{\mathcal{O}}_1\) by crossing through \(E_\pi\), and eventually remains
+outside this set.
+It is possible for orbits starting in \(\mathcal{O}_1\) to always approach
+\(E_\pi\) without ever crossing into the rotation zone.
+We will prove this does not happen in general.
+
+To begin, let us analyze the upright equilibrium.
+Taking the Jacobian of the constrained dynamics
+~\eqref{eqn:acrobot-constrained-dynamics} at \((q_u,p_u) = (\pi,0)\) yields
+\[
+    J = \begin{bmatrix}
+        -\frac{6mgl\bar{q}_aI}{5} & \frac{1 - 2m^2gl^3\bar{q}_a^2 I^2}{5ml^2} \\
+        3mgl & mgl\bar{q}_aI
+    \end{bmatrix}
+    ,
+\]
+which has characteristic polynomial
+\(\det\left(\lambda \Id{2} - J\right)
+= \lambda^2 + 1/5 mgl\bar{q}_a I \lambda - 3g\).
+By Descartes' rule of signs, this polynomial has one root with positive real
+part. 
+The equilibrium \((\pi,0)\) is therefore unstable, so the stable manifold \(\Pi^+\) of
+initial conditions converging to \((\pi,0)\) is one-dimensional, and hence is
+of measure zero in \(\SxR\).
+
+Using \(x(t) := (q_u(t),p_u(t))\) as shorthand, let
+\(x(0) \in \mathcal{O}_1\) be a nonzero initial condition of the acrobot.
+Suppose by way of contradiction that the orbit \(x(\R)\) is confined within 
+\(\bar{\mathcal{O}}_1\), and does not exit through \(E_\pi\) into the rotation
+zone.
+Since \(\bar{\mathcal{O}}_1\) is compact, the Birkhoff Theorem \cite{birkhoff}
+implies:
+\begin{itemize}
+    \item The positive limit set \(L_+\) of \(x(t)\) is non-empty, compact, and
+        invariant.
+    \item The solution \(x(t)\) asymptotically tends to \(L_+\).
+\end{itemize}
+Since the acrobot gains energy on \(\mathcal{O}_1\), the positive limit set of
+\(x(t)\) must be the largest invariant subset of \(E_\pi\). 
+From our discussion on pseudo-polar coordinates (in particular the extension
+\ref{eqn:theta-dot-limit} of \(\dot{\theta}\) to \(\bar{\mathcal{O}}_1\)),
+we know that \(\dot{\theta} \geq 0\) on \(E_\pi\) with equality if and only if 
+\(\theta \in \{0,\pi\}\).
+Taking the derivative of \(E(q_u,p_u)\) at the \(p_u\)-axis yields
+\(\dot{E}(0,p_u) = g/(5l) \sin(q_a)p_u\).
+This is non-zero everywhere except at the origin, which means it is non-zero on
+\(E_\pi\); this implies \(E_\pi\) is not invariant, so the positive limit set of 
+\(x(t)\) must be the set \(\{(\pi,0)\}\). Hence, \(x(t)\) converges to 
+\((\pi,0)\), so \(x(0) \in \Pi^+\).
+Since \(\Pi^+\) is a set of measure zero in \(\SxR\), almost every orbit
+initialized in \(\mathcal{O}_1\) must escape through \(E_\pi\) into the rotation
+domain.
+
+Escaping once into the rotation domain does not guarantee the acrobot
+orbit will never return to \(\mathcal{O}_1\).
+Indeed, the orbit could escape through \(E_\pi\) and return to \(\mathcal{O}_1\)
+several times.
+However, almost every orbit must eventually remain outside the closure of 
+\(\mathcal{O}_1\). 
+If not, the positive limit set would once again be
+\(E_\pi\); by the same argument as above, that orbit would be in \(\Pi^+\).
+
+We conclude that all orbits beginning in \(\mathcal{O}_1\) will, in finite time,
+escape the closure of \(\mathcal{O}_1\) and remain in the rotation domain
+forever after.
+
+\subsection{Energy Gain on \(\mathcal{O}_2(\bar{\rho})\)}
+Since \(\mathcal{O}_2(\bar{\rho}) = \bar{\mathcal{O}}_1 \cup \mathcal{R}\)
+(where \(\mathcal{R}\) is the rotation domain defined in
+\eqref{eqn:rotation-domain}), and since all orbits escape 
+\(\bar{\mathcal{O}_1}\) in finite time, we need simply prove energy gain on
+\(\mathcal{R}\) to complete the proof of Theorem
+\ref{thm:acrobot-energy-stabilization}.
+We separate \(\mathcal{R}\) into its two distinct connected components:
+\(\mathcal{R}^+\), the set of rotations with \(p_u > 0\); 
+and \(\mathcal{R}^-\), the set of rotations with \(p_u < 0\).
+We take the domain of interest for Lemma \ref{lemma:energy-regulation-D} to be
+\(D \in \{\mathcal{R}^+, \mathcal{R}^-\}\).
+
+We now apply the method described in
+\cite{dynamic_vhcs_stabilize_closed_orbits} to find pseudo-polar coordinates
+adapted to rotations.
+These coordinates are 
+\begin{align}
+    \label{eqn:r-rot}
+    r &= \sqrt{p_u^2 - 30m^2gl^3(1-c_u)}
+    , \\
+    \label{eqn:theta-rot}
+    \theta &= \pm q_u
+\end{align}
+where \(r \in \, ]\sqrt{60m^2gl^3}, \bar{\rho}[\) and \(\pm\) denotes
+whether \(D=\mathcal{R}^+\) or \(D=\mathcal{R}^-\).
+The inverse of this transformation is
+\begin{align*}
+    q_u &= \pm \theta
+    , \\
+    p_u = \pm \sqrt{r^2+30m^2gl^3(1-c_\theta)}
+    .
+\end{align*}
+
+When we compute the constrained dynamics in
+\((r,\theta)\) coordinates and set \(I = 0\), MATLAB symbolic computations
+reveal that \(\dot{r} = 0\) and
+\(\dot{\theta} = 1/(5ml^2) \sqrt{r^2 - 30m^2gl^3(1-c_\theta)}\).
+Regardless of \(D\), we have \(\dot{\theta} > 0\) when \(I = 0\) as required.
+Defining \(g(\theta,r,I) = \dot{r}/\dot{\theta}\), MATLAB symbolic computations
+confirm that \((\partial g/\partial r)(\theta,r,0) \equiv 0\).
+The function \(b(\theta,r_0) = (\partial g/\partial I)(\theta,r_0,0)\) is given
+in the statement of Theorem \ref{thm:acrobot-energy-stabilization}.
+The theorem also assumes that \(S(r_0) \geq \epsilon\).
+Thus, all requirements of Lemma \ref{lemma:energy-regulation-D} are satisfied,
+so there exists some \(I_2^\star(\bar{\rho})\) whereby the acrobot gains/loses
+energy on \(\mathcal{R}^+\) and \(\mathcal{R}^-\).
+
+Let \(I_1^\star\) be the value returned by Lemma \ref{lemma:energy-regulation-D}
+for \(\mathcal{O}_1\).
+We conclude that the acrobot gains/loses energy on \(\mathcal{O}_2(\bar{\rho})\)
+for \(|I| \leq I^{\star\star}\), where 
+\(I^{\star\star} = \min \{I_1^\star, I_2^\star(\bar{\rho})\}\).
+This completes the proof of Theorem \ref{thm:acrobot-energy-stabilization}.
 
 %/========== Conclusion ==========/%
 \section{Conclusion}\label{sec:conclusion}
