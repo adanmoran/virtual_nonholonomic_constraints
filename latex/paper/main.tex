@@ -1425,31 +1425,28 @@ external disturbances.
 
 %/========== Proof ==========/%
 \section{Proof of Theorem \ref{thm:acrobot-energy-stabilization}}\label{sec:proof}
-Theorem \ref{thm:acrobot-energy-stabilization} proves that the acrobot gains
-energy on \(\mathcal{O}_1\) and \(\mathcal{O}_2(\bar{\rho})\), which are
-sublevel sets of the nominal pendulum's energy
-\(E(q_u,p_u)\) defined in \eqref{eqn:nominal-energy}.
+In this section we prove Theorem \ref{thm:acrobot-energy-stabilization},
+which claims that the acrobot gains energy on \(\mathcal{O}_1\) and
+\(\mathcal{O}_2(\bar{\rho})\), which are sublevel sets of the nominal pendulum's
+energy \(E(q_u,p_u)\) defined in \eqref{eqn:nominal-energy}.
 
-Here is the fundamental idea of this proof: for certain subsets
+Here is the summary of this proof: for certain subsets
 \(D \subset \SxR\), one can find a change of coordinates into 
-pseudo-polar coordinates adapted to level sets of \(E\) 
+pseudo-polar coordinates adapted to level sets of \(E(q_u,p_u)\)
 (see Mohammadi \etal \cite{dynamic_vhcs_stabilize_closed_orbits}).
 That is, when \(I = 0\) in \eqref{eqn:acrobot-constraint}, one can find
-a diffeomorphism \(T(q_u,p_u) = (r,\theta)\), where \(r\)
+a diffeomorphism \((q_u,p_u) \leftrightarrow (r,\theta)\), where \(r\)
 chooses a level set of \(E\) and \(\theta\) chooses a point on that level set.
-We will explicitly calculate these transformations later.
-What matters is that the dynamics of \((r,\theta)\) will satisfy 
+The acrobot's dynamics in \((r,\theta)\) coordinates will satisfy 
 \(\dot{r} = 0\) and \(\dot{\theta} > 0\) when \(I = 0\).
-By continuity of the constrained dynamics with respect to \(I\), this implies 
-there exists a small enough value \(I > 0\) so that \(\dot{\theta} > 0\) for the
-acrobot.
-This property will enable us to perform a time-scaling transformation 
-\(t = t(\theta)\), and study how the pseudo-radius \(r\) evolves as a function
-of the pseudo-angle \(\theta\), rather than as a function of time.
-We will show that, for small enough \(I > 0\), \(r(\theta)\) increases on
-average.
-Thus, \(E\) must also be increasing on average and the constrained dynamics must
-be gaining energy on \(D\).
+By continuity of the constrained dynamics with respect to \(I\),
+we maintain \(\dot{\theta} > 0\) for small non-zero values of \(I\).
+This will enable us to perform a time-scaling transformation 
+\(t = t(\theta)\), and study how the acrobot's pseudo-radius \(r\) evolves as a
+function of the pseudo-angle \(\theta\), rather than as a function of time.
+We will formally show that \(r(\theta)\) increases ``on average", which means
+\(E\) is also be increasing on average.
+This means the constrained dynamics must be gaining energy on \(D\).
 This idea is formalized in the following lemma.
 
 \begin{lemma}\label{lemma:energy-regulation-D}
@@ -1468,8 +1465,8 @@ This idea is formalized in the following lemma.
     \(I = 0\).
     Let \(g(\theta,r,I) = \dot{r}/\dot{\theta}\) and assume that 
     \((\partial g/\partial r)(\theta,r,0) \equiv 0\).
-    Define \(b(\theta,r_0) = (\partial g/\partial I)(\theta,r_0,0)\);
-    assume it is \(2\pi\)-periodic in \(\theta\) for any fixed \(r_0\),
+    Assume \(b(\theta,r_0) = (\partial g/\partial I)(\theta,r_0,0)\)
+    is \(2\pi\)-periodic in \(\theta\) for any fixed \(r_0\),
     and that there exists \(\epsilon > 0\) such that 
     \[
         S(r_0) := \int \limits_0^{2\pi} b(\sigma,r_0)d\sigma \geq \epsilon
@@ -1484,7 +1481,7 @@ This idea is formalized in the following lemma.
     Since \(\dot{\theta} > 0\) when \(I = 0\) and the constrained dynamics 
     in \((r,\theta)\) coordinates are continuous in \(I\), there exists 
     \(I_1 > 0\) small enough that \(\dot{\theta} > 0\) for all
-    \(I \in \, ]0,I_1]\).
+    \(I \in \, [-I_1,I_1]\).
     Hence, we can perform a time reparameterization \(t = t(\theta)\) to get a
     time-scaled pseudo-radius \(\hat{r}(\theta) := r(t(\theta))\).
     This reduces the system \((\dot{r},\dot{\theta})\) into the scalar
@@ -1506,30 +1503,31 @@ This idea is formalized in the following lemma.
     Taking the Taylor expansion of this solution around \(I = 0\) we get
     \(\hat{r}(\theta,r_0,I) = \hat{r}(\theta,r_0,0) + I\hat{r}_1(\theta,r_0) 
     + R(\theta,r_0,I)\). 
-    Here, \(\hat{r}(\theta,r_0,0) \equiv r_0\) for all \(\theta\) because
+    Note that \(\hat{r}(\theta,r_0,0) \equiv r_0\) for all \(\theta\) because
     \(g(\theta,\hat{r},0) \equiv 0\).
     The function \(\hat{r}_1(\theta,r_0)\) is the solution to
     \begin{equation}\label{eqn:r1-hat-prime}
         \begin{cases}
         \hat{r}_1^\prime = 
         \frac{\partial g}{\partial \hat{r}}(\theta,r_0,0)\hat{r}_1 +
-        \frac{\partial g}{\partial I}(\theta,r_0,0)
+        b(\theta,r_0)
+        %\frac{\partial g}{\partial I}(\theta,r_0,0)
         , \\
         \hat{r}_1(0) = 0
         ,
     \end{cases}
     \end{equation}
-    and the remainder \(R(\theta,r_0,I)\) is \(O(I^2)\).
+    and the remainder term \(R(\theta,r_0,I)\) is \(O(I^2)\).
 
     Our assumption that \((\partial g/\partial r)(\theta,r_0,0) \equiv 0\)
-    implies that \((\partial g/\partial \hat{r})(\theta,r_0,0) \equiv 0\).
-    The solution of \ref{eqn:r1-hat-prime} can therefore be obtained by
+    means that \((\partial g/\partial \hat{r})(\theta,r_0,0) \equiv 0\).
+    The solution of \eqref{eqn:r1-hat-prime} can therefore be obtained by
     quadrature, giving
     \[
         \hat{r}_1(\theta,r_0) = \int\limits_0^\theta b(\sigma,r_0)d\sigma
-        ,
+        .
     \]
-    with \(b(\theta,r_0) := (\partial g/\partial I)(\theta,r_0,0)\). 
+%    with \(b(\theta,r_0) := (\partial g/\partial I)(\theta,r_0,0)\). 
     Since and \(\dot{\theta} > 0\) and \(b(\theta,r_0)\) is \(2\pi\)-periodic in
     \(\theta\), there is a well-defined Poincar\'{e} map describing
     how \(\hat{r}\) changes each time \(\theta\) increases by \(2\pi\).
@@ -1552,46 +1550,50 @@ This idea is formalized in the following lemma.
     when an orbit of \((r,\theta)\) hits \(L\) for the the \(n^\text{th}\) time,
     assuming the acrobot was initialized at \((r,\theta) = (r_0,0)\).
 
-    If \(r_n \not\in \, ]\underline{r},\overline{r}[\), the orbit must have
-    departed \(D\) and \eqref{eqn:r-discrete} is no longer valid.
+    If \(r_n \not\in \, ]\underline{r},\overline{r}[\), the orbit 
+    in \((q_u,p_u)\) coordinates must have
+    departed \(D\). % and \eqref{eqn:r-discrete} is no longer valid.
     Proving the constrained dynamics gain energy on \(D\) is therefore
     equivalent to finding \(N \in \mathbb{Z}_{> 0}\) where 
-    \(\hat{r}_{n} > \overline{r}\) for all \(n \geq N\).
+    \(\hat{r}_{n} \geq \overline{r}\) for all \(n \geq N\).
     Using a perturbation analysis (see Khalil 
     \cite[Theorem 10.1]{khalil_nonlinear}),
-    we know there exists some \(I_2 \in ]0,I_1]\) and \(\delta > 0\)
-    such that \(\left|R(2\pi,r_n,I)\right| \leq \delta I^2\) for all 
+    we know there exists some \(I_2 \in ]0,I_1]\) and \(\kappa > 0\)
+    such that \(\left|R(2\pi,r_n,I)\right| \leq \kappa I^2\) for all 
     \(I \in [-I_2,I_2]\).
     Taking this fact alongside the assumption that \(S(r_0) \geq \epsilon\),
     we find a lower bound on \(r_{n+1}\):
-    \eqref{eqn:r-discrete}:
     \[
-        r_{n+1} \geq r_n + I\epsilon - \delta I_2^2
+        r_{n+1} \geq r_n + I\epsilon - \kappa I_2^2
         .
     \]
-    Choosing \(I^\star \in ]0,I_2]\) small enough makes 
-    \(I\epsilon - \delta I_2^2 \geq \gamma > 0\) for all \(I \in ]0,I^\star]\).
-    Therefore, \(r_{n} \geq r_{n-1} + \gamma \geq r_0 + n\gamma\), 
+    Choosing \(\gamma > 0\) and \(I^\star \in \, ]0,I_2]\) small enough makes 
+    \(I\epsilon - \delta I_2^2 \geq \gamma\) for all \(I \in ]0,I^\star]\).
+    Therefore, \(r_{n} \geq r_0 + n\gamma\), 
     so all solutions of \eqref{eqn:r-discrete} eventually flow past
     \(\overline{r}\).
-    We conclude that, for \(I \in ]0, I^\star]\), the constrained dynamics gain
+    We conclude that, for \(I \in \, ]0, I^\star]\), the constrained dynamics gain
     energy on \(D\).
 
     Changing the sign of \(I\) changes the direction of all the
-    above inequalites, which implies \(r_{n} \leq r_0 - n\gamma\). 
+    above inequalites, so that \(r_{n} \leq r_0 - n\gamma\). 
     In this case all orbits of \eqref{eqn:r-discrete} flow below
     \(\underline{r}\), i.e., the constrained dynamics lose energy on \(D\).
 \end{proof}
 
-\subsection{Energy gain on \(\mathcal{O}_1\)}
-We will now prove the first part of Theorem
-\ref{thm:acrobot-energy-stabilization}.
-We begin by studying the punctured open set
-\(\mathcal{O}_1 \backslash \{(0,0)\}\) consisting of all (nonzero) oscillations
-of the nominal pendulum.
-Using the procedure described by Mohammadi \etal 
-\cite{dynamic_vhcs_stabilize_closed_orbits} for finding pseudo-polar
-coordinates adapted to level sets of \(E\), we compute
+To prove Theorem \ref{thm:acrobot-energy-stabilization}, we will explicitly
+compute the pseudo-radius coordinates for \(\mathcal{O}_1\) and
+\(\mathcal{O}_2(\bar{\rho})\) and apply Lemma \ref{lemma:energy-regulation-D}.
+ 
+
+\subsection{Energy Gain on \(\mathcal{O}_1\)}\label{sec:proof-o1}
+To prove the first part of Theorem
+\ref{thm:acrobot-energy-stabilization},
+we begin by studying the punctured open set
+\(\mathcal{O}_1 \backslash \{(0,0)\} \subset \SxR\) consisting of all
+oscillations of the nominal pendulum.
+Using the procedure from \cite{dynamic_vhcs_stabilize_closed_orbits} for finding
+pseudo-polar coordinates adapted to level sets of \(E\), we compute
 \begin{align}
     \label{eqn:r-osc}
     r &= \arccos\left(\cos(q_u) - \frac{p_u^2}{30m^2gl^3}\right)
@@ -1605,20 +1607,22 @@ coordinates adapted to level sets of \(E\), we compute
 where \(r \in \, ]0,\pi[\).
 This has inverse
 \begin{align*}
-    q_u &= r\cos(\theta)
+    q_u &= rc_\theta
     , \\
-    p_u &= -\sign{\sin(\theta)}
-    \sqrt{30m^2gl^3(\cos(rc_\theta - c_r)}
-    .
+    p_u &= -\sign{s_\theta}
+    \sqrt{30m^2gl^3\cos(rc_\theta - c_r)}
+    ,
 \end{align*}
+where for shorthand we write \(c_\theta := \cos(\theta)\), \(s_\theta :=
+\sin(\theta)\), \(c_r := \cos(r)\), and \(s_r := \sin(r)\).
 We now verify these coordinates satisfy the requirements of 
 Lemma \ref{lemma:energy-regulation-D}.
 
 When \(I = 0\) we have \(\dot{r} = 0\) and
 \begin{equation} \label{eqn:theta-dot-nom-osc}
     \dot{\theta} = \sqrt{\frac{6g}{5l}} 
-        \sqrt{\frac{\cos(r\cos(\theta)) - \cos(r)}
-            {r^2 \sin(\theta)^2}}
+        \sqrt{\frac{\cos(r c_\theta) - c_r}
+            {r^2 s_\theta^2}}
     .
 \end{equation}
 Note that ~\eqref{eqn:theta-dot-nom-osc} has removable singularities at
@@ -1627,7 +1631,7 @@ Taking the limit as \(\theta\) approaches these points yields
 \begin{equation}\label{eqn:theta-dot-limit}
     \lim\limits_{\theta \to 0}\dot{\theta} 
     = \lim\limits_{\theta \to \pi} \dot{\theta}
-    = \sqrt{\frac{6g \sin(r)}{10lr}}
+    = \sqrt{\frac{6g s_r}{10lr}}
     , 
 \end{equation}
 which is smooth and well-defined for all
@@ -1645,19 +1649,19 @@ where
     K &:= \frac{\bar{q}_a \sqrt{30m^2g l^3}}{15}
     , \\
     a(\theta,r_0) &:= \frac{
-        r_0 |\sin(\theta)| \left(
+        r_0 |s_\theta| \left(
         5 c_{r_0} \cos(r_0 c_\theta) - 8 \cos(r_0c_\theta)^2 + 3
     \right)
     }{
-    \sin(r_0)\sqrt{\cos(r_0c_\theta) - c_{r_0}}
+    s_{r_0}\sqrt{\cos(r_0c_\theta) - c_{r_0}}
     }
     .
 \end{align*}
 Notice that \(K\) is a positive constant which depends only on
-\(m\),\(g\),\(l\), and \(\bar{q}_a\), and \(a(\theta,r_0)\) is \(2\pi\)-periodic
-in \(\theta\).
+\(m\),\(g\),\(l\), and \(\bar{q}_a\), while \(a(\theta,r_0)\) is adimensional
+and \(2\pi\)-periodic in \(\theta\).
 This means that there exists \(\epsilon > 0\) such that 
-\(S(r_0) := \int_0^{2\pi} b(\sigma,r_0)d\sigma \geq \epsilon\) at \(r_0\)
+\(S(r_0) := \int_0^{2\pi} b(\sigma,r_0)d\sigma \geq \epsilon\)
 if and only if there exists \(\delta > 0\) such that 
 \(Q(r_0) := \int_0^{2\pi} a(\sigma,r_0) d\sigma \geq \delta\).
 Since \(a(\theta,r_0)\) is adimensional, we can numerically compute \(Q(r_0)\)
@@ -1678,7 +1682,7 @@ division by zero, yet we believe the \(Q(r_0)\) is in fact positive for all
 \end{figure}
 
 Unfortunately there is no \(\delta\) such that \(Q(r_0) \geq \delta\)
-everywhere on \(]0,\pi[\), though this \(\delta\) does exist 
+everywhere on \(]0,\pi[\), though such a \(\delta\) does exist 
 on \(]\omega,\pi[\) for each fixed \(\omega > 0\).
 This means all conditions of Lemma \ref{lemma:energy-regulation-D}
 are satisfied on the set 
@@ -1701,7 +1705,7 @@ To prove the origin in the \((q_u,p_u)\)-plane is a repeller, we need simply
 prove the linearization of \eqref{eqn:r-discrete} is greater than \(1\) at 
 \(r_0 = 0\).
 Linearizing these discrete-time dynamics is equivalent to linearizing the
-Poincar\'{e} map \eqref{eqn:poincare-map} to get
+Poincar\'{e} map \eqref{eqn:poincare-map}, which yields 
 \[
     P^\prime(0) = 1 + I K Q^\prime(0) + R^\prime(2\pi,0,I)
     ,
@@ -1725,7 +1729,7 @@ Since the remainder term \(R\) is \(O(I^2)\), its partial derivative
 Hence, it can be written in the form
 \(I^2 \tilde{R}(I)\) where \(\tilde{R}(I)\) is smooth and zero at \(I = 0\).
 Thus, there exists \(I_0 > 0\) such that 
-\(I_0 K Q^\prime(0) + (I_0)^2 \tilde{R}(I) > 0\), which means
+\(I_0 K Q^\prime(0) + (I_0)^2 \tilde{R}(I_0) > 0\), which means
 \(P^\prime(0) > 1\) for all \(I \in \, ]0, I_0]\).
 We conclude that the origin is a repeller, which means there exists some
 (unknown) \(\mu > 0\) where the interval \(]0,\mu]\) is negatively
@@ -1741,9 +1745,11 @@ asymptotically stable equilibrium.
 Since the acrobot now loses energy on \(D_\mu\), all orbits in \(\mathcal{O}_1\)
 lose energy and converge to the origin for \(I \in [-I^\star,0[\).
 
+We have succeeded in proving that any acrobot constrained by 
+our VNHC \eqref{eqn:acrobot-constraint} gains/loses energy on \(\mathcal{O}_1\).
 Before moving on to the second part of Theorem
-\ref{thm:acrobot-energy-stabilization}, we must first confirm that any acrobot
-constrained by \eqref{eqn:acrobot-constraint} will eventually start rotating.
+\ref{thm:acrobot-energy-stabilization}, we must first confirm that the
+acrobot will eventually start rotating.
 The definition of energy gain states that all orbits initialized in
 \(\mathcal{O}_1\) will escape compact subsets of \(\mathcal{O}_1\) in finite time. 
 This is not enough to prove that all orbits will escape the boundary of
@@ -1771,8 +1777,11 @@ Taking the Jacobian of the constrained dynamics
     ,
 \]
 which has characteristic polynomial
-\(\det\left(\lambda \Id{2} - J\right)
-= \lambda^2 + 1/5 mgl\bar{q}_a I \lambda - 3g\).
+\[
+    \det\left(\lambda \Id{2} - J\right)
+    = \lambda^2 + \frac{mgl\bar{q}_a I}{5} \lambda - 3g\)
+    .
+\]
 By Descartes' rule of signs, this polynomial has one root with positive real
 part. 
 The equilibrium \((\pi,0)\) is therefore unstable, so the stable manifold \(\Pi^+\) of
@@ -1794,7 +1803,7 @@ implies:
 Since the acrobot gains energy on \(\mathcal{O}_1\), the positive limit set of
 \(x(t)\) must be the largest invariant subset of \(E_\pi\). 
 From our discussion on pseudo-polar coordinates (in particular the extension
-\ref{eqn:theta-dot-limit} of \(\dot{\theta}\) to \(\bar{\mathcal{O}}_1\)),
+\eqref{eqn:theta-dot-limit} of \(\dot{\theta}\) to \(\bar{\mathcal{O}}_1\)),
 we know that \(\dot{\theta} \geq 0\) on \(E_\pi\) with equality if and only if 
 \(\theta \in \{0,\pi\}\).
 Taking the derivative of \(E(q_u,p_u)\) at the \(p_u\)-axis yields
@@ -1850,29 +1859,33 @@ The inverse of this transformation is
 \begin{align*}
     q_u &= \pm \theta
     , \\
-    p_u = \pm \sqrt{r^2+30m^2gl^3(1-c_\theta)}
+    p_u &= \pm \sqrt{r^2+30m^2gl^3(1-c_\theta)}
     .
 \end{align*}
 
 When we compute the constrained dynamics in
 \((r,\theta)\) coordinates and set \(I = 0\), MATLAB symbolic computations
 reveal that \(\dot{r} = 0\) and
-\(\dot{\theta} = 1/(5ml^2) \sqrt{r^2 - 30m^2gl^3(1-c_\theta)}\).
-Regardless of \(D\), we have \(\dot{\theta} > 0\) when \(I = 0\) as required.
+\[
+\dot{\theta} = \frac{1}{5ml^2} \sqrt{r^2 - 30m^2gl^3(1-c_\theta)}
+.
+\]
+We thus have \(\dot{\theta} > 0\) when \(I = 0\) as required.
 Defining \(g(\theta,r,I) = \dot{r}/\dot{\theta}\), MATLAB symbolic computations
-confirm that \((\partial g/\partial r)(\theta,r,0) \equiv 0\).
+also confirm that \((\partial g/\partial r)(\theta,r,0) \equiv 0\).
 The function \(b(\theta,r_0) = (\partial g/\partial I)(\theta,r_0,0)\) is given
-in the statement of Theorem \ref{thm:acrobot-energy-stabilization}.
-The theorem also assumes that \(S(r_0) \geq \epsilon\).
+in the statement of Theorem \ref{thm:acrobot-energy-stabilization}, and by
+assumption we have \(S(r_0) \geq \epsilon\) on
+\(]\sqrt{60m^2gl^3},\bar{\rho}[\).
 Thus, all requirements of Lemma \ref{lemma:energy-regulation-D} are satisfied,
-so there exists some \(I_2^\star(\bar{\rho})\) whereby the acrobot gains/loses
-energy on \(\mathcal{R}^+\) and \(\mathcal{R}^-\).
+so there exists a common \(I_2(\bar{\rho})\) whereby the acrobot gains/loses
+energy on both \(\mathcal{R}^+\) and \(\mathcal{R}^-\).
 
-Let \(I_1^\star\) be the value returned by Lemma \ref{lemma:energy-regulation-D}
-for \(\mathcal{O}_1\).
-We conclude that the acrobot gains/loses energy on \(\mathcal{O}_2(\bar{\rho})\)
-for \(|I| \leq I^{\star\star}\), where 
-\(I^{\star\star} = \min \{I_1^\star, I_2^\star(\bar{\rho})\}\).
+Let \(I_1^\star\) be the parameter we found for \(\mathcal{O}_1\) in 
+Section \ref{sec:proof-o1}.
+Taking \(I^{\star\star} = \min \{I_1^\star, I_2(\bar{\rho})\}\),
+the acrobot gains/loses energy on \(\mathcal{O}_2(\bar{\rho})\)
+when \(|I| \leq I^{\star\star}\).
 This completes the proof of Theorem \ref{thm:acrobot-energy-stabilization}.
 
 %/========== Conclusion ==========/%
