@@ -1,7 +1,7 @@
 %! TEX program = lualatex
 
 % TODO: remove onecolumn and draftcls formatting
-\documentclass[journal,twoside,web]{ieeecolor}
+\documentclass[journal,twoside,web, onecolumn, draftcls]{ieeecolor}
 
 \usepackage{generic}
 %/========== Preamble ==========/%
@@ -65,7 +65,7 @@
 \newcommand*{\pdmat}{(\Id{n} \otimes p\tpose)\nabla_q\Minv(q)p}
 \newcommand*{\pudmat}{(\Id{n-k} \otimes p\tpose)\nabla_{q_u}\Minv(q)p}
 
-\newcommand*{\etal}{\MakeLowercase{\textit{et al.}}}
+\newcommand*{\etal}{\MakeLowercase{\textit{et al.~}}}
 %/========== /Preamble ==========/%
 
 %/========== Main Document ==========/%
@@ -90,9 +90,9 @@ Electrical and Computer Engineering, University of Toronto, ON, Canada.}
     We design a constraint which emulates gymnastics giant motion in an
     acrobot, and rigorously prove that this constraint will inject or dissipate
     energy.
-    This constraint is tested on a real-world acrobot, demonstrating highly
-    effective energy regulation properties and robustness to a variety of
-    disturbances.
+    This constraint is tested in simulation and on a real-world acrobot,
+    demonstrating highly effective energy regulation properties and robustness
+    to a variety of disturbances.
 \end{abstract}
 
 \begin{IEEEkeywords}
@@ -169,19 +169,19 @@ Indeed, they produce more robust walking motion in biped robots than
 other virtual constraints which do not depend on velocity
 \cite{nhvc_incline_walking}.
 In particular, VNHCs may be capable of injecting and
-dissipating energy from a system in a robust manner, all while producing realistic
-biological motion. 
+dissipating energy from a system in a robust manner, all while producing
+realistic biological motion. 
 
 In this article, we will design a virtual nonholonomic constraint which provably
 injects energy into the acrobot through human-like giant motion.
 In particular, any acrobot constrained by this VNHC is guaranteed to perform
 rotations around the bar.
-Under suitable conditions on the acrobot's mass and length parameters, this VNHC
-also enables the acrobot to rotate with a desired speed.
-We will conclude by providing simulations which demonstrate a mechanism for
-energy regulation through VNHCS, along with experimental results which
-demonstrate the robustness of this behaviour to model uncertainty, sensor noise,
-and a variety of external disturbances. 
+Under suitable conditions on the acrobot's physical parameters, this VNHC
+also enables the acrobot to rotate around the bar a desired speed.
+We will provide simulations to show how one can use VNHCs to regulate energy,
+along with experimental results which demonstrate the robustness of this
+behaviour to model uncertainty, sensor noise, and a variety of external
+disturbances. 
 
 %%
 \textbf{Notation}:
@@ -224,10 +224,10 @@ The Poisson bracket \cite{landau_mechanics} between the functions
 \end{equation}
 The Kronecker delta is \(\delta_i^j = 1\) if \(i = j\) and \(0\)
 otherwise.
-Finally, we say a function \(f(x,I)\) is \(O(I^2)\)
+Finally, we say a function \(R(I)\) is \(O(I^2)\)
 if
 \[
-    \lim\limits_{\epsilon \to 0} \frac{f(x,I)}{I} = 0
+    \lim\limits_{I \to 0} \frac{R(I)}{I} = 0
     .
 \]
 
@@ -312,9 +312,9 @@ Let us now define what it means for a mechanical system to gain or lose energy.
 \end{defn}
 
 Our goal is to design a smooth function \(f : \Sone \times \R\) such that the
-relation \(q_a = f(q_u,p_u)\) can be enforced asymptotically via feedback
-control (in Section \ref{sec:vnhc} we call this a regular virtual
-nonholonomic constraint).  
+relation \(q_a = f(q_u,p_u)\) for system \eqref{eqn:acrobot-hamiltonian}
+can be enforced asymptotically via feedback control (in Section \ref{sec:vnhc}
+we call this a regular virtual nonholonomic constraint).  
 We will further require that the dynamics of the acrobot, when the relation
 holds, gain or lose energy on some set \(D\) in the sense of Definition
 \ref{defn:energy-gain}. 
@@ -324,7 +324,7 @@ can have unstable equilibria on \(D\), but not limit cycles nor closed orbits.
 
 %/========== VNHC ==========/%
 \section{Theory of VNHCs}\label{sec:vnhc}
-Before embarking on our design problem, we begin by summarizing the relevant
+Before embarking on our design problem, we must summarize the relevant
 theory of virtual nonholonomic constraints for a class of mechanical systems we
 call ``simply actuated hamiltonian systems". 
 Note that the results we provide in Section \ref{sec:vnhc-vnhc} are not novel:
@@ -444,8 +444,8 @@ Since \(B^\perp\) is a left annihilator of \(B\) and both \(B^\perp\) and
 \(B\tpose\) are right semi-orthogonal, one can easily show that \(\mathbf{B}\) is
 an orthogonal matrix.
 
-We now take \(\mathcal{Q}\) to be embedded in \(\R^n\), so the coordinate
-transformation used the following theorem is well-defined.
+We temporarily take \(\mathcal{Q}\) to be embedded in \(\R^N\), so the
+coordinate transformation used the following theorem is well-defined.
 
 \begin{thm}\label{thm:simply-actuated}
     Take the Hamiltonian system \eqref{eqn:hamiltonian} and suppose
@@ -1779,7 +1779,7 @@ Taking the Jacobian of the constrained dynamics
 which has characteristic polynomial
 \[
     \det\left(\lambda \Id{2} - J\right)
-    = \lambda^2 + \frac{mgl\bar{q}_a I}{5} \lambda - 3g\)
+    = \lambda^2 + \frac{mgl\bar{q}_a I}{5} \lambda - 3g
     .
 \]
 By Descartes' rule of signs, this polynomial has one root with positive real
