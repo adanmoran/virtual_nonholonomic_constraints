@@ -1534,11 +1534,11 @@ This idea is formalized in the following lemma.
     \(\theta\), there is a well-defined Poincar\'{e} map describing
     how \(\hat{r}\) changes each time \(\theta\) increases by \(2\pi\).
     This map is 
-    \begin{align*}
+    \begin{align}\label{eqn:poincare-map}
         P : \, ]\underline{r},\overline{r}[ &\to \mathbb{R}_{\geq 0} \\
         r_0 &\mapsto \hat{r}(2\pi,r_0,I)
         ,
-    \end{align*}
+    \end{align}
     which expands to \(P(r_0) = r_0 + IS(r_0) + R(2\pi,r_0,I)\).
     In other words, we can understand the evolution of \(\hat{r}\) by studying
     the dynamics of the discrete-time system
@@ -1657,9 +1657,9 @@ Notice that \(K\) is a positive constant which depends only on
 \(m\),\(g\),\(l\), and \(\bar{q}_a\), and \(a(\theta,r_0)\) is \(2\pi\)-periodic
 in \(\theta\).
 This means that there exists \(\epsilon > 0\) such that 
-\(S(r_0) := \int_0^{2\pi} b(\sigma,r_0)d\sigma \geq \epsilon\)
-if and only if \(Q(r_0) := \int_0^{2\pi} a(\sigma,r_0) d\sigma\) is strictly
-positive for all \(r_0 \in \, ]0,\pi[\).
+\(S(r_0) := \int_0^{2\pi} b(\sigma,r_0)d\sigma \geq \epsilon\) at \(r_0\)
+if and only if there exists \(\delta > 0\) such that 
+\(Q(r_0) := \int_0^{2\pi} a(\sigma,r_0) d\sigma \geq \delta\).
 Since \(a(\theta,r_0)\) is adimensional, we can numerically compute \(Q(r_0)\)
 once for all acrobots.
 The plot of \(Q(r_0)\) when \(r_0 \in [10^{-10}, \pi - 10^{-3}]\) is shown in
@@ -1677,8 +1677,9 @@ division by zero, yet we believe the \(Q(r_0)\) is in fact positive for all
     \label{fig:acrobot-Q}
 \end{figure}
 
-While \(Q(r_0) \not \geq \epsilon\) on \(]0,\pi[\), it is certainly bounded
-below on \(]\omega,\pi[\) for each fixed \(\omega > 0\).
+Unfortunately there is no \(\delta\) such that \(Q(r_0) \geq \delta\)
+everywhere on \(]0,\pi[\), though this \(\delta\) does exist 
+on \(]\omega,\pi[\) for each fixed \(\omega > 0\).
 This means all conditions of Lemma \ref{lemma:energy-regulation-D}
 are satisfied on the set 
 \[
@@ -1686,14 +1687,59 @@ are satisfied on the set
     \{(q_u,p_u) \in \SxR \mid E(q_u,p_u) \leq E(\omega,0)\}
     .
 \]
-Therefore, for each \(\omega \in \, ]0,\pi[\) there exists some \(I_1^\star\)
-such that the acrobot gains/loses energy everywhere on \(D_\omega\).
+Therefore, for each \(\omega \in \, ]0,\pi[\) there exists some 
+\(I_1(\omega) > 0\) such that the acrobot gains/loses energy everywhere on
+\(D_\omega\).
 To prove energy gain on all of \(\mathcal{O}_1\), we will show the origin is a
-repeller if \(I > 0\), and that it is an asymptotically stable equilibrium
-if \(I < 0\).
-Recall the Poincar\'{e} section used in the proof of Lemama
-\ref{lemma:energy-regulation-D}.
-\textbf{TODO: Show the origin is a repeller/stable eqm via the poincare map}.
+repeller so that all orbits near the origin flow away from the origin into
+\(D_\omega\) (for small enough \(\omega\)) and continue gaining energy
+thereafter.
+
+Recall the discrete-time pseudo-radius dynamics \eqref{eqn:r-discrete} from the
+proof of Lemma \ref{lemma:energy-regulation-D}. 
+To prove the origin in the \((q_u,p_u)\)-plane is a repeller, we need simply
+prove the linearization of \eqref{eqn:r-discrete} is greater than \(1\) at 
+\(r_0 = 0\).
+Linearizing these discrete-time dynamics is equivalent to linearizing the
+Poincar\'{e} map \eqref{eqn:poincare-map} to get
+\[
+    P^\prime(0) = 1 + I K Q^\prime(0) + R^\prime(2\pi,0,I)
+    ,
+\]
+where prime denotes differentiation with respect to \(r\).
+MATLAB symbolic computations reveal that
+\begin{equation*}
+    \lim \limits_{r_0 \to 0^+}
+    \pdiff{a}{r}(\theta,r_0) 
+    = -\frac{\sqrt{2}}{2} \left(11\sin(\theta)^2 - 6\right)
+    ,
+\end{equation*}
+which means
+\begin{align*}
+    Q^\prime(0) = \int \limits_0^\pi \pdiff{a}{\mu}(\sigma,0) d\sigma
+    = \frac{\pi}{2\sqrt{2}} > 0
+    .
+\end{align*}
+Since the remainder term \(R\) is \(O(I^2)\), its partial derivative 
+\(R^\prime\) is also \(O(I^2)\).
+Hence, it can be written in the form
+\(I^2 \tilde{R}(I)\) where \(\tilde{R}(I)\) is smooth and zero at \(I = 0\).
+Thus, there exists \(I_0 > 0\) such that 
+\(I_0 K Q^\prime(0) + (I_0)^2 \tilde{R}(I) > 0\), which means
+\(P^\prime(0) > 1\) for all \(I \in \, ]0, I_0]\).
+We conclude that the origin is a repeller, which means there exists some
+(unknown) \(\mu > 0\) where the interval \(]0,\mu]\) is negatively
+invariant for \eqref{eqn:r-discrete}, and all solutions starting in this
+interval flow through \(r = \mu\).
+This in turn implies that all orbits starting in \(\mathcal{O}_1\) near the
+origin will gain energy up to \(E(\mu,0)\).
+We know there exists \(I_1(\mu)\) so that the acrobot gains energy on \(D_\mu\).
+Taking \(I^\star = \min\{I_0,I_1(\mu)\}\) means the acrobot will gain energy on
+\(\mathcal{O}_1\) for each \(I \in \, ]0,I^\star]\).
+If \(I < 0\), then \(P^\prime(0) < 1\) which implies the origin is an
+asymptotically stable equilibrium.
+Since the acrobot now loses energy on \(D_\mu\), all orbits in \(\mathcal{O}_1\)
+lose energy and converge to the origin for \(I \in [-I^\star,0[\).
 
 Before moving on to the second part of Theorem
 \ref{thm:acrobot-energy-stabilization}, we must first confirm that any acrobot
