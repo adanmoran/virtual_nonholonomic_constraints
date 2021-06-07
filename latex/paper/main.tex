@@ -1836,8 +1836,7 @@ Since \(\mathcal{O}_2(\rho) = \bar{\mathcal{O}}_1 \cup \mathcal{R}(\rho)\)
 (where \(\mathcal{R}(\rho)\) is the rotation domain defined in
 \eqref{eqn:rotation-domain}), and since all orbits escape 
 \(\bar{\mathcal{O}_1}\) in finite time, we need simply prove energy gain on
-\(\mathcal{R}(\rho)\) to complete the proof of Theorem
-\ref{thm:acrobot-energy-stabilization}.
+\(\mathcal{R}(\rho)\) to prove energy gain on \(\mathcal{O}_2(\rho)\).
 We separate \(\mathcal{R}(\rho)\) into its two distinct connected components:
 \(\mathcal{R}^+(\rho)\), the set of rotations with \(p_u > 0\); 
 and \(\mathcal{R}^-(\rho)\), the set of rotations with \(p_u < 0\).
@@ -1850,44 +1849,48 @@ adapted to rotations.
 These coordinates are 
 \begin{align}
     \label{eqn:r-rot}
-    r &= \sqrt{p_u^2 - 30m^2gl^3(1-c_u)}
+    r &= \sqrt{p_u^2 + 30m^2gl^3(1-c_u)}
     , \\
     \label{eqn:theta-rot}
     \theta &= \pm q_u
 \end{align}
-where \(r \in \, ]\sqrt{60m^2gl^3}, \rho[\) and \(\pm\) denotes
-whether \(D=\mathcal{R}^+(\rho)\) or \(D=\mathcal{R}^-(\rho)\).
+where \((r,\theta) \in \, ]\sqrt{60m^2gl^3}, \rho[ \times \Sone\).
 The inverse of this transformation is
 \begin{align*}
     q_u &= \pm \theta
     , \\
-    p_u &= \pm \sqrt{r^2+30m^2gl^3(1-c_\theta)}
+    p_u &= \pm \sqrt{r^2-30m^2gl^3(1-c_\theta)}
     .
 \end{align*}
+In this context, \(\pm\) denotes whether \(D=\mathcal{R}^+(\rho)\) or
+\(D=\mathcal{R}^-(\rho)\).
 
-When we compute the constrained dynamics in
-\((r,\theta)\) coordinates and set \(I = 0\), MATLAB symbolic computations
-reveal that \(\dot{r} = 0\) and
+In computing the constrained dynamics in
+\((r,\theta)\) coordinates and setting \(I = 0\), 
+we find that \(\dot{r} \equiv 0\) and
 \[
 \dot{\theta} = \frac{1}{5ml^2} \sqrt{r^2 - 30m^2gl^3(1-c_\theta)}
-.
+,
 \]
-We thus have \(\dot{\theta} > 0\) when \(I = 0\) as required.
-Defining \(g(\theta,r,I) = \dot{r}/\dot{\theta}\), MATLAB symbolic computations
+which is strictly positive as required.
+Defining \(g(\theta,r,I) = \dot{r}/\dot{\theta}\), symbolic computations
 also confirm that \((\partial g/\partial r)(\theta,r,0) \equiv 0\).
 The function \(b(\theta,r_0) = (\partial g/\partial I)(\theta,r_0,0)\) is given
 in the statement of Theorem \ref{thm:acrobot-energy-stabilization}, and by
 assumption we have \(S(r_0) \geq \epsilon\) on
 \(]\sqrt{60m^2gl^3},\rho[\).
-Thus, all requirements of Lemma \ref{lemma:energy-regulation-D} are satisfied,
-so there exists a common \(I_2(\rho)\) whereby the acrobot gains/loses
-energy on both \(\mathcal{R}^+\) and \(\mathcal{R}^-\).
 
-Let \(I_1^\star\) be the parameter we found for \(\mathcal{O}_1\) in 
+All requirements of Lemma \ref{lemma:energy-regulation-D} are satisfied,
+so there exists a control parameter \(I_2(\rho) > 0\) whereby the acrobot
+gains energy on both \(\mathcal{R}^+\) and \(\mathcal{R}^-\) for
+each \(I \in \, ]0,I_2(\rho)]\).
+Let \(I_1^\star\) be the value we found for \(\mathcal{O}_1\) in 
 Section \ref{sec:proof-o1}.
 Taking \(I^{\star\star} = \min \{I_1^\star, I_2(\rho)\}\),
 the acrobot gains/loses energy on \(\mathcal{O}_2(\rho)\)
-when \(|I| \leq I^{\star\star}\).
+for each \(I \in \,]0, I^{\star\star}]\).
+If instead \(I \in [-I^{\star\star},0[\), the acrobot dissipates energy on
+\(\mathcal{O}_2(\rho)\).
 This completes the proof of Theorem \ref{thm:acrobot-energy-stabilization}.
 
 %/========== Conclusion ==========/%
