@@ -154,8 +154,8 @@ While all these approaches succeed at making the acrobot rotate around the
 bar, none of them use the results of \cite{pendulum_length_giant_gymnastics}.
 That is, none of these leg controllers track a function of the acrobot's body
 angle and velocity.
-In 2016, Wang attempted to design such a controller \cite{xingbo_thesis}
-but was unable to prove the acrobot would gain energy over time.
+In 2016, Wang designed a controller \cite{xingbo_thesis} which tracked the
+body angle and an \textit{estimate} of the velocity, but not the velocity itself.
 His approach was a preliminary version of a recent technique know as the method
 of virtual nonholonomic constraints \cite{hybrid_zero_dynamics_bipedal_nhvcs}.
 
@@ -177,7 +177,7 @@ injects energy into the acrobot through human-like giant motion.
 In particular, any acrobot constrained by this VNHC is guaranteed to perform
 rotations around the bar.
 Under suitable conditions on the acrobot's physical parameters, this VNHC
-also enables the acrobot to rotate around the bar a desired speed.
+also enables the acrobot to rotate around the bar at a desired speed.
 We will provide simulations to show how one can use VNHCs to regulate energy,
 along with experimental results which demonstrate the robustness of this
 behaviour to model uncertainty, sensor noise, and a variety of external
@@ -203,10 +203,12 @@ For \(T > 0\), the set of real numbers modulo \(T\) is denoted \(\Rt{T}\), with
 The gradient of a matrix-valued function 
 \(A : \R^m \rightarrow \R^{n\times n}\) is the block matrix of stacked partial
 derivatives, 
-\(\nabla_xA := [\pdiff{A}{x_1};\ldots;\pdiff{A}{x_m}] \in \R^{nm \times n}\).
+\(\nabla_xA := [\partial A/\partial x_1; \cdots; \partial A/\partial x_m] \in
+\R^{nm \times n}\).
+%\(\nabla_xA := [\pdiff{A}{x_1};\ldots;\pdiff{A}{x_m}] \in \R^{nm \times n}\).
 Given two matrices \(A \in \R^{n \times m}\) and \(B \in \R^{r \times s}\), the
-Kronecker product \(A \otimes B \in \R^{nr \times ms}\) (see \cite{kronprod}) is
-the matrix
+Kronecker product (see \cite{kronprod}) is the matrix  
+\(A \otimes B \in \R^{nr \times ms}\)  defined as
 \begin{equation}\label{eqn:kronprod}
     A \otimes B = \begin{bmatrix}
         A_{1,1}B & \cdots & A_{1,m} B \\
@@ -222,14 +224,10 @@ The Poisson bracket \cite{landau_mechanics} between the functions
         \pdiff{f}{q_i}\pdiff{g}{p_i}
     .
 \end{equation}
-The Kronecker delta is \(\delta_i^j = 1\) if \(i = j\) and \(0\)
+The Kronecker delta \(\delta_i^j\) is \(1\) if \(i = j\) and \(0\)
 otherwise.
 Finally, we say a function \(R(I)\) is \(O(I^2)\)
-if
-\[
-    \lim\limits_{I \to 0} \frac{R(I)}{I} = 0
-    .
-\]
+if \(\lim_{I \to 0} R(I)/I = 0\).
 
 %/========== Problem Formulation ==========/%
 \section{Problem Formulation}\label{sec:problem-formulation}
@@ -245,14 +243,6 @@ are usually flexible enough to raise them parallel to the floor;
 hence, we assume the leg angle \(q_a\) lies in \([-Q_a, Q_a]\) for some
 \(Q_a \in [\frac{\pi}{2}, \pi[\). 
 We also ignore any dissipative forces.
-
-%\begin{figure}
-%    \centering
-%    \includegraphics[width=0.8\linewidth]{simple_acrobot_model.pdf}
-%    \caption{A simple acrobot has massless rods of equal length \(l\) and 
-%    equal masses \(m\) at the tips.}
-%    \label{fig:simple-acrobot-model}
-%\end{figure}
 
 The acrobot has inertia matrix 
 \(M\), potential function \(V\) (with respect to
@@ -306,7 +296,7 @@ Let us now define what it means for a mechanical system to gain or lose energy.
     \textit{gains energy on \(D\)} if, 
     for all compact sets \(K \subset D\) and for almost every initial
     condition \(x(0) \in K\), there exists \(T > 0\) such
-    that \(x(t) \notin K\) for all \(t > T)\).
+    that \(x(t) \notin K\) for all \(t > T\).
     The system \textit{loses energy on \(D\)} if it gains energy in
     negative-time.
 \end{defn}
@@ -444,8 +434,8 @@ Since \(B^\perp\) is a left annihilator of \(B\) and both \(B^\perp\) and
 \(B\tpose\) are right semi-orthogonal, one can easily show that \(\mathbf{B}\) is
 an orthogonal matrix.
 
-We temporarily take \(\mathcal{Q}\) to be embedded in \(\R^N\), so the
-coordinate transformation used the following theorem is well-defined.
+We temporarily take \(\mathcal{Q}\) to be embedded in \(\R^N\) so that the
+transformation \(\tilde{q} = \mathbf{B}q\) is well-defined.
 
 \begin{thm}\label{thm:simply-actuated}
     Take the Hamiltonian system \eqref{eqn:hamiltonian} and suppose
@@ -575,12 +565,12 @@ To ease notation in the rest of this section, we use the following shorthand:
     A relation \(h(q,p) = 0\) for system \eqref{eqn:simple-hamiltonian}
     is a regular VNHC of order \(k\) if and only if 
     \(dh_{p_a} = \Zmat{k \times k}\) 
-    and
-    \[
-        \rank{\left(\mathcal{A}(q,p_u) - dh_{p_u}\mathcal{M}(q,p)\right)\simpleB} = k
+    and the decoupling matrix
+    \begin{equation}\label{eqn:decoupling-matrix}
+        \left(\mathcal{A}(q,p_u) - dh_{p_u}\mathcal{M}(q,p)\right)\simpleB
          ,
-    \]
-    everywhere on the constraint manifold \(\Gamma\).
+     \end{equation}
+    is full rank \(k\) everywhere on the constraint manifold \(\Gamma\).
 \end{thm}
 \begin{proof}
     Let \(e = h(q,p) \in \R^k\).
@@ -592,7 +582,7 @@ To ease notation in the rest of this section, we use the following shorthand:
      dh_{p_u}\left(1/2~\mathcal{M}(q,p)p + \nabla_{q_u}V(q)\right)\).
     Taking one further derivative provides
     \( \ddot{e} = (\star) - 
-        dh_{p_u}\left(1/2~d/dt~\left(\mathcal{M}(q,p)p\right)\right) 
+        dh_{p_u}\left(1/2~d/dt\left(\mathcal{M}(q,p)p\right)\right) 
         + \mathcal{A}(q,p_u)[\Zmat{(n-k)\times k};\Id{k}] \tau\),
     where \((\star)\) is a continuous function of \(q\) and \(p\).
     One can further show that
@@ -669,11 +659,12 @@ The inertia matrix does not depend on the unactuated coordinates, i.e.,
         g(q_u,p_u) := \left( \mathcal{A}(q,p_u)
         \begin{bmatrix} \Zmat{(n-k)\times k} \\ \Id{k} \end{bmatrix}\right)\inv 
         \cdot
-        \Big(dh_{p_u}\nabla_{q_u}(V(q) -
+        \Big(dh_{p_u}\nabla_{q_u}V(q) -
         \\
         \mathcal{A}(q,p_u)
         \begin{bmatrix} \Id{(n-k)} \\ \Zmat{k \times (n-k)} \end{bmatrix} p_u
         \left.\Big)\right|_{q_a = f(q_u,p_u)}
+        .
     \end{multline}
 
 %    \begin{align}\label{eqn:g-qpu}
@@ -693,7 +684,8 @@ The inertia matrix does not depend on the unactuated coordinates, i.e.,
     Notice that
     \(\mathcal{A}(q,p_u)p = \mathcal{A}(q,p_u)[\Zmat{(n-k)\times k}; \Id{k}]p_a
     + \mathcal{A}(q,p_u)[\Id{n-k};\Zmat{k \times (n-k)}] p_u\).
-    Since \(h(q,p_u)\) is regular, \(\mathcal{A}(q,p_u)\) is invertible.
+    Since \(h(q,p_u)\) is regular,
+    \(\mathcal{A}(q,p_u)[\Zmat{(n-k)\times k}; \Id{k}]\) is invertible.
     Taking \(e = \dot{e} = 0\), solving for \(p_a\), and setting 
     \(q_a = f(q_u,p_u)\) completes the proof.
 \end{proof}
@@ -731,7 +723,7 @@ VNHCs to the acrobot.
 Our goal in this article is to design a VNHC which injects energy into the
 acrobot by means of a giant-like motion.
 Recall that the acrobot in Figure \ref{fig:acrobot} has dynamics given by
-\eqref{eqn:acrobot-hamiltonian}, repeated here for convenience{
+\eqref{eqn:acrobot-hamiltonian}, repeated here for convenience:
     \begin{equation*}
      \begin{cases}
         \dot{q} = \Minv(q) p 
@@ -759,7 +751,8 @@ useful.
     VNHC of order 1 for the acrobot.
 \end{prop}
 \begin{proof}
-    The decoupling matrix for the acrobot evaluates to
+    The decoupling matrix \eqref{eqn:decoupling-matrix} for the acrobot
+    evaluates to
     \(((1+c_a)\partial_{q_u}f(q_u,p_u) + (3+2c_a))/(ml^2(2-c_a^2))\).
     Since \(\partial_{q_u} f = 0\), this matrix is strictly positive for all values
     of \(q_a\), and hence is full rank \(1\) everywhere on the constraint manifold.
@@ -859,7 +852,7 @@ If for some \(I \neq 0\) our VNHC injects energy into the acrobot on
 giant-like motion and begin rotating around the bar.
 
 When the pendulum is rotating with bounded momentum
-\(\abs{p_u} < \bar{\rho}\) (for some chosen \(\bar{\rho}\)),
+\(\abs{p_u} < \rho\) (for some chosen \(\rho\)),
 \((q_u,p_u)\) must lie inside the rotation domain
 \begin{multline}\label{eqn:rotation-domain}
     \mathcal{R}(\rho) := \left\{
@@ -872,14 +865,14 @@ When the pendulum is rotating with bounded momentum
 Connecting the regions \eqref{eqn:oscillation-domain} and
 \eqref{eqn:rotation-domain} yields the set
 \begin{equation}\label{eqn:o-rhobar}
-    \mathcal{O}_2(\bar{\rho}) := \left\{(q_u,p_u) \in \SxR
-        \mid E(q_u,p_u) < E(0,\bar{\rho}) \right\}
+    \mathcal{O}_2(\rho) := \left\{(q_u,p_u) \in \SxR
+        \mid E(q_u,p_u) < E(0,\rho) \right\}
     ,
 \end{equation}
 shown in Figure \ref{fig:acrobot-o2}.
-If the VNHC injects energy on \(\mathcal{O}_2(\bar{\rho})\) for some 
+If the VNHC injects energy on \(\mathcal{O}_2(\rho)\) for some 
 \(I \neq 0\), then the acrobot must necessarily swing up, begin rotating, 
-and eventually rotate with a momentum of at least \(\bar{\rho}\).
+and eventually rotate with a momentum of at least \(\rho\).
 
 \begin{figure}
     \centering
@@ -892,17 +885,17 @@ and eventually rotate with a momentum of at least \(\bar{\rho}\).
     \hfill
     \begin{subfigure}[t]{0.45\linewidth}
         \includegraphics[width=\linewidth]{acrobot_omega.pdf}
-        \caption{The set \(\mathcal{O}_2(\bar{\rho})\). Orbits starting in this
-            set are guaranteed to reach the level set \(E(0,\bar{\rho})\) of the
+        \caption{The set \(\mathcal{O}_2(\rho)\). Orbits starting in this
+            set are guaranteed to reach the level set \(E(0,\rho)\) of the
             nominal pendulum.}
             \label{fig:acrobot-o2}
     \end{subfigure}
-    \caption{The sets on which the acrobot gains energy, according to Theorem
-        \ref{thm:acrobot-energy-stabilization}.}
+    \caption{The sets on which the acrobot gains energy, according to
+        Theorem \ref{thm:acrobot-energy-stabilization}.}
 \end{figure}
 
 Unfortunately, our VNHC does not always inject energy on \(\mathcal{O}_1\) and
-\(\mathcal{O}_2(\bar{\rho})\).
+\(\mathcal{O}_2(\rho)\).
 If \(I\) is too large, the leg controller saturates and the body oscillates
 without gaining energy.
 Choosing \(I\) small enough guarantees the legs will synchronize
@@ -913,7 +906,7 @@ The following theorem provides conditions under which such an \(I\) exists.
     Consider the acrobot with Hamiltonian dynamics given in
     \eqref{eqn:acrobot-hamiltonian}.
 \begin{enumerate}
-    \item For positive \(m\), \(g\), \(l\), and \(\bar{q}_a\), there exists
+    \item For each \(m, g, l, \bar{q}_a > 0\), there exists
         \(I^\star > 0\) such that, for all \(I \in \, ]0,I^\star]\), the VNHC
         \eqref{eqn:acrobot-constraint} injects energy into the acrobot on
         \(\mathcal{O}_1\).
@@ -935,14 +928,14 @@ The following theorem provides conditions under which such an \(I\) exists.
     \]
         Define 
         \(S(\rho_0) := \int \limits_{0}^{2\pi} b(\sigma,\rho_0)d\sigma\).
-        Fix \(\bar{\rho} > \sqrt{60m^2gl^3}\) and
+        Fix \(\rho > \sqrt{60m^2gl^3}\) and
         suppose there exists \(\epsilon > 0\) so that 
         \(S(\rho_0) \geq \epsilon\) for all 
-        \(\rho_0 \in \, \left]\sqrt{60m^2gl^3}, \bar{\rho}\right]\).
+        \(\rho_0 \in \, \left]\sqrt{60m^2gl^3}, \rho\right]\).
         Then there exists \(I^{\star\star} \in \, ]0, I^\star]\) such that, for all 
         \(I \in \, ]0,I^{\star\star}]\), the VNHC
         \eqref{eqn:acrobot-constraint} injects energy into the acrobot on
-        \(\mathcal{O}_2(\bar{\rho})\).
+        \(\mathcal{O}_2(\rho)\).
         If instead \(I \in [-I^{\star\star},0[\), the VNHC dissipates energy.
 \end{enumerate}
 \end{thm}
@@ -950,7 +943,7 @@ The following theorem provides conditions under which such an \(I\) exists.
     See Section \ref{sec:proof}.
 \end{proof}
 
-Notice that \(\mathcal{O}_1 \subset \mathcal{O}_2(\bar{\rho})\), yet
+Notice that \(\mathcal{O}_1 \subset \mathcal{O}_2(\rho)\), yet
 Theorem \ref{thm:acrobot-energy-stabilization} considers these sets separately.
 This separation is advantageous because the first result holds for any positive
 \(m\), \(g\), \(l\), and \(\bar{q}_a\). 
@@ -962,12 +955,12 @@ the bar.
 %the unstable equilibrium at \((q_u,p_u) = (\pi,0)\).
 
 For the acrobot to achieve giants with energy
-\(E(0,\bar{\rho})\), it must satisfy the assumption on the integral
+\(E(0,\rho)\), it must satisfy the assumption on the integral
 of \(b(\beta,\rho_0)\). 
 The value of this integral depends on the acrobot's physical parameters.
 If the assumption holds, there is some control value \(I\)
-(which depends on \(\bar{\rho}\)) for which the acrobot will 
-achieve rotations with a momentum of at least \(\bar{\rho}\).
+(which depends on \(\rho\)) for which the acrobot will 
+achieve rotations with a momentum of at least \(\rho\).
 
 \subsection{Energy Regulation}\label{sec:energy-reg}
 One can apply the results of Theorem \ref{thm:acrobot-energy-stabilization} 
@@ -978,7 +971,7 @@ between injection and dissipation VNHCs.
 \textbf{Oscillation Regulation}: one chooses a desired oscillation angle 
 \(q_\text{des} \in \, ]0,\pi[\) and, to avoid infinite switching, a
 hysteresis value \(\delta \in [0,1]\).
-Each time the orbit crosses the \(q_u\)-axis (i.e. when \(p_u = 0\)) or 
+Each time the orbit crosses the \(q_u\)-axis (i.e., when \(p_u = 0\)) or 
 when \(|q_u| = \pi\), the supervisor does the following: 
 \begin{itemize}
     \item If \(|q_u| < (1-\delta)q_\text{des}\), enable the injection VNHC.
@@ -987,6 +980,9 @@ when \(|q_u| = \pi\), the supervisor does the following:
         keep the leg extended at \(q_a = 0\). This can be done continously since
         \(q_a = 0\) when \(p_u = 0\).
 \end{itemize}
+Here one must be careful to choose \(\delta\) so that
+\((1+\delta)q_\text{des} < \pi\), otherwise a rotating acrobot will not
+dissipate energy.
 
 \textbf{Rotation Regulation}: one chooses a desired rotation rate 
 \(p_\text{des} > 0\) and a hysteresis value \(\delta \in [0,1]\).
@@ -999,12 +995,16 @@ supervisor changes which VNHC is enforced as follows:
         extend the leg fully by setting \(q_a = 0\).
         For these simulations, we assume this can be done instantaneously.
 \end{itemize}
+While this method is titled ``rotation regulation", it is entirely possible to
+choose \(p_\text{des} < \sqrt{60m^2gl^3}\);
+this would stabilize an oscillation whose momentum at the bottom of the swing
+arc is \(p_\text{des}\).
 
 %/========== Experiments ==========/%
 \section{Simulation Results}\label{sec:simulations}
-In Section \ref{sec:experiments} we will test our VNHC on the physical acrobot
-built by Xingbo Wang \cite{xingbo_thesis}.
-This physical acrobot cannot be modelled by the simplified setup in Figure
+In Section \ref{sec:experiments} we will test our VNHC on a physical acrobot.
+%built by Xingbo Wang \cite{xingbo_thesis}.
+This acrobot cannot be modelled by the simplified setup in Figure
 \ref{fig:acrobot}, because the torso and leg links have 
 distributed mass. 
 We must therefore use the more general acrobot model in Figure
@@ -1045,17 +1045,17 @@ and potential function
 \end{figure}
 
 Recall that we defined the sets \(\mathcal{O}_1\) and
-\(\mathcal{O}_2(\bar{\rho})\) used in Theorem \ref{thm:acrobot-energy-stabilization}
+\(\mathcal{O}_2(\rho)\) used in Theorem \ref{thm:acrobot-energy-stabilization}
 via the mechanical energy \eqref{eqn:nominal-energy} of the nominal
 pendulum associated with a simplified acrobot.
 We obtained this nominal pendulum by setting \(I = 0\) in
 \eqref{eqn:acrobot-constraint}.
-Recall that the boundary between oscillations and rotations of the nominal
+The boundary between oscillations and rotations of the nominal
 pendulum is obtained by finding the level set \(E_\pi\) of the nominal energy
 corresponding to the upright equilibrium \((q_u,p_u) = (\pi,0)\).
 
-We can extend this idea to find the nominal pendulum associated with Wang's
-acrobot, whose physical parameters are provided in Table
+We can extend this idea to find the nominal pendulum associated with our
+physical acrobot, whose parameters are provided in Table
 \ref{tab:acrobot-parameters}.
 Setting \(I = 0\) in \eqref{eqn:acrobot-constraint} for this acrobot
 yields the following mechanical energy of the nominal pendulum:
@@ -1067,7 +1067,7 @@ Despite the change in model, the level set \(E_\pi\) with energy
 \(E(\pi,0)\) remains the boundary between oscillations and rotations
 for this nominal pendulum.
 
-We will now simulate the effects of constraining Wang's acrobot with the VNHC
+We will now simulate the effects of constraining our real acrobot with the VNHC
 \eqref{eqn:acrobot-constraint}, thereby demonstrating that VNHCs are robust to
 model mismatch.
 According to Theorem \ref{thm:acrobot-energy-stabilization}, the control
@@ -1113,7 +1113,7 @@ controller \eqref{eqn:stabilizing-controller}.
 We initialized the acrobot on the constraint manifold
 with initial condition \((q_u,p_u) = \left(\pi/32,0 \right)\) and simulated the
 constrained system for \(30\) seconds.
-The resulting orbit (on the constraint manifold) is plotted in Figure
+The resulting orbit is plotted in Figure
 \ref{fig:acrobot-in-orbit}.
 
 The level set \(E_\pi\) with energy \(E(\pi,0)\) is outlined in black.
@@ -1176,7 +1176,7 @@ decayed to zero.
 
 \subsection{Oscillation Regulation}
 
-Recall from \ref{sec:energy-reg} that one can use a supervisor to stabilize
+Recall from Section \ref{sec:energy-reg} that one can use a supervisor to stabilize
 oscillations by appropriately toggling between injection and dissipation VNHCs
 whenever the orbit of the acrobot crosses the \(q_u\)-axis.
 Figure \ref{fig:acrobot-osc-reg} shows the supervisor stabilizing an
@@ -1271,10 +1271,9 @@ works even for acrobots whose limbs have differing masses and lengths.
 
 \subsection{Hardware Description}
 In this section we will demonstrate that our VNHC is robust to friction, sensor
-noise, and other real-world considerations by testing it on the physical
-acrobot built by Xingbo Wang \cite{xingbo_thesis} 
-(Figure \ref{fig:xingbo-acrobot}).
-This platform was given the name SUGAR, which stands for
+noise, and other real-world considerations by testing it on our physical
+acrobot (Figure \ref{fig:xingbo-acrobot}).
+This platform is called SUGAR, which stands for
 Simple Underactuated Gymnastics and Acrobatics Robot.
 Its dynamic parameters are outlined in Table \ref{tab:acrobot-parameters}.
 
@@ -1287,7 +1286,7 @@ Its dynamic parameters are outlined in Table \ref{tab:acrobot-parameters}.
 \end{figure}
 
 SUGAR is comprised of two 3D-printed links: a torso and a leg.
-The torso link houses an Arduino Nano microcontroller unit (MCU) which controls
+The torso houses an Arduino Nano microcontroller unit (MCU) which controls
 a Dynamixel RX24F servo motor between the torso and the leg.
 The MCU and the motor are powered by a 12V battery held in a compartment
 in the leg.
@@ -1322,7 +1321,7 @@ implementation.
 Finally, The Dynamixel servo motor does not have a torque control mode; instead,
 we can assign the servo setpoint at iteration \(k \in \mathbb{Z}_{> 0}\)
 via \(q_a^{k} = \arctan(I p_u^{k-1})\).
-Unfortunately, this negatively affects the stabilization to the constraint
+This negatively affects the stabilization to the constraint
 manifold because we are introducing timing errors from the servo's built-in PID
 controller.
 
@@ -1427,15 +1426,16 @@ external disturbances.
 \section{Proof of Theorem \ref{thm:acrobot-energy-stabilization}}\label{sec:proof}
 In this section we prove Theorem \ref{thm:acrobot-energy-stabilization},
 which claims that the acrobot gains energy on \(\mathcal{O}_1\) and
-\(\mathcal{O}_2(\bar{\rho})\), which are sublevel sets of the nominal pendulum's
+\(\mathcal{O}_2(\rho)\), which are sublevel sets of the nominal pendulum's
 energy \(E(q_u,p_u)\) defined in \eqref{eqn:nominal-energy}.
 
 Here is the summary of this proof: for certain subsets
 \(D \subset \SxR\), one can find a change of coordinates into 
 pseudo-polar coordinates adapted to level sets of \(E(q_u,p_u)\)
-(see Mohammadi \etal \cite{dynamic_vhcs_stabilize_closed_orbits}).
+(see the general procedure devised by Mohammadi \etal 
+\cite{dynamic_vhcs_stabilize_closed_orbits}).
 That is, when \(I = 0\) in \eqref{eqn:acrobot-constraint}, one can find
-a diffeomorphism \((q_u,p_u) \leftrightarrow (r,\theta)\), where \(r\)
+a diffeomorphism \(T(q_u,p_u) =  (r,\theta)\), where \(r\)
 chooses a level set of \(E\) and \(\theta\) chooses a point on that level set.
 The acrobot's dynamics in \((r,\theta)\) coordinates will satisfy 
 \(\dot{r} = 0\) and \(\dot{\theta} > 0\) when \(I = 0\).
@@ -1444,10 +1444,10 @@ we maintain \(\dot{\theta} > 0\) for small non-zero values of \(I\).
 This will enable us to perform a time-scaling transformation 
 \(t = t(\theta)\), and study how the acrobot's pseudo-radius \(r\) evolves as a
 function of the pseudo-angle \(\theta\), rather than as a function of time.
-We will formally show that \(r(\theta)\) increases ``on average", which means
-\(E\) is also be increasing on average.
-This means the constrained dynamics must be gaining energy on \(D\).
-This idea is formalized in the following lemma.
+We will formally show that \(r(\theta)\) increases on average, which means
+\(E\) also increases on average.
+This in turn implies the constrained dynamics are gaining energy on \(D\).
+We formalize these ideas in the following lemma.
 
 \begin{lemma}\label{lemma:energy-regulation-D}
     Consider the simplified acrobot \eqref{eqn:acrobot-hamiltonian} constrained
@@ -1495,8 +1495,8 @@ This idea is formalized in the following lemma.
             ,
         \end{cases}
     \end{equation}
-    where \(\theta\) now represents time.
-    The prime denotes differentiation by \(\theta\) and 
+    where \(\theta\) now represents time,
+    the prime denotes differentiation by \(\theta\), and
     \(r_0 \in \, ]\underline{r},\overline{r}[\) is the initial condition.
 
     Let \(\hat{r}(\theta,r_0,I)\) be the solution to \eqref{eqn:rhat-ode}.
@@ -1558,17 +1558,17 @@ This idea is formalized in the following lemma.
     \(\hat{r}_{n} \geq \overline{r}\) for all \(n \geq N\).
     Using a perturbation analysis (see Khalil 
     \cite[Theorem 10.1]{khalil_nonlinear}),
-    we know there exists some \(I_2 \in ]0,I_1]\) and \(\kappa > 0\)
+    we know there exists some \(I_2 \in \, ]0,I_1]\) and \(\kappa > 0\)
     such that \(\left|R(2\pi,r_n,I)\right| \leq \kappa I^2\) for all 
     \(I \in [-I_2,I_2]\).
     Taking this fact alongside the assumption that \(S(r_0) \geq \epsilon\),
     we find a lower bound on \(r_{n+1}\):
     \[
-        r_{n+1} \geq r_n + I\epsilon - \kappa I_2^2
+        r_{n+1} \geq r_n + I\epsilon - \kappa I^2
         .
     \]
     Choosing \(\gamma > 0\) and \(I^\star \in \, ]0,I_2]\) small enough makes 
-    \(I\epsilon - \delta I_2^2 \geq \gamma\) for all \(I \in ]0,I^\star]\).
+    \(I\epsilon - \delta I^2 \geq \gamma\) for all \(I \in \, ]0,I^\star]\).
     Therefore, \(r_{n} \geq r_0 + n\gamma\), 
     so all solutions of \eqref{eqn:r-discrete} eventually flow past
     \(\overline{r}\).
@@ -1583,7 +1583,7 @@ This idea is formalized in the following lemma.
 
 To prove Theorem \ref{thm:acrobot-energy-stabilization}, we will explicitly
 compute the pseudo-radius coordinates for \(\mathcal{O}_1\) and
-\(\mathcal{O}_2(\bar{\rho})\) and apply Lemma \ref{lemma:energy-regulation-D}.
+\(\mathcal{O}_2(\rho)\) and apply Lemma \ref{lemma:energy-regulation-D}.
  
 
 \subsection{Energy Gain on \(\mathcal{O}_1\)}\label{sec:proof-o1}
@@ -1604,7 +1604,7 @@ pseudo-polar coordinates adapted to level sets of \(E\), we compute
     \right|_{r = r(q_u,p_u)}
     ,
 \end{align}
-where \(r \in \, ]0,\pi[\).
+where \((r,\theta) \in \, ]0,\pi[ \times \Sone\).
 This has inverse
 \begin{align*}
     q_u &= rc_\theta
@@ -1637,8 +1637,7 @@ Taking the limit as \(\theta\) approaches these points yields
 which is smooth and well-defined for all
 \(r \in \, ]0,\pi[\).
 From \eqref{eqn:theta-dot-nom-osc}-\eqref{eqn:theta-dot-limit},
-one can verify that \(\dot{\theta} > 0\) when \(I = 0\), for every 
-\(r \in \, ]0,\pi[\).
+one can verify that \(\dot{\theta} > 0\) when \(I = 0\).
 Defining \(g(\theta,r,I) = \dot{r}/\dot{\theta}\), MATLAB symbolic computations
 confirm that \((\partial g/\partial r)(\theta,r,0) \equiv 0\) as required.
 
@@ -1658,7 +1657,7 @@ where
     .
 \end{align*}
 Notice that \(K\) is a positive constant which depends only on
-\(m\),\(g\),\(l\), and \(\bar{q}_a\), while \(a(\theta,r_0)\) is adimensional
+\(m\), \(g\), \(l\), and \(\bar{q}_a\), while \(a(\theta,r_0)\) is adimensional
 and \(2\pi\)-periodic in \(\theta\).
 This means that there exists \(\epsilon > 0\) such that 
 \(S(r_0) := \int_0^{2\pi} b(\sigma,r_0)d\sigma \geq \epsilon\)
@@ -1675,8 +1674,7 @@ division by zero, yet we believe the \(Q(r_0)\) is in fact positive for all
 \(r_0 \in \, ]0,\pi[\).
 \begin{figure}
     \centering
-    % TODO: Show this plot
-    %\includegraphics[width=0.8\linewidth]{}
+    \includegraphics[width=0.8\linewidth]{Qro.png}
     \caption{The plot of \(Q(r_0)\).}
     \label{fig:acrobot-Q}
 \end{figure}
@@ -1685,7 +1683,7 @@ Unfortunately there is no \(\delta\) such that \(Q(r_0) \geq \delta\)
 everywhere on \(]0,\pi[\), though such a \(\delta\) does exist 
 on \(]\omega,\pi[\) for each fixed \(\omega > 0\).
 This means all conditions of Lemma \ref{lemma:energy-regulation-D}
-are satisfied on the set 
+are satisfied on the annulus
 \[
     D_\omega = \mathcal{O}_1 \backslash 
     \{(q_u,p_u) \in \SxR \mid E(q_u,p_u) \leq E(\omega,0)\}
@@ -1720,7 +1718,7 @@ MATLAB symbolic computations reveal that
 \end{equation*}
 which means
 \begin{align*}
-    Q^\prime(0) = \int \limits_0^\pi \pdiff{a}{\mu}(\sigma,0) d\sigma
+    Q^\prime(0) = \int \limits_0^\pi \pdiff{a}{r}(\sigma,0) d\sigma
     = \frac{\pi}{2\sqrt{2}} > 0
     .
 \end{align*}
@@ -1729,31 +1727,32 @@ Since the remainder term \(R\) is \(O(I^2)\), its partial derivative
 Hence, it can be written in the form
 \(I^2 \tilde{R}(I)\) where \(\tilde{R}(I)\) is smooth and zero at \(I = 0\).
 Thus, there exists \(I_0 > 0\) such that 
-\(I_0 K Q^\prime(0) + (I_0)^2 \tilde{R}(I_0) > 0\), which means
-\(P^\prime(0) > 1\) for all \(I \in \, ]0, I_0]\).
-We conclude that the origin is a repeller, which means there exists some
+\(I K Q^\prime(0) + I^2 \tilde{R}(I) > 0\) for all \(I \in \, ]0,I_0]\),
+which implies \(P^\prime(0) > 1\).
+The origin is therefore a repeller, which means there exists some
 (unknown) \(\mu > 0\) where the interval \(]0,\mu]\) is negatively
 invariant for \eqref{eqn:r-discrete}, and all solutions starting in this
 interval flow through \(r = \mu\).
 This in turn implies that all orbits starting in \(\mathcal{O}_1\) near the
 origin will gain energy up to \(E(\mu,0)\).
-We know there exists \(I_1(\mu)\) so that the acrobot gains energy on \(D_\mu\).
-Taking \(I^\star = \min\{I_0,I_1(\mu)\}\) means the acrobot will gain energy on
+
+Since there exists \(I_1(\mu)\) so that the acrobot gains energy on \(D_\mu\),
+taking \(I^\star = \min\{I_0,I_1(\mu)\}\) means the acrobot will gain energy on
 \(\mathcal{O}_1\) for each \(I \in \, ]0,I^\star]\).
 If \(I < 0\), then \(P^\prime(0) < 1\) which implies the origin is an
 asymptotically stable equilibrium.
-Since the acrobot now loses energy on \(D_\mu\), all orbits in \(\mathcal{O}_1\)
-lose energy and converge to the origin for \(I \in [-I^\star,0[\).
+The acrobot now loses energy on \(D_\mu\), and all orbits in \(\mathcal{O}_1\)
+lose energy for \(I \in [-I^\star,0[\).
 
 We have succeeded in proving that any acrobot constrained by 
 our VNHC \eqref{eqn:acrobot-constraint} gains/loses energy on \(\mathcal{O}_1\).
 Before moving on to the second part of Theorem
 \ref{thm:acrobot-energy-stabilization}, we must first confirm that the
-acrobot will eventually start rotating.
-The definition of energy gain states that all orbits initialized in
-\(\mathcal{O}_1\) will escape compact subsets of \(\mathcal{O}_1\) in finite time. 
-This is not enough to prove that all orbits will escape the boundary of
-\(\mathcal{O}_1\). 
+acrobot will eventually start rotating:
+the definition of energy gain states that all orbits initialized in
+\(\mathcal{O}_1\) will escape compact subsets of \(\mathcal{O}_1\) in finite
+time, which is not enough to conclude that all orbits will escape the boundary
+of \(\mathcal{O}_1\). 
 
 Let \(E_\pi\) be the level set with energy \(E(\pi,0)\), 
 which forms the boundary of \(\mathcal{O}_1\). 
@@ -1766,9 +1765,9 @@ It is possible for orbits starting in \(\mathcal{O}_1\) to always approach
 \(E_\pi\) without ever crossing into the rotation zone.
 We will prove this does not happen in general.
 
-To begin, let us analyze the upright equilibrium.
 Taking the Jacobian of the constrained dynamics
-~\eqref{eqn:acrobot-constrained-dynamics} at \((q_u,p_u) = (\pi,0)\) yields
+~\eqref{eqn:acrobot-constrained-dynamics} at the upright equilibrium 
+\((q_u,p_u) = (\pi,0)\) yields
 \[
     J = \begin{bmatrix}
         -\frac{6mgl\bar{q}_aI}{5} & \frac{1 - 2m^2gl^3\bar{q}_a^2 I^2}{5ml^2} \\
@@ -1802,10 +1801,13 @@ implies:
 \end{itemize}
 Since the acrobot gains energy on \(\mathcal{O}_1\), the positive limit set of
 \(x(t)\) must be the largest invariant subset of \(E_\pi\). 
-From our discussion on pseudo-polar coordinates (in particular the extension
-\eqref{eqn:theta-dot-limit} of \(\dot{\theta}\) to \(\bar{\mathcal{O}}_1\)),
-we know that \(\dot{\theta} \geq 0\) on \(E_\pi\) with equality if and only if 
+Taking the limit as \(r \to \pi\) of
+\eqref{eqn:theta-dot-nom-osc}--\eqref{eqn:theta-dot-limit},
+we get \(\dot{\theta} \geq 0\) on \(E_\pi\) with equality if and only if
 \(\theta \in \{0,\pi\}\).
+Thus, if \(E_\pi\) is not invariant, the largest invariant subset is the upright
+equilibrium \((q_u,p_u) = (\pi,0)\).
+
 Taking the derivative of \(E(q_u,p_u)\) at the \(p_u\)-axis yields
 \(\dot{E}(0,p_u) = g/(5l) \sin(q_a)p_u\).
 This is non-zero everywhere except at the origin, which means it is non-zero on
@@ -1825,22 +1827,22 @@ However, almost every orbit must eventually remain outside the closure of
 If not, the positive limit set would once again be
 \(E_\pi\); by the same argument as above, that orbit would be in \(\Pi^+\).
 
-We conclude that all orbits beginning in \(\mathcal{O}_1\) will, in finite time,
-escape the closure of \(\mathcal{O}_1\) and remain in the rotation domain
-forever after.
+We conclude that almost all orbits beginning in \(\mathcal{O}_1\) will, in
+finite time, escape the closure of \(\mathcal{O}_1\) and remain in the rotation
+domain forever after.
 
-\subsection{Energy Gain on \(\mathcal{O}_2(\bar{\rho})\)}
-Since \(\mathcal{O}_2(\bar{\rho}) = \bar{\mathcal{O}}_1 \cup \mathcal{R}\)
-(where \(\mathcal{R}\) is the rotation domain defined in
+\subsection{Energy Gain on \(\mathcal{O}_2(\rho)\)}
+Since \(\mathcal{O}_2(\rho) = \bar{\mathcal{O}}_1 \cup \mathcal{R}(\rho)\)
+(where \(\mathcal{R}(\rho)\) is the rotation domain defined in
 \eqref{eqn:rotation-domain}), and since all orbits escape 
 \(\bar{\mathcal{O}_1}\) in finite time, we need simply prove energy gain on
-\(\mathcal{R}\) to complete the proof of Theorem
+\(\mathcal{R}(\rho)\) to complete the proof of Theorem
 \ref{thm:acrobot-energy-stabilization}.
-We separate \(\mathcal{R}\) into its two distinct connected components:
-\(\mathcal{R}^+\), the set of rotations with \(p_u > 0\); 
-and \(\mathcal{R}^-\), the set of rotations with \(p_u < 0\).
+We separate \(\mathcal{R}(\rho)\) into its two distinct connected components:
+\(\mathcal{R}^+(\rho)\), the set of rotations with \(p_u > 0\); 
+and \(\mathcal{R}^-(\rho)\), the set of rotations with \(p_u < 0\).
 We take the domain of interest for Lemma \ref{lemma:energy-regulation-D} to be
-\(D \in \{\mathcal{R}^+, \mathcal{R}^-\}\).
+\(D \in \{\mathcal{R}^+(\rho), \mathcal{R}^-(\rho)\}\).
 
 We now apply the method described in
 \cite{dynamic_vhcs_stabilize_closed_orbits} to find pseudo-polar coordinates
@@ -1853,8 +1855,8 @@ These coordinates are
     \label{eqn:theta-rot}
     \theta &= \pm q_u
 \end{align}
-where \(r \in \, ]\sqrt{60m^2gl^3}, \bar{\rho}[\) and \(\pm\) denotes
-whether \(D=\mathcal{R}^+\) or \(D=\mathcal{R}^-\).
+where \(r \in \, ]\sqrt{60m^2gl^3}, \rho[\) and \(\pm\) denotes
+whether \(D=\mathcal{R}^+(\rho)\) or \(D=\mathcal{R}^-(\rho)\).
 The inverse of this transformation is
 \begin{align*}
     q_u &= \pm \theta
@@ -1876,23 +1878,23 @@ also confirm that \((\partial g/\partial r)(\theta,r,0) \equiv 0\).
 The function \(b(\theta,r_0) = (\partial g/\partial I)(\theta,r_0,0)\) is given
 in the statement of Theorem \ref{thm:acrobot-energy-stabilization}, and by
 assumption we have \(S(r_0) \geq \epsilon\) on
-\(]\sqrt{60m^2gl^3},\bar{\rho}[\).
+\(]\sqrt{60m^2gl^3},\rho[\).
 Thus, all requirements of Lemma \ref{lemma:energy-regulation-D} are satisfied,
-so there exists a common \(I_2(\bar{\rho})\) whereby the acrobot gains/loses
+so there exists a common \(I_2(\rho)\) whereby the acrobot gains/loses
 energy on both \(\mathcal{R}^+\) and \(\mathcal{R}^-\).
 
 Let \(I_1^\star\) be the parameter we found for \(\mathcal{O}_1\) in 
 Section \ref{sec:proof-o1}.
-Taking \(I^{\star\star} = \min \{I_1^\star, I_2(\bar{\rho})\}\),
-the acrobot gains/loses energy on \(\mathcal{O}_2(\bar{\rho})\)
+Taking \(I^{\star\star} = \min \{I_1^\star, I_2(\rho)\}\),
+the acrobot gains/loses energy on \(\mathcal{O}_2(\rho)\)
 when \(|I| \leq I^{\star\star}\).
 This completes the proof of Theorem \ref{thm:acrobot-energy-stabilization}.
 
 %/========== Conclusion ==========/%
 \section{Conclusion}\label{sec:conclusion}
 
-In this article we apply the framework of virtual nonholonomic constraints
-towards the acrobot, and designed a constraint which emulates giant motion from
+In this article we applied the framework of virtual nonholonomic constraints
+on the acrobot, and designed a constraint which emulates giant motion from
 gymnastics.
 We proved this constraint will inject energy into the simplified acrobot whose
 limbs are massless rods of equal length, with equal masses at the tips.
