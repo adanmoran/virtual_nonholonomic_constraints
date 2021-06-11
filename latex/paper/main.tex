@@ -1,7 +1,7 @@
 %! TEX program = lualatex
 
 % TODO: remove onecolumn and draftcls formatting
-\documentclass[journal,twoside,web, onecolumn,draftcls]{ieeecolor}
+\documentclass[journal,twoside,web, twocolumn,draftcls]{ieeecolor}
 
 \usepackage{generic}
 %/========== Preamble ==========/%
@@ -25,7 +25,8 @@
 \bibliographystyle{IEEEtran}
 
 %---------- Header ----------% 
-\newcommand*{\Title}{VNHC and Acrobot Title}
+\newcommand*{\Title}{From gymnastics to virtual nonholonomic constraints: energy
+injection, dissipation, and regulation for the acrobot}
 \markboth{\journalname, VOL. XX, NO. XX, XXXX 2021}
 {Moran-MacDonald \MakeLowercase{\textit{et al.}}: \Title}
 
@@ -300,9 +301,10 @@ Let us now define what it means for a mechanical system to gain or lose energy.
     The system \textit{loses energy on \(D\)} if it gains energy in
     negative-time.
 \end{defn}
+
 The definition above applies to vector fields that are a not necessarily
 Hamiltonian, and therefore might not have an associated notion of ``energy". 
-The terminology " gain energy" or "lose energy" is to be interpreted loosely in
+The terms ``gain energy" and ``lose energy" are to be interpreted loosely in
 this context.
 Our goal is to design a smooth function \(f : \Sone \times \R\) such that the
 relation \(q_a = f(q_u,p_u)\) for system \eqref{eqn:acrobot-hamiltonian}
@@ -390,18 +392,18 @@ As a first step in addressing this problem, we make the following assumptions.
     and has full rank \(k < n\).
 \end{assm}
 
-\begin{assm}\label{assm:B-perp}
-    There exists a right semi-orthogonal matrix 
-    \(B^\perp \in \R^{(n-k)\times n}\)
-    which is a left-annihilator for \(B\). 
-\end{assm}
-
-Note that Assumption \ref{assm:B-perp} requires the rows of \(B^\perp\) be unit vectors
-that are mutually orthogonal. 
-When \(k = (n-1)\), Assumption \ref{assm:B-perp} can be removed because it is
-automatically implied by Assumption \ref{assm:B-const}.
-
-The above assumptions allow us to define a
+%\begin{assm}\label{assm:B-perp}
+%    There exists a right semi-orthogonal matrix 
+%    \(B^\perp \in \R^{(n-k)\times n}\)
+%    which is a left-annihilator for \(B\). 
+%\end{assm}
+%
+%Note that Assumption \ref{assm:B-perp} requires the rows of \(B^\perp\) be unit vectors
+%that are mutually orthogonal. 
+%When \(k = (n-1)\), Assumption \ref{assm:B-perp} can be removed because it is
+%automatically implied by Assumption \ref{assm:B-const}.
+%
+When \(\mathcal{Q} = \R^n\), the above assumption allows us to define a
 canonical coordinate transformation of \eqref{eqn:hamiltonian} 
 which decouples the input forces.
 To define this transformation we will make use of the following lemma.
@@ -431,19 +433,21 @@ To define this transformation we will make use of the following lemma.
 In light of Lemma \ref{lemma:B-orthogonal} there is no loss of generality in
 assuming that the input matrix is left semi-orthogonal, which means that
 \(B\tpose\) is right semi-orthogonal.
-Now, let \(\mathbf{B} := [B^\perp; B\tpose]\).
-Since \(B^\perp\) is a left annihilator of \(B\) and both \(B^\perp\) and
-\(B\tpose\) are right semi-orthogonal, one can easily show that \(\mathbf{B}\) is
-an orthogonal matrix.
+Now, let \(\mathbf{B} := [B^\perp; B\tpose]\) where 
+\(B^\perp \in \R^{(n-k)\times k}\) is a left annihilator of \(B\), i.e.,
+\(B^\perp B = \Zmat{(n-k) \times k}\).
+Since \(B\) is constant, such a \(B^\perp\) exists and
+\(\mathbf{B}\) is invertible.
 
-We temporarily take \(\mathcal{Q}\) to be embedded in \(\R^N\) so that the
-transformation \(\tilde{q} = \mathbf{B}q\) is well-defined.
+The following theorem requires that \(\mathcal{Q} = \R^n\) so that the
+transformation \(\tilde{q} = \mathbf{B}q\) is well defined.
 
 \begin{thm}\label{thm:simply-actuated}
-    Take the Hamiltonian system \eqref{eqn:hamiltonian} and suppose
-    Assumptions \ref{assm:B-const} and \ref{assm:B-perp} hold.
+    Take the Hamiltonian system \eqref{eqn:hamiltonian} with configuration
+    manifold \(\mathcal{Q} = \R^n\) and suppose
+    Assumption \ref{assm:B-const} holds.
     The coordinate transformation
-    \(\left(\tilde{q} = \mathbf{B}q, \tilde{p} = \mathbf{B}p\right)\)
+    \(\left(\tilde{q} = (\mathbf{B}\tpose)\inv q, \tilde{p} = \mathbf{B}p\right)\)
     is a canonical transformation and the resulting dynamics are given by 
     \begin{gather}\label{eqn:simple-hamiltonian}
         \mathcal{H}(\tilde{q},\tilde{p}) = 
@@ -460,7 +464,7 @@ transformation \(\tilde{q} = \mathbf{B}q\) is well-defined.
     \end{gather}
     where 
     \(\Minv(\tilde{q}) := 
-    \mathbf{B}D^{-1}(\mathbf{B}\tpose \tilde{q})\mathbf{B}\tpose\)
+    (\mathbf{B}\tpose)\inv D^{-1}(\mathbf{B}\tpose \tilde{q})\mathbf{B}\inv\)
     and
     \(V(\tilde{q}) := P(\mathbf{B}\tpose \tilde{q})\).
 \end{thm}
@@ -470,26 +474,30 @@ transformation \(\tilde{q} = \mathbf{B}q\) is well-defined.
     \(i,j \in \{1,\ldots,n\}\).
     This implies the Poisson brackets \([\tilde{q}_i, \tilde{q}_j]\)
     and \([\tilde{p}_i,\tilde{p}_j]\) are both zero.
-    Then, since \(\mathbf{B}\) is orthogonal, 
-    \([\tilde{p}_i, \tilde{q}_j] = (\mathbf{B}_i)\tpose (\mathbf{B}\tpose)_j
+    Then, one can show that
+    \([\tilde{p}_i, \tilde{q}_j] = (\mathbf{B}\tpose)\inv_i (\mathbf{B}\tpose)_j
         = \delta_i^j\).
     By (45.10) in \cite{landau_mechanics}, this is a canonical transformation
     and the new Hamiltonian is
-    \(\mathcal{H}(\mathbf{B}\tpose \tilde{q}, \mathbf{B}\tpose \tilde{p})\).
+    \(\mathcal{H}(\mathbf{B}\tpose \tilde{q}, \mathbf{B}\inv \tilde{p})\).
     Finally, since \(\dot{\tilde{p}} = \mathbf{B} \dot{p}\), the input
     matrix for the system in \((\tilde{q},\tilde{p})\) coordinates is
     \(\mathbf{B}B = [\Zmat{(n-k)\times k}; \Id{k}]\), which proves the theorem.
 \end{proof}
 
 We call the \((\tilde{q},\tilde{p})\) coordinates
-\textit{simply actuated coordinates}, and we call system
-\eqref{eqn:simple-hamiltonian} a \textit{simply actuated hamiltonian system}.
+\textit{simply actuated coordinates}, and we call any Hamiltonian system
+whose input matrix is \([\Zmat{(n-k)\times k}; \Id{k}]\) a 
+\textit{simply actuated hamiltonian system}.
 The first \((n-k)\) configuration variables in \(\tilde{q}\), labelled \(q_u\),
 are the \textit{unactuated coordinates}; 
 the remaining \(k\) configuration variables, labelled \(q_a\), are the
 \textit{actuated coordinates}.
 The corresponding \((p_u, p_a)\) in \(\tilde{p}\) are the \textit{unactuated}
 and \textit{actuated momenta}, respectively.
+
+In this article we focus on the acrobot which, despite having a configuration
+manifold which is not \(\R^n\), is already a simply actuated Hamiltonian system.
 
 \subsection{Virtual Nonholonomic Constraints}\label{sec:vnhc-vnhc}
 
@@ -969,89 +977,69 @@ achieve rotations with a momentum of at least \(\rho\).
 
 \subsection{Energy Regulation}\label{sec:energy-reg}
 One can apply the results of Theorem \ref{thm:acrobot-energy-stabilization} 
-towards energy regulation.
-That is, given a level set of \eqref{eqn:nominal-energy} contained in 
-\(\mathcal{O}_2(\rho)\), one can stabilize a neighbourhood of this level set by
-appropriately toggling between injection and dissipation VNHCs, which can be
-achieved by changing the sign of \(I\) in \eqref{eqn:acrobot-constraint}.
-
-In the rest of this article we distinguish between ``rotations" and
-``oscillations".
-
-%We say the acrobot is \textit{rotating} with \textit{rotation rate} \(p_0\)
-%whenever \((q_u(t),p_u(t))\) crosses the \(p_u\)-axis at \(|p_u| = p_0\), 
-%and \(p_u(t)\) has not changed sign since the previous time the orbit crossed
-%the \(p_u\)-axis.
-We say the acrobot is \textit{rotating} whenever \((q_u(t),p_u(t))\) crosses the 
-\(p_u\)-axis, and \(p_u(t)\) has not changed sign since the previous time the
-orbit crossed the \(p_u\)-axis.
-The value of \(|p_u|\) at this crossing is the \textit{rotation rate}. 
-If \(I = 0\) in \eqref{eqn:acrobot-constraint}, rotations are
-closed periodic orbits of \((q_u(t),p_u(t))\) which are entirely contained in
-\(\mathcal{R}(\rho)\), the rotation domain defined in
-\eqref{eqn:rotation-domain}.
-In this case, each rotation is contained in a level set of
-\eqref{eqn:nominal-energy}, which is uniquely determined by its rotation rate.
-\textbf{TODO: state that if abs(qu) = pi and pu neq 0, the acrobot must necessarily
-rotate}
-
-We say the acrobot is \textit{oscillating} if it is not rotating.
-Since \(p_u(t)\) changes sign, an oscillating acrobot must necessarily cross the
-\(q_u\)-axis at some point \(q \in \, ]-\pi,\pi[\).
-The value of \(|q|\) at this crossing is called the \textit{oscillation angle}.
-If \(I = 0\) in \eqref{eqn:acrobot-constraint}, oscillations are closed periodic
-orbits of \((q_u(t),p_u(t))\) which are entirely contained in \(\mathcal{O}_1\).
-In this case, each oscillation is contained in a level set of
-\eqref{eqn:nominal-energy} which is uniquely determined by its oscillation
-angle.
+towards energy regulation; 
+that is, one can stabilize oscillations or rotations by appropriately toggling
+between injection and dissipation VNHCs, which can be achieved by changing the
+sign of \(I\) in \eqref{eqn:acrobot-constraint}.
+The acrobot is \textit{oscillating} when it swings back and forth without
+performing a full revolution around the pivot point.
+Oscillations correspond to \(p_u\) changing sign periodically, and the peak
+torso angle (i.e., the point where an orbit crosses the \(q_u\)-axis)
+is called the \textit{oscillation angle}.
+Conversely, the acrobot is \textit{rotating} when its torso is performing full
+revolutions around the pivot, which corresponds mathematically to \(p_u\)
+maintaining the same sign.
+The momentum achieved by the acrobot at the bottom of the swing
+(i.e., the point where an orbit of rotation crosses the \(p_u\)-axis) is
+called the \textit{rotation rate}.
 
 \textbf{Rotation Regulation}: one chooses a desired rotation rate 
 \(p_\text{des} > 0\) and a hysteresis value \(\delta \in [0,1]\).
 Each time the orbit crosses the \(p_u\)-axis (i.e. when \(q_u = 0\)), the
 supervisor changes which VNHC is enforced as follows:
 \begin{itemize}
-    \item If \(|p_u| < (1-\delta)p_\text{des}\), enable the injection VNHC.
-    \item If \(|p_u| > (1+\delta)p_\text{des}\), enable the dissipation VNHC.
+    \item If \(|p_u| < (1-\delta)p_\text{des}\), enable the injection VNHC by
+        setting \(I > 0\) in \eqref{eqn:acrobot-constraint}.
+    \item If \(|p_u| > (1+\delta)p_\text{des}\), enable the dissipation VNHC by
+        replacing \(I > 0\) with \(-I < 0\) in \eqref{eqn:acrobot-constraint}.
     \item If \((1-\delta)p_\text{des} \leq |p_u| \leq (1+\delta)p_\text{des}\),
         extend the leg fully by setting \(q_a = 0\).
-        For these simulations, we assume this can be done instantaneously.
+        For these simulations, we assume this can be done instantaneously,
+        though in practice this is impossible.
 \end{itemize}
-This method is entitled ``rotation regulation", which implies that one must choose
+Note that all orbits of the acrobot must cross the \(p_u\) axis, 
+so this method will stabilize a rotation even if the acrobot is initialized in
+\(\mathcal{O}_1\).
+Also, the above supervisor is designed to regulate a rotation rate, but it
+cannot regulate the rotation direction.
+
+The term ``rotation regulation" implies that one must choose
 \(p_\text{des}\) and \(\delta\) so that 
 \((1-\delta) p_\text{des} > \sqrt{60m^2gl^3}\).
-that way, when \(q_a = 0\), the resulting orbit is a rotation.
 In fact, it is entirely possible to choose \(p_\text{des}\) and \(\delta\) so
 that \((1+\delta)p_\text{des} \leq \sqrt{60m^2gl^3}\).
-Rather than stabilizing a rotation, the above method would stabilize an
+Rather than stabilizing a rotation, the supervisor would then stabilize an
 oscillation whose momentum at the bottom of the swing arc is \(p_\text{des}\).
-
-The problem with rotation regulation is that it assumes the supervisor can
-instantaneously transition from an injection/dissipation VNHC (with non-zero \(I\))
-to extending the leg by setting \(q_a = 0\).
-This is impossible because the transition is happening on the \(p_u\)-axis.
-If the supervisor changed the VNHC on the \(q_u\)-axis instead, 
-this transition to \(q_a = 0\) can be done continuously.
-Hence, we now present the preferred method for stabilizing oscillations.
+However, there is a preferred method for stabilizing oscillations
+which we outline next.
 
 \textbf{Oscillation Regulation}: one chooses a desired oscillation angle 
 \(q_\text{des} \in \, ]0,\pi[\) and, to avoid infinite switching, a
-hysteresis value \(\delta \in [0,1]\).
-Each time the orbit crosses the \(q_u\)-axis (i.e., when \(p_u = 0\)) or 
-whenever the acrobot begins rotating (i.e., when \(|q_u| = \pi\) and \(p_u
-\neq 0\)), the supervisor does the following: 
+hysteresis value \(\delta \in [0,\pi - q_\text{des}]\).
+An orbit in the \((q_u,p_u)\)-plane will either cross the \(q_u\) axis if the
+orbit corresponds to a rocking motion, or it will cross the line \(|q_u| = \pi\)
+if the orbit corresponds to a full revolution.
+When either of these occur, the supervisor does the following: 
 \begin{itemize}
-    \item If \(|q_u| < (1-\delta)q_\text{des}\), enable the injection VNHC by
-        setting \(I > 0\) in the VNHC \eqref{eqn:acrobot-constraint}.
-    \item If \(|q_u| > (1+\delta)q_\text{des}\), enable the dissipation VNHC by
-        setting \(I < 0\) in the VNHC \eqref{eqn:acrobot-constraint}.
+    \item If \(|q_u| < (1-\delta)q_\text{des}\), enable the injection VNHC.
+    \item If \(|q_u| > (1+\delta)q_\text{des}\), enable the dissipation VNHC.
     \item If \((1-\delta)q_\text{des} \leq |q_u| \leq (1+\delta)q_\text{des}\),
         keep the leg extended at \(q_a = 0\). This can be done continously since
         \(q_a = 0\) when \(p_u = 0\).
 \end{itemize}
-Here one must be careful to choose \(\delta\) so that
-\((1+\delta)q_\text{des} < \pi\), so t
-
-
+Note that by our choice of \(\delta\), if the supervisor kicks in when 
+\(|q_u| = \pi\) (i.e., when the robot is rotating) then the supervisor will
+automatically enable the dissipation VNHC.
 
 %/========== Experiments ==========/%
 \section{Simulation Results}\label{sec:simulations}
@@ -1172,8 +1160,8 @@ The resulting orbit is plotted in Figure
 The level set \(E_\pi\) with energy \(E(\pi,0)\) is outlined in black.
 Recall that this level set is the boundary between oscillations and rotations of the
 nominal pendulum.
-The points where the orbit exits \(E_\pi\) are marked with black stars,
-with the final departure marked by a red star.
+The points where the orbit exits \(E_\pi\) are marked with black asterisks,
+with the final departure marked by a red asterisk.
 Interestingly, our choice of \(I\) is large enough that we observe significant
 differences between the nominal pendulum and the constrained dynamics:
 \(E_\pi\) intersects the \(p_u\)-axis at \(\abs{p_u} \approx 0.18\), yet the
@@ -1216,7 +1204,7 @@ We simulated the constrained system for \(30\) seconds and plotted the
 resulting orbit in Figure \ref{fig:acrobot-diss-orbit}. 
 As expected, the acrobot slows down over time.
 We highlight the locations where the orbit crossed the set \(E_\pi\) by
-black stars, with the final crossing in red.
+black asterisks, with the final crossing in red.
 After this final crossing, the acrobot ceased rotating and its oscillations
 decayed to zero.
 
@@ -1235,7 +1223,7 @@ whenever the orbit of the acrobot crosses the \(q_u\)-axis.
 Figure \ref{fig:acrobot-osc-reg} shows the supervisor stabilizing an
 oscillation with body angle \(q_\text{des} = \pi/2\) and a 
 \(5\%\) hysteresis, meaning \(\delta = 0.05\).
-The supervisor reevaluated its choice of VNHC at each black star;  
+The supervisor reevaluated its choice of VNHC at each black asterisk;  
 the red contour corresponds to the part of the orbit where the supervisor kept
 the leg extended, because the oscillation was within tolerance of
 \(q_\text{des}\).
@@ -1243,11 +1231,15 @@ The solid black line is the desired oscillation, and the dashed black
 lines show the hysteresis around that orbit.
 
 In Figure \ref{fig:acrobot-osc-reg-in} the acrobot was initialized at 
-\((q_u,p_u) = (\pi/32,0)\); here the supervisor injected energy for most of the
-orbit.
+\((q_u,p_u) = (\pi/32,0)\); here the supervisor injected energy to stabilize the
+desired orbit.
 In Figure \ref{fig:acrobot-osc-reg-diss} the acrobot was initialized at the rotation
-\((q_u,p_u) = (0,0.19)\); here the supervisor dissipated energy. 
-In both cases, the supervisor stabilized the desired oscillation.
+\((q_u,p_u) = (0,0.19)\); note that the supervisor is first enabled at the line
+\(|q_u| = \pi\) and dissipates energy. Eventually the acrobot begins a rocking
+motion and the supervisor is enable again each time the acrobot hits the
+\(q_u\)-axis. 
+The supervisor continues to dissipate energy until it stabilizes the desired
+oscillation.
 
 \begin{figure}
     \centering
@@ -1274,7 +1266,7 @@ injection and dissipation VNHCs at each crossing of the \(p_u\)-axis.
 Rotation regulation for the acrobot is demonstrated in 
 Figure \ref{fig:acrobot-rot-reg}, where the supervisor stabilizes 
 \(p_\text{des} = 0.19\) with a \(2\%\) hysteresis \(\delta = 0.02\).
-The supervisor evaluated its choice of VNHC at each black star.
+The supervisor evaluated its choice of VNHC at each black asterisk.
 Once it was within range of \(p_\text{des}\) it extended the legs completely,
 the orbit of which is shown in red.
 
@@ -1304,7 +1296,8 @@ In both cases, the desired rotation was stabilized correctly.
 \end{figure}
 
 Note the difference in shape between the blue rotations of the dissipation VNHC
-and the red rotation of the nominal pendulum: the red one slows down much more
+and the red rotation of the nominal pendulum in Figure
+\ref{fig:acrobot-rot-reg}: the red one slows down much more
 near \(|q_u| = \pi\).
 This difference arises because of the size of \(I\):
 if \(|I|\) were smaller, the blue rotations would be more similar in shape to the
@@ -1460,13 +1453,6 @@ motor.
     \caption{Perturbation Test 2: SUGAR's orbit before (blue) and after (red) pushing.}
 \end{figure}
 
-We had hoped to show experimental results for dissipation and
-oscillation/rotation regulation. 
-Unfortunately the Dynamixel RX24F servo motor broke before we could perform
-these experiments.
-These motors are no longer in production at the time of writing this article, so
-SUGAR has been retired from service.
-
 \subsection{Summary of Results} 
 We performed three tests on SUGAR: a baseline energy injection test,
 a stop test, and a push test.
@@ -1485,9 +1471,8 @@ These are the sublevel sets \eqref{eqn:oscillation-domain} and
 \eqref{eqn:nominal-energy}.
 
 Here is fundamental idea behind this proof:
-using a procedure devised by Mohammadi \etal
-\cite{dynamic_vhcs_stabilize_closed_orbits}, on certain subsets 
-\(D \subset \SxR\) one can find a diffeomorphism \(T(q_u,p_u) = (r,\theta)\)
+By means of a diffeomorphism \(T(q_u,p_u) = (r,\theta)\) we transform the
+constrained dynamics \eqref{eqn:acrobot-constrained-dynamics} 
 into pseudo-polar coordinates adapted to level sets of \(E(q_u,p_u)\).
 That is, when \(I = 0\) in \eqref{eqn:acrobot-constraint}, the pseudo-radius
 \(r\) chooses a level set of \(E\) and the pseudo-angle \(\theta\) chooses a
@@ -1530,7 +1515,6 @@ We formalize this idea in the following lemma.
         (q_u,p_u) &\mapsto (r,\theta)
         ,
     \end{align*}
-    into pseudo-polar coordinates adapted to level sets of \(E(q_u,p_u)\),
     satisfying \(\dot{r} \equiv 0\) and \(\dot{\theta} > 0\) when
     \(I = 0\).
     Let \(g(\theta,r,I) = \dot{r}/\dot{\theta}\) and assume that 
@@ -1652,8 +1636,8 @@ We formalize this idea in the following lemma.
 
 \subsection{Energy Gain on \(\mathcal{O}_1\)}\label{sec:proof-o1}
 To prove the first part of Theorem
-\ref{thm:acrobot-energy-stabilization}, we begin by using the procedure from
-\cite{dynamic_vhcs_stabilize_closed_orbits} to find 
+\ref{thm:acrobot-energy-stabilization}, we adapt
+\cite[Eqn. (9)]{dynamic_vhcs_stabilize_closed_orbits} to find 
 pseudo-polar coordinates (adapted to level sets of \(E\)) on
 the punctured open set \(\mathcal{O}_1 \backslash \{(0,0)\} \subset \SxR\).
 The resulting coordinate transformation is
@@ -1701,8 +1685,8 @@ which is smooth and well-defined for all
 \(r \in \, ]0,\pi[\).
 From \eqref{eqn:theta-dot-nom-osc}--\eqref{eqn:theta-dot-limit},
 one can verify that \(\dot{\theta} > 0\) when \(I = 0\).
-Defining \(g(\theta,r,I) = \dot{r}/\dot{\theta}\), MATLAB symbolic computations
-confirm that \((\partial g/\partial r)(\theta,r,0) \equiv 0\) as required.
+Defining \(g(\theta,r,I) = \dot{r}/\dot{\theta}\), one can show that
+\((\partial g/\partial r)(\theta,r,0) \equiv 0\) as required.
 
 Next we compute
 \(b(\theta,r_0) := (\partial g/\partial I)(\theta, r_0, 0) = K a(\theta,r_0)\),
@@ -1771,7 +1755,7 @@ This linearization yields
     ,
 \]
 where the prime now denotes differentiation with respect to \(r\).
-MATLAB symbolic computations reveal that
+One can show that
 %\begin{equation*}
 %    \lim \limits_{r_0 \to 0^+}
 %    \pdiff{a}{r}(\theta,r_0) 
@@ -1895,8 +1879,8 @@ and \(\mathcal{R}^-(\rho)\), the set of rotations with \(p_u < 0\).
 We take the domain of interest for Lemma \ref{lemma:energy-regulation-D} to be
 \(D \in \{\mathcal{R}^+(\rho), \mathcal{R}^-(\rho)\}\).
 
-We now apply the method described in
-\cite{dynamic_vhcs_stabilize_closed_orbits} to find pseudo-polar coordinates
+We now apply
+\cite[Eqn. (8)]{dynamic_vhcs_stabilize_closed_orbits} to find pseudo-polar coordinates
 adapted to rotations.
 These coordinates are 
 \begin{align}
