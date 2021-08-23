@@ -560,8 +560,8 @@ The authors of
 \cite{nhvc_dynamic_walking,hybrid_zero_dynamics_bipedal_nhvcs}
 observed that relations which use only the unactuated conjugate of momentum
 often have vector relative degree \(\{2,\ldots,2\}\).
-Indeed, we shall now provide a characterization of regularity which shows that
-regular constraints cannot use the actuated momentum at all.
+Indeed, we shall now prove that regular constraints cannot depend on the
+actuated momentum.
 
 To ease notation in the rest of this section, we use the following shorthand:
 \begin{align}
@@ -577,7 +577,7 @@ To ease notation in the rest of this section, we use the following shorthand:
     \(dh_{p_a} = \Zmat{k \times k}\) 
     and the decoupling matrix
     \begin{equation}\label{eqn:decoupling-matrix}
-        \left(\mathcal{A}(q,p_u) - dh_{p_u}\mathcal{M}(q,p)\right)\simpleB
+        \big(\mathcal{A}(q,p_u) - dh_{p_u}\mathcal{M}(q,p)\big)\simpleB
          ,
      \end{equation}
     is invertible everywhere on the constraint manifold \(\Gamma\).
@@ -602,7 +602,7 @@ To ease notation in the rest of this section, we use the following shorthand:
     Hence,
     \[
        \ddot{e} = (\star) +
-       \left(\mathcal{A}(q,p_u) - dh_{p_u}\mathcal{M}(q,p)\right) \simpleB \tau
+       \big(\mathcal{A}(q,p_u) - dh_{p_u}\mathcal{M}(q,p)\big) \simpleB \tau
         ,
     \]
     which we write as \( \ddot{e} = E(q,p) + H(q,p)\tau\) for appropriate \(E\)
@@ -815,12 +815,13 @@ By Theorem \ref{thm:zero-dynamics}, the constrained dynamics arising from the
 VNHC \eqref{eqn:acrobot-constraint} are parameterized fully by 
 \((q_u,p_u) \in \SxR\).
 Here, \eqref{eqn:g-qpu} reduces to
-\begin{equation*}
+\begin{multline*}
     g(q_u,p_u) = \frac{
-        (1+c_a)(1+I^2 p_u^2)p_u - m^2gl^3\bar{q}_a I (2-c_a^2)(2s_u + s_{ua})
-    }{ml^2(3+2c_a)(1+I^2 p_u^2)}
+    (1+c_a)p_u}{ml^2(3+2c_a)}
+    - \frac{mgl\bar{q}_a I (2-c_a^2)(2s_u + s_{ua})
+    }{(3+2c_a)(1+I^2 p_u^2)}
     ,
-\end{equation*}
+\end{multline*}
 and the constrained dynamics \eqref{eqn:qpu-dynamics} are
 \begin{equation}\label{eqn:acrobot-constrained-dynamics}
     \begin{cases}
@@ -859,7 +860,8 @@ When the pendulum is oscillating, its state \((q_u,p_u)\) lies in the set
 which is shown in Figure \ref{fig:acrobot-oscillation-domain}.
 If for some \(I \neq 0\) our VNHC injects energy into the acrobot on 
 \(\mathcal{O}_1\), and the constrained dynamics escape
-\(\mathcal{O}_1\) in finite time, then the acrobot is guaranteed to perform
+\(\mathcal{O}_1\) and hit the vertical line \(|q_u| = \pi\)
+in finite time, then the acrobot is guaranteed to perform
 giant-like motion and begin rotating around the bar.
 
 When the pendulum is rotating with bounded momentum
@@ -921,9 +923,9 @@ The following theorem provides conditions under which such an \(I\) exists.
         \(I^\star > 0\) such that, for all \(I \in \, ]0,I^\star]\), the VNHC
         \eqref{eqn:acrobot-constraint} injects energy into the acrobot on
         \(\mathcal{O}_1\).
-        Moreover, almost every orbit of the constrained dynamics 
-        \eqref{eqn:acrobot-constrained-dynamics} will escape the closure of
-        \(\mathcal{O}_1\) in finite time.
+        Moreover, every orbit of the constrained dynamics 
+        \eqref{eqn:acrobot-constrained-dynamics} will reach the line
+        \(|q_u| = \pi\) in finite time.
         If instead \(I \in [-I^\star,0[\), the VNHC dissipates energy
         on \(\mathcal{O}_1\).
     \item Let \(C = m^2gl^3\bar{q}_a\) and 
@@ -1025,7 +1027,7 @@ which we outline next.
 
 \textbf{Oscillation Regulation}: one chooses a desired oscillation angle 
 \(q_\text{des} \in \, ]0,\pi[\) and, to avoid infinite switching, a
-hysteresis value \(\delta \in [0,\pi - q_\text{des}]\).
+hysteresis value \(\delta \in [0,\pi/q_\text{des} - 1]\).
 An orbit in the \((q_u,p_u)\)-plane will either cross the \(q_u\) axis if the
 orbit corresponds to a rocking motion, or it will cross the line \(|q_u| = \pi\)
 if the orbit corresponds to a full revolution.
@@ -1164,7 +1166,7 @@ The points where the orbit exits \(E_\pi\) are marked with black asterisks,
 with the final departure marked by a red asterisk.
 Interestingly, our choice of \(I\) is large enough that we observe significant
 differences between the nominal pendulum and the constrained dynamics:
-\(E_\pi\) intersects the \(p_u\)-axis at \(\abs{p_u} \approx 0.18\), yet the
+\(E_\pi\) intersects the \(p_u\)-axis at \(\abs{p_u} \approx 0.17\), yet the
 constrained acrobot begins rotating once it hits the
 \(p_u\)-axis at \(\abs{p_u} \approx 0.16\). 
 This indicates that higher values of \(I\) enable the acrobot to gain energy
@@ -1357,7 +1359,7 @@ To resolve this issue, the MCU estimates \(\dot{q}\) by applying a washout
 filter to sequential measurements of \(q\).
 We then compute \(p = M(q)\dot{q}\) for use in the VNHC controller.
 
-Communication between the Arduinos restricts the sampling rate of \(p\) to
+The communication speed between Arduinos restricts the sampling rate of \(p\) to
 500Hz.
 This low sampling rate results in a noisy momentum signal which suffers
 from noticeable phase lag.
@@ -1397,7 +1399,7 @@ We performed the following tests on SUGAR with the energy injection VNHC.
 \item \textbf{Perturbation Test 1:}
     we initialized SUGAR at 
     \((q_u,p_u) \approx \left(\pi,0\right)\), let it run for 15
-    seconds, then introduced a rod as it passed through the bottom of
+    seconds, then introduced a rod as SUGAR passed through the bottom of
     its arc.
     This caused a collision which stopped SUGAR in its tracks, at which
     point we immediately removed the rod so SUGAR could continue
@@ -1418,14 +1420,14 @@ We performed the following tests on SUGAR with the energy injection VNHC.
 
 
 \item \textbf{Perturbation Test 2:}
-    to see how SUGAR responds when pushed, we allowed
+    to see how SUGAR would respond when pushed, we allowed
     it to rotate unperturbed for 15 seconds and then pushed it in its
     direction of motion.
     The orbit in Figure \ref{fig:acrobot-fpush-orbit} shows that SUGAR,
     when pushed, rotates with energy \(E(0,-0.22)\), but then slows down until
     it reaches a rotation with energy \(E(0,-0.195)\).
     We repeated this test by pushing SUGAR against its direction of motion.
-    The orbit in Figure \ref{fig:acrobot-rpush-orbit} demonstrates that it
+    The orbit in Figure \ref{fig:acrobot-rpush-orbit} demonstrates that SUGAR
     readily changes direction, and quickly achieves its maximum speed
     with energy \(E(0,0.195)\).
 \end{enumerate}
@@ -1471,16 +1473,22 @@ These are the sublevel sets \eqref{eqn:oscillation-domain} and
 \eqref{eqn:nominal-energy}.
 
 Here is fundamental idea behind this proof:
-By means of a diffeomorphism \(T(q_u,p_u) = (r,\theta)\) we transform the
-constrained dynamics \eqref{eqn:acrobot-constrained-dynamics} 
-into pseudo-polar coordinates adapted to level sets of \(E(q_u,p_u)\).
-That is, when \(I = 0\) in \eqref{eqn:acrobot-constraint}, the pseudo-radius
+for each of \(\mathcal{O}_1\) or \(\mathcal{O}_2(\rho)\),
+we can find a diffeomorphism \(T(q_u,p_u) = (r,\theta)\) into pseudo-polar
+coordinates adapted to level sets of \(E(q_u,p_u)\);
+that is, when \(I = 0\) in \eqref{eqn:acrobot-constraint}, the pseudo-radius
 \(r\) chooses a level set of \(E\) and the pseudo-angle \(\theta\) chooses a
 point on that level set.
-We can formally show that \(r\) increases ``on average", which means \(E\)
-also increases on average and the constrained dynamics are gaining energy on
-\(D\).
-We formalize this idea in the following lemma.
+If the constrained dynamics in \((r,\theta)\) coordinates flow in such a way
+that \(r\) increases ``on average", then \(E\) must also increase ``on average",
+and the original constrained dynamics \eqref{eqn:acrobot-constrained-dynamics} 
+must be gaining energy on the domain of the diffeomorphism.
+
+The following lemma provides a set of conditions on the \((r,\theta)\) dynamics
+under which energy will increase on a domain \(D\); later in this section, we
+will assign \(D = \mathcal{O}_1\) or \(D = \mathcal{O}_2(\rho)\), find an
+appropriate transformation \(T\), and apply this lemma to prove the claims in
+Theorem \ref{thm:acrobot-energy-stabilization}.
 
 %Here is the summary of this proof: for certain subsets
 %\(D \subset \SxR\), one can find a change of coordinates into 
@@ -1515,13 +1523,14 @@ We formalize this idea in the following lemma.
         (q_u,p_u) &\mapsto (r,\theta)
         ,
     \end{align*}
-    satisfying \(\dot{r} \equiv 0\) and \(\dot{\theta} > 0\) when
-    \(I = 0\).
-    Let \(g(\theta,r,I) = \dot{r}/\dot{\theta}\) and assume that 
-    \((\partial g/\partial r)(\theta,r,0) \equiv 0\).
-    Assume \(b(\theta,r_0) = (\partial g/\partial I)(\theta,r_0,0)\)
-    is \(2\pi\)-periodic in \(\theta\) for any fixed \(r_0\),
-    and that there exists \(\epsilon > 0\) such that 
+    yielding the new constrained dynamics \(\dot{r} = f_r(\theta,r,I)\),
+    \(\dot{\theta} = f_\theta(\theta,r,I)\).
+    Suppose that \(f_r(\theta,r,0) \equiv 0\) and \(f_\theta(\theta,r,0) > 0\).
+    Let \(g(\theta,r,I) = f_r(\theta,r,I)/f_\theta(\theta,r,I)\), and assume that 
+    \((\partial g/\partial r)(\theta,r,0) \equiv 0\) and
+    \(b(\theta,r) := (\partial g/\partial I)(\theta,r,0)\)
+    is \(2\pi\)-periodic in \(\theta\).
+    Assume also that there exists \(\epsilon > 0\) such that 
     \(S(r_0) := \int_0^{2\pi} b(\sigma,r_0)d\sigma \geq \epsilon\)
 %    \[
 %        S(r_0) := \int \limits_0^{2\pi} b(\sigma,r_0)d\sigma \geq \epsilon
@@ -1540,19 +1549,20 @@ We formalize this idea in the following lemma.
     Hence, we can perform a time reparameterization \(t = t(\theta)\) to get a
     time-scaled pseudo-radius \(\hat{r}(\theta) := r(t(\theta))\).
     This reduces the system \((\dot{r},\dot{\theta})\) into the scalar
-    time-varying ODE 
+    time-varying ODE
     \begin{equation}\label{eqn:rhat-ode}
         \begin{cases}
-            \hat{r}^\prime= \left.\frac{\dot{r}}{\dot{\theta}}\right|_{r =
-                \hat{r}(\theta)} = 
+            \hat{r}^\prime= \left.\frac{dr}{dt} \frac{dt}{d\theta}\right|_{r =
+                \hat{r}} = 
             g(\theta,\hat{r},I)
             , \\
             \hat{r}(0) = r_0
             ,
         \end{cases}
     \end{equation}
-    where \(\theta\) now represents time,
-    the prime denotes differentiation by \(\theta\), and
+    with state \(\hat{r}\).
+    Here \(\theta\) represents time,
+    prime denotes differentiation by \(\theta\), and
     \(r_0 \in \, ]\underline{r},\overline{r}[\) is the initial condition.
 
     Let \(\hat{r}(\theta,r_0,I)\) be the solution to \eqref{eqn:rhat-ode}.
@@ -1575,8 +1585,8 @@ We formalize this idea in the following lemma.
     \end{equation}
     and the remainder term \(R(\theta,r_0,I)\) is \(O(I^2)\).
 
-    Our assumption that \((\partial g/\partial r)(\theta,r_0,0) \equiv 0\)
-    means that \((\partial g/\partial \hat{r})(\theta,r_0,0) \equiv 0\).
+    Since \((\partial g/\partial r)(\theta,r_0,0) \equiv 0\), we get
+    \((\partial g/\partial \hat{r})(\theta,r_0,0) \equiv 0\).
     The solution of \eqref{eqn:r1-hat-prime} can therefore be obtained by
     quadrature, giving
     \(\hat{r}_1(\theta,r_0) = \int_0^\theta b(\sigma,r_0)d\sigma\).
@@ -1585,7 +1595,7 @@ We formalize this idea in the following lemma.
 %        .
 %    \]
 %    with \(b(\theta,r_0) := (\partial g/\partial I)(\theta,r_0,0)\). 
-    Since and \(\dot{\theta} > 0\) and \(b(\theta,r_0)\) is \(2\pi\)-periodic in
+    Since \(b(\theta,r_0)\) is \(2\pi\)-periodic in
     \(\theta\), there is a well-defined Poincar\'{e} map describing
     how \(\hat{r}\) changes each time \(\theta\) increases by \(2\pi\).
     This map is 
@@ -1607,17 +1617,18 @@ We formalize this idea in the following lemma.
     when an orbit of \((r,\theta)\) hits \(L\) for the the \(n^\text{th}\) time,
     assuming the acrobot was initialized at \((r,\theta) = (r_0,0)\).
 
-    If \(r_n \not\in \, ]\underline{r},\overline{r}[\), the orbit 
-    in \((q_u,p_u)\) coordinates must have
-    departed \(D\). % and \eqref{eqn:r-discrete} is no longer valid.
-    Proving the constrained dynamics gain energy on \(D\) is therefore
-    equivalent to finding \(N \in \mathbb{Z}_{> 0}\) where 
-    \(\hat{r}_{n} \geq \overline{r}\) for all \(n \geq N\).
+    If at any point in discrete time \(r_n\) exits \(]\underline{r},\overline{r}[\), the orbit 
+    in \((q_u,p_u)\) coordinates must have departed \(D\).
+    Hence, proving the constrained dynamics gain energy on \(D\) is
+    equivalent to finding \(N \in \mathbb{Z}_{> 0}\) such that 
+    \(r_{n} \geq \overline{r}\) for all \(n \geq N\).
     Using a perturbation analysis (see Khalil 
     \cite[Theorem 10.1]{khalil_nonlinear}),
     we know there exists some \(I_2 \in \, ]0,I_1]\) and \(\kappa > 0\)
-    such that \(\left|R(2\pi,r_n,I)\right| \leq \kappa I^2\) for all 
-    \(I \in [-I_2,I_2]\).
+    such that \(\left|R(\theta,r,I)\right| \leq \kappa I^2\) for all 
+    \(\theta \in [0,2\pi]\),
+    \(r \in \, ]\underline{r},\overline{r}[\),
+    and \(I \in [-I_2,I_2]\).
     Taking this fact alongside the assumption that \(S(r_0) \geq \epsilon\),
     we find a lower bound \(r_{n+1} \geq r_n + I\epsilon - \kappa I^2\).
     Choosing \(\gamma > 0\) and \(I^\star \in \, ]0,I_2]\) small enough makes 
@@ -1685,11 +1696,11 @@ which is smooth and well-defined for all
 \(r \in \, ]0,\pi[\).
 From \eqref{eqn:theta-dot-nom-osc}--\eqref{eqn:theta-dot-limit},
 one can verify that \(\dot{\theta} > 0\) when \(I = 0\).
-Defining \(g(\theta,r,I) = \dot{r}/\dot{\theta}\), one can show that
-\((\partial g/\partial r)(\theta,r,0) \equiv 0\) as required.
+Defining \(g(\theta,r,I)\) as in Lemma \ref{lemma:energy-regulation-D}, one can
+verify that \((\partial g/\partial r)(\theta,r,0) \equiv 0\) as required.
 
 Next we compute
-\(b(\theta,r_0) := (\partial g/\partial I)(\theta, r_0, 0) = K a(\theta,r_0)\),
+\(b(\theta,r_0) = K a(\theta,r_0)\),
 where
 \begin{align*}
     K &:= \frac{\bar{q}_a \sqrt{30m^2g l^3}}{15}
@@ -1934,13 +1945,13 @@ This completes the proof of Theorem \ref{thm:acrobot-energy-stabilization}.
 \section{Conclusion}\label{sec:conclusion}
 
 In this article we applied the framework of virtual nonholonomic constraints
-on the acrobot, and designed a constraint which emulates giant motion from
+to the acrobot, and designed a constraint which emulates giant motion from
 gymnastics.
 We proved this constraint will inject energy into the simplified acrobot whose
 limbs are massless rods of equal length, with equal masses at the tips.
 We then performed simulations and physical experiments on a real acrobot robot.
 These demonstrated that virtual nonholonomic constraints are capable of
-injecting and dissipating energy in a robust manner, all while producing
+injecting and dissipating energy in a robust manner, while producing
 realistic biologically-inspired motion.
 
 %---------- Bibliography ----------%
