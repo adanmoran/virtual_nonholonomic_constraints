@@ -1804,20 +1804,20 @@ on \(\mathcal{O}_1\) for \(I \in [-I^\star,0[\).
 
 We have proved that any acrobot constrained by 
 our VNHC \eqref{eqn:acrobot-constraint} gains/loses energy on \(\mathcal{O}_1\).
-We must now confirm that the acrobot will start rotating:
-the definition of energy gain states that all orbits initialized in
+We must now confirm that the acrobot will begin rotating, 
+i.e., that for \(I > 0\) almost every orbit initialized in \(\mathcal{O}_1\)
+will reach the line \(|q_u| = \pi\).
+Since the definition of energy gain only guarantees that orbits initialized in
 \(\mathcal{O}_1\) will escape compact subsets of \(\mathcal{O}_1\) in finite
-time, which is not enough to conclude that these orbits will also escape the
-boundary of \(\mathcal{O}_1\) in finite time.
+time, we must first prove that almost every orbit in \(\mathcal{O}_1\) will
+escape \(\mathcal{O}_1\) through its boundary, the level set \(E_\pi\) with
+energy \(E(\pi,0)\).
 
-Let \(E_\pi\) be the level set with energy \(E(\pi,0)\), 
-which forms the boundary of \(\mathcal{O}_1\). 
 Define \(\bar{\mathcal{O}}_1 = \mathcal{O}_1 \cup E_\pi\) to be the closure of
 \(\mathcal{O}_1\).
 An orbit of the acrobot will only begin rotating if it escapes
 \(\bar{\mathcal{O}}_1\) by crossing through \(E_\pi\), and eventually remains
 outside this set.
-
 Taking the Jacobian of the constrained dynamics
 ~\eqref{eqn:acrobot-constrained-dynamics} at the upright equilibrium 
 \((q_u,p_u) = (\pi,0)\) yields
@@ -1845,15 +1845,17 @@ Using \(x(t) := (q_u(t),p_u(t))\) as shorthand, let
 Suppose by way of contradiction that the orbit \(x(\R)\) is confined within 
 \(\bar{\mathcal{O}}_1\), and does not exit through \(E_\pi\) into the rotation
 zone.
-Since \(\bar{\mathcal{O}}_1\) is compact, the Birkhoff Theorem \cite{birkhoff}
-implies:
-\begin{itemize}
-    \item The positive limit set \(L_+\) of \(x(t)\) is non-empty, compact, and
-        invariant.
-    \item The solution \(x(t)\) asymptotically tends to \(L_+\).
-\end{itemize}
-Since the acrobot gains energy on \(\mathcal{O}_1\), the positive limit set of
-\(x(t)\) must be the largest invariant subset of \(E_\pi\). 
+%Since \(\bar{\mathcal{O}}_1\) is compact, the Birkhoff Theorem \cite{birkhoff}
+%implies:
+%\begin{itemize}
+%    \item The positive limit set \(L_+\) of \(x(t)\) is non-empty, compact, and
+%        invariant.
+%    \item The solution \(x(t)\) asymptotically tends to \(L_+\).
+%\end{itemize}
+Since the acrobot gains energy on \(\mathcal{O}_1\) and \(\bar{\mathcal{O}}_1\)
+is compact, the Birkhoff Theorem \cite{birkhoff} implies that
+the solution \(x(t)\) asymptotically tends to the positive limit set, which is
+the largest invariant subset of \(E_\pi\).
 Taking the limit as \(r \to \pi\) of
 \eqref{eqn:theta-dot-nom-osc}--\eqref{eqn:theta-dot-limit},
 we get \(\dot{\theta} \geq 0\) on \(E_\pi\) with equality if and only if
@@ -1869,14 +1871,34 @@ Hence, \(x(t)\) converges to \((\pi,0)\), so \(x(0) \in \Pi^+\).
 Since \(\Pi^+\) is a set of measure zero in \(\SxR\), almost every orbit
 initialized in \(\mathcal{O}_1\) must escape at least once through \(E_\pi\)
 into the rotation domain.
-Moreover, almost every orbit must eventually remain outside
-\(\bar{\mathcal{O}}_1\).
-If not, the positive limit set would once again be
-\(E_\pi\); by the same argument as above, that orbit would be in \(\Pi^+\).
+
+Using this fact, we now prove that almost every orbit in \(\mathcal{O}_1\) will
+cross the line \(|q_u| = \pi\).
+Let \(x(0) \in \mathcal{O}_1 \backslah \Pi^+\) and suppose that the orbit
+\(x([0,\infty[)\) does not hit the line \(|q_u| = \pi\).
+This orbit must remain in the compact set \(\Sone \times [-K,K]\) for some 
+\(K > 0\).
+Indeed, suppose otherwise.
+Then for arbitrary \(K > 0\), there exists some \(t_K > 0\) such that
+\(|p_u(t_K)| = K\), and there exists a \(t_{K/2}\) so that
+\(|p_u(t)| >= K/2\) for \(t \in [t_K, t_K + t_{K/2}]\).
+Looking at the constrained dynamics \eqref{eqn:acrobot-constrained-dynamics} in
+this timespan, we see that \(\dot{p}_u \geq -3mgl\) and
+\(\dot{q}_u \geq c_1 p_u + c_2 \geq c_1 K/2 + c_2\) for some constants
+\(c_1, c_2 > 0\).
+Picking \(K\) large enough guarantees that \(q_u\) covers a distance of \(2\pi\)
+over this time interval, and so the orbit hits the line \(|q_u| = \pi\)
+(thus providing a contradiction).
+
+Thus, the orbit \(x(t)\) remains within the compact set \(\Sone \times [-K,K]\).
+By the Birkhoff theorem, \(x(t)\) approaches a positive limit set, which is
+either a closed orbit or the equilibrium \((\pi,0)\).
+
+TODO: closed orbit case
 
 We conclude that almost all orbits beginning in \(\mathcal{O}_1\) will, in
-finite time, escape the closure of \(\mathcal{O}_1\) and remain in the rotation
-domain forever after.
+finite time, escape the closure of \(\mathcal{O}_1\) and begin rotating by
+crossing the vertical line \(|q_u| = \pi\).
 
 \subsection{Energy Gain on \(\mathcal{O}_2(\rho)\)}
 Since \(\mathcal{O}_2(\rho) = \bar{\mathcal{O}}_1 \cup \mathcal{R}(\rho)\)
