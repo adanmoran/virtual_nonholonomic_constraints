@@ -1631,10 +1631,12 @@ Theorem \ref{thm:acrobot-energy-stabilization}.
     and \(I \in [-I_2,I_2]\).
     Taking this fact alongside the assumption that \(S(r_0) \geq \epsilon\),
     we find a lower bound \(r_{n+1} \geq r_n + I\epsilon - \kappa I^2\).
-    Choosing \(\gamma > 0\) and \(I^\star \in \, ]0,I_2]\) small enough makes 
-    \(I\epsilon - \kappa I^2 \geq \gamma\) for all \(I \in \, ]0,I^\star]\).
+    Let \(0 < I^\star < \min\{I_2, \epsilon/\kappa\}\).
+    Then for each \(I \in ]0,I^\star]\), the value 
+    \(\gamma := I\epsilon - \kappa I^2\) is strictly positive, so
+    \(P(r_0) \geq r_0 + \gamma\).
     Therefore, \(r_{n} \geq r_0 + n\gamma\), 
-    so all solutions of \eqref{eqn:r-discrete} eventually flow past
+    and all solutions of \eqref{eqn:r-discrete} eventually flow past
     \(\overline{r}\).
     We conclude that, for \(I \in \, ]0, I^\star]\), the constrained dynamics gain
     energy on \(D\).
@@ -1792,7 +1794,7 @@ The origin is therefore a repeller, which means there exists some
 invariant for \eqref{eqn:r-discrete}, and all solutions in this
 interval flow through \(r = \mu\).
 Hence, all orbits in \(\mathcal{O}_1\) near the
-origin will gain energy up to \(E(\mu,0)\).
+origin will gain energy up to (and including) \(E(\mu,0)\).
 
 Since there exists \(I_1(\mu)\) so that the acrobot gains energy on \(D_\mu\),
 taking \(I^\star = \min\{I_0,I_1(\mu)\}\) means the acrobot will gain energy on
@@ -1874,31 +1876,50 @@ into the rotation domain.
 
 Using this fact, we now prove that almost every orbit in \(\mathcal{O}_1\) will
 cross the line \(|q_u| = \pi\).
-Let \(x(0) \in \mathcal{O}_1 \backslah \Pi^+\) and suppose that the orbit
+Let \(x(0) \in \mathcal{O}_1\) and suppose that the orbit
 \(x([0,\infty[)\) does not hit the line \(|q_u| = \pi\).
-This orbit must remain in the compact set \(\Sone \times [-K,K]\) for some 
-\(K > 0\).
-Indeed, suppose otherwise.
+We claim that this orbit must remain in the compact set 
+\(\Sone \times [-K,K]\), for some \(K > 0\).
+By contradiction, suppose otherwise.
 Then for arbitrary \(K > 0\), there exists some \(t_K > 0\) such that
-\(|p_u(t_K)| = K\), and there exists a \(t_{K/2}\) so that
-\(|p_u(t)| >= K/2\) for \(t \in [t_K, t_K + t_{K/2}]\).
-Looking at the constrained dynamics \eqref{eqn:acrobot-constrained-dynamics} in
-this timespan, we see that \(\dot{p}_u \geq -3mgl\) and
-\(\dot{q}_u \geq c_1 p_u + c_2 \geq c_1 K/2 + c_2\) for some constants
-\(c_1, c_2 > 0\).
-Picking \(K\) large enough guarantees that \(q_u\) covers a distance of \(2\pi\)
-over this time interval, and so the orbit hits the line \(|q_u| = \pi\)
-(thus providing a contradiction).
+\(|p_u(t_K)| = K\). 
+Looking at the constrained dynamics \eqref{eqn:acrobot-constrained-dynamics},
+we see that \(\dot{p}_u \geq -3mgl\) and
+\(\dot{q}_u \geq c_1 p_u + c_2\) for some constants \(c_1,c_2 > 0\).
+This implies there exists a \(t_{1/2} > 0\) (independent of \(K\)) 
+where
+\(|p_u(t)| >= K/2\) for \(t \in [t_K, t_K + t_{1/2}]\),
+and \(\dot{q}_u \geq c_1 K/2 + c_2\) on this interval.
+Picking \(K\) large enough guarantees \(q_u(t)\) covers a distance of \(2\pi\)
+over this time interval, and so the orbit must hit the line \(|q_u| = \pi\).
+Contradiction.
 
-Thus, the orbit \(x(t)\) remains within the compact set \(\Sone \times [-K,K]\).
-By the Birkhoff theorem, \(x(t)\) approaches a positive limit set, which is
-either a closed orbit or the equilibrium \((\pi,0)\).
+Thus, the orbit must \(x(t)\) remain within the compact set 
+\(\Sone \times [-K,K]\).
+By the Birkhoff theorem, \(x(t)\) approaches a positive limit set \(L^+\), 
+which is either an invariant closed orbit which crosse the \(q_u\)-axis, 
+or the set \(\{(\pi,0)\}\).
+By contradiction, suppose \(L^+\) is a closed orbit which 
+hits the \(q_u\)-axis at \(\bar{q} < \pi\).
+Since \(]0,\mu]\) is negatively invariant for \eqref{eqn:r-discrete}, 
+we must have \(\bar{q} \in ]\mu,\pi[\).
+The Poincar\'{e} map \eqref{eqn:poincare-map} is smooth on \(]0,\pi[\), and its
+image contains \(\bar{q}\), so \(P^{-1}(\bar{q}) \neq \emptyset\).
+Take \(q^\prime \in P^{-1}(\bar{q})\). 
+If \(q^\prime \in ]0,\mu]\), then \(q^\prime < \bar{q}\).
+If \(q^\prime > \mu\), then we know 
+from the proof of Lemma \ref{lemma:energy-regulation-D} that
+\(P(q^\prime) = \bar{q} \geq q^\prime + \gamma\) for some \(\gamma > 0\), 
+so \(q^\prime \leq \bar{q} - \gamma < \bar{q}\).
+Since \(q^\prime < \bar{q}\), the orbit starting at \(q^\prime\) stays within
+\(\mathcal{O}_1\) and intersects the closed orbit at \(\bar{q}\).
+This violates uniqueness of solutions for the constrained dynamics,
+so \(L^+\) must be \(\{(\pi,0)\}\), which in turn implies that 
+\(x(0) \in \Pi^+\).
 
-TODO: closed orbit case
-
-We conclude that almost all orbits beginning in \(\mathcal{O}_1\) will, in
-finite time, escape the closure of \(\mathcal{O}_1\) and begin rotating by
-crossing the vertical line \(|q_u| = \pi\).
+We conclude that almost all orbits beginning in \(\mathcal{O}_1\) will
+escape the closure of \(\mathcal{O}_1\) and, in finite time, 
+begin rotating by crossing the vertical line \(|q_u| = \pi\).
 
 \subsection{Energy Gain on \(\mathcal{O}_2(\rho)\)}
 Since \(\mathcal{O}_2(\rho) = \bar{\mathcal{O}}_1 \cup \mathcal{R}(\rho)\)
