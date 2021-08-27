@@ -1790,7 +1790,7 @@ Taking \(I^\star = \min\{I_0,I_1(\mu)\}\), the acrobot will gain energy on
 \(\mathcal{O}_1\) for \(I \in \, ]0,I^\star]\) and lose energy 
 for \(I \in [-I^\star,0[\).
 
-\subsection{All acrobots will rotate}
+\subsection{All Acrobots Rotate}
 
 We have proven that any acrobot constrained by 
 our VNHC \eqref{eqn:acrobot-constraint} will gain (or lose) energy on
@@ -1862,28 +1862,28 @@ into the rotation domain.
 Using this fact, we now prove that almost every orbit in \(\mathcal{O}_1\) will
 cross the line \(|q_u| = \pi\).
 Let \(x(0) \in \mathcal{O}_1\) and suppose that the orbit
-\(x([0,\infty[)\) does not hit the line \(|q_u| = \pi\).
+\(x(t)\) does not hit the line \(|q_u| = \pi\).
 We claim that this orbit must remain in the compact set 
 \(\Sone \times [-K,K]\), for some \(K > 0\).
 Suppose otherwise;
 then for arbitrary \(K > 0\), there exists some \(t_K > 0\) such that
 \(|p_u(t_K)| = K\). 
-Looking at the constrained dynamics \eqref{eqn:acrobot-constrained-dynamics},
-we see that \(\dot{p}_u \geq -3mgl\) and
-\(\dot{q}_u \geq c_1 p_u + c_2\) for some constants \(c_1,c_2 > 0\).
+From \eqref{eqn:acrobot-constrained-dynamics},
+we see that \(-3mgl \leq \dot{p}_u \leq 3mgl\) and
+\(\dot{q}_u \geq c_1 p_u - c_2\) for some constants \(c_1,c_2 > 0\).
 This implies there exists a \(t_{1/2} > 0\) (independent of \(K\)) 
 where
 \(|p_u(t)| >= K/2\) 
-and \(\dot{q}_u \geq c_1 K/2 + c_2\) 
+and \(|\dot{q}_u(t)| \geq c_1 K/2 - c_2\) 
 for \(t \in [t_K, t_K + t_{1/2}]\).
 Picking \(K\) large enough guarantees \(q_u(t)\) covers a distance of \(2\pi\)
 over this time interval, so the orbit would hit the line \(|q_u| = \pi\).
 
-If the orbit \(x(t)\) does not hit the line \(|q_u| = \pi\), we now know it must
-remain within the compact set \(\Sone \times [-K,K]\).
+We now know that if \(x(t)\) does not hit the line \(|q_u| = \pi\),
+it must remain within the compact set \(\Sone \times [-K,K]\).
 By the Birkhoff theorem, \(x(t)\) approaches a positive limit set \(L^+\), 
 which is either the upright equilibrium \(\{(\pi,0)\}\), or
-a closed orbit not fully contained in \(\mathcal{O}_1\)
+a closed orbit (not fully contained in \(\mathcal{O}_1\))
 which crosses the positive \(q_u\)-axis at some point \(\bar{q} < \pi\).
 Suppose \(L^+\) is the latter.
 Since \(]0,\mu]\) is negatively invariant for \eqref{eqn:r-discrete}, 
