@@ -1466,29 +1466,30 @@ external disturbances.
 %/========== Proof ==========/%
 \section{Proof of Theorem \ref{thm:acrobot-energy-stabilization}}\label{sec:proof}
 In this section we prove Theorem \ref{thm:acrobot-energy-stabilization},
-which claims the acrobot gains/loses energy on \(\mathcal{O}_1\) and
-\(\mathcal{O}_2(\rho)\).
-These are the sublevel sets \eqref{eqn:oscillation-domain} and
-\eqref{eqn:o-rhobar} of the nominal pendulum's energy \(E(q_u,p_u)\) defined in
-\eqref{eqn:nominal-energy}.
+which claims the acrobot constrained by the VNHC \eqref{eqn:acrobot-constraint}
+will gain or lose energy on \(\mathcal{O}_1\) and \(\mathcal{O}_2(\rho)\) for
+``small enough" values of \(I\).
+%These are the sublevel sets \eqref{eqn:oscillation-domain} and
+%\eqref{eqn:o-rhobar} of the nominal pendulum's energy \(E(q_u,p_u)\) defined in
+%\eqref{eqn:nominal-energy}.
 
-Here is fundamental idea behind this proof:
+Here is intuition behind this proof:
 for each of \(\mathcal{O}_1\) and \(\mathcal{O}_2(\rho)\),
-we can find a diffeomorphism \(T(q_u,p_u) = (r,\theta)\) into pseudo-polar
-coordinates adapted to level sets of \(E(q_u,p_u)\);
+we can find a diffeomorphism from \((q_u,p_u)\) into pseudo-polar
+coordinates \((r,\theta)\) adapted to level sets of \(E(q_u,p_u)\);
 that is, when \(I = 0\) in \eqref{eqn:acrobot-constraint}, the pseudo-radius
 \(r\) chooses a level set of \(E\) and the pseudo-angle \(\theta\) chooses a
 point on that level set.
-If the constrained dynamics in \((r,\theta)\) coordinates flow in such a way
-that \(r\) increases ``on average", then \(E\) must also increase ``on average",
-and the original constrained dynamics \eqref{eqn:acrobot-constrained-dynamics} 
-must be gaining energy on the domain of the diffeomorphism.
+We will show that \(r(t)\) increases ``on average", 
+which implies \(E\) also increases ``on average",
+and that the original constrained dynamics \eqref{eqn:acrobot-constrained-dynamics} 
+are gaining energy on the domain of the diffeomorphism.
 
-The following lemma provides a set of conditions on the \((r,\theta)\) dynamics
-under which energy will increase on a domain \(D\); later in this section, we
-will assign \(D \subset \mathcal{O}_1\) or \(D \subset \mathcal{O}_2(\rho)\),
-find the diffeomorphism \(T\), and apply this lemma to prove the claims in
-Theorem \ref{thm:acrobot-energy-stabilization}.
+The following lemma provides a set of conditions on the \((r,\theta)\)-dynamics
+under which energy will increase on a domain \(D \subset \SxR\); later in this section, we
+will assign \(D \subset \mathcal{O}_1\) or \(D \subset \mathcal{O}_2(\rho)\)
+and apply this lemma to prove the claims in Theorem
+\ref{thm:acrobot-energy-stabilization}.
 
 %Here is the summary of this proof: for certain subsets
 %\(D \subset \SxR\), one can find a change of coordinates into 
@@ -1600,7 +1601,7 @@ Theorem \ref{thm:acrobot-energy-stabilization}.
     This map is 
     \begin{align}\label{eqn:poincare-map}
         P : \, ]\underline{r},\overline{r}[ &\to \mathbb{R}_{\geq 0} \\
-        r_0 &\mapsto \hat{r}(2\pi,r_0,I)
+        r_0 &\mapsto \hat{r}(2\pi,r_0,I) \nonumber
         ,
     \end{align}
     which expands to \(P(r_0) = r_0 + IS(r_0) + R(2\pi,r_0,I)\).
@@ -1616,8 +1617,11 @@ Theorem \ref{thm:acrobot-energy-stabilization}.
 %    when an orbit of \((r,\theta)\) hits \(L\) for the the \(n^\text{th}\) time,
 %    assuming the acrobot was initialized at \((r,\theta) = (r_0,0)\).
 
-    If at any point in discrete time \(r_n\) exits \(]\underline{r},\overline{r}[\), the orbit 
-    in \((q_u,p_u)\) coordinates must have departed \(D\).
+    If \(r_{n+1}\in \, ]\underline{r},\overline{r}[\), the orbit 
+    \((q_u(t),p_u(t))\) starting at \(T^{-1}(r_n,0)\) remained in \(D\) as
+    \(\theta\) increased by \(2\pi\) and
+    landed at \(T^{-1}(r_{n+1},2\pi)\); otherwise, this orbit exited
+    \(D\)  before \(\theta\) reached \(2\pi\).
     Hence, proving the constrained dynamics gain energy on \(D\) is
     equivalent to finding \(N \in \mathbb{Z}_{> 0}\) such that 
     \(r_{n} \geq \overline{r}\) for all \(n \geq N\).
@@ -1631,7 +1635,7 @@ Theorem \ref{thm:acrobot-energy-stabilization}.
     Taking this fact alongside the assumption that \(S(r_0) \geq \epsilon\),
     we find a lower bound \(r_{n+1} \geq r_n + I\epsilon - \kappa I^2\).
     Let \(0 < I^\star < \min\{I_2, \epsilon/\kappa\}\).
-    Then for each \(I \in ]0,I^\star]\), the value 
+    Then for each \(I \in \, ]0,I^\star]\), the value 
     \(\gamma := I\epsilon - \kappa I^2\) is strictly positive, so
     \(P(r_0) \geq r_0 + \gamma\).
     Therefore, \(r_{n} \geq r_0 + n\gamma\), 
@@ -1648,7 +1652,7 @@ Theorem \ref{thm:acrobot-energy-stabilization}.
 
 \subsection{Energy Gain on \(\mathcal{O}_1\)}\label{sec:proof-o1}
 To prove the first part of Theorem
-\ref{thm:acrobot-energy-stabilization}, we use
+\ref{thm:acrobot-energy-stabilization}, we apply
 \cite[Eqn. (9)]{dynamic_vhcs_stabilize_closed_orbits} to find 
 pseudo-polar coordinates adapted to level sets of \(E\) on
 \(\mathcal{O}_1 \backslash \{(0,0)\}\).
@@ -1676,8 +1680,8 @@ where for shorthand we write \(c_\theta := \cos(\theta)\), \(s_\theta :=
 \sin(\theta)\), \(c_r := \cos(r)\), and \(s_r := \sin(r)\).
 We now verify these pseudo-polar coordinates satisfy the requirements of 
 Lemma \ref{lemma:energy-regulation-D}.
-We omit the expressions for \(f_r(\theta,r,I)\) and \(f_\theta(\theta,r,I)\), as
-they are too long for print.
+Note: we omit the expressions for \(f_r(\theta,r,I)\) and
+\(f_\theta(\theta,r,I)\) as they are too long for print.
 
 It is straightforward to show that
 \(f_r(\theta,r,0) \equiv 0\)
@@ -1688,7 +1692,7 @@ and
             {r^2 s_\theta^2}}
     .
 \end{equation}
-Note that ~\eqref{eqn:theta-dot-nom-osc} has removable singularities at
+Observe that ~\eqref{eqn:theta-dot-nom-osc} has removable singularities at
 \(\theta \in \{0,\pi\}\).
 Taking the limit as \(\theta\) approaches these points yields
 \begin{equation}\label{eqn:theta-dot-limit}
@@ -1728,7 +1732,7 @@ hence, there exists \(\epsilon > 0\) such that
 \(S(r_0) := \int_0^{2\pi} b(\sigma,r_0)d\sigma \geq \epsilon\)
 if and only if there exists \(\delta > 0\) such that 
 \(Q(r_0) := \int_0^{2\pi} a(\sigma,r_0) d\sigma \geq \delta\)
-for every \(r_0 \in ]0,\pi[\). 
+for every \(r_0 \in \,]0,\pi[\). 
 
 Unfortunately, this latter statement is not true.
 The plot of \(Q(r_0)\) for \(r_0 \in [10^{-10}, \pi - 10^{-3}]\) is shown in
@@ -1767,13 +1771,13 @@ Hence, it can be written in the form
 zero at \(I = 0\).
 Thus, there exists \(I_0 > 0\) such that 
 \(I K Q^\prime(0) + I^2 \tilde{R}(I) > 0\) for all \(I \in \, ]0,I_0]\),
-which implies \(P^\prime(0) > 1\).
-The origin is now a repeller, which means there exists some
+which implies \(P^\prime(0) > 1\) for all \(I \in \, ]0,I_0]\).
+This means the origin is a repeller, so there exists some
 (unknown) \(\mu > 0\) where \(]0,\mu]\) is negatively
 invariant for \eqref{eqn:r-discrete}, and all solutions in this
 interval flow through \(r = \mu\).
 If \(I < 0\), we have \(P^\prime(0) < 1\) and the origin is an
-asymptotically stable equilibrium for \eqref{eqn:r-discrete} instead.
+asymptotically stable equilibrium for \eqref{eqn:r-discrete}.
 
 Let \(E_{\leq\mu}\) be the sublevel set of the energy \(E(\mu,0)\).
 Since there exists \(\delta_\mu > 0\) such that \(Q(r_0) \geq \delta_\mu\) 
