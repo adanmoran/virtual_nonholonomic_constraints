@@ -239,11 +239,7 @@ The acrobot's configuration is described in generalized coordinates
 \((q_u,q_a)\) on the configuration manifold 
 \(\mathcal{Q} = \Sone \times \Sone\), where \(q_u\) is unactuated and 
 \(q_a\) is actuated.
-A real gymnast cannot swing their legs in full circles, though they
-are usually flexible enough to raise them parallel to the floor;
-hence, we assume the leg angle \(q_a\) lies in \([-Q_a, Q_a]\) for some
-\(Q_a \in [\frac{\pi}{2}, \pi[\). 
-We also ignore any dissipative forces.
+We ignore dissipative forces in this model.
 
 The acrobot has inertia matrix 
 \(M\), potential function \(V\) (with respect to
@@ -263,7 +259,7 @@ the horizontal bar), and input matrix \(B\) given as follows:
     B &= [0;1]
     .
 \end{align}
-For reasons that will become clear in later sections of this article, we will
+For reasons that will become clear later in this article, we
 use Hamiltonian mechanics to derive the dynamics of the acrobot. 
 For this we require the conjugate of momenta, \(p = (p_u,p_a) = M(q)\dot{q}\).
 The dynamics of the acrobot in \((q,p)\) coordinates are given in
@@ -440,7 +436,7 @@ Since \(B\) is constant, such a \(B^\perp\) exists and
 \(\mathbf{B}\) is invertible.
 
 The following theorem requires that \(\mathcal{Q} = \R^n\) so that the
-transformation \(\tilde{q} = \mathbf{B}q\) is well defined.
+coordinate transformation is well defined.
 
 \begin{thm}\label{thm:simply-actuated}
     Take the Hamiltonian system \eqref{eqn:hamiltonian} with configuration
@@ -779,7 +775,7 @@ from their center of mass to the pivot and adding more energy to the swing
 
 Now imagine the person's torso is affixed to the swing's rope so they are
 always upright. 
-Imagine further that the swing has no seat at all, allowing the person to extend
+Imagine further that the swing has no seat, allowing the person to extend
 their legs beneath them. 
 This position is identical to that of a gymnast on a bar.
 
@@ -787,11 +783,16 @@ The acrobot's legs are rigid rods which cannot retract, so we emulate the person
 on a swing by pivoting the legs toward the direction of motion. 
 Since a person lifts their legs higher at faster speeds, the acrobot's legs should
 pivot to an angle proportional to the swing's speed.
+A real gymnast cannot swing their legs in full circles, though they
+are usually flexible enough to raise them parallel to the floor;
+hence, the VNHC must restrict the leg angle \(q_a\) 
+to lie in \([-Q_a, Q_a]\) for some \(Q_a \in [\frac{\pi}{2}, \pi[\). 
 Because the direction of motion is entirely determined by \(p_u\), 
 one VNHC which emulates this process is \(q_a = \bar{q}_a\arctan( I p_u)\),
 displayed in Figure \ref{fig:qa-arctan}.
 Here, \(\bar{q}_a \in \, ]0,2 Q_a/\pi]\) and \(I \in \R\) are 
 design parameters.
+
 This constraint does not perfectly recreate giant motion, during which
 the gymnast's legs are almost completely extended \cite{usagym_giant}.
 It instead pivots the legs partially during rotations.
@@ -1006,13 +1007,13 @@ supervisor changes which VNHC is enforced as follows:
         replacing \(I > 0\) with \(-I < 0\) in \eqref{eqn:acrobot-constraint}.
     \item If \((1-\delta)p_\text{des} \leq |p_u| \leq (1+\delta)p_\text{des}\),
         extend the leg fully by setting \(q_a = 0\).
-        For these simulations, we assume this can be done instantaneously,
-        though in practice this is impossible.
+        In simulation we assume this can be done instantaneously,
+        though in practice this takes time.
 \end{itemize}
-Note that all orbits of the acrobot must cross the \(p_u\) axis, 
+All orbits of the acrobot must cross the \(p_u\) axis, 
 so this method will stabilize a rotation even if the acrobot is initialized in
 \(\mathcal{O}_1\).
-Also, the above supervisor is designed to regulate a rotation rate, but it
+While the above supervisor is designed to regulate a rotation rate, it
 cannot regulate the rotation direction.
 
 The term ``rotation regulation" implies that one must choose
@@ -1101,7 +1102,7 @@ We can extend this idea to find the nominal pendulum associated with our
 physical acrobot, whose parameters are provided in Table
 \ref{tab:acrobot-parameters}.
 Setting \(I = 0\) in \eqref{eqn:acrobot-constraint} for this acrobot
-yields the following mechanical energy of the nominal pendulum:
+yields the mechanical energy of the nominal pendulum:
 \[
     E(q_u,p_u) \approx 396.5501 p_u^2 + 0.5997(1 - \cos(q_u))
     .
@@ -1366,7 +1367,7 @@ from noticeable phase lag.
 This also rate-limits the control signal to \(500\)Hz, which impacts any control
 implementation.
 
-Finally, The Dynamixel servo motor does not have a torque control mode; instead,
+Finally, the Dynamixel servo motor does not have a torque control mode; instead,
 we can assign the servo setpoint at iteration \(k \in \mathbb{Z}_{> 0}\)
 via \(q_a^{k} = \arctan(I p_u^{k-1})\).
 This negatively affects the stabilization to the constraint
@@ -1527,7 +1528,7 @@ and apply this lemma to prove the claims in Theorem
     yielding the new constrained dynamics \(\dot{r} = f_r(\theta,r,I)\),
     \(\dot{\theta} = f_\theta(\theta,r,I)\).
     Suppose that \(f_r(\theta,r,0) \equiv 0\) and \(f_\theta(\theta,r,0) > 0\).
-    Let \(g(\theta,r,I) = f_r(\theta,r,I)/f_\theta(\theta,r,I)\), and assume that 
+    Let \(g(\theta,r,I) := f_r(\theta,r,I)/f_\theta(\theta,r,I)\), and assume that 
     \((\partial g/\partial r)(\theta,r,0) \equiv 0\).
     Assume also that \(b(\theta,r) := (\partial g/\partial I)(\theta,r,0)\)
     is \(2\pi\)-periodic in \(\theta\),
@@ -1567,12 +1568,13 @@ and apply this lemma to prove the claims in Theorem
     \(r_0 \in \, ]\underline{r},\overline{r}[\) is the initial condition.
 
     Let \(\hat{r}(\theta,r_0,I)\) be the solution to \eqref{eqn:rhat-ode}.
-    Taking the Taylor expansion of this solution around \(I = 0\) we get
+    Taking the Taylor expansion of this solution around \(I = 0\) yields
     \(\hat{r}(\theta,r_0,I) = \hat{r}(\theta,r_0,0) + I\hat{r}_1(\theta,r_0) 
     + R(\theta,r_0,I)\). 
     Here, \(\hat{r}(\theta,r_0,0) \equiv r_0\) because
     \(g(\theta,\hat{r},0) \equiv 0\),
-    the function \(\hat{r}_1(\theta,r_0)\) is the solution to
+    the function \(\hat{r}_1(\theta,r_0)\) is the solution to the linear
+    time-varying ODE
     \begin{equation}\label{eqn:r1-hat-prime}
         \begin{cases}
         \hat{r}_1^\prime = 
@@ -1767,8 +1769,8 @@ One can show that
 Since \(R(2\pi,0,I)\) is \(O(I^2)\), so is
 \(R^\prime(2\pi,0,I)\).
 Hence, it can be written in the form
-\(R^\prime(2\pi,0,I) = I^2 \tilde{R}(I)\) where \(\tilde{R}(I)\) is smooth and
-zero at \(I = 0\).
+\(R^\prime(2\pi,0,I) = I^2 \tilde{R}(I)\) where \(\tilde{R}(I)\) is smooth,
+bounded, and zero at \(I = 0\).
 Thus, there exists \(I_0 > 0\) such that 
 \(I K Q^\prime(0) + I^2 \tilde{R}(I) > 0\) for all \(I \in \, ]0,I_0]\),
 which implies \(P^\prime(0) > 1\) for all \(I \in \, ]0,I_0]\).
