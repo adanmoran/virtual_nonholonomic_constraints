@@ -1,0 +1,48 @@
+%! TEX program = lualatex
+
+\documentclass[a4paper,12pt]{article}
+
+%/========== Preamble ==========/%
+%----------- Set Main Font ----------%
+\usepackage{times} % Times New Roman
+
+%----------- Choose Margins ----------%
+\usepackage[a4paper,margin=1.87cm]{geometry}
+
+%---------- Bibliography Style ----------%
+\usepackage[style=ieee,backend=biber]{biblatex}
+\addbibresource{bib.bib}
+
+%----------- Math Packages -----------%
+\usepackage{mathtools}
+
+%---------- Remove indenting from paragraphs ----------%
+% Also makes each new paragraph start with an vertical space.
+\usepackage[parfill]{parskip}
+
+%---------- Add name to Header ----------%
+\usepackage{atbegshi,picture}
+\AtBeginShipout{\AtBeginShipoutUpperLeft{%
+        \put(\dimexpr\paperwidth-5.5cm\relax,-1.2cm){\makebox{\setlength{\fboxrule}{0pt}\framebox{Adan
+        Moran-MacDonald}}}%
+}}
+
+%/========== Main Document ==========/%
+\begin{document}
+
+%---------- Title -----------%
+\subsection*{Part I: Contributions to Research and Development}
+\subsubsection*{d. Non-peer-reviewed Contributions}
+\textbf{Moran-MacDonald, A.}, \& Alajaji, F. (2018). The R\'{e}nyi Deterministic
+Information Bottleneck and Geometric Clustering. Unpublished technical report. 
+
+\subsection*{Part II: Most Significant Contributions to Research \& Development}
+
+\subsection*{Part III: Applicant's Statement}
+\subsubsection*{Research Experience}
+
+\subsubsection*{Relevant Activities}
+
+\end{document}
+
+% vim: set tw=80 ts=4 sw=4 sts=0 et ffs=unix :
