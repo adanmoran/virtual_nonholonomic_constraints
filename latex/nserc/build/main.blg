@@ -1,0 +1,15 @@
+[0] Config.pm:340> INFO - This is Biber 2.4
+[0] Config.pm:343> INFO - Logfile is 'build/main.blg'
+[54] biber:287> INFO - === Fri Sep 10, 2021, 11:43:47
+[205] Biber.pm:348> INFO - Reading 'build/main.bcf'
+[408] Biber.pm:742> INFO - Found 10 citekeys in bib section 0
+[419] Biber.pm:3151> INFO - Processing section 0
+[462] Biber.pm:3308> INFO - Looking for bibtex format file 'bib.bib' for section 0
+[498] bibtex.pm:1113> INFO - Decoding LaTeX character macros into UTF-8
+[521] bibtex.pm:974> INFO - Found BibTeX data source 'bib.bib'
+[777] UCollate.pm:65> INFO - Overriding locale 'en-US' defaults 'normalization = NFD' with 'normalization = prenormalized'
+[777] UCollate.pm:65> INFO - Overriding locale 'en-US' defaults 'variable = shifted' with 'variable = non-ignorable'
+[777] Biber.pm:3028> INFO - Sorting list 'none/global' of type 'entry' with scheme 'none' and locale 'en-US'
+[777] Biber.pm:3032> INFO - No sort tailoring available for locale 'en-US'
+[806] bbl.pm:519> INFO - Writing 'build/main.bbl' with encoding 'UTF-8'
+[881] bbl.pm:615> INFO - Output to build/main.bbl

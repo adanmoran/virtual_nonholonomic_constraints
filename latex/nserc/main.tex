@@ -20,16 +20,24 @@
 % Also makes each new paragraph start with an vertical space.
 \usepackage[parfill]{parskip}
 
+%---------- Add name to Header ----------%
+\usepackage{atbegshi,picture}
+\AtBeginShipout{\AtBeginShipoutUpperLeft{%
+        \put(\dimexpr\paperwidth-5.5cm\relax,-1.2cm){\makebox{\setlength{\fboxrule}{0pt}\framebox{Adan
+        Moran-MacDonald}}}%
+}}
+
 %/========== Main Document ==========/%
 \begin{document}
 
 %---------- Title -----------%
-\title{Ontario Graduate Scholarship: Plan of Study}
-\author{Adan Moran-MacDonald}
+\title{Energy Regulation for Biologically-inspired Robotics}
+\author{}
 \date{}
 \maketitle
 
 %---------- Main Content ----------%
+\vspace{-1cm}
 \begin{large}
 \textbf{Background}
 \end{large}
