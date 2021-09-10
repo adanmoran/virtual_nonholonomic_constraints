@@ -36,25 +36,39 @@
 \date{}
 \maketitle
 
+\vspace{-1cm} % Move the following text up
+\textbf{What is your area of research? What sort of problems do you want to
+    address? WHy is the area important, and why are the applications important?
+    What is special about your approach, and how is it different from
+    existing/competing approaches? What is a sample application of the outcomes
+of your thesis?}
+
 %---------- Main Content ----------%
-\vspace{-1cm}
 \begin{large}
 \textbf{Background}
 \end{large}
 
-When a gymnast on a horizontal bar wants to swing up to do backflips, they
-typically perform a technique called a ``giant".
-This technique involves the gymnast swinging their legs based on their current
-speed and position, thereby generating enough momentum to rotate around the bar
-\cite{pendulum_length_giant_gymnastics}.  
+When a gymnast wants to do backflips around a horizontal bar, they start by
+performing a technique called a ``giant" \cite{usagym_giant}. 
+The gymnast swings their legs based on their current speed and position, thereby
+generating enough momentum to rotate around the bar.
 
-Standard practice in robotics begins with finding a trajectory over time
-replicating a desired behaviour, then using the robot's actuators to track this
-time-based trajectory. 
-While this often works for simple systems, it can cause timing delays, it is not
-robust to external disturbances, and it is not what humans do.
-A more natural approach is to constrain the robot's actuators according to
-some function of speed and position.
+Now imagine the gymnast is a robot, and their creator is teaching them to act
+like a human.
+If the roboticist had studied classical control theory, they would plot a
+human gymnast's hip angle as a trajectory over time and tell the robot to synchronize
+its legs with this trajectory.
+While this approach often works for simple systems, it is not great for
+biologically-inspired robots: it can cause timing delays, it is not robust to
+many external disturbances, and it is \textit{not what humans do}.
+After all, human gymnasts do not have an internal stopwatch telling them when to
+extend or retract their legs.
+Instead, existing research suggests that human gymnasts actually move their legs
+as a function of their body angle and velocity
+\cite{pendulum_length_giant_gymnastics}.
+Rather than using time-based motion, a clever roboticist would attempt to
+emulate this more natural human behaviour.
+% by driveing robot's legs according to some function of its torso speed and position.
 This type of behaviour is well described by the method of virtual constraints.
 
 There are two types of constraints on a mechanical system:
@@ -62,11 +76,10 @@ There are two types of constraints on a mechanical system:
 but not fly),
 while \textit{nonholonomic} constraints restrict position and
 velocity (e.g. cars cannot slide sideways).
-One can design a specific constraint for a robot and enforce it using the
-actuators.
+One can design a constraint they want their robot to satisfy and enforce it
+using the robot's actuators.
 Since this constraint is not enforced by physics, it is known as a ``virtual"
-constraint
-\cite{vhcs_for_el_systems}.
+constraint \cite{vhcs_for_el_systems}.
 Virtual holonomic constraints (VHCs) have been used to control walking robots
 \cite{stable-walking}, autonomous bicycles \cite{bicycle},
 gymnastics robots \cite{xingbo-thesis}, and snake robots \cite{snake-robot}.
@@ -79,8 +92,8 @@ applications.
 
 Virtual constraints have proven useful for generating biologically-inspired
 behaviour in robotic systems.
-In my master's thesis, I demonstrated that VNHCs can also inject energy into
-robots:
+In my master's thesis, I demonstrated that VNHCs can inject/dissipate energy
+into/from robots:
 I designed a VNHC which enabled a gymnastics robot to gain energy
 and perform backflips on a horizontal bar \cite{my-thesis}.
 Using VNHCs for \textit{energy injection} is beneficial because it allows robots to
@@ -90,11 +103,17 @@ safely slow down in a realistic and reliable manner.
 
 We propose to study the energy injection and dissipation properties of VNHCs.
 First, we will find mathematical conditions under which VNHCs are guaranteed to
-inject/dissipate energy in abstract mechanical systems.
-Then we will design a means of safely transitioning between two different VNHCs.
-Finally, we will test the theory on a gymnastics robot by designing a gymnastics
+inject/dissipate energy in arbitrary mechanical systems.
+Then we will design a means of transitioning between two different VNHCs,
+enabling us to regulate energy in a provably safe manner.
+Finally, we will test the theory on two robots: a gymnastics robot and a robotic
+monkey.
+For the gymnastics robot (which is already built), we will design a gymnastics
 routine which is performed solely by transitioning between different virtual
 constraints.
+After this, we will build the robotic monkey and design virtual constraints
+which allow it to swing on monkey bars, just like real monkeys swing through
+trees.
 
 The advancements in mathematics from this research will bring improvements to
 the control of autonomous systems. 
