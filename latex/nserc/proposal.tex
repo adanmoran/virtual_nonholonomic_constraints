@@ -37,11 +37,15 @@
 \maketitle
 
 \vspace{-1cm} % Move the following text up
-\textbf{What is your area of research? What sort of problems do you want to
-    address? WHy is the area important, and why are the applications important?
-    What is special about your approach, and how is it different from
-    existing/competing approaches? What is a sample application of the outcomes
-of your thesis?}
+%\textbf{What is your area of research? What sort of problems do you want to
+%    address? WHy is the area important, and why are the applications important?
+%    What is special about your approach, and how is it different from
+%    existing/competing approaches? What is a sample application of the outcomes
+%of your thesis?}
+%\textbf{Detailed but concise. Provide background to position your research
+%    within current knowledge of the field. State significance of research to the
+%    field. Outline approach to be taken (citing literature). Clearly state
+%differences btwn masters and this work.}
 
 %---------- Main Content ----------%
 \begin{large}
@@ -53,74 +57,97 @@ performing a technique called a ``giant" \cite{usagym_giant}.
 The gymnast swings their legs based on their current speed and position, thereby
 generating enough momentum to rotate around the bar.
 
-Now imagine the gymnast is a robot, and their creator is teaching them to act
-like a human.
-If the roboticist had studied classical control theory, they would plot a
-human gymnast's hip angle as a trajectory over time and tell the robot to synchronize
+Now imagine the gymnast is a robot, and their creator is teaching them to
+perform giants like a human.
+If the roboticist had studied classical control theory, they would plot a human
+gymnast's leg angle as a trajectory over time and tell the robot to synchronize
 its legs with this trajectory.
-While this approach often works for simple systems, it is not great for
-biologically-inspired robots: it can cause timing delays, it is not robust to
-many external disturbances, and it is \textit{not what humans do}.
+While this is the standard approach in robotics, it is not appropriate for
+biologically-inspired robots: it is susceptible to timing delays, it is not
+robust to external disturbances, and it is \textit{not what humans do}.
 After all, human gymnasts do not have an internal stopwatch telling them when to
-extend or retract their legs.
+move their legs.
+%If our robot were pushed mid-swing, its legs would continue along the
+%time-based trajectory but the leg motion would desynchronize with
+%the swinging of the torso, making the robot slow down.
 Instead, existing research suggests that human gymnasts actually move their legs
 as a function of their body angle and velocity
-\cite{pendulum_length_giant_gymnastics}.
+\cite{pendulum_length_giant_gymnastics}. 
 Rather than using time-based motion, a clever roboticist would attempt to
-emulate this more natural human behaviour.
-% by driveing robot's legs according to some function of its torso speed and position.
-This type of behaviour is well described by the method of virtual constraints.
+emulate this natural human behaviour, which is well described by the method
+of virtual constraints.
 
 There are two types of constraints on a mechanical system:
 \textit{holonomic} constraints restrict position (e.g. a snake robot can slither
-but not fly),
-while \textit{nonholonomic} constraints restrict position and
-velocity (e.g. cars cannot slide sideways).
-One can design a constraint they want their robot to satisfy and enforce it
-using the robot's actuators.
-Since this constraint is not enforced by physics, it is known as a ``virtual"
-constraint \cite{vhcs_for_el_systems}.
+on the ground but cannot fly),
+while \textit{nonholonomic} constraints restrict both position and
+velocity (e.g. an autonomous car with normal wheels cannot slide sideways).
+It is often possible to use a robot's actuators to enforce a desired constraint
+which is engineered to achieve a safety or motion planning goal.
+Since this constraint is enforced by the robot's actuators, and not by the
+physics of the system, it is known as a ``virtual" constraint
+\cite{vhcs_for_el_systems}.
 Virtual holonomic constraints (VHCs) have been used to control walking robots
-\cite{stable-walking}, autonomous bicycles \cite{bicycle},
-gymnastics robots \cite{xingbo-thesis}, and snake robots \cite{snake-robot}.
-Virtual nonholonomic constraints (VNHCs) have been used for human-robot
-cooperation \cite{vnhc-human-robot-coop} and for improving robustness of walking
-robots \cite{vnhc-biped-robot,hybrid_zero_dynamics_bipedal_nhvcs}, among other
-applications.
+\cite{stable_walking}, autonomous bicycles \cite{bicycle},
+helicopters \cite{helicopter}, and snake robots \cite{snake_robot},
+among other applications.
+Unfortunately, VHCs cannot adequately recreate many animal behaviours.
+For example, they cannot perfectly recreate the giant motion of gymnastics 
+because they do not incorporate information about the gymnast's velocity
+\cite{xingbo_thesis}.
+This is where virtual nonholonomic constraints (VNHCs) are most useful.
+
+The modern concept of VNHCs was described by
+Griffin and Grizzle \cite{nhvc_dynamic_walking} in 2015, though there are
+references to preliminary versions going back as early as the year 2000
+\cite{vnhc_human_robot_coop}.
+VNHCs have been of most notable use in bipedal walking robots,
+where they show marked improvements in the robustness of walking gaits
+when compared to previous control techniques
+\cite{nhvc_gait_optimization,output_nhvc_bipedal_control}.
+They have also been used for error-reduction in time-delayed teleoperation
+\cite{vnhc_time_delay_teleop} and in the field of human-robot interaction
+\cite{psd_based_vnhc_redundant_manipulator,haptic_vnhc}.
+Horn \textit{et.~al.}~\cite{hybrid_zero_dynamics_bipedal_nhvcs} derived the 
+equations of motion for robots constrained by VNHCs, and they used VNHCs to
+improve the gait of walking robots on a variable-slope terrain
+\cite{nhvc_incline_walking}.
 
 \begin{large} \textbf{Proposal} \end{large}
 
-Virtual constraints have proven useful for generating biologically-inspired
+Virtual constraints have proven useful for generating biologically-realistic
 behaviour in robotic systems.
-In my master's thesis, I demonstrated that VNHCs can inject/dissipate energy
-into/from robots:
-I designed a VNHC which enabled a gymnastics robot to gain energy
-and perform backflips on a horizontal bar \cite{my-thesis}.
+In my master's thesis I showed that VNHCs allow for \textit{energy regulation},
+i.e., they can inject energy into (or dissipate energy from) a certain class of
+mechanical systems \cite{my-thesis}.
+One such system is a gymnastics robot called the
+\textit{acrobot}, for which I designed a VNHC that generates giant-like motion. 
+This VNHC enabled the acrobot to gain energy and perform backflips on a
+horizontal bar.
+
 Using VNHCs for \textit{energy injection} is beneficial because it allows robots to
 safely increase their momentum.
 Likewise, designing VNHCs for \textit{energy dissipation} allows robots to
 safely slow down in a realistic and reliable manner. 
-
-We propose to study the energy injection and dissipation properties of VNHCs.
+In this PhD, I propose to further study the energy regulation properties of VNHCs.
 First, we will find mathematical conditions under which VNHCs are guaranteed to
-inject/dissipate energy in arbitrary mechanical systems.
+inject or dissipate energy in arbitrary fixed-base mechanical systems.
 Then we will design a means of transitioning between two different VNHCs,
 enabling us to regulate energy in a provably safe manner.
-Finally, we will test the theory on two robots: a gymnastics robot and a robotic
-monkey.
-For the gymnastics robot (which is already built), we will design a gymnastics
-routine which is performed solely by transitioning between different virtual
-constraints.
-After this, we will build the robotic monkey and design virtual constraints
-which allow it to swing on monkey bars, just like real monkeys swing through
-trees.
+We will experimentally verify the results of this theory on the acrobot by
+designing a gymnastics routine which is performed solely by transitioning
+between different virtual constraints.
+Finally, we will extend the theory to robots which can walk or drive, 
+and we will build a robotic monkey which uses VNHCs to swing on monkey bars just
+like a real monkey would swing through trees.
 
-The advancements in mathematics from this research will bring improvements to
-the control of autonomous systems. 
+The advancements in mathematics from this research will bring improvements
+to the control of all autonomous systems. 
 The ability to safely transition between complex constraints by adding or
 removing energy will allow for more expressive motion, and may become a standard
 technique for controlling biologically inspired robots.
 
+\newpage
 %---------- Bibliography ----------%
 \printbibliography
 \end{document}
