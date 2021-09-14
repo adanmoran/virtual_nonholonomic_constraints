@@ -11,12 +11,12 @@
 % * fval = value at which to trigger the event.
 % * d = direction: +1 for increasing, -1 for decreasing, 0 for either.
 
-function [value,isterminal,direction] = energyEvent(t,qp,E,Eval)
-    % Trigger when E(q,p) = Eval. The value increases as E -> Eval from
+function [value,isterminal,direction] = regulationEvent(t,qp,f,fval,d)
+    % Trigger when f(q,p) = fval. The value increases as f -> fval from
     % below.
-    value = E(qp(1),qp(2))-Eval;
-    % Don't stop the integration, just record the event
-    isterminal = 0;
+    value = f(qp(1),qp(2))-fval;
+    % Stop the integration
+    isterminal = 1;
     % Track only values where the energy is increasing past Eval, not those
     % where you come back down. If you want it to track only decreasing,
     % set direction to -1. If you want both increasing and decreasing, set
