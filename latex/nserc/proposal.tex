@@ -93,10 +93,10 @@ emulate this natural human behaviour, which is well described by the method
 of virtual constraints.
 
 There are two types of constraints on a mechanical system:
-\textit{holonomic} constraints restrict position (e.g. a snake robot can slither
-on the ground but cannot fly),
-while \textit{nonholonomic} constraints restrict both position and
-velocity (e.g. an autonomous car with normal wheels cannot slide sideways).
+\textit{holonomic} constraints restrict position (e.g. an autonomous car must
+remain on the ground),
+while \textit{nonholonomic} constraints restrict position and
+velocity (e.g.~an autonomous car with normal wheels cannot slide sideways).
 It is often possible to use a robot's actuators to enforce a desired constraint
 which is engineered to achieve a safety or motion planning goal.
 Since this constraint is enforced by the robot's actuators, and not by the
@@ -155,6 +155,8 @@ between different virtual constraints.
 Finally, we will extend the theory to mobile animal-like robots,
 and we will build a robotic monkey which uses VNHCs to swing on monkey bars just
 like a real monkey would swing through jungle trees.
+This robot monkey is representative of a variety of robotic systems, and will be
+a useful platform on which to test our mathematical theory.
 
 The advancements in mathematics from this research will bring improvements
 to the control of all autonomous systems. 
