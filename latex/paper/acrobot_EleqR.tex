@@ -69,6 +69,11 @@
     \draw[gray, dashed] (-pi,-22) -- (-pi,22);
     \draw[gray, dashed] (pi,-22) -- (pi,22);
 
+    % Draw a red line for the poincare section
+    \draw[red,ultra thick] (0,0) -- (\Rval,0);
+    % Add the label
+    \node [text=red] at (\Rval/2,1.5) {$\mathcal{P}_0$};
+
 \end{axis}
 \end{tikzpicture}
 \end{document}
