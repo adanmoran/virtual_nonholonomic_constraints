@@ -88,6 +88,14 @@
     \draw[gray, dashed] (-pi,-22) -- (-pi,22);
     \draw[gray, dashed] (pi,-22) -- (pi,22);
 
+    % Draw vertical red lines between R1 and R2
+    \draw[red, ultra thick] (0,\Rone) -- (0,\Rtwo);
+    \draw[red, ultra thick] (0,-\Rone) -- (0,-\Rtwo);
+    % Add a label
+    \pgfmathsetmacro{\Ravg}{(\Rone+\Rtwo)/2};
+    \node[text=red] at (-0.3,-\Ravg) {$\mathcal{P}_r$};
+    \node[text=red] at (-0.3,\Ravg) {$\mathcal{P}_r$};
+
 \end{axis}
 \end{tikzpicture}
 \end{document}
