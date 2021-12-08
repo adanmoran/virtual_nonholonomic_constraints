@@ -107,10 +107,10 @@ injection, dissipation, and regulation for the acrobot}
 \author{Adan Moran-MacDonald, \IEEEmembership{Member, IEEE}, Manfredi Maggiore,
 \IEEEmembership{Member, IEEE}*, and Xingbo Wang
 \thanks{Manuscript submitted for review on \today.}
-\thanks{A. Moran-MacDonald (e-mail: adan.moran@mail.utoronto.ca) and
-M. Maggiore (e-mail: maggiore@control.utoronto.ca) are with the Department of
+\thanks{A. Moran-MacDonald (e-mail: adan.moran@mail.utoronto.ca),
+M. Maggiore (e-mail: maggiore@control.utoronto.ca), and
+X. Wang (e-mail: xingbo.wang@utoronto.ca) are with the Department of
 Electrical and Computer Engineering, University of Toronto, ON, Canada.}
-\thanks{X. Wang is with ??? (e-mail: ???).}
 } %/author
 
 \maketitle
@@ -506,21 +506,56 @@ manifold which is not \(\R^n\), is already a simply actuated Hamiltonian system.
 
 \subsection{Virtual Nonholonomic Constraints}\label{sec:vnhc-vnhc}
 
-Griffin and Grizzle \cite{nhvc_dynamic_walking} were the first to define relative degree two nonholonomic constraints which can be enforced through state feedback. Horn \etal later extended their results in \cite{hybrid_zero_dynamics_bipedal_nhvcs} to derive the constrained dynamics for a certain class of mechanical systems. These researchers made use of the unactuated conjugate momentum, but they developed their results in the Lagrangian framework. In particular, they focused on Lagrangian systems with degree of underactuation one. We will now present a special case of \cite{hybrid_zero_dynamics_bipedal_nhvcs} for simply actuated Hamiltonian systems, so that the theory we apply to the acrobot is provided in its clearest form. After we finish this summary we will clarify the relationship between our material and that of \cite{hybrid_zero_dynamics_bipedal_nhvcs}.
+Griffin and Grizzle \cite{nhvc_dynamic_walking} were the first to define
+relative degree two nonholonomic constraints which can be enforced through state
+feedback. Horn \etal extended their results in
+\cite{hybrid_zero_dynamics_bipedal_nhvcs} to derive the constrained dynamics for
+a certain class of mechanical systems. 
+Hamed and Ames \cite{nonholonomic_hybrid_zero_dynamics} then found an explicit
+representation of these constrained dynamics for virtual
+nonholonomic constraints with a specific form.
+All these researchers made use of the
+unactuated conjugate momentum, but they developed their results in the
+Lagrangian framework. In particular, they focused on Lagrangian systems with
+degree of underactuation one. We will now present a special case of
+\cite{hybrid_zero_dynamics_bipedal_nhvcs} for simply actuated Hamiltonian
+systems, so that the theory we apply to the acrobot is provided in its clearest
+form. After we finish this summary we will clarify the relationship between our
+material and that of 
+\cite{hybrid_zero_dynamics_bipedal_nhvcs,nonholonomic_hybrid_zero_dynamics}.
 
-The rest of this section refers to the simply actuated system \eqref{eqn:simple-hamiltonian}. For simplicity of notation, we relabel \((\tilde{q},\tilde{p})\) to \((q,p)\). We assume henceforth that $(q,p) \in \cQ \times \Re^n$.
+The rest of this section refers to the simply actuated system
+\eqref{eqn:simple-hamiltonian}. For simplicity of notation, we relabel
+\((\tilde{q},\tilde{p})\) to \((q,p)\). We assume henceforth that 
+$(q,p) \in \cQ \times \Re^n$.
 
 \begin{defn}\label{defn:vnhc}
-    A \textit{virtual nonholonomic constraint} (\vnhc) \textit{of order \(k\)} is a     relation \(h(q,p) = 0\) where \(h : \mathcal{Q}\times\R^n \rightarrow \R^k\) is     \(C^2\), \(\rank{\left[ dh_q,\, dh_p \right]} = k\) for all      \((q,p) \in h\inv(0)\), and there exists a feedback controller \(\tau(q,p)\)     rendering the \textit{constraint manifold} \(\Gamma\) invariant,     where
+    A \textit{virtual nonholonomic constraint} (\vnhc) \textit{of order \(k\)}
+    is a relation \(h(q,p) = 0\) where 
+    \(h : \mathcal{Q}\times\R^n \rightarrow \R^k\) is \(C^2\),
+    \(\rank{\left[ dh_q,\, dh_p \right]} = k\) for all 
+    \((q,p) \in h\inv(0)\), and there exists a feedback
+    controller \(\tau(q,p)\) rendering the \textit{constraint manifold}
+    \(\Gamma\) invariant, where
     \begin{equation}
         \Gamma = \left\{(q,p) \mid h(q,p) = 0, dh_q \dot{q} + dh_p \dot{p} = 0\right\}
         .
     \end{equation}
 \end{defn}
 
-The constraint manifold is a \(2(n-k)\)-dimensional closed embedded submanifold of \(\mathcal{Q} \times \R^n\). A \vnhc thereby allows us to study a reduced-order model of the system: it reduces the original \(2n\) differential equations to \(2(n-k)\) equations. In particular, if the mechanical system has degree of underactuation one, i.e., \(k = (n-1)\), the constraint manifold is \textit{always} two-dimensional.
+The constraint manifold is a \(2(n-k)\)-dimensional closed embedded submanifold
+of \(\mathcal{Q} \times \R^n\). A \vnhc thereby allows us to study a
+reduced-order model of the system: it reduces the original \(2n\) differential
+equations to \(2(n-k)\) equations. In particular, if the mechanical system has
+degree of underactuation one, i.e., \(k = (n-1)\), the constraint manifold is
+\textit{always} two-dimensional.
 
-In order to enforce the constraint \(h(q,p) = 0\), we want to asymptotically stabilize the set \(\Gamma\). To see when this is possible, let us define the error output \(e = h(q,p)\). If any component of \(e_i\) has relative degree 1, we may not be able to stabilize \(\Gamma\): we can always guarantee \(e_i \to 0\), but not necessarily \(\dot{e}_i \to 0\). It is for this reason that we define the following special type of \vnhc.
+In order to enforce the constraint \(h(q,p) = 0\), we want to asymptotically
+stabilize the set \(\Gamma\). To see when this is possible, let us define the
+error output \(e = h(q,p)\). If any component of \(e_i\) has relative degree 1,
+we may not be able to stabilize \(\Gamma\): we can always guarantee 
+\(e_i \to 0\), but not necessarily \(\dot{e}_i \to 0\). It is for this reason
+that we define the following special type of \vnhc.
 
 \begin{defn}
     A \vnhc \(h(q,p) = 0\) of order \(k\) is \textit{regular} if the output 
@@ -679,16 +714,22 @@ dynamics for \vnhcs in \cite{nhvc_incline_walking}.
 Their assumption \textbf{H2} is what we call regularity, and our requirement
 that one can solve for \(q_a = f(q_u,p_u)\) on \(\Gamma\) implies their
 assumption \textbf{H3} holds true.
-The only real distinction between this section and their work is that
-our constrained dynamics are explicit functions of the Hamiltonian coordinates
-\((q_u,p_u)\).
+Constraints of this form are used by Hamed and Ames in
+\cite{nonholonomic_hybrid_zero_dynamics}.
+%The only real distinction between this section and their work is that
+%our constrained dynamics are explicit functions of the Hamiltonian coordinates
+%\((q_u,p_u)\).
 In fact, one can show that the constrained dynamics \eqref{eqn:qpu-dynamics}
-coincide with the constrained dynamics in
+are exactly the constrained dynamics in
+\cite[Eqn. (9)]{nonholonomic_hybrid_zero_dynamics}, which coincide with 
 \cite[Eqn. (17)]{hybrid_zero_dynamics_bipedal_nhvcs}
 when one chooses the special case \(\theta_1 = q_u\) and 
 \(\theta_2 = p_u\).
-This explicit representation will be beneficial when we apply the theory of
-\vnhcs to the acrobot.
+The only real distinction between this section and the work of
+\cite{nonholonomic_hybrid_zero_dynamics,hybrid_zero_dynamics_bipedal_nhvcs} is
+that our constrained dynamics are derived in the Hamiltonian framework. 
+%This explicit representation will be beneficial when we apply the theory of
+%\vnhcs to the acrobot.
 
 %/========== Acrobot ==========/%
 \section{The Proposed Acrobot \vnhc}\label{sec:acrobot}
