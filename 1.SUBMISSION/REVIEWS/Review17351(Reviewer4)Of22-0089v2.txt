@@ -1,0 +1,27 @@
+My main concern: The topic of virtual (nonlinear) nonholonomic
+constraints has its roots in the works of Grizzle and Griffin in CDC
+2015. Since then that notion was used and employed in a very
+interesting context as the one in the present paper. Nevertheless, a
+mathematical foundation of the subject as happens with virtual
+holonomic constraints (done by the second author of the paper under
+review) was not provided yet. Some effort has been done recently to
+formulate virtual nonholonomic constraints from a geometric framework
+in the linear (https://arxiv.org/abs/2207.01299) and affine cases
+(https://arxiv.org/abs/2301.03890) that I guess they merit to be
+mentioned in the literature review of the paper.
+
+My recommendation is based on the next aspects of the paper:
+
+(1)The paper is mathematically correct and self-contained.
+
+(2)The paper is accessible to a wide range of researchers in control
+and robotics
+
+(3)The paper demonstrates the theory with real-life experimental.
+
+(4) The experiments are understandable for a wide range of researchers
+in control and robotics
+
+(5) The paper is original and the topic is on current research.
+
+I recommend acceptance of the manuscript.
