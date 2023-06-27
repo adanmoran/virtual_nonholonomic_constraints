@@ -1,0 +1,308 @@
+\documentclass[11pt,letter]{article}
+\usepackage{amsfonts}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amstext,pdfsync}
+\usepackage[dvips]{color}
+\usepackage{tcolorbox}
+\usepackage{mathpazo}
+\usepackage{amssymb,xspace,enumerate}
+\definecolor{LineColor}{rgb}{0.4,0.4,0.4}
+
+
+%--------------------------------------------------%
+\definecolor{shadecolor}{gray}{.9}
+\definecolor{darkblue}{rgb}{0.0,0.0,0.3}
+\newenvironment{myquote}{%
+\bigskip%
+\begin{tcolorbox}[]\footnotesize}{%
+\end{tcolorbox}%			
+\bigskip}
+
+%\headsep 0 true cm
+%\textwidth 15.0 true cm
+%\textheight 24.0 true cm
+%\topmargin 0 true cm
+%\oddsidemargin 0 true cm
+%\evensidemargin 0 true cm
+%\headsep 0 true cm
+\usepackage{geometry}
+
+%\setlength{\parindent}{2ex}
+
+\newcommand*{\vhc}{\textsc{vhc}\xspace}
+\newcommand*{\vhcs}{\textsc{vhc}s\xspace}
+\newcommand*{\vcg}{\textsc{vcg}\xspace}
+\newcommand*{\vcgs}{\textsc{vcg}s\xspace}
+\newcommand*{\R}{\mathbb{R}}
+\newcommand*{\Q}{\mathcal{Q}}
+\newcommand*{\X}{\mathcal{X}}
+\newcommand*{\specone}{\textsc{spec 1}\xspace}
+\newcommand*{\spectwo}{\textsc{spec 2}\xspace}
+\newcommand{\NC}{\textsc{nlc}\xspace}
+\DeclareMathOperator{\Image}{Im}
+
+
+
+\newcommand{\drawline}
+{   \hspace*{-\marginparsep minus \marginparwidth}
+	\begin{minipage}[t]{\textwidth+\marginparwidth+\marginparsep}%
+		{\large \bfseries {} \hfill {}}\\[-0.15\baselineskip]%
+		\textcolor{LineColor}{\rule{\columnwidth}{2 pt}}%}
+	\end{minipage}}
+
+\newcommand{\myver}{\vspace{0.5cm}}
+
+\newcommand{\mybox}[1]{{\color{blue}\fbox{#1}}}
+
+%\include{Bibtex_DistTeleop}
+
+\title{\vspace{-1cm} {\Large \bf \color{darkblue}{Reply to the Associate
+      Editor and Reviewers}\\[0.6cm] \large {\bf From gymnastics to virtual nonholonomic constraints: energy
+injection, dissipation, and regulation for the acrobot
+      }\\[0.2cm] {(Revision of  IEEE TCST 22-0089)\\ A.~Moran-MacDonald, M.~Maggiore, X.~Wang}}} \author{}
+\date{\today}
+
+\begin{document}
+\vspace{-4cm}
+\maketitle
+
+%\drawline
+\pagenumbering{gobble}
+
+\indent We sincerely thank the Associate Editor for collecting two thoughtful reviews and for the 
+constructive remarks on this submission. We have revised the paper addressing the reviewers'
+comments. Below are detailed replies to the Associate Editor and the reviewers.
+\pagenumbering{arabic}
+%---------------------------------------------------------------------------%
+%\vspace{-1cm}
+\subsection*{\textcolor{darkblue}{Reply to the Associate Editor}} 
+\vspace{0cm}
+
+
+
+\begin{myquote}
+We have received only two reviews for this paper, which are - however -
+sufficiently informative for a recommendation  to be  issued. Overall,
+the reviewers praise the high quality of the paper, but request that a
+sharper focus is placed on its contribution with respect not only on
+the literature on virtual nonholonomic constraints, but the  landscape
+of energy-based nonlinear control. While this may appear a daunting
+task, the authors are invited to put their work into perspective as
+suggested by reviewer no.2.  The remaining issues appear to be well
+within the authors' reach.  
+\end{myquote}
+
+In this revision, we have significantly expanded the introduction to include a \emph{detailed} overview of the literature on orbital stabilization mentioned by reviewer 2, contrasting our ideas to existing ones. We have also included a new subsection titled ``Contributions of this article'' in which we better showcase the main results of the paper.  We have also addressed all other issues raised by the two reviewers.
+
+
+\newpage
+%---------------------------------------------------------------%
+\vspace{0.2cm}
+\subsection*{\textcolor{darkblue}{Reply to Reviewer 2}} 
+\vspace{0.2cm}
+
+We wish to sincerely thank the reviewer for the constructive comments,
+which we have  addressed in this revision. Below are
+detailed replies to the reviewer's remarks.
+
+
+
+\begin{myquote}
+The problem of designing a feedback control for the two-link acrobot
+system through virtual nonholonomic constraints is addressed in this
+paper. \((\cdots)\) 
+The paper is technically correct and the proofs of Theorem 4 and
+Theorem 5 are mathematically rigorous and consistent with the
+statements.
+\end{myquote}
+
+We thank the reviewer for this assessment.
+
+\begin{myquote}
+However, my major concern is that neither the benefit nor
+the novelty of considering stabilization by assigning virtual
+nonholonomic constraints are clearly articulated. The literature on how
+to design nonlinear controllers, possibly passive, for achieving either
+swing-up and orbital stabilization or swing-up and asymptotic
+stabilization is extensive. In terms of the acrobot, most of the
+existing approaches rely on the construction of Casimir functions
+(conserved quantities) to help shape the energy of the closed-loop
+system via Control-by-Interconnection (CbI) as in [R9], [R8], the
+potential energy shaping of the closed-loop system via Interconnection
+and Damping Assignment (IDA-PBC) as in [R1], [R2], [R3], [R7], orbital
+stabilization via Immersion and Invariance (I\&I) as in [R4], [R5], and
+finally orbital stabilization via energy shaping and with the injection
+of both pumping and damping as in [R6]. As an application-based
+research paper, I would have expected an application of established
+research findings and a comparison with other existing approaches. In
+addition to showing the effectiveness of implementing virtual
+nonholonomic constraints, it would be valuable to discuss the benefit
+of the method when compared with the approaches mentioned beforehand. 
+\end{myquote}
+
+
+The reviewer makes a good point, and we completely agree that not placing our paper in a wider context was an omission. This revision \emph{significantly expands} the literature treatment and placed our work in a wider context. The introduction has been significantly expanded with a new subsection titled ``Related literature'' in which we review other techniques for orbital stabilization: I\&I, IDA, VHC-based, and the Fantoni-Lozano approach. We also stress the differences between these approaches and the ideas of this submission.
+
+\begin{myquote}
+Furthermore, the following issues should be addressed:
+
+1.	Please define q before the Hamiltonian function given in by the
+equations (6). I assume that the generalized coordinate q is composed
+of (qu, qa), however, the structure of q is not defined anywhere in the
+manuscript.
+\end{myquote}
+
+Done, and thank you for raising this point.
+
+\begin{myquote}
+ 2.	Please enumerate the Hamiltonian function H(q,p) in (6) with
+(6a) and the dynamics associated with H(q, p) with (6b). It is quite
+uncommon to write "The dynamics of the acrobot in (q,p) coordinates are
+given in (6)î. I would suggest, instead, writing îThe dynamics of the
+acrobot with Hamiltonian function (6a) are given in (6b)î.  
+\end{myquote}
+
+Done, and thank you.
+
+\begin{myquote}
+3.	The manuscript deals with the acrobot model, which yields a
+Hamiltonian system described by an inhomogeneous differential equation
+with a constant input matrix. What is the benefit of introducing the
+general Hamiltonian system as in (8) with a nonconstant input matrix B
+and then assuming B constant? For ease of presentation, I would suggest
+considering directly the inhomogeneous Hamiltonian system used in the
+paper.  
+\end{myquote}
+
+Done. As suggested by the reviewer, we now directly consider a model with \(B\) constant.
+
+
+\begin{myquote}
+4.	If Lemma 1 and Theorem 1 are recalled from another paper,
+please cite the paper which contains the statements and proofs, and
+remove the proofs from this paper. Otherwise, if Lemma 1 and Theorem 1
+are original results or enhance some other previous findings, then keep
+the proofs but emphasise the originality of the results.  
+\end{myquote}
+
+We did not take Lemma 1 and Theorem 1 from the literature. However,
+the results are relatively obvious and for this reason we do not
+showcase them. We clarified this point in a footnote.
+
+\begin{myquote}
+5.	Please restate Definition 2. The expression îthe output e =
+h(q,p) is of relative degree 2, 2, ..., 2î is unusual. The output is
+not of relative degree, rather the system associated with the output e
+= h(q,p) has a relative degree. In addition, relative degree 2, 2, ...,
+2 is unclear. I think the authors wanted to say that the system has
+relative degree 2 for each e\_i.
+\end{myquote}
+
+Fixed, thank you. The correct term is \emph{vector relative degree}. We also added a reference to the book by Isidori where this notion is defined.
+
+\begin{myquote}
+6.	From Definition 2 results that, if you define the output as e =
+h(q,p), where h satisfies the relation h(q,p) = 0, you are looking for
+a special characterization of the zero dynamics of your closed-loop
+system. This approach reminds me of the construction of the invariant
+manifold used to construct a stabilizer through I\&I [R5]. Is there any
+relation between the two?  
+\end{myquote}
+
+In this revision we have given a detailed comparison between the  I\&I technique and the approach proposed in this paper. Both approaches involve the stabilization of a submanifold of the state space on which one has ``desirable'' behaviour. While in the I\&I literature related to orbital stabilization one assumes that the dynamics on the submanifold are those of an oscillator, in this paper we show that the dynamics on the constraint manifold induced by the proposed VNHC are ``expansive'' or ``contractive'' in that orbits gain energy or lose energy, depending on the sign of a design parameter. In particular the dynamics on our constraint manifold do not contain closed orbits. 
+\begin{myquote}
+  7.	The output e = h(q,p), which is here assumed relative degree 2,
+rules out the most common passive outputs because the relative degree
+of the passive output is at most 1. Hence, the virtual nonholonomic
+constraints seem to be weak compared to the IDA-PBC approach in [R6].
+Please, clarify their relationship. Moreover, the original results in
+Section IV.A also seems to have much in common with the
+pumping-and-damping technique in [R6].
+\end{myquote}
+
+Having relative degree two rather than one does not imply any weakness per se. There is indeed a philosophical  similarity between pumping and damping and the ideas of this submission. This is clarified in the revised introduction. Despite the philosophical similarity, the two techniques are very different and we point this out.
+
+
+\begin{myquote}
+8.	In the sentence before equation (14), what type of stability do
+you refer to? 
+\end{myquote}
+
+We were referring to asymptotic stability of the constraint manifold. We have modified the language to make this clear.
+
+\begin{myquote}
+9.	As I have already mentioned, the subsection îComparison with
+existing literatureî only discusses previous work on virtual
+nonholonomic constraints and a comparison with other consolidated
+methods such as I\&I, CbI, and IDA-PBC is missing. Moreover, a
+comparison should be given also in terms of simulations showing the
+effectiveness of the virtual nonholonomic constraints when compared
+with the existing methods.   
+\end{myquote}
+
+
+We have addressed this point in great detail. We have not however included a simulation comparison because for it to be meaningful, the comparison would require  detailed discussions and an overview of the various techniques  which are beyond the scope of this paper. We hope that the detailed comparison provided in the introduction will at least partially address the reviewer's concern.
+
+
+
+\begin{myquote}
+10.	Some general comments: the introduction should be improved by
+motivating and properly discussing the main results achieved within the
+paper; it would be preferable to conclude the introduction with the
+organization of the paper; the reading of the article would be easier
+if the problem formulation is presented after the preliminary section.  
+\end{myquote}
+
+We agree. We have added two new subsections titled ``Contributions of this paper'' and ``Paper organization'' in which we do exactly what the reviewer recommended.
+
+\newpage
+%---------------------------------------------------------------------------------%
+\vspace{0.2cm}
+\subsection*{\textcolor{darkblue}{Reply to Reviewer 4}}
+\vspace{0.2cm}
+
+
+We wish to sincerely thank the reviewer for the constructive comments. Below are
+detailed replies to the reviewer's remarks.
+
+
+\begin{myquote}
+My main concern: The topic of virtual (nonlinear) nonholonomic
+constraints has its roots in the works of Grizzle and Griffin in CDC
+2015. Since then that notion was used and employed in a very
+interesting context as the one in the present paper. Nevertheless, a
+mathematical foundation of the subject as happens with virtual
+holonomic constraints (done by the second author of the paper under
+review) was not provided yet. Some effort has been done recently to
+formulate virtual nonholonomic constraints from a geometric framework
+in the linear (https://arxiv.org/abs/2207.01299) and affine cases
+(https://arxiv.org/abs/2301.03890) that I guess they merit to be
+mentioned in the literature review of the paper.
+\end{myquote}
+
+Thank you very much for flagging this paper. We are now citing it and discussing it both in the introduction and in Section IIIB on virtual nonholonomic constraints.
+
+
+
+\begin{myquote}
+  My recommendation is based on the next aspects of the paper:
+
+(1)The paper is mathematically correct and self-contained.
+
+(2)The paper is accessible to a wide range of researchers in control
+and robotics
+
+(3)The paper demonstrates the theory with real-life experimental.
+
+(4) The experiments are understandable for a wide range of researchers
+in control and robotics
+
+(5) The paper is original and the topic is on current research.
+
+I recommend acceptance of the manuscript.
+\end{myquote}
+
+
+We sincerely appreciate the positive assessment of our work.
+\end{document}

@@ -1,0 +1,9 @@
+We have received only two reviews for this paper, which are - however -
+sufficiently informative for a recommendation  to be  issued. Overall,
+the reviewers praise the high quality of the paper, but request that a
+sharper focus is placed on its contribution with respect not only on
+the literature on virtual nonholonomic constraints, but the  landscape
+of energy-based nonlinear control. While this may appear a daunting
+task, the authors are invited to put their work into perspective as
+suggested by reviewer no.2.  The remaining issues appear to be well
+within the authors' reach.  

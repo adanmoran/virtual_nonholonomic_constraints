@@ -1,0 +1,80 @@
+%! TEX program = lualatex
+
+% Use :VimtexToggleMain to compile this file alone with Vimtex
+\documentclass[tikz]{standalone}
+
+\usepackage{sty/adantikz}
+%TODO: Add a figure with one oscillation mark at a distance mu from
+    % the origin to the intersection on the q-axis. We also draw the boundary of
+    % mathcalO and shade the interior, and draw a line to the oscillation with
+    % clockwise angle alpha
+
+\begin{document}
+\begin{tikzpicture}
+    % Define the value of m2gl3 making sqrt(60m2gl3)=15
+    \pgfmathsetmacro{\mgl}{15^2/60};
+    % Define the oscillation domain, which is E_{<=R}
+    \pgfmathsetmacro{\Rval}{pi-0.5};
+% Define the figure
+\begin{axis}[
+ axis line style = thick,
+ % Set the axes to be centered nicely
+ axis lines  = center,
+ % Turn off arrows
+ axis line style={-},
+ % Set the axes
+ xlabel = $q_u$, 
+ x label style={right},
+ xmin = -3.5, xmax = 3.5,
+ ylabel = $p_u$,
+ y label style={above},
+ ymin = -22, ymax = 22,
+ % Custom tick labels at specified positions
+ xtick = {-3.1415, 3.1415},
+ xticklabels = {$-\pi$, $\pi$},
+ xticklabel style={xshift={(\ticknum==0)*(-0.3cm) + (\ticknum==1)*(0.25cm)}},
+ ytick = {-15, 15},
+ yticklabels = {},
+ % Move the label so it looks good
+ yticklabel style={yshift={(\ticknum == 0)*(-0.3cm) + (\ticknum == 1)*(0.25cm)}}
+]
+    % Draw the homoclinic orbit in gray 
+    \addplot[gray,->,thick,samples=100,domain=-pi:pi]
+        {sqrt(30*\mgl*(cos(deg(x))+1))};
+    \addplot[gray,<-,thick, samples=100,domain=-pi:pi]
+        {-sqrt(30*\mgl*(cos(deg(x))+1))};
+    % Draw the region R in black
+    \addplot[black,name path=upper,thick,samples=100,domain=-\Rval:\Rval]
+        {sqrt(30*\mgl*(cos(deg(x))-cos(deg(\Rval))))};
+    \addplot[black,name path=lower,thick,samples=100,domain=-\Rval:\Rval]
+        {-sqrt(30*\mgl*(cos(deg(x))-cos(deg(\Rval))))};
+
+
+    % Colour in the region
+    \addplot[fill=blue,opacity=0.2] 
+        fill between[of=upper and lower];
+
+    % Add a label
+    \node at (3*pi/4,8) {\small $E_{R}$};
+
+    % Draw a spiraling orbit heading towards the homoclinic orbit, resting
+    % completely within R
+    \spiral[blue,thick]{center={(0,0)},
+        start angle=0,end angle=135,
+        start radius=0cm, end radius=1.95cm,
+        revolutions=4,
+        clockwise};
+
+    % Draw vertical dashed lines at +-pi
+    \draw[gray, dashed] (-pi,-22) -- (-pi,22);
+    \draw[gray, dashed] (pi,-22) -- (pi,22);
+
+    % Draw a red line for the poincare section
+    \draw[red,ultra thick] (0,0) -- (\Rval,0);
+    % Add the label
+    \node [text=red] at (\Rval/2,1.5) {$\mathcal{P}_0$};
+
+\end{axis}
+\end{tikzpicture}
+\end{document}
+% vim: set tw=80 ts=4 sw=4 sts=0 et ffs=unix :

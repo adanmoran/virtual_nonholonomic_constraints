@@ -1,0 +1,136 @@
+The problem of designing a feedback control for the two-link acrobot
+system through virtual nonholonomic constraints is addressed in this
+paper. The acrobot model is a two-degree-of-freedom planar robot arm
+with a single actuator working at the elbow. The design of feedback
+control relies upon a proper construction of virtual nonholonomic
+constraints, which are constraints obtained by particular relations
+between the generalized coordinates and momenta. The main theoretical
+results, which are contained in Theorem 4 and Theorem 5, show that, for
+particular relations between the generalized coordinates and momenta
+associated with the acrobot model, the resulting virtual nonholonomic
+constraints ensure that the acrobot model gain and lose energy (on
+compact subsets) while generating a giant motion. The proposed design
+approach is validated first through simulations and then experimentally
+to show that the virtual nonholonomic constraints are robust to
+real-world uncertainties. 
+
+The paper is technically correct and the proofs of Theorem 4 and
+Theorem 5 are mathematically rigorous and consistent with the
+statements. However, my major concern is that neither the benefit nor
+the novelty of considering stabilization by assigning virtual
+nonholonomic constraints are clearly articulated. The literature on how
+to design nonlinear controllers, possibly passive, for achieving either
+swing-up and orbital stabilization or swing-up and asymptotic
+stabilization is extensive. In terms of the acrobot, most of the
+existing approaches rely on the construction of Casimir functions
+(conserved quantities) to help shape the energy of the closed-loop
+system via Control-by-Interconnection (CbI) as in [R9], [R8], the
+potential energy shaping of the closed-loop system via Interconnection
+and Damping Assignment (IDA-PBC) as in [R1], [R2], [R3], [R7], orbital
+stabilization via Immersion and Invariance (I&I) as in [R4], [R5], and
+finally orbital stabilization via energy shaping and with the injection
+of both pumping and damping as in [R6]. As an application-based
+research paper, I would have expected an application of established
+research findings and a comparison with other existing approaches. In
+addition to showing the effectiveness of implementing virtual
+nonholonomic constraints, it would be valuable to discuss the benefit
+of the method when compared with the approaches mentioned beforehand. 
+Furthermore, the following issues should be addressed:
+
+1.	Please define q before the Hamiltonian function given in by the
+equations (6). I assume that the generalized coordinate q is composed
+of (qu, qa), however, the structure of q is not defined anywhere in the
+manuscript.
+
+2.	Please enumerate the Hamiltonian function H(q,p) in (6) with
+(6a) and the dynamics associated with H(q, p) with (6b). It is quite
+uncommon to write "The dynamics of the acrobot in (q,p) coordinates are
+given in (6)”. I would suggest, instead, writing ”The dynamics of the
+acrobot with Hamiltonian function (6a) are given in (6b)”.
+
+3.	The manuscript deals with the acrobot model, which yields a
+Hamiltonian system described by an inhomogeneous differential equation
+with a constant input matrix. What is the benefit of introducing the
+general Hamiltonian system as in (8) with a nonconstant input matrix B
+and then assuming B constant? For ease of presentation, I would suggest
+considering directly the inhomogeneous Hamiltonian system used in the
+paper.
+
+
+4.	If Lemma 1 and Theorem 1 are recalled from another paper,
+please cite the paper which contains the statements and proofs, and
+remove the proofs from this paper. Otherwise, if Lemma 1 and Theorem 1
+are original results or enhance some other previous findings, then keep
+the proofs but emphasise the originality of the results.
+
+5.	Please restate Definition 2. The expression ”the output e =
+h(q,p) is of relative degree 2, 2, ..., 2” is unusual. The output is
+not of relative degree, rather the system associated with the output e
+= h(q,p) has a relative degree. In addition, relative degree 2, 2, ...,
+2 is unclear. I think the authors wanted to say that the system has
+relative degree 2 for each e_i.
+
+6.	From Definition 2 results that, if you define the output as e =
+h(q,p), where h satisfies the relation h(q,p) = 0, you are looking for
+a special characterization of the zero dynamics of your closed-loop
+system. This approach reminds me of the construction of the invariant
+manifold used to construct a stabilizer through I&I [R5]. Is there any
+relation between the two?
+
+7.	The output e = h(q,p), which is here assumed relative degree 2,
+rules out the most common passive outputs because the relative degree
+of the passive output is at most 1. Hence, the virtual nonholonomic
+constraints seem to be weak compared to the IDA-PBC approach in [R6].
+Please, clarify their relationship. Moreover, the original results in
+Section IV.A also seems to have much in common with the
+pumping-and-damping technique in [R6].
+
+8.	In the sentence before equation (14), what type of stability do
+you refer to? 
+
+9.	As I have already mentioned, the subsection ”Comparison with
+existing literature” only discusses previous work on virtual
+nonholonomic constraints and a comparison with other consolidated
+methods such as I&I, CbI, and IDA-PBC is missing. Moreover, a
+comparison should be given also in terms of simulations showing the
+effectiveness of the virtual nonholonomic constraints when compared
+with the existing methods. 
+
+10.	Some general comments: the introduction should be improved by
+motivating and properly discussing the main results achieved within the
+paper; it would be preferable to conclude the introduction with the
+organization of the paper; the reading of the article would be easier
+if the problem formulation is presented after the preliminary section.
+
+
+References: 
+
+[R1] Romeo Ortega et al. “Stabilization of a class of underactuated
+mechanical systems via interconnection and damping assignment”. In:
+IEEE transactions on automatic control (2002), pp. 1218–1233.
+[R2] Arun D. Mahindrakar et al. “Further constructive results on
+interconnection and damping assignment control of mechanical systems:
+The acrobot example”. In: International Journal of Robust and Nonlinear
+Control: IFAC-Affiliated Journal (2006), pp. 671–685. 
+[R3] Romeo Ortega et al. “Control by interconnection and standard
+passivity-based control of port-Hamiltonian systems”. In: IEEE
+Transactions on Automatic control (2008), pp. 2527–2542. 
+[R4] Paul Kotyczka and Ioannis Sarras. “On the equivalence of two
+nonlinear control approaches: Immersion and invariance and IDA-PBC”.
+In: European Journal of Control (2013), pp. 445–453. 
+[R5] Romeo Ortega et al. “Orbital stabilization of nonlinear systems
+via the immersion and invariance technique”. In: International Journal
+of Robust and Nonlinear Control (2020), pp. 1850–1871. 
+[R6] Bowen Yi et al. “Orbital stabilization of nonlinear systems via
+Mexican sombrero energy shaping and pumping-and-damping injection”. In:
+Automatica (2020), p. 108661. 
+[R7] Mutaz Ryalat, Dina Shona Laila, and Hisham ElMoaqet. “Adaptive
+interconnection and damping assignment passivity based control for
+underactuated mechanical systems”. In: International Journal of
+Control, Automation and Systems (2021), pp. 864–877. 
+[R8] Enrico Franco. “IDA-PBC with adaptive friction compensation for
+underactuated mechanical systems”. In: International Journal of Control
+(2021), pp. 860– 870. 
+[R9] Joel Ferguson. “Total energy-shaping control for mechanical
+systems via Control by-Interconnection”. In: arXiv preprint
+arXiv:2301.03746 (2023).
