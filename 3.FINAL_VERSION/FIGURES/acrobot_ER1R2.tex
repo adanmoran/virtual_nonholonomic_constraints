@@ -1,0 +1,102 @@
+%! TEX program = lualatex
+
+% Use :VimtexToggleMain to compile this file alone with Vimtex
+\documentclass[tikz]{standalone}
+
+\usepackage{sty/adantikz}
+%TODO: Add a figure with one oscillation mark at a distance mu from
+    % the origin to the intersection on the q-axis. We also draw the boundary of
+    % mathcalO and shade the interior, and draw a line to the oscillation with
+    % clockwise angle alpha
+
+\begin{document}
+\begin{tikzpicture}
+    % Set pu for Epi
+    \pgfmathsetmacro{\puEpi}{10};
+    % Define the value of m2gl3 making sqrt(60m2gl3)=puEpi
+    \pgfmathsetmacro{\mgl}{\puEpi^2/60};
+    % Define R1, the lower bound of our rotation domain where we gain energy
+    \pgfmathsetmacro{\Rone}{\puEpi+1};
+    \pgfmathsetmacro{\Rtwo}{21};
+% Define the figure
+\begin{axis}[
+ axis line style = thick,
+ % Set the axes to be centered nicely
+ axis lines  = center,
+ % Turn off arrows
+ axis line style={-},
+ % Set the axes
+ xlabel = $q_u$, 
+ x label style={right},
+ xmin = -3.5, xmax = 3.5,
+ ylabel = $p_u$,
+ y label style={above},
+ ymin = -22, ymax = 22,
+ % Custom tick labels at specified positions
+ xtick = {-3.1415, 3.1415},
+ xticklabels = {$-\pi$, $\pi$},
+ xticklabel style={xshift={(\ticknum==0)*(-0.3cm) + (\ticknum==1)*(0.25cm)}},
+ ytick = {-\Rtwo,-\puEpi, \puEpi,\Rtwo},
+ yticklabels = {},
+ % Move the label so it looks good
+ yticklabel style={yshift={(\ticknum == 0)*(-0.25cm) + (\ticknum == 3)*(0.2cm)}}
+]
+    % Draw rotations for R1 and R2
+    % The rotation has pu = sign(rho)sqrt(rhob^2+30m^2gl^3(cos(q_u)-1)
+    \addplot[name path=Roplus,thick,samples=100,domain=-pi:pi]
+        {sqrt(\Rone^2+30*\mgl*(cos(deg(x))-1))};
+    \addplot[name path=Rominus,thick,samples=100,domain=-pi:pi]
+        {-sqrt(\Rone^2+30*\mgl*(cos(deg(x))-1))};
+
+    \addplot[name path=Rtplus,thick,samples=100,domain=-pi:pi]
+        {sqrt(\Rtwo^2+30*\mgl*(cos(deg(x))-1))};
+    \addplot[name path=Rtminus,thick,samples=100,domain=-pi:pi]
+        {-sqrt(\Rtwo^2+30*\mgl*(cos(deg(x))-1))};
+
+    % Colour in the region E_{R1 <= R <= R2}
+    \addplot[fill=blue,opacity=0.2] 
+        fill between[of=Roplus and Rtplus];
+    \addplot[fill=blue,opacity=0.2] 
+        fill between[of=Rominus and Rtminus];
+	% Draw the homoclinic orbit
+    \addplot[gray,->,thick,samples=100,domain=-pi:pi]
+        {sqrt(30*\mgl*(cos(deg(x))+1))};
+    \addplot[gray,<-,thick,samples=100,domain=-pi:pi]
+        {-sqrt(30*\mgl*(cos(deg(x))+1))};
+
+
+    % Draw increasing rotations towards the rho_bar line
+    % We don't use \mgl, but instead pretend that there was a rotation at pu=15
+    % and we change \mgl to 14^2/60 so the curve is bigger and more obvious
+    \pgfmathsetmacro{\mglbig}{14^2/60};
+    \addplot[blue,name path=lower,thick,samples=100,domain=0:pi]
+        {sqrt(15^2+30*\mglbig*(cos(deg(x))-1))};
+    % Now we start a rotation at a bigger spot, but force it to curve down
+    % further so it connects to the previous curve at |qu|=pi
+    \pgfmathsetmacro{\curvediffone}{sqrt(18^2-60*\mglbig)-sqrt(15^2-60*\mglbig)};
+    \addplot[blue,thick,samples=100, domain=-pi:0]
+        {sqrt(18^2+30*\mglbig*(cos(deg(x))-1))-abs(x)/pi*(\curvediffone)};
+    \addplot[blue,thick,samples=100, domain=0:pi]
+        {sqrt(18^2+30*\mglbig*(cos(deg(x))-1))};
+
+    % Add a label for these energy level sets
+    \node at (-0.5, 12.5) {\small$E_{R_1}$};
+    \node at (-pi+0.5, 16) {\small$E_{R_2}$};
+
+
+    % Draw vertical dashed lines at +-pi
+    \draw[gray, dashed] (-pi,-22) -- (-pi,22);
+    \draw[gray, dashed] (pi,-22) -- (pi,22);
+
+    % Draw vertical red lines between R1 and R2
+    \draw[red, ultra thick] (0,\Rone) -- (0,\Rtwo);
+    \draw[red, ultra thick] (0,-\Rone) -- (0,-\Rtwo);
+    % Add a label
+    \pgfmathsetmacro{\Ravg}{(\Rone+\Rtwo)/2};
+    \node[text=red] at (-0.3,-\Ravg) {$\mathcal{P}_r$};
+    \node[text=red] at (-0.3,\Ravg) {$\mathcal{P}_r$};
+
+\end{axis}
+\end{tikzpicture}
+\end{document}
+% vim: set tw=80 ts=4 sw=4 sts=0 et ffs=unix :

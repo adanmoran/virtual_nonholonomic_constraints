@@ -1,0 +1,10 @@
+The revised version of the paper has significantly improved and the
+authors have successfully addressed the raised concerns and provided
+detailed responses. 
+They have expanded upon the background and motivation behind the
+considered approach with the objective of designing virtual
+nonholonomic constraints for an acrobot model which emulates gymnastics
+giant motion. Additionally, the authors have included a more
+comprehensive discussion and comparison with other existing methods
+concerning orbital stabilization.  Therefore, based on my overall
+evaluation, I recommend the paper for publication in its present form.
